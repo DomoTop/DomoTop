@@ -89,7 +89,7 @@ public class ListPanelIDs extends RESTAPI
 
       X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
       if(certs != null && certs.length > 0) {
-         panelsXML = "<user>" + certs[0].getSerialNumber() + "</user>";
+         panelsXML = "<user>" + certs[0].getSerialNumber() + " " + certs[0].getSubjectX500Principal().getName().split(",")[0].split("=")[1] + "</user>";
       }
 
       sendResponse(response, panelsXML);

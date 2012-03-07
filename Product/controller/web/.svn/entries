@@ -1,86 +1,0 @@
-10
-
-dir
-5903
-https://openremote.svn.sourceforge.net/svnroot/openremote/trunk/Controller/web
-https://openremote.svn.sourceforge.net/svnroot/openremote
-
-
-
-2011-02-18T17:12:11.692043Z
-3630
-juhalindfors
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-9621b191-8951-0410-821f-b8f8a45b0b95
-
-META-INF
-dir
-
-image
-dir
-
-jslib
-dir
-
-logs
-dir
-
-WEB-INF
-dir
-
-common
-dir
-
-css
-dir
-
-index.html
-file
-
-
-
-
-2012-03-07T15:08:55.216442Z
-8341afb620cbcc050ceda8a20b3a3521
-2011-02-12T21:48:42.448773Z
-3615
-juhalindfors
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-4340
-
-js
-dir
-
