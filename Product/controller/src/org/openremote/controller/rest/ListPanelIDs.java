@@ -20,6 +20,8 @@
  */
 package org.openremote.controller.rest;
 
+import java.security.cert.X509Certificate;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,6 +86,12 @@ public class ListPanelIDs extends RESTAPI
     try
     {
       String panelsXML = profileService.getAllPanels();
+
+      X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+      if(certs != null && certs.length > 0) {
+         panelsXML = "<user>" + certs[0].getSerialNumber() + "</user>";
+      }
+
       sendResponse(response, panelsXML);
     }
 
