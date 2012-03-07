@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/apache
+END
+NOTICE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/apache/NOTICE.txt
+END
+commons-codec-1.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/openremote/!svn/ver/2495/trunk/Controller/lib/core/apache/commons-codec-1.3.jar
+END
+commons-collections-3.2.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/openremote/!svn/ver/907/trunk/Controller/lib/core/apache/commons-collections-3.2.1.jar
+END
+ASLv2.0-LICENSE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/apache/ASLv2.0-LICENSE.txt
+END
+commons-fileupload-1.2.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/907/trunk/Controller/lib/core/apache/commons-fileupload-1.2.1.jar
+END
+commons-logging-1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/openremote/!svn/ver/907/trunk/Controller/lib/core/apache/commons-logging-1.1.jar
+END
+commons-io-1.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/openremote/!svn/ver/907/trunk/Controller/lib/core/apache/commons-io-1.4.jar
+END

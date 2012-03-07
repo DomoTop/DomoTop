@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/log4j
+END
+NOTICE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/log4j/NOTICE.txt
+END
+ASLv2.0-LICENSE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/openremote/!svn/ver/3329/trunk/Controller/lib/core/log4j/ASLv2.0-LICENSE.txt
+END
+log4j-1.2.11.jar
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/openremote/!svn/ver/907/trunk/Controller/lib/core/log4j/log4j-1.2.11.jar
+END

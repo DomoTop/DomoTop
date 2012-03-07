@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/http
+END
+HttpGetCommandBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/http/HttpGetCommandBuilder.java
+END
+HttpGetCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/http/HttpGetCommand.java
+END

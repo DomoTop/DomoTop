@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2012.2.17)  21 FEB 2012 14:14
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2012.2.17)  2 MAR 2012 11:05
 entering extended mode
  %&-line parsing enabled.
 **begin.tex
@@ -58,13 +58,6 @@ File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
-
-! LaTeX Error: File `titlepages.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
 (/usr/share/texmf-texlive/tex/generic/babel/babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
 
@@ -86,39 +79,29 @@ Package babel Info: Making " an active character on input line 132.
 )) (./begin.aux)
 \openout1 = `begin.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 File: /home/vincent/tass.eps Graphic file (type eps)
  </home/vincent/tass.eps> [1
 
-]
-File: /home/vincent/tass.eps Graphic file (type eps)
- </home/vincent/tass.eps> [2]
-File: /home/vincent/tass.eps Graphic file (type eps)
-
-</home/vincent/tass.eps> [3]
-File: /home/vincent/tass.eps Graphic file (type eps)
- </home/vincent/tass.eps> [4]
-File: /home/vincent/tass.eps Graphic file (type eps)
-
-</home/vincent/tass.eps> [5] (./begin.aux) ) 
+] (./begin.aux) ) 
 Here is how much of TeX's memory you used:
- 988 strings out of 495062
- 11502 string characters out of 1182644
- 68469 words of memory out of 3000000
- 4213 multiletter control sequences out of 15000+50000
- 4850 words of font info for 18 fonts, out of 3000000 for 9000
+ 982 strings out of 495062
+ 11408 string characters out of 1182644
+ 64467 words of memory out of 3000000
+ 4208 multiletter control sequences out of 15000+50000
+ 4245 words of font info for 16 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 25i,10n,43p,205b,345s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 25i,10n,43p,207b,343s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on begin.dvi (5 pages, 19576 bytes).
+Output written on begin.dvi (1 page, 568 bytes).

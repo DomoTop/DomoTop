@@ -1,0 +1,8 @@
+K 10
+svn:ignore
+V 65
+org.eclipse.jdt.ui.prefs
+
+com.genuitec.eclipse.j2eedt.core.prefs
+
+END

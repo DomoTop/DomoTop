@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/openremote/!svn/ver/1229/trunk/Controller/src/com/jpeterson/x10
+END
+ControlException.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/ControlException.java
+END
+Gateway.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/Gateway.java
+END
+NullGatewayQueue.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/NullGatewayQueue.java
+END
+SerialGateway.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/SerialGateway.java
+END
+GatewayState.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayState.java
+END
+GatewayAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayAdapter.java
+END
+GatewayEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayEvent.java
+END
+GatewayQueue.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayQueue.java
+END
+X10Util.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/X10Util.java
+END
+GatewayListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayListener.java
+END
+GatewayStateError.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayStateError.java
+END
+Transmitter.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/Transmitter.java
+END
+TransmitterAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/TransmitterAdapter.java
+END
+GatewayErrorEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayErrorEvent.java
+END
+TransmitterEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/TransmitterEvent.java
+END
+GatewayException.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayException.java
+END
+ControlEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/ControlEvent.java
+END
+AWTGatewayQueue.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/AWTGatewayQueue.java
+END
+TransmitterListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/TransmitterListener.java
+END
+GatewayImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/GatewayImpl.java
+END
+TooManyAttemptsException.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/TooManyAttemptsException.java
+END
+ControlEventDispatcher.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/ControlEventDispatcher.java
+END
+ControlError.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/ControlError.java
+END
+InterruptedTransmissionException.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/x10/InterruptedTransmissionException.java
+END

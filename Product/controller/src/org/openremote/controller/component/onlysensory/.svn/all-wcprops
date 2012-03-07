@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/component/onlysensory
+END
+Label.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/component/onlysensory/Label.java
+END
+Image.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/component/onlysensory/Image.java
+END
+LabelBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/component/onlysensory/LabelBuilder.java
+END
+ImageBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/component/onlysensory/ImageBuilder.java
+END

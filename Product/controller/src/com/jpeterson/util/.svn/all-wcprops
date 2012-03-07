@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/util
+END
+Condition.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/util/Condition.java
+END
+Unsigned.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/util/Unsigned.java
+END
+BinaryFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/util/BinaryFormat.java
+END
+HexFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/openremote/!svn/ver/1204/trunk/Controller/src/com/jpeterson/util/HexFormat.java
+END

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/config
+END
+russoundCommands.properties
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/config/russoundCommands.properties
+END
+config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/config/config.properties
+END
+spring-context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/openremote/!svn/ver/270/trunk/Controller/config/spring-context.xml
+END
+spring-servlet.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/openremote/!svn/ver/3415/trunk/Controller/config/spring-servlet.xml
+END
+spring-quartz.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/openremote/!svn/ver/2495/trunk/Controller/config/spring-quartz.xml
+END
+applicationContext.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/config/applicationContext.xml
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/openremote/!svn/ver/3679/trunk/Controller/config/log4j.properties
+END
+panel-2.0-M7.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/openremote/!svn/ver/2506/trunk/Controller/config/panel-2.0-M7.xsd
+END
+controller-1.0.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/openremote/!svn/ver/1269/trunk/Controller/config/controller-1.0.xsd
+END
+lutron_homeworks.properties
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/openremote/!svn/ver/3695/trunk/Controller/config/lutron_homeworks.properties
+END
+roundrobin.properties
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/openremote/!svn/ver/2495/trunk/Controller/config/roundrobin.properties
+END
+russound.properties
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/config/russound.properties
+END
+controller-2.0-M7.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/openremote/!svn/ver/4120/trunk/Controller/config/controller-2.0-M7.xsd
+END

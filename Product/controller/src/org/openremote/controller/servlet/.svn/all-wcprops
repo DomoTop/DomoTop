@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/servlet
+END
+ResourceServlet.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/servlet/ResourceServlet.java
+END
+LogoutServlet.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/servlet/LogoutServlet.java
+END

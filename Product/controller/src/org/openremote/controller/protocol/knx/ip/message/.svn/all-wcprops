@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message
+END
+IpDiscoverReq.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpDiscoverReq.java
+END
+Hpai.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/Hpai.java
+END
+IpConnectionStateReq.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpConnectionStateReq.java
+END
+IpDiscoverResp.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpDiscoverResp.java
+END
+IpConnectionStateResp.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpConnectionStateResp.java
+END
+IpTunnelingReq.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpTunnelingReq.java
+END
+IpConnectReq.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpConnectReq.java
+END
+IpDisconnectReq.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpDisconnectReq.java
+END
+IpTunnelingAck.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpTunnelingAck.java
+END
+IpConnectResp.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpConnectResp.java
+END
+IpDisconnectResp.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpDisconnectResp.java
+END
+IpMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/message/IpMessage.java
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/test
+END
+config_test.properties
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/openremote/!svn/ver/2495/trunk/Controller/test/config_test.properties
+END
+spring-context-test.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/openremote/!svn/ver/2495/trunk/Controller/test/spring-context-test.xml
+END
+testApplicationContext.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/testApplicationContext.xml
+END

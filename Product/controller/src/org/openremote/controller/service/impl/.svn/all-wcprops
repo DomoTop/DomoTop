@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl
+END
+PollingMachinesServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/PollingMachinesServiceImpl.java
+END
+ControlCommandServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/ControlCommandServiceImpl.java
+END
+FileServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/FileServiceImpl.java
+END
+ProfileServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/ProfileServiceImpl.java
+END
+RoundRobinServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/RoundRobinServiceImpl.java
+END
+StatusCommandServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/StatusCommandServiceImpl.java
+END
+StatusCacheServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/StatusCacheServiceImpl.java
+END
+StatusPollingServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/StatusPollingServiceImpl.java
+END
+ControllerXMLChangeServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/service/impl/ControllerXMLChangeServiceImpl.java
+END
