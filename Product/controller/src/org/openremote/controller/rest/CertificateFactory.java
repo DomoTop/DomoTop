@@ -26,10 +26,15 @@ import java.lang.ProcessBuilder;
 import java.lang.InterruptedException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Base64;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
@@ -78,6 +83,58 @@ public class CertificateFactory extends RESTAPI
        "profileService");
 
 
+  protected String generateCertificate(String username) throws IOException, InterruptedException
+  {
+    String certname = username + System.currentTimeMillis(); 
+    String keytool = "/usr/bin/keytool";
+    File certloc = new File(profileService.getAllPanels() + "/certificates/");
+
+    String bksloc = certloc.getPath() + "/BKS.jar";
+    String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
+
+    String exitcodes = "";
+    
+    //Try to create server certificate if it not already exist, should be configured as path, later TODO
+    ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=OpenRemote,OU=Controller,O=OpenRemote inc,L=NY,S=NY,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
+    pb.directory(certloc);
+
+    Process p = pb.start();
+    p.waitFor();
+    exitcodes += p.exitValue() + " ";
+
+    //Generate user certificate
+    pb.command(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
+    
+    p = pb.start();
+    p.waitFor();
+    exitcodes += p.exitValue() + " ";
+
+    //Export user certificate to file for sending to android, could happen later, TODO
+    pb.command(keytool,"-exportcert","-alias",certname,"-file",certname +".cer","-keystore",certname+".bks","-storetype","BKS","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
+    
+    p = pb.start();
+    p.waitFor();
+    exitcodes += p.exitValue() + " ";
+
+    //Import user certificate into server certificate        
+    pb.command(keytool,"-importcert","-keystore","server.jks","-alias",certname,"-file",certname+".cer","-v","-trustcacerts","-noprompt","-storepass","password");
+    
+    p = pb.start();
+    p.waitFor();
+    exitcodes += p.exitValue() + " ";
+
+    File file = new File(certloc, "/" + certname + ".bks");
+    FileInputStream fin = new FileInputStream(file);
+    byte[] bindata = new byte[(int)file.length()];
+    int ch, i = 0;
+    while((ch = fin.read()) != -1) {
+        bindata[i++] = (byte)ch;
+    }
+    fin.close();
+
+    return new String(Base64.encodeBase64(bindata));
+    //return Base64.encodeBase64(new String(bindata));
+  }
 
   // Implement REST API ---------------------------------------------------------------------------
 
@@ -86,45 +143,8 @@ public class CertificateFactory extends RESTAPI
   {
     try
     {
-        String certname = "vincent" + System.currentTimeMillis(); 
-        String keytool = "/usr/bin/keytool";
-        File certloc = new File(profileService.getAllPanels() + "/certificates/");
-
-        String bksloc = certloc.getPath() + "/BKS.jar";
-        String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
-
-        String exitcodes = "";
-        
-        //Try to create server certificate if it not already exist, should be configured as path, later TODO
-        ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=OpenRemote,OU=Controller,O=OpenRemote inc,L=NY,S=NY,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
-        pb.directory(certloc);
-
-        Process p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-
-        //Generate user certificate
-        pb.command(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
-        
-        p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-
-        //Export user certificate to file for sending to android, could happen later, TODO
-        pb.command(keytool,"-exportcert","-alias",certname,"-file",certname +".cer","-keystore",certname+".bks","-storetype","BKS","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
-        
-        p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-
-        //Import user certificate into server certificate        
-        pb.command(keytool,"-importcert","-keystore","server.jks","-alias",certname,"-file",certname+".cer","-v","-trustcacerts","-noprompt","-storepass","password");
-        
-        p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-
-        sendResponse(response, exitcodes);
+        String base64cert = generateCertificate("vincent");
+        sendResponse(response, base64cert);
     }
 
     catch (ControlCommandException e)
