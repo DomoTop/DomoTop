@@ -96,7 +96,7 @@ public class CertificateFactory extends RESTAPI
         String exitcodes = "";
         
         //Try to create server certificate if it not already exist, should be configured as path, later TODO
-        ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=Web Server,OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
+        ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=OpenRemote,OU=Controller,O=OpenRemote inc,L=NY,S=NY,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
         pb.directory(certloc);
 
         Process p = pb.start();
