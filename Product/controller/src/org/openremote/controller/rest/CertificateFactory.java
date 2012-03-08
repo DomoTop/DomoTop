@@ -87,10 +87,14 @@ public class CertificateFactory extends RESTAPI
     try
     {
         String certname = "vincent" + System.currentTimeMillis(); 
-        File certloc = new File(profileService.getAllPanels() + "/certificates/");
         String keytool = "/usr/bin/keytool";
-        String exitcodes = "";
+        File certloc = new File(profileService.getAllPanels() + "/certificates/");
 
+        String bksloc = certloc.getPath() + "/BKS.jar";
+        String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
+
+        String exitcodes = "";
+        
         //Try to create server certificate if it not already exist, should be configured as path, later TODO
         ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=Web Server,OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
         pb.directory(certloc);
@@ -100,14 +104,14 @@ public class CertificateFactory extends RESTAPI
         exitcodes += p.exitValue() + " ";
 
         //Generate user certificate
-        pb.command(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".p12","-storetype","pkcs12","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password");
+        pb.command(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
         
         p = pb.start();
         p.waitFor();
         exitcodes += p.exitValue() + " ";
 
         //Export user certificate to file for sending to android, could happen later, TODO
-        pb.command(keytool,"-exportcert","-alias",certname,"-file",certname +".cer","-keystore",certname+".p12","-storetype","pkcs12","-storepass","password");
+        pb.command(keytool,"-exportcert","-alias",certname,"-file",certname +".cer","-keystore",certname+".bks","-storetype","BKS","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
         
         p = pb.start();
         p.waitFor();
