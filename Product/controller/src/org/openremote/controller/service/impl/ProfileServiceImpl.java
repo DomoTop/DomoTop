@@ -70,7 +70,8 @@ public class ProfileServiceImpl implements ProfileService
   {
     String xmlPath = PathUtil.addSlashSuffix(configuration.getResourcePath()) + Constants.PANEL_XML;
     Document doc = getAllPanelsDocument(xmlPath);
-    return output(doc);
+    //return output(doc);
+    return configuration.getResourcePath();
   }
 
   @Override public String getAllPanels(String panelXMLPath)
