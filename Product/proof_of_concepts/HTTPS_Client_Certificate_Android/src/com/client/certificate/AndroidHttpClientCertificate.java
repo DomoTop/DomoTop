@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader; 
 import java.net.URI; 
 import java.security.KeyStore; 
+import java.security.cert.Certificate;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -43,7 +45,7 @@ public class AndroidHttpClientCertificate
 	
 	private static SSLSocketFactory SSLSocketFactory(Context context) 
 	{
-		try 
+		try
 		{
 			KeyStore keystore = KeyStore.getInstance("BKS"); // BKS  - PKCS12
 			//InputStream in = context.getResources().openRawResource(R.raw.vincent1331085321077);
@@ -59,6 +61,7 @@ public class AndroidHttpClientCertificate
 		    	Log.e("client", "Cert error: " + e.getMessage());
 		    }
 		    
+		    // load client certificate		    
 			try 
 			{
 				keystore.load(in, "password".toCharArray());
@@ -74,7 +77,18 @@ public class AndroidHttpClientCertificate
 					Log.e("client", "File input stream is NULL");
 				}
 			}
+			Log.i("client", "Loaded client certifcates: " + keystore.size());
 			
+			Enumeration<String> aliases = keystore.aliases();
+			while (aliases.hasMoreElements())
+			{
+				String alias = (String) aliases.nextElement();
+				
+				Certificate cert = keystore.getCertificate(alias);
+				Log.i("client", "Cert alias: " + alias + " \nCert Type: " + cert.getType() + "\nPublic key:\n" + cert.getPublicKey().toString() + "Public key Algorithm: " + cert.getPublicKey().getAlgorithm());
+			}
+			
+			// initialize key manager factory with the read client certificate
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			keyManagerFactory.init(keystore, "password".toCharArray());
 						
