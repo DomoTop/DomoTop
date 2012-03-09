@@ -2,6 +2,7 @@ package com.client.certificate;
 
 
 import java.io.BufferedReader; 
+import java.io.FileOutputStream;
 import java.io.IOException; 
 import java.io.InputStreamReader; 
 import java.net.URI; 
@@ -27,6 +28,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams; 
 import org.apache.http.protocol.HTTP; 
 
+import android.content.Context;
 import android.util.Log;
 
 import com.client.certificate.AndroidSSLSocketFactory;
@@ -85,6 +87,8 @@ public class AndroidHttpClient
 			in.close();           
 			
 			String result = sb.toString(); 
+			
+			
 			return result; 
 		} 
 		finally 

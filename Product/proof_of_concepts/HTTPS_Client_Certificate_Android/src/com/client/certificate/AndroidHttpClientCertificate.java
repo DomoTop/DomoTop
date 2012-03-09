@@ -2,6 +2,8 @@ package com.client.certificate;
 
 
 import java.io.BufferedReader; 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException; 
 import java.io.InputStream;
 import java.io.InputStreamReader; 
@@ -41,15 +43,38 @@ public class AndroidHttpClientCertificate
 	
 	private static SSLSocketFactory SSLSocketFactory(Context context) 
 	{
-		try {
+		try 
+		{
 			KeyStore keystore = KeyStore.getInstance("BKS"); // BKS  - PKCS12
-			InputStream in = context.getResources().openRawResource(R.raw.asus);
-			
-			try {
+			//InputStream in = context.getResources().openRawResource(R.raw.vincent1331085321077);
+
+			//Read file in Internal Storage
+		    FileInputStream in = null;	
+		    try
+		    {
+		    	in = context.openFileInput("client_certificate.bks");
+		    } 
+		    catch (FileNotFoundException e) 
+		    {
+		    	Log.e("client", "Cert error: " + e.getMessage());
+		    }
+		    
+			try 
+			{
 				keystore.load(in, "password".toCharArray());
-			} finally {
-				in.close();
+			} 
+			finally 
+			{
+				if(in != null)
+				{
+					in.close();
+				}
+				else
+				{
+					Log.e("client", "File input stream is NULL");
+				}
 			}
+			
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			keyManagerFactory.init(keystore, "password".toCharArray());
 						
