@@ -89,6 +89,8 @@ public class CertificateFactory extends RESTAPI
     String keytool = "/usr/bin/keytool";
     File certloc = new File(profileService.getAllPanels() + "/certificates/");
 
+    String servercertloc = "/usr/share/tomcat6/cert/";
+
     String bksloc = certloc.getPath() + "/BKS.jar";
     String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 
@@ -109,19 +111,32 @@ public class CertificateFactory extends RESTAPI
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
-    //Export user certificate to file for sending to android, could happen later, TODO
-    pb.command(keytool,"-exportcert","-alias",certname,"-file",certname +".cer","-keystore",certname+".bks","-storetype","BKS","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
-    
+    //Generate CSR for the user certificate to sign by our server certificate
+    pb.command(keytool, "-certreq", "-alias", certname, "-file", certname + ".csr", "-keystore", certname + ".bks", "-storepass", "password", "-provider",bksprovider,"-providerpath",bksloc, "-storetype", "bks");
+
     p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
-    //Import user certificate into server certificate        
-    pb.command(keytool,"-importcert","-keystore","server.jks","-alias",certname,"-file",certname+".cer","-v","-trustcacerts","-noprompt","-storepass","password");
-    
+    File serverkey = new File(servercertloc + "server.pem");
+    if(!serverkey.exists()) {
+        pb.command(keytool, "-importkeystore","-srckeystore",servercertloc + "server.jks","-destkeystore",servercertloc + "temp.p12","-srcstoretype","JKS","-deststoretype","PKCS12","-srcstorepass","password","-deststorepass","password","-srcalias","servercert","-destalias","servercert","-srckeypass","password","-destkeypass","password","-noprompt");
+
+        p = pb.start();
+        p.waitFor();
+        exitcodes += p.exitValue() + " ";
+
+        pb.command("/usr/bin/openssl", "pkcs12", "-in", servercertloc + "temp.p12", "-out", "server.pem", "-passin pass:password", "-passout pass:password");
+        p = pb.start();
+        p.waitFor();
+        exitcodes += p.exitValue() + " ";
+    }
+
+    pb.command("/usr/bin/openssl", "x509", "-req", "-days", "365", "-in", certname + ".csr", "-CA", serverkey.getPath(), "-CAcreateserial", "-out", certname + ".cer", "-passin", "pass:password", "-extensions", "v3_usr");
     p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
+
 
     File file = new File(certloc, "/" + certname + ".bks");
     FileInputStream fin = new FileInputStream(file);
@@ -132,7 +147,8 @@ public class CertificateFactory extends RESTAPI
     }
     fin.close();
 
-    return new String(Base64.encodeBase64(bindata));
+    return exitcodes;
+    //return new String(Base64.encodeBase64(bindata));
     //return Base64.encodeBase64(new String(bindata));
   }
 
