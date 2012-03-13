@@ -28,6 +28,11 @@ import java.lang.InterruptedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 
 import java.util.ArrayList;
 
@@ -85,29 +90,24 @@ public class CertificateFactory extends RESTAPI
 
   protected String generateCertificate(String username) throws IOException, InterruptedException
   {
-    String certname = username + System.currentTimeMillis(); 
+    String certname = username + System.currentTimeMillis() / 1000; 
     String keytool = "/usr/bin/keytool";
+    String openssl = "/usr/bin/openssl";
     File certloc = new File(profileService.getAllPanels() + "/certificates/");
 
     String servercertloc = "/usr/share/tomcat6/cert/";
+    String caloc = "/usr/share/tomcat6/cert/myCA/";
 
     String bksloc = certloc.getPath() + "/BKS.jar";
     String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 
     String exitcodes = "";
     
-    //Try to create server certificate if it not already exist, should be configured as path, later TODO
-    ProcessBuilder pb = new ProcessBuilder(keytool, "-genkeypair", "-alias", "servercert","-keyalg","RSA","-dname","CN=OpenRemote,OU=Controller,O=OpenRemote inc,L=NY,S=NY,C=US","-keypass","password","-keystore","server.jks","-storepass","password");
-    pb.directory(certloc);
-
-    Process p = pb.start();
-    p.waitFor();
-    exitcodes += p.exitValue() + " ";
-
     //Generate user certificate
-    pb.command(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
+    ProcessBuilder pb = new ProcessBuilder(keytool,"-genkeypair","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-keyalg","RSA","-dname","CN="+certname+",OU=Unit,O=Organization,L=City,S=State,C=US","-keypass","password","-storepass","password","-provider",bksprovider,"-providerpath",bksloc);
+    pb.directory(certloc);
     
-    p = pb.start();
+    Process p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
@@ -118,25 +118,24 @@ public class CertificateFactory extends RESTAPI
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
-    File serverkey = new File(servercertloc + "server.pem");
-    if(!serverkey.exists()) {
-        pb.command(keytool, "-importkeystore","-srckeystore",servercertloc + "server.jks","-destkeystore",servercertloc + "temp.p12","-srcstoretype","JKS","-deststoretype","PKCS12","-srcstorepass","password","-deststorepass","password","-srcalias","servercert","-destalias","servercert","-srckeypass","password","-destkeypass","password","-noprompt");
+    pb.directory(new File(caloc));
+    pb.command(openssl, "ca", "-batch", "-passin", "pass:password", "-config", "openssl.my.cnf", "-policy", "policy_anything", "-out", certloc.getPath() + "/" + certname + ".crt", "-infiles",certloc.getPath() + "/" + certname + ".csr");
 
-        p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-
-        pb.command("/usr/bin/openssl", "pkcs12", "-in", servercertloc + "temp.p12", "-out", "server.pem", "-passin pass:password", "-passout pass:password");
-        p = pb.start();
-        p.waitFor();
-        exitcodes += p.exitValue() + " ";
-    }
-
-    pb.command("/usr/bin/openssl", "x509", "-req", "-days", "365", "-in", certname + ".csr", "-CA", serverkey.getPath(), "-CAcreateserial", "-out", certname + ".cer", "-passin", "pass:password", "-extensions", "v3_usr");
     p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
+    mergeChain(
+            new File(certloc.getPath() + "/" + certname + ".crt"),
+            new File(caloc + "certs/myca.crt"),
+            new File(certloc.getPath() + "/" + certname + ".chain"));
+
+    pb = new ProcessBuilder(keytool,"-importcert","-trustcacerts" ,"-noprompt","-alias",certname,"-keystore",certname + ".bks","-storetype","BKS","-provider",bksprovider,"-providerpath",bksloc,"-storepass","password","-file",certloc.getPath() + "/" + certname + ".chain");
+    pb.directory(certloc);
+
+    p = pb.start();
+    p.waitFor();
+    exitcodes += p.exitValue() + " ";
 
     File file = new File(certloc, "/" + certname + ".bks");
     FileInputStream fin = new FileInputStream(file);
@@ -147,13 +146,42 @@ public class CertificateFactory extends RESTAPI
     }
     fin.close();
 
-    return exitcodes;
-    //return new String(Base64.encodeBase64(bindata));
+    return new String(Base64.encodeBase64(bindata));
+    //return exitcodes;// + new String(bindata);
     //return Base64.encodeBase64(new String(bindata));
   }
 
   // Implement REST API ---------------------------------------------------------------------------
 
+  protected String mergeChain(File clientcert, File servercert, File chain) throws IOException
+  {
+    BufferedWriter out = new BufferedWriter(new FileWriter(chain));
+
+    FileReader fr = new FileReader(servercert);
+    BufferedReader reader = new BufferedReader(fr);
+    String st = "";
+    while((st = reader.readLine()) != null) {
+        out.write(st + "\n");
+    }
+
+    fr = new FileReader(clientcert);
+    reader = new BufferedReader(fr);
+    boolean cert = false;
+    while((st = reader.readLine()) != null) {
+        if(cert) {
+            out.write(st + "\n");
+        } else {
+            if(st.startsWith("-----BEGIN CERTIFICATE-----")) {
+                cert = true;
+                out.write(st + "\n");
+            }
+        }
+    }
+
+    out.close();
+
+    return chain.getPath();
+  }
 
   @Override protected void handleRequest(HttpServletRequest request, HttpServletResponse response)
   {
