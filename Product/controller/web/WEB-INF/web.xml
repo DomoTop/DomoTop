@@ -350,6 +350,19 @@
   </servlet>
 
   <!--
+   | Servlet for 'rest/clients' implementation
+   +-->
+  <servlet>
+    <description>
+        Display the list of clients
+    </description>
+
+    <display-name>Create certificates for clients -- /rest/clients</display-name>
+    <servlet-name>ListClientInfo</servlet-name>
+    <servlet-class>org.openremote.controller.rest.ListClientInfo</servlet-class>
+  </servlet>
+
+  <!--
    | Servlet for 'rest/panel/{id} implementation.
    +-->
   <servlet>
@@ -405,6 +418,11 @@
   <servlet-mapping>
     <servlet-name>CertificateFactory</servlet-name>
     <url-pattern>/rest/cert/create/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ListClientInfo</servlet-name>
+    <url-pattern>/rest/clients/</url-pattern>
   </servlet-mapping>
 
 
