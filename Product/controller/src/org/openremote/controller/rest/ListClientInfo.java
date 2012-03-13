@@ -95,8 +95,9 @@ public class ListClientInfo extends RESTAPI
 		if (listOfFiles[i].isFile()) 
 		{
 			files = listOfFiles[i].getName();
-	   		if (files.endsWith(".crt") || !files.equals("myca.crt"))
+	   		if (files.endsWith(".crt") && !files.equals("myca.crt"))
 	   		{
+				//openssl x509 -subject -enddate -serial -noout -in ./certs/vincent.crt
 		  		output += "File #: " + i + " - " + files;
 			}
 	 	}
