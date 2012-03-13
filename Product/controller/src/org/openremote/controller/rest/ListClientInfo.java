@@ -83,9 +83,10 @@ public class ListClientInfo extends RESTAPI
        "profileService");
 
 
-  protected void getClients(String path) throws NullPointerException
+  protected String getClients(String path) throws NullPointerException
   {
 	String files;
+	String output;
 	File folder = new File(path);
 	File[] listOfFiles = folder.listFiles(); 
  
@@ -96,10 +97,11 @@ public class ListClientInfo extends RESTAPI
 			files = listOfFiles[i].getName();
 	   		if (files.endsWith(".crt") || !files.equals("myca.crt"))
 	   		{
-		  		System.out.println("File #: " + i + " - " + files);
+		  		output += "File #: " + i + " - " + files;
 			}
 	 	}
 	}
+	return output;
   }
 
   // Implement REST API ---------------------------------------------------------------------------
@@ -109,7 +111,7 @@ public class ListClientInfo extends RESTAPI
   {
     try
     {
-        this.getClients("/usr/share/tomcat6/cert/ca/certs");
+        sendResponse(response, this.getClients("/usr/share/tomcat6/cert/ca/certs"));
     }
 
     catch (NullPointerException e)
