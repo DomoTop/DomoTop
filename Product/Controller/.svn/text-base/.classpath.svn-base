@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="config"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="lib" path="lib/apache/commons-net/commons-net-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/compile/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/compile/javax.servlet.jsp.jar"/>
+	<classpathentry kind="lib" path="lib/core/apache/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/apache/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/apache/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/core/apache/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/jdom/jaxen-1.1-beta-9.jar"/>
+	<classpathentry kind="lib" path="lib/core/jdom/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/core/log4j/log4j-1.2.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/core/spring/spring.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring/spring-test-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/httpunit/httpunit.jar"/>
+	<classpathentry kind="lib" path="lib/test/js/js-1.6R5.jar"/>
+	<classpathentry kind="lib" path="lib/test/nekohtml/nekohtml.jar"/>
+	<classpathentry kind="lib" path="lib/test/jtidy/jtidy-r918.jar"/>
+	<classpathentry kind="lib" path="lib/test/xerces-2.9.1/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/test/xerces-2.9.1/xml-apis.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/dbunit/dbunit-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty/jetty-6.1.22.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty/jetty-util-6.1.22.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit/junit-4.8.jar"/>
+	<classpathentry kind="lib" path="lib/core/httpclient/httpclient-4.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/httpclient/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/spring/spring-security-core-2.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/core/apache/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/core/spring/quartz-1.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/apache/commons-lang/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/rxtx/RXTXcomm-2.2-pre2.jar"/>
+	<classpathentry kind="lib" path="lib/apache/commons-beanutils-1.8.3/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/clink/clink170.jar"/>
+	<classpathentry kind="lib" path="/media/ntfs/ogandit/src/or-knx/lib/json/json-20110113.jar"/>
+	<classpathentry kind="output" path="web/WEB-INF/classes"/>
+</classpath>

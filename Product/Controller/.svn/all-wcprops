@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/openremote/!svn/ver/4465/trunk/Controller
+END
+.classpath
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/.classpath
+END
+License
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/openremote/!svn/ver/4120/trunk/Controller/License
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/openremote/!svn/ver/3415/trunk/Controller/.project
+END
+build.properties
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/openremote/!svn/ver/3695/trunk/Controller/build.properties
+END
+contributors.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/contributors.txt
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/openremote/!svn/ver/4120/trunk/Controller/build.xml
+END

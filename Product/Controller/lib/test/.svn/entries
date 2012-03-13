@@ -1,0 +1,61 @@
+10
+
+dir
+5961
+https://openremote.svn.sourceforge.net/svnroot/openremote/trunk/Controller/lib/test
+https://openremote.svn.sourceforge.net/svnroot/openremote
+
+
+
+2010-06-22T16:12:27.970925Z
+2474
+juhalindfors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9621b191-8951-0410-821f-b8f8a45b0b95
+
+httpunit
+dir
+
+jetty
+dir
+
+apache
+dir
+
+nekohtml
+dir
+
+spring
+dir
+
+jtidy
+dir
+
+dbunit
+dir
+
+junit
+dir
+
+js
+dir
+
+checkstyle
+dir
+
+xerces-2.9.1
+dir
+

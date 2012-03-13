@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache
+END
+PollingSensorIDListComparator.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/PollingSensorIDListComparator.java
+END
+PollingMachineThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/PollingMachineThread.java
+END
+ChangedStatusTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/ChangedStatusTable.java
+END
+PollingControlIDListComparator.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/PollingControlIDListComparator.java
+END
+StatusCache.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/StatusCache.java
+END
+ChangedStatusRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/ChangedStatusRecord.java
+END
+PollingData.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/statuscache/PollingData.java
+END

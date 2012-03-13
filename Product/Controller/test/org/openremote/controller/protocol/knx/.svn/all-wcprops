@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/test/org/openremote/controller/protocol/knx
+END
+DimIncreaseDecreaseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/DimIncreaseDecreaseTest.java
+END
+ScalingTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/ScalingTest.java
+END
+DummyDiscoverServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/DummyDiscoverServer.java
+END
+DummyServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/DummyServer.java
+END
+GroupAddressTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/protocol/knx/GroupAddressTest.java
+END
+KNXIpConnectionManagerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/KNXIpConnectionManagerTest.java
+END
+KNXCommandBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/KNXCommandBuilderTest.java
+END
+RealKNXIpConnectionManagerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/test/org/openremote/controller/protocol/knx/RealKNXIpConnectionManagerTest.java
+END
+RangeTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/test/org/openremote/controller/protocol/knx/RangeTest.java
+END

@@ -1,0 +1,77 @@
+10
+
+dir
+5961
+https://openremote.svn.sourceforge.net/svnroot/openremote/trunk/Controller/src/org/openremote/controller/component/control
+https://openremote.svn.sourceforge.net/svnroot/openremote
+
+
+
+2011-02-12T21:48:42.448773Z
+3615
+juhalindfors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9621b191-8951-0410-821f-b8f8a45b0b95
+
+Control.java
+file
+
+
+
+
+2012-03-13T16:11:23.930821Z
+a20936aae5015248a1a829d67936fdaa
+2011-02-12T21:48:42.448773Z
+3615
+juhalindfors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2117
+
+toggle
+dir
+
+slider
+dir
+
+switchtoggle
+dir
+
+button
+dir
+
+gesture
+dir
+

@@ -1,0 +1,55 @@
+10
+
+dir
+5961
+https://openremote.svn.sourceforge.net/svnroot/openremote/trunk/Controller/lib
+https://openremote.svn.sourceforge.net/svnroot/openremote
+
+
+
+2011-05-02T00:42:55.299436Z
+4120
+juhalindfors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9621b191-8951-0410-821f-b8f8a45b0b95
+
+test
+dir
+
+clink
+dir
+
+apache
+dir
+
+rxtx
+dir
+
+cobertura
+dir
+
+compile
+dir
+
+core
+dir
+
+onewire
+dir
+
+json
+dir
+

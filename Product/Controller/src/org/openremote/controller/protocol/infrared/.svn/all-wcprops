@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/infrared
+END
+IRCommandBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/infrared/IRCommandBuilder.java
+END
+IRCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/infrared/IRCommand.java
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/component/control
+END
+ButtonBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/component/control/ButtonBuilderTest.java
+END
+GestureBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/component/control/GestureBuilderTest.java
+END
+SwitchBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/component/control/SwitchBuilderTest.java
+END
+SliderBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/component/control/SliderBuilderTest.java
+END

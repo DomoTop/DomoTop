@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+       default-autowire="byName">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+            	<value>classpath:config_test.properties</value>
+            	<value>classpath:roundrobin.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- configuration variables -->
+    <bean id="configuration" class="org.openremote.controller.ControllerConfiguration">
+        <property name="irsendPath" value="${irsend.path}" />
+        <property name="lircdconfPath" value="${lircd.conf.path}" />
+        <property name="copyLircdconf" value="${copy.lircd.conf.on}" />
+        <property name="webappPort" value="${webapp.port}" />
+        <property name="multicastAddress" value="${multicast.address}" />
+        <property name="multicastPort" value="${multicast.port}" />
+        <property name="resourcePath" value="${resource.path}" />
+        <property name="resourceUpload" value="${resource.upload.enable}" />
+    </bean>
+    
+    <!-- service for control command from panel -->
+    <bean id="controlCommandService" class="org.openremote.controller.service.impl.ControlCommandServiceImpl" />
+    
+    <!-- controller.xml parser -->
+    <bean id="remoteActionXMLParser" class="org.openremote.controller.command.RemoteActionXMLParser">
+    </bean>
+    
+    <!-- service for file system operation : upload, unzip etc. -->
+    <bean id="fileService" class="org.openremote.controller.service.impl.FileServiceImpl">
+    </bean>
+    
+	<!-- profile service -->
+    <bean id="profileService" class="org.openremote.controller.service.impl.ProfileServiceImpl" >
+    	<property name="configuration" ref="configuration"></property>
+    </bean>
+    
+   	<!-- round-robin service -->
+    <bean id="roundRobinService" class="org.openremote.controller.service.impl.RoundRobinServiceImpl" />
+    
+    <bean id = "servers" class="java.util.concurrent.ConcurrentHashMap" />
+    
+    <!-- polling machine service -->
+    <bean id="pollingMachinesService" class="org.openremote.controller.service.impl.PollingMachinesServiceImpl" />
+    
+    <!-- service for status command from panel -->
+    <bean id="statusCommandService" class="org.openremote.controller.service.impl.StatusCommandServiceImpl" />
+    
+    <!-- service for listening the status of device -->
+    <bean id="statusPollingService" class="org.openremote.controller.service.impl.StatusPollingServiceImpl" />
+    
+    <bean id = "changedStatusTable" class="org.openremote.controller.statuscache.ChangedStatusTable" />
+	
+	<bean id = "statusCache" class="org.openremote.controller.statuscache.StatusCache" />
+	
+	<!-- status cache service -->
+    <bean id="statusCacheService" class="org.openremote.controller.service.impl.StatusCacheServiceImpl" >
+    	<property name="cache" ref="statusCache"></property>
+    </bean>
+    
+	<bean id="sensorBuilder" class="org.openremote.controller.component.SensorBuilder" />
+	
+	<!-- controller.xml change service -->
+    <bean id="controllerXMLChangeService" class="org.openremote.controller.service.impl.ControllerXMLChangeServiceImpl" />	
+	
+	<bean id = "controllerXMLListenSharingData" class="org.openremote.controller.config.ControllerXMLListenSharingData" />
+
+    <bean id = "commandFactory" class = "org.openremote.controller.command.CommandFactory">
+		<property name = "commandBuilders">
+		    <props>
+            	<prop key = "test">testCommandBuilder</prop>
+		    </props>
+		</property>
+	</bean>
+
+
+	<!-- COMMAND BUILDERS ============================================================================
+	 |
+	 | Implementation specific builders for the Event Factory bean. In short, each distinct command
+	 | type, as they appear in controller.xml, will need a corresponding builder implementation.
+	 |
+	 | See the org.openremote.controller.command.CommandBuilder interface for details if you seek to
+	 | extend the implementation with additional command types.
+	 +-->
+
+	<bean id = "testCommandBuilder" class = "org.openremote.controller.protocol.test.TestCommandBuilder"
+	      scope = "prototype" />
+	      
+	<bean id = "componentFactory" class = "org.openremote.controller.component.ComponentFactory">
+		<property name = "componentBuilders">
+		    <props>
+		        <prop key = "button">buttonBuilder</prop>
+		        <prop key = "toggle">toggleBuilder</prop>
+		        <prop key = "switch">switchBuilder</prop>
+		        <prop key = "label">labelBuilder</prop>
+		        <prop key = "slider">sliderBuilder</prop>
+		        <prop key = "gesture">gestureBuilder</prop>
+		        <prop key = "image">imageBuilder</prop>
+		    </props>
+		</property>
+	</bean>
+	
+	<!-- UI COMPONENT BUILDERS ============================================================================
+	 |
+	 | Implementation specific builders for the UI component Factory bean. In short, each distinct command
+	 | type, as they appear in controller.xml, will need a corresponding builder implementation.
+	 |
+	 | See the org.openremote.controller.component.ComponentBuilder interface for details if you seek to
+	 | extend the implementation with additional UI component types.
+	 +-->  	
+	<!-- Button Builder -->
+	<bean id = "buttonBuilder" class = "org.openremote.controller.component.control.button.ButtonBuilder"/>
+	
+	<!-- Toggle Builder -->
+	<bean id = "toggleBuilder" class = "org.openremote.controller.component.control.toggle.ToggleBuilder"/>
+	
+	<!-- Switch Builder -->
+	<bean id = "switchBuilder" class = "org.openremote.controller.component.control.switchtoggle.SwitchBuilder"/>
+	
+	<!-- Label Builder -->
+	<bean id= "labelBuilder" class="org.openremote.controller.component.onlysensory.LabelBuilder" />
+	
+	<!-- Slider Builder -->
+	<bean id= "sliderBuilder" class="org.openremote.controller.component.control.slider.SliderBuilder" />
+	
+	<!-- GestureBuilder -->
+	<bean id= "gestureBuilder" class="org.openremote.controller.component.control.gesture.GestureBuilder" />
+	
+	<!-- imageBuilder -->
+	<bean id="imageBuilder" class="org.openremote.controller.component.onlysensory.ImageBuilder" />
+
+</beans>

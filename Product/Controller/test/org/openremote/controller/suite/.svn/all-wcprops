@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/test/org/openremote/controller/suite
+END
+RESTTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/RESTTests.java
+END
+AllControlBuilderTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/AllControlBuilderTests.java
+END
+KNXTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/test/org/openremote/controller/suite/KNXTests.java
+END
+AllCommandBuildersTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/AllCommandBuildersTests.java
+END
+RoundRobinTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/RoundRobinTests.java
+END
+AllUtilTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/AllUtilTests.java
+END
+AllTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/AllTests.java
+END
+VirtualProtocolTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/VirtualProtocolTests.java
+END
+AllServiceTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/test/org/openremote/controller/suite/AllServiceTests.java
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/openremote/!svn/ver/3635/trunk/Controller/src/org/openremote/controller/protocol/x10
+END
+X10Command.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/x10/X10Command.java
+END
+X10ControllerManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svnroot/openremote/!svn/ver/3635/trunk/Controller/src/org/openremote/controller/protocol/x10/X10ControllerManager.java
+END
+X10CommandType.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/3635/trunk/Controller/src/org/openremote/controller/protocol/x10/X10CommandType.java
+END
+X10Controller.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/x10/X10Controller.java
+END
+ConnectionException.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/protocol/x10/ConnectionException.java
+END
+X10CommandBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/3635/trunk/Controller/src/org/openremote/controller/protocol/x10/X10CommandBuilder.java
+END

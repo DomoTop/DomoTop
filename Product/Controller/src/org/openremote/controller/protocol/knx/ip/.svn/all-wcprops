@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip
+END
+IpMessageListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/IpMessageListener.java
+END
+IpProcessor.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/IpProcessor.java
+END
+KnxIpException.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/KnxIpException.java
+END
+DiscoveryListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/DiscoveryListener.java
+END
+IpTunnelClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/IpTunnelClient.java
+END
+IpDiscoverer.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/IpDiscoverer.java
+END
+IpProcessorListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/knx/ip/IpProcessorListener.java
+END

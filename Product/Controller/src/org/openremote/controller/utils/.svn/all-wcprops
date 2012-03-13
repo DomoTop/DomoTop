@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/openremote/!svn/ver/3630/trunk/Controller/src/org/openremote/controller/utils
+END
+Logger.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/openremote/!svn/ver/3630/trunk/Controller/src/org/openremote/controller/utils/Logger.java
+END
+ZipUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/ZipUtil.java
+END
+NetworkUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/NetworkUtil.java
+END
+Strings.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/Strings.java
+END
+PathUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/PathUtil.java
+END
+CommandUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/CommandUtil.java
+END
+MacrosIrDelayUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/openremote/!svn/ver/3615/trunk/Controller/src/org/openremote/controller/utils/MacrosIrDelayUtil.java
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/src/org/openremote/controller/protocol/telnet
+END
+TelnetCommandBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/openremote/!svn/ver/4154/trunk/Controller/src/org/openremote/controller/protocol/telnet/TelnetCommandBuilder.java
+END
+TelnetCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svnroot/openremote/!svn/ver/4465/trunk/Controller/src/org/openremote/controller/protocol/telnet/TelnetCommand.java
+END
