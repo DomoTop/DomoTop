@@ -83,7 +83,7 @@ public class ListClientInfo extends RESTAPI
        "profileService");
 
 
-  protected String getClients(String path) throws NullPointerException
+  protected String getClientsAuthorized(String path) throws NullPointerException
   {
 	String files;
 	String output = "";
@@ -98,12 +98,36 @@ public class ListClientInfo extends RESTAPI
 	   		if (files.endsWith(".crt") && !files.equals("myca.crt"))
 	   		{
 				//openssl x509 -subject -enddate -serial -noout -in ./certs/vincent.crt
-		  		output += "File #: " + i + " - " + files;
+		  		output += "File #: " + i + " - " + files + "\n\r";
 			}
 	 	}
 	}
 	return output;
   }
+
+
+  protected String getClientsNotAuthorized(String path) throws NullPointerException
+  {
+	String files;
+	String output = "";
+	File folder = new File(path);
+	File[] listOfFiles = folder.listFiles(); 
+ 
+	for (int i = 0; i < listOfFiles.length; i++) 
+	{
+		if (listOfFiles[i].isFile()) 
+		{
+			files = listOfFiles[i].getName();
+	   		if (files.endsWith(".csr"))
+	   		{
+				//openssl x509 -subject -enddate -serial -noout -in ./certs/vincent.crt
+		  		output += "File #: " + i + " - " + files  + "\n\r";
+			}
+	 	}
+	}
+	return output;
+  }
+
 
   // Implement REST API ---------------------------------------------------------------------------
 
@@ -112,7 +136,8 @@ public class ListClientInfo extends RESTAPI
   {
     try
     {
-        sendResponse(response, this.getClients("/usr/share/tomcat6/cert/ca/certs"));
+        sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
+		sendResponse(response, this.getClientsNotAuthorized("/usr/share/tomcat6/cert/ca/csr"));
     }
 
     catch (NullPointerException e)
