@@ -86,7 +86,7 @@ public class ListClientInfo extends RESTAPI
   protected String getClients(String path) throws NullPointerException
   {
 	String files;
-	String output;
+	String output = "";
 	File folder = new File(path);
 	File[] listOfFiles = folder.listFiles(); 
  
