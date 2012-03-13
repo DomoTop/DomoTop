@@ -136,8 +136,10 @@ public class ListClientInfo extends RESTAPI
   {
     try
     {
-        sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
 		sendResponse(response, this.getClientsNotAuthorized("/usr/share/tomcat6/cert/ca/csr"));
+		sendResponse(response, "Authorized: \n");
+        sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
+
     }
 
     catch (NullPointerException e)
