@@ -96,7 +96,7 @@ public class CertificateFactory extends RESTAPI
     File certloc = new File(profileService.getAllPanels() + "/certificates/");
 
     String servercertloc = "/usr/share/tomcat6/cert/";
-    String caloc = "/usr/share/tomcat6/cert/myCA/";
+    String caloc = "/usr/share/tomcat6/cert/ca/";
 
     String bksloc = certloc.getPath() + "/BKS.jar";
     String bksprovider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
@@ -112,21 +112,21 @@ public class CertificateFactory extends RESTAPI
     exitcodes += p.exitValue() + " ";
 
     //Generate CSR for the user certificate to sign by our server certificate
-    pb.command(keytool, "-certreq", "-alias", certname, "-file", certname + ".csr", "-keystore", certname + ".bks", "-storepass", "password", "-provider",bksprovider,"-providerpath",bksloc, "-storetype", "bks");
+    pb.command(keytool, "-certreq", "-alias", certname, "-file", caloc + "csr/" + certname + ".csr", "-keystore", certname + ".bks", "-storepass", "password", "-provider",bksprovider,"-providerpath",bksloc, "-storetype", "bks");
 
     p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
     pb.directory(new File(caloc));
-    pb.command(openssl, "ca", "-batch", "-passin", "pass:password", "-config", "openssl.my.cnf", "-policy", "policy_anything", "-out", certloc.getPath() + "/" + certname + ".crt", "-infiles",certloc.getPath() + "/" + certname + ".csr");
+    pb.command(openssl, "ca", "-batch", "-passin", "pass:password", "-config", "openssl.my.cnf", "-policy", "policy_anything", "-out", caloc + "certs/" + certname + ".crt", "-infiles",caloc + "csr/" + certname + ".csr");
 
     p = pb.start();
     p.waitFor();
     exitcodes += p.exitValue() + " ";
 
     mergeChain(
-            new File(certloc.getPath() + "/" + certname + ".crt"),
+            new File(caloc + "certs/" + certname +  ".crt"),
             new File(caloc + "certs/myca.crt"),
             new File(certloc.getPath() + "/" + certname + ".chain"));
 
