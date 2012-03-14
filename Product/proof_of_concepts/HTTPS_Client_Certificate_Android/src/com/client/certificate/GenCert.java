@@ -15,6 +15,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -24,12 +25,15 @@ import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.x509.X509V1CertificateGenerator;
 
+import android.util.Log;
+
 public class GenCert {
 
 	static {
 		Security.addProvider(new BouncyCastleProvider());
 		}
 	
+	@SuppressWarnings("deprecation")
 	public static String generateCertificate() throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, NoSuchProviderException, SignatureException, KeyStoreException, CertificateException, IOException
 	{
 		Date startDate = new Date();                // time from which certificate is valid
@@ -38,7 +42,7 @@ public class GenCert {
 		//PrivateKey caKey = ...;              // private key of the certifying authority (ca) certificate
 		//X509Certificate caCert = ...;        // public key certificate of the certifying authority
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		keyGen.initialize(1024);
+		keyGen.initialize(2048);
 
 		KeyPair keypair = keyGen.generateKeyPair();              // public/private key pair that we are creating certificate for
 
@@ -67,6 +71,8 @@ public class GenCert {
 		                                                      keypair.getPublic(),
 		                                                      null,
 		                                                      keypair.getPrivate());
+		
+		Log.d("client", new String(Base64.encode(kpGen.getDEREncoded())));
 		return new String(Base64.encode(kpGen.getDEREncoded()));
 	}
 
