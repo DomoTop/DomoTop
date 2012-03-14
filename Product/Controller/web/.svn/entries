@@ -35,8 +35,22 @@ dir
 jslib
 dir
 
+administrator.html
+file
+0
+
+
+add
+
 logs
 dir
+
+certificates
+dir
+
+
+
+add
 
 WEB-INF
 dir
