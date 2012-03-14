@@ -3,6 +3,12 @@ package com.client.certificate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +20,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.TextView;
 
 public class WebClientActivity extends Activity
 {
@@ -21,7 +28,8 @@ public class WebClientActivity extends Activity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        TextView text = new TextView(this);
+       
         
         /*
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -31,9 +39,22 @@ public class WebClientActivity extends Activity
         
         
         //this.getCertificate();
-        this.openConnection();
+        //this.openConnection();
+        
+        try {
+        	text.setText("Succes:\n");
+        	text.append(GenCert.generateCertificate());
+        } catch (Exception e) {
+        	text.setText("Failure:\n");
+
+        	text.append(e.getClass().toString() + "\n");
+        	text.append(e.getMessage() + "\n");
+        }
+        
+        setContentView(text);
     }
     
+   
     public void getCertificate()
     {
     	String certificateContent = "";
