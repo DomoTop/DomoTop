@@ -63,6 +63,7 @@
     <fileset dir = "${lib.dir}/clink"/>
   	<fileset dir = "${lib.dir}/json"/>
     <fileset dir = "${lib.dir}/onewire"/>
+  	<fileset dir = "${lib.dir}/freemarker"/>
     <path location = "${classes.dir}"/>
   </path>
   
@@ -78,6 +79,7 @@
     <path location = "${config.dir}"/>
     <fileset dir = "${lib.dir}/apache" includes = "**/*.jar"/>
     <fileset dir = "${lib.dir}/onewire"/>
+  	<fileset dir = "${lib.dir}/freemarker"/>
   </path>
 
   <path id = "container.libs">
@@ -90,6 +92,7 @@
     <fileset dir = "${lib.dir}/test" includes = "**/*.jar"/>
     <path location = "${config.dir}"/>
     <fileset dir = "${lib.dir}/apache" includes = "**/*.jar"/>
+  	<fileset dir = "${lib.dir}/freemarker" includes = "**/*.jar"/>
   </path>
 
 
@@ -141,6 +144,9 @@
       </fileset>
       <fileset dir = "${lib.dir}/onewire">
         <include name = "*.jar"/>
+      </fileset>
+      <fileset dir = "${lib.dir}/freemarker">
+        <include name = "**/*.jar"/>
       </fileset>
     </copy>
     <copy todir = "${build.dir}/lib/native" flatten = "true">

@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="lib/apache/commons-beanutils-1.8.3/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/clink/clink170.jar"/>
 	<classpathentry kind="lib" path="/media/ntfs/ogandit/src/or-knx/lib/json/json-20110113.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker/freemarker.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>

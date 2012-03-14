@@ -28,6 +28,7 @@ import java.lang.InterruptedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,26 @@ import org.apache.commons.codec.binary.Base64;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
+import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.service.ProfileService;
 import org.openremote.controller.spring.SpringContext;
+
+
+
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
+import java.io.OutputStreamWriter;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
+
 
 /**
  * This servlet implements the REST API '/rest/clients' functionality which creates
@@ -128,7 +146,45 @@ public class ListClientInfo extends RESTAPI
 	return output;
   }
 
+  
+  private String setListInTemplate()
+  {
+     List<Test> invoices = Arrays.asList(
+              new Test( "note1", "amount1" ), new Test( "note2", "amount2" ) );
+     Map<String, Object> root = new HashMap<String, Object>();
+      
+     String result = "";
+     
+     // Read the XML file and process the template using FreeMarker
+     try 
+     {     
+        root.put( "invoices", invoices );
+        result = freemarkerDo(root, "administrator.ftl");
+     }
+     catch(Exception e) 
+     {
+        logger.error(e.getLocalizedMessage());
+     }
+     return result;
+  }
 
+  // Process a template using FreeMarker and print the results
+
+  static String freemarkerDo(Map root, String template) throws Exception
+  {
+     Configuration cfg = new Configuration();
+     ControllerConfiguration configuration = ControllerConfiguration.readXML();
+     
+     cfg.setDirectoryForTemplateLoading(new File(configuration.getResourcePath()));
+     //cfg.setClassForTemplateLoading( FreemarkerUtils.class, "/templates" );
+     cfg.setObjectWrapper( new DefaultObjectWrapper() );
+     Template temp = cfg.getTemplate(template);
+     StringWriter out = new StringWriter();
+     temp.process( root, out );
+
+     return out.getBuffer().toString();
+  }
+  
   // Implement REST API ---------------------------------------------------------------------------
 
 
@@ -136,9 +192,10 @@ public class ListClientInfo extends RESTAPI
   {
     try
     {
-		sendResponse(response, this.getClientsNotAuthorized("/usr/share/tomcat6/cert/ca/csr"));
-		sendResponse(response, "Authorized: \n");
-        sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
+       sendResponse(response, setListInTemplate());
+       sendResponse(response, this.getClientsNotAuthorized("/usr/share/tomcat6/cert/ca/csr"));
+       sendResponse(response, "Authorized: \n");
+       sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
 
     }
 
