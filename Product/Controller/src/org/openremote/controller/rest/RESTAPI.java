@@ -118,8 +118,7 @@ public abstract class RESTAPI extends HttpServlet
 
     try
     {
-      //handleRequest(request, response);
-      sendResponse(response, request.getReader().readLine());
+      handleRequest(request, response);
     }
     catch (Throwable t)
     {

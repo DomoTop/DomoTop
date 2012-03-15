@@ -344,9 +344,9 @@
         Creates certificates for clients to authenticate with
     </description>
 
-    <display-name>Create certificates for clients -- /rest/cert/create</display-name>
-    <servlet-name>CertificateFactory</servlet-name>
-    <servlet-class>org.openremote.controller.rest.CertificateFactory</servlet-class>
+    <display-name>Create certificates for clients -- /rest/cert/get/*</display-name>
+    <servlet-name>FindCertificateByID</servlet-name>
+    <servlet-class>org.openremote.controller.rest.FindCertificateByID</servlet-class>
   </servlet>
 
   <!--
@@ -414,11 +414,18 @@
     <url-pattern>/rest/panels/</url-pattern>
   </servlet-mapping>
 
+  <!--
+   | Map Controller REST API servlet which returns the certificate
+   +-->
   <servlet-mapping>
-    <servlet-name>CertificateFactory</servlet-name>
-    <url-pattern>/rest/cert/create/</url-pattern>
+    <servlet-name>FindCertificateByID</servlet-name>
+    <url-pattern>/rest/cert/get/*</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>FindCertificateByID</servlet-name>
+    <url-pattern>/rest/cert/get/*/</url-pattern>
+  </servlet-mapping>
 
   <!--
    | Map Controller REST API servlet which returns a panel definition by ID to
