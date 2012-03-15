@@ -32,10 +32,12 @@ import java.io.InputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.BufferedWriter;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +60,7 @@ import org.openremote.controller.spring.SpringContext;
  *
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
  */
-public class CertificateFactory extends RESTAPI
+public class CertificateFactory extends HttpServlet
 {
 
   /*
@@ -150,9 +152,7 @@ public class CertificateFactory extends RESTAPI
     //return exitcodes;// + new String(bindata);
     //return Base64.encodeBase64(new String(bindata));
   }
-
-  // Implement REST API ---------------------------------------------------------------------------
-
+  
   protected String mergeChain(File clientcert, File servercert, File chain) throws IOException
   {
     BufferedWriter out = new BufferedWriter(new FileWriter(chain));
@@ -183,12 +183,41 @@ public class CertificateFactory extends RESTAPI
     return chain.getPath();
   }
 
-  @Override protected void handleRequest(HttpServletRequest request, HttpServletResponse response)
+  protected String signCsr(InputStream csr, String username) throws IOException, InterruptedException
+  {
+    String certname = username + System.currentTimeMillis() / 1000; 
+    String openssl = "/usr/bin/openssl";
+    String caloc = "/usr/share/tomcat6/cert/ca/test/";
+
+    BufferedWriter out = new BufferedWriter(new FileWriter(caloc + certname + ".csr"));
+    int c, i = 0;
+    while((c = csr.read()) != -1) {
+        out.write(c);
+        i++;
+    }
+    out.close();
+    
+    String exitcodes = "";
+
+//    ProcessBuilder pb = new ProcessBuilder(openssl, "ca", "-batch", "-passin", "pass:password", "-config", "openssl.my.cnf", "-policy", "policy_anything", "-out", caloc + "certs/" + certname + ".crt", "-infiles",caloc + "csr/" + certname + ".csr");
+//    pb.directory(new File(caloc));
+//
+//    Process p = pb.start();
+//    p.waitFor();
+//    exitcodes += p.exitValue() + " ";
+
+
+    return "I wrote " + i + " characters";
+  }
+
+  // Implement REST API ---------------------------------------------------------------------------
+  @Override protected void doPost(HttpServletRequest request, HttpServletResponse response)
   {
     try
     {
-        String base64cert = generateCertificate("vincent");
-        sendResponse(response, base64cert);
+        response.getWriter().print("POST: " + request.getReader().readLine());
+
+        //String test = signCsr(request.getInputStream(), "melroy");
     }
 
     catch (ControlCommandException e)
@@ -201,19 +230,18 @@ public class CertificateFactory extends RESTAPI
       //
       // response.setStatus(e.getErrorCode());
 
-      sendResponse(response, e.getErrorCode(), e.getMessage());
+      //sendResponse(response, e.getErrorCode(), e.getMessage());
     }
-    catch (InterruptedException e) 
-    {
-        logger.error("Failed to create certificate");
-        sendResponse(response, "Interupted");
-    }
+//    catch (InterruptedException e) 
+//    {
+//        logger.error("Failed to create certificate");
+//        //sendResponse(response, "Interupted");
+//    }
     catch (IOException e) 
     {
         logger.error("Failed to create certificate");
- //       sendResponse(response, "IOException" + profileService.getAllPanels() + "/certificates/create.sh");
-        sendResponse(response, e.getMessage());
+       // sendResponse(response, "IOException" + profileService.getAllPanels() + "/certificates/create.sh");
+        //sendResponse(response, e.getMessage());
     }
   }
-
 }
