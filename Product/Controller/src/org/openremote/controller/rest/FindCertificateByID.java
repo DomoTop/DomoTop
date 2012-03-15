@@ -1,4 +1,5 @@
 /*
+ *String caloc = 
  * OpenRemote, the Home of the Digital Home.
  * Copyright 2008-2011, OpenRemote Inc.
  *
@@ -92,6 +93,7 @@ public class FindCertificateByID extends RESTAPI
    
     sb.append("\n<chain>\n<server>\n");
 
+    //TODO Filename of CA should be a contant in the future
     FileReader fr = new FileReader(caloc + "myca.crt");
     BufferedReader reader = new BufferedReader(fr);
     

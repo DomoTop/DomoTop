@@ -337,7 +337,7 @@
   </servlet>
 
   <!--
-   | Servlet for 'rest/cert/create' implementation
+   | Servlet for 'rest/cert/get/*' implementation
    +-->
   <servlet>
     <description>
@@ -349,6 +349,18 @@
     <servlet-class>org.openremote.controller.rest.FindCertificateByID</servlet-class>
   </servlet>
 
+  <!--
+   | Servlet for 'rest/cert/put/*' implementation
+   +-->
+  <servlet>
+    <description>
+        Saves certification request sent by clients
+    </description>
+
+    <display-name>Saves certification request by clients -- /rest/cert/put/*</display-name>
+    <servlet-name>SubmitCSR</servlet-name>
+    <servlet-class>org.openremote.controller.rest.SubmitCSR</servlet-class>
+  </servlet>
   <!--
    | Servlet for 'rest/panel/{id} implementation.
    +-->
@@ -427,6 +439,19 @@
     <url-pattern>/rest/cert/get/*/</url-pattern>
   </servlet-mapping>
 
+  <!--
+   | Map Controller REST API servlet which returns the certificate
+   +-->
+  <servlet-mapping>
+    <servlet-name>SubmitCSR</servlet-name>
+    <url-pattern>/rest/cert/put/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SubmitCSR</servlet-name>
+    <url-pattern>/rest/cert/put/*/</url-pattern>
+  </servlet-mapping>
+  
   <!--
    | Map Controller REST API servlet which returns a panel definition by ID to
    | 'rest/panel/id URI.
