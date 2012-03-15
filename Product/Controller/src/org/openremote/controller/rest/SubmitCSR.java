@@ -84,7 +84,7 @@ public class SubmitCSR extends RESTAPI
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
   private final static String CA_LOCATION = "/usr/share/tomcat6/cert/ca/";
-  private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----\n";
+  private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----";
   private final static String CSR_FOOTER = "\n-----END NEW CERTIFICATE REQUEST-----\n";
 
   protected String putCsr(String username, String cert) throws IOException
@@ -93,7 +93,14 @@ public class SubmitCSR extends RESTAPI
     BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + username + ".csr"));
 
     out.write(CSR_HEADER);
-    out.write(certificate);
+    int j = 0;
+    for(int i = 0; i < certificate.length(); ++i)
+    {
+        if((j++ % 65) == 0) {
+            out.write("\n");
+        } 
+        out.write(certificate.charAt(i));
+    }
     out.write(CSR_FOOTER);
 
     out.close();
