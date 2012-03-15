@@ -350,19 +350,6 @@
   </servlet>
 
   <!--
-   | Servlet for 'rest/clients' implementation
-   +-->
-  <servlet>
-    <description>
-        Display the list of clients
-    </description>
-
-    <display-name>Create certificates for clients -- /rest/clients</display-name>
-    <servlet-name>ListClientInfo</servlet-name>
-    <servlet-class>org.openremote.controller.rest.ListClientInfo</servlet-class>
-  </servlet>
-
-  <!--
    | Servlet for 'rest/panel/{id} implementation.
    +-->
   <servlet>
@@ -392,6 +379,18 @@
     <servlet-class>org.openremote.controller.rest.RoundRobinRESTServlet</servlet-class>
   </servlet>
 
+  <!--
+   | Servlet for 'administrator' implementation
+   +-->
+  <servlet>
+    <description>
+        Display the list of clients and manage them
+    </description>
+
+    <display-name>AdministratorServlet - Display user list and manage users -- /administrator</display-name>
+    <servlet-name>AdministratorServlet</servlet-name>
+    <servlet-class>org.openremote.controller.servlet.AdministratorServlet</servlet-class>
+  </servlet>
 
 
   <servlet-mapping>
@@ -420,11 +419,6 @@
     <url-pattern>/rest/cert/create/</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>ListClientInfo</servlet-name>
-    <url-pattern>/rest/clients/</url-pattern>
-  </servlet-mapping>
-
 
   <!--
    | Map Controller REST API servlet which returns a panel definition by ID to
@@ -451,6 +445,22 @@
     <servlet-name>RoundRobinRESTServlet</servlet-name>
     <url-pattern>/rest/servers</url-pattern>
   </servlet-mapping>
+
+  <!--
+   | Servlet Mapping for the Administrator Servlet to
+   | '/administrator' URI.
+   +-->
+
+  <servlet-mapping>
+    <servlet-name>AdministratorServlet</servlet-name>
+    <url-pattern>/administrator</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AdministratorServlet</servlet-name>
+    <url-pattern>/administrator/</url-pattern>
+  </servlet-mapping>
+
 
   <!--
   | FreeMarker Servlet, FreeMarker is a Java template engine.

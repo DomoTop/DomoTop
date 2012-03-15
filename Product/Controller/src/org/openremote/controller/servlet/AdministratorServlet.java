@@ -18,60 +18,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openremote.controller.rest;
+package org.openremote.controller.servlet;
 
 import java.security.cert.X509Certificate;
 
-import java.lang.ProcessBuilder;
-import java.lang.InterruptedException;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import java.util.ArrayList;
-
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.binary.Base64;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
-import org.openremote.controller.exception.ControlCommandException;
-import org.openremote.controller.service.ProfileService;
+import org.openremote.controller.model.Client;
+import org.openremote.controller.service.ClientListService;
 import org.openremote.controller.spring.SpringContext;
-
-
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
-import java.io.OutputStreamWriter;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.Arrays;
-
 
 /**
- * This servlet implements the REST API '/rest/clients' functionality which creates
- * a certificate when a call has been done.  <p>
- *
- * See <a href = "http://www.openremote.org/display/docs/Controller+2.0+HTTP-REST-XML">
- * Controller 2.0 REST XML API<a> and
- * <a href = "http://openremote.org/display/docs/Controller+2.0+HTTP-REST-JSONP">Controller 2.0
- * REST JSONP API</a> for more details.
- *
+ * This servlet is used to show the list of clients, manage clients 
+ * (accept, deny, revoke and putting the client in a group)
+ * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
+ * 
  */
-public class ListClientInfo extends RESTAPI
+@SuppressWarnings("serial")
+public class AdministratorServlet extends HttpServlet
 {
 
   /*
@@ -92,65 +76,11 @@ public class ListClientInfo extends RESTAPI
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
-
-  // TODO :
-  //  reduce API dependency and lookup service implementation through either an service container
-  //  or short term servlet application context
-
-  private final static ProfileService profileService = (ProfileService) SpringContext.getInstance().getBean(
-       "profileService");
+  private static ClientListService clientListService = (ClientListService) SpringContext.getInstance().getBean("clientListService");
 
 
-  protected String getClientsAuthorized(String path) throws NullPointerException
+  private String setListInTemplate(List<Client> clients)
   {
-	String files;
-	String output = "";
-	File folder = new File(path);
-	File[] listOfFiles = folder.listFiles(); 
- 
-	for (int i = 0; i < listOfFiles.length; i++) 
-	{
-		if (listOfFiles[i].isFile()) 
-		{
-			files = listOfFiles[i].getName();
-	   		if (files.endsWith(".crt") && !files.equals("myca.crt"))
-	   		{
-				//openssl x509 -subject -enddate -serial -noout -in ./certs/vincent.crt
-		  		output += "File #: " + i + " - " + files + "\n\r";
-			}
-	 	}
-	}
-	return output;
-  }
-
-
-  protected String getClientsNotAuthorized(String path) throws NullPointerException
-  {
-	String files;
-	String output = "";
-	File folder = new File(path);
-	File[] listOfFiles = folder.listFiles(); 
- 
-	for (int i = 0; i < listOfFiles.length; i++) 
-	{
-		if (listOfFiles[i].isFile()) 
-		{
-			files = listOfFiles[i].getName();
-	   		if (files.endsWith(".csr"))
-	   		{
-				//openssl x509 -subject -enddate -serial -noout -in ./certs/vincent.crt
-		  		output += "File #: " + i + " - " + files  + "\n\r";
-			}
-	 	}
-	}
-	return output;
-  }
-
-  
-  private String setListInTemplate()
-  {
-     List<Test> invoices = Arrays.asList(
-              new Test( "note1", "amount1" ), new Test( "note2", "amount2" ) );
      Map<String, Object> root = new HashMap<String, Object>();
       
      String result = "";
@@ -158,18 +88,19 @@ public class ListClientInfo extends RESTAPI
      // Read the XML file and process the template using FreeMarker
      try 
      {     
-        root.put( "invoices", invoices );
+        root.put( "clients", clients );
         result = freemarkerDo(root, "administrator.ftl");
      }
      catch(Exception e) 
      {
+        result = "<h1>Template Exception</h1>";
+        result += e.getLocalizedMessage();
         logger.error(e.getLocalizedMessage());
      }
      return result;
   }
 
   // Process a template using FreeMarker and print the results
-
   static String freemarkerDo(Map root, String template) throws Exception
   {
      Configuration cfg = new Configuration();
@@ -185,24 +116,21 @@ public class ListClientInfo extends RESTAPI
      return out.getBuffer().toString();
   }
   
-  // Implement REST API ---------------------------------------------------------------------------
-
-
-  @Override protected void handleRequest(HttpServletRequest request, HttpServletResponse response)
+  @Override 
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                                                              throws ServletException, IOException
   {
-    try
-    {
-       sendResponse(response, setListInTemplate());
-       sendResponse(response, this.getClientsNotAuthorized("/usr/share/tomcat6/cert/ca/csr"));
-       sendResponse(response, "Authorized: \n");
-       sendResponse(response, this.getClientsAuthorized("/usr/share/tomcat6/cert/ca/certs"));
-
-    }
-
-    catch (NullPointerException e)
-    {
-      logger.error("NullPointer client", e);
-    }
+     PrintWriter printWriter = response.getWriter();
+     
+     try
+     {        
+        printWriter.print(setListInTemplate(clientListService.getClientList()));
+        response.setStatus(200);
+     }
+     catch (NullPointerException e)
+     {
+        response.setStatus(401);
+        logger.error("NullPointer client", e);
+     }
   }
-
 }

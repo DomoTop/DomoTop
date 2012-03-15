@@ -16,20 +16,15 @@
 	<TBODY>
 		<TR vAlign="center" align="middle">
 			<TD>
-			
-			<#list invoices as invoice>
-			 Item: ${invoice.note} - ${invoice.amount}
-			</#list>			
-			
-			<TABLE cellSpacing=0 cellPadding=0 width=468 bgColor=#ffffff border=0>
+			<TABLE cellSpacing=0 cellPadding=0 width=668 bgColor=#ffffff border=0>
 				<TBODY>
 					<TR>
 						<TD width=20 background="image/rbox_1.gif" height=20></TD>
-						<TD width=108 background="image/rbox_2.gif" height=20></TD>
+						<TD width=178 background="image/rbox_2.gif" height=20></TD>
 						<TD width=56><IMG height=20 src="image/rbox_2.gif" width=56></TD>
-						<TD width=100 background="image/rbox_2.gif"></TD>
+						<TD width=170 background="image/rbox_2.gif"></TD>
 						<TD width=56><IMG height=20 src="image/rbox_2.gif" width=56></TD>
-						<TD width=108 background="image/rbox_2.gif"></TD>
+						<TD width=178 background="image/rbox_2.gif"></TD>
 						<TD width=20 background="image/rbox_3.gif" height=20></TD>
 					</TR>
 					<TR>
@@ -46,30 +41,32 @@
 							<p>Select the user that you want to give or remove access by clicking on the icon below the activated column.<br /></p>
 							<p><i>Users:</i><br /></p>
 
-							<TABLE cellSpacing=0 cellPadding=0 width=400 align="center" bgColor=#ffffff border=0>
+							<TABLE cellSpacing=0 cellPadding=0 width=600 align="center" bgColor=#ffffff border=0>
 							<TBODY>
 								<TR>
-									<th align="left">Username</th><th align="left">Activated</th><th align="left">Group</th>
+									<th align="left">Username</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Activated</th><th align="left">Group</th>
 								</TR>
+								<#list clients as client>
 								<TR>
-									<TD>Vincent</TD><TD><a href="#"><img src="image/accept.gif" alt="Accepted" border=0 /></a></TD><TD>
-										<select name="group">
-											<option value="">No group</option>
-											<option value="admin" selected>Administrator</option>
-											<option value="parent">Parent</option>
-											<option value="child">Childeren</option>
-										</select>
-									</TD>							
-								</TR>
-								<TR>
-									<TD>Melroy</TD><TD><a href="#"><img src="image/denied.gif" alt="Denied" border=0 /></a></TD><TD>										
+									<TD>${client.name}</TD><TD>${client.email}</TD><TD>${client.pinCode}</TD>
+									<TD>
+										<#if client.active>											
+									  	<a href="#deny"><img src="image/accept.gif" alt="Accepted" border=0 /></a>
+										<#else>
+											<a href="#accept"><img src="image/denied.gif" alt="Denied" border=0 /></a>
+										</#if>
+									</TD>
+									<TD>		
+										${client.groupName}							
 										<select name="group">
 											<option value="">No group</option>
 											<option value="admin">Administrator</option>
 											<option value="parent">Parent</option>
 											<option value="child">Childeren</option>
-										</select></TD>
+										</select>
+									</TD>
 								</TR>
+								</#list>
 							</TBODY>
 							</TABLE>							
 							<br />
