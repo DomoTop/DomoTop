@@ -20,8 +20,6 @@
  */
 package org.openremote.controller.servlet;
 
-import java.security.cert.X509Certificate;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,23 +55,10 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class AdministratorServlet extends HttpServlet
 {
-
-  /*
-   *  IMPLEMENTATION NOTES:
-   *
-   *    - This adheres to the current 2.0 version of the HTTP/REST/XML and HTTP/REST/JSON APIs.
-   *      There's currently no packaging or REST URL distinction for supported API versions.
-   *      Later versions of the Controller may support multiple revisions of the API depending
-   *      on client request. Appropriate implementation changes should be made then.
-   *                                                                                      [JPL]
-   */
-
-
-  // Class Members --------------------------------------------------------------------------------
-
   /**
-   * Common log category for HTTP REST API.
+   * Common log category for HTTP
    */
+  // @TODO Fix own logger
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
   private static ClientListService clientListService = (ClientListService) SpringContext.getInstance().getBean("clientListService");
@@ -124,7 +109,7 @@ public class AdministratorServlet extends HttpServlet
      
      try
      {        
-        printWriter.print(setListInTemplate(clientListService.getClientList()));
+        printWriter.print(setListInTemplate(clientListService.getClientList("/usr/share/tomcat6")));
         response.setStatus(200);
      }
      catch (NullPointerException e)

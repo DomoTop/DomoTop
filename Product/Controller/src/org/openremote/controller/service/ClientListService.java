@@ -6,5 +6,5 @@ import org.openremote.controller.model.Client;
 
 public interface ClientListService {
    
-   List<Client> getClientList();
+   List<Client> getClientList(String rootDir);
 }
