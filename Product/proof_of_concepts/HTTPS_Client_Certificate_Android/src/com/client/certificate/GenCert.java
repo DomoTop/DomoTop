@@ -36,6 +36,9 @@ import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.x509.X509V1CertificateGenerator;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.util.Log;
 
 public class GenCert {
@@ -45,7 +48,7 @@ public class GenCert {
 		}
 	
 	@SuppressWarnings("deprecation")
-	public static String generateCertificate() throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, NoSuchProviderException, SignatureException, KeyStoreException, CertificateException, IOException
+	public static String generateCertificate(Context context) throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, NoSuchProviderException, SignatureException, KeyStoreException, CertificateException, IOException
 	{
 		Date startDate = new Date();                // time from which certificate is valid
 		Date expiryDate = new Date();               // time after which certificate is not valid
@@ -58,7 +61,7 @@ public class GenCert {
 		KeyPair keypair = keyGen.generateKeyPair();              // public/private key pair that we are creating certificate for
 
 		X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
-		X500Principal              dnName = new X500Principal("CN=Test CA Certificate");
+		X500Principal              dnName = new X500Principal("CN=" + getAccount(context));
 
 		certGen.setSerialNumber(serialNumber);
 		certGen.setIssuerDN(dnName);
@@ -88,7 +91,14 @@ public class GenCert {
 		String basecert = new String(Base64.encode(kpGen.getDEREncoded()));
 		return postData(basecert);
 	}
-	
+   
+	public static String getAccount(Context context)
+    {
+    	AccountManager manager = AccountManager.get(context);
+    	Account acc = manager.getAccounts()[0];
+    	return acc.name;
+    }
+   
 	public static String postData(String csr) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
