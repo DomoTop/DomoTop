@@ -1,7 +1,9 @@
 package com.client.certificate;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -24,6 +27,7 @@ import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +35,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.security.auth.x500.X500Principal;
-import javax.security.cert.X509Certificate;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -153,8 +158,9 @@ public class GenCert {
 	    return csr;
 	} 
 	
-	public static X509Certificate[] getData() throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException {
-		X509Certificate[] chain = new X509Certificate[2];
+	public static Certificate[] getData(Context context) throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException, CertificateException, KeyStoreException, NoSuchAlgorithmException 
+	{
+		Certificate[] chain = new X509Certificate[2];
 		
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpGet httpget = new HttpGet("http://10.10.4.40:8080/controller/rest/cert/get/melroy");
@@ -176,18 +182,30 @@ public class GenCert {
 
 	    chain[0] = certificateFromDocument(doc, "server");
 	    chain[1] = certificateFromDocument(doc, "client");
+	    KeyStore keystore = KeyStore.getInstance("BKS");
+	    keystore.load(null, null);
+	    keystore.setKeyEntry("user", 
+	    		deserializeKeypair(context).getPrivate().getEncoded(), 
+	    		chain);
 	    
 		return chain;
 	}
 	
-	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws javax.security.cert.CertificateException 
+	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws javax.security.cert.CertificateException, CertificateException, IOException 
 	{
 	    String data = doc.toString();
 	    String servercert = doc.getElementsByTagName(tagname).item(0).getTextContent();
 	    servercert = servercert.replace("-----BEGIN CERTIFICATE-----", "");
 	    servercert = servercert.replace("-----END CERTIFICATE-----","");
 
-	    return X509Certificate.getInstance(Base64.decode(servercert));
+	    
+		InputStream is = new ByteArrayInputStream(Base64.decode(servercert));
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+	    X509Certificate cert = (X509Certificate)cf.generateCertificate(is);
+	    is.close();
+	    
+	    return cert;
+	    //return X509Certificate.getInstance(Base64.decode(servercert));
 	}
 	
 	public static Document XMLfromIS(InputStream is){

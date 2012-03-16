@@ -3,23 +3,8 @@ package com.client.certificate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.RSAKeyGenParameterSpec;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.cert.X509Certificate;
 
-import javax.security.cert.CertificateException;
-import javax.security.cert.X509Certificate;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -46,18 +31,18 @@ public class WebClientActivity extends Activity
         //this.getCertificate();
         //this.openConnection();
         
-//        try {
-//        	text.setText("Succes:\n");
-//        	text.append(GenCert.generateCertificate(this));
-//        } catch (Exception e) {
-//        	text.setText("Failure:\n");
-//
-//        	text.append(e.getClass().toString() + "\n");
-//        	text.append(e.getMessage() + "\n");
-//        }
+        try {
+        	text.setText("Succes:\n");
+        	text.append(GenCert.generateCertificate(this));
+        } catch (Exception e) {
+        	text.setText("Failure:\n");
+
+        	text.append(e.getClass().toString() + "\n");
+        	text.append(e.getMessage() + "\n");
+        }
         
         try {
-        	X509Certificate[] chain = GenCert.getData();
+        	X509Certificate[] chain = (X509Certificate[]) GenCert.getData(this);
 			text.setText(chain[1].getIssuerDN().getName() + "\n" + chain[1].getSubjectDN().getName());
 		} catch (Exception e) {
 			text.setText(e.getClass().getName());
