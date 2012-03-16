@@ -13,6 +13,7 @@ import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
 import org.apache.http.HttpResponse; 
@@ -47,26 +48,26 @@ public class AndroidHttpClientCertificate
 	{
 		try
 		{
-			KeyStore keystore = KeyStore.getInstance("BKS"); // BKS  - PKCS12
+			KeyStore keystore = KeyStore.getInstance("BKS"); // BKS - PKCS12
 			//InputStream in = context.getResources().openRawResource(R.raw.vincent1331085321077);
 
 			//Read file in Internal Storage
-		    FileInputStream in = null;	
-		    try
-		    {
-		    	in = context.openFileInput("client_certificate.bks");
-		    } 
-		    catch (FileNotFoundException e) 
-		    {
-		    	Log.e("client", "Cert error: " + e.getMessage());
-		    }
-		    
-		    // load client certificate		    
-			try 
+			FileInputStream in = null;
+			try
+			{
+				in = context.openFileInput("keystore");
+			}
+			catch (FileNotFoundException e)
+			{
+				Log.e("client", "Cert error: " + e.getMessage());
+			}
+
+			// load client certificate
+			try
 			{
 				keystore.load(in, "password".toCharArray());
-			} 
-			finally 
+			}
+			finally
 			{
 				if(in != null)
 				{
@@ -78,21 +79,21 @@ public class AndroidHttpClientCertificate
 				}
 			}
 			Log.i("client", "Loaded client certifcates: " + keystore.size());
-			
+
 			Enumeration<String> aliases = keystore.aliases();
 			while (aliases.hasMoreElements())
 			{
 				String alias = (String) aliases.nextElement();
-				
+
 				Certificate cert = keystore.getCertificate(alias);
 				Log.i("client", "Cert alias: " + alias + " \nCert Type: " + cert.getType() + "\nPublic key:\n" + cert.getPublicKey().toString() + "Public key Algorithm: " + cert.getPublicKey().getAlgorithm());
 			}
-			
 			// initialize key manager factory with the read client certificate
-			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("BKS");
 			keyManagerFactory.init(keystore, "password".toCharArray());
-						
-			return new AndroidSSLSocketFactory(keyManagerFactory.getKeyManagers());
+			
+			KeyManager[] managers = keyManagerFactory.getKeyManagers();
+			return new AndroidSSLSocketFactory(managers);
 		} catch (Exception e) {
 			Log.e("client", "SSL error:" + e.getMessage());
 			throw new AssertionError(e);

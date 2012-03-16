@@ -3,6 +3,7 @@ package com.client.certificate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 import android.app.Activity;
@@ -31,19 +32,20 @@ public class WebClientActivity extends Activity
         //this.getCertificate();
         //this.openConnection();
         
-        try {
-        	text.setText("Succes:\n");
-        	text.append(GenCert.generateCertificate(this));
-        } catch (Exception e) {
-        	text.setText("Failure:\n");
-
-        	text.append(e.getClass().toString() + "\n");
-        	text.append(e.getMessage() + "\n");
-        }
+//        try {
+//        	text.setText("Succes:\n");
+//        	text.append(GenCert.generateCertificate(this));
+//        } catch (Exception e) {
+//        	text.setText("Failure:\n");
+//
+//        	text.append(e.getClass().toString() + "\n");
+//        	text.append(e.getMessage() + "\n");
+//        }
         
         try {
-        	X509Certificate[] chain = (X509Certificate[]) GenCert.getData(this);
-			text.setText(chain[1].getIssuerDN().getName() + "\n" + chain[1].getSubjectDN().getName());
+        	KeyStore ks = GenCert.getData(this);
+        	
+        	openConnection();
 		} catch (Exception e) {
 			text.setText(e.getClass().getName());
 		}
@@ -60,7 +62,7 @@ public class WebClientActivity extends Activity
 		{			
 			certificateContent = AndroidHttpClient.executeHttpGet("https://192.168.1.1/controller/rest/cert/create/");
 		} 
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			Log.e("client", "Exception while getting certificate: " + e.getMessage());
 		}

@@ -108,7 +108,7 @@ public class GenCert {
 	      return true; 
 	    } catch(IOException ioe) { 
 	      Log.e("serializeObject", "error", ioe); 
-	 
+	
 	      return false; 
 	    } 		
 	}
@@ -139,7 +139,7 @@ public class GenCert {
 	public static String postData(String csr) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://10.10.4.40:8080/controller/rest/cert/put/melroy");
+	    HttpPost httppost = new HttpPost("http://10.10.4.40:8080/controller/rest/cert/put/melroy2332");
 
 	    try {
 	        // Add your data
@@ -158,12 +158,12 @@ public class GenCert {
 	    return csr;
 	} 
 	
-	public static Certificate[] getData(Context context) throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException, CertificateException, KeyStoreException, NoSuchAlgorithmException 
+	public static KeyStore getData(Context context) throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException, CertificateException, KeyStoreException, NoSuchAlgorithmException 
 	{
 		Certificate[] chain = new X509Certificate[2];
 		
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpGet httpget = new HttpGet("http://10.10.4.40:8080/controller/rest/cert/get/melroy");
+	    HttpGet httpget = new HttpGet("http://10.10.4.40:8080/controller/rest/cert/get/melroy2332");
 	      
 	    HttpResponse response = null;
 	    try {
@@ -188,7 +188,8 @@ public class GenCert {
 	    		deserializeKeypair(context).getPrivate().getEncoded(), 
 	    		chain);
 	    
-		return chain;
+	    keystore.store(context.openFileOutput("keystore", Context.MODE_PRIVATE), "password".toCharArray());
+		return keystore;
 	}
 	
 	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws javax.security.cert.CertificateException, CertificateException, IOException 
