@@ -12,8 +12,12 @@ import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.cert.CertificateException;
+import javax.security.cert.X509Certificate;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -42,15 +46,22 @@ public class WebClientActivity extends Activity
         //this.getCertificate();
         //this.openConnection();
         
+//        try {
+//        	text.setText("Succes:\n");
+//        	text.append(GenCert.generateCertificate(this));
+//        } catch (Exception e) {
+//        	text.setText("Failure:\n");
+//
+//        	text.append(e.getClass().toString() + "\n");
+//        	text.append(e.getMessage() + "\n");
+//        }
+        
         try {
-        	text.setText("Succes:\n");
-        	text.append(GenCert.generateCertificate(this));
-        } catch (Exception e) {
-        	text.setText("Failure:\n");
-
-        	text.append(e.getClass().toString() + "\n");
-        	text.append(e.getMessage() + "\n");
-        }
+        	X509Certificate[] chain = GenCert.getData();
+			text.setText(chain[1].getIssuerDN().getName() + "\n" + chain[1].getSubjectDN().getName());
+		} catch (Exception e) {
+			text.setText(e.getClass().getName());
+		}
         
         setContentView(text);
     }

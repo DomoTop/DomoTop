@@ -83,8 +83,45 @@ public class GenCert {
 		
 		Log.d("client", new String(Base64.encode(kpGen.getDEREncoded())));
 		
+		serializeKeypair(context, keypair);
+		
 		String basecert = new String(Base64.encode(kpGen.getDEREncoded()));
 		return postData(basecert);
+	}
+	
+	public static boolean serializeKeypair(Context context, KeyPair keypair) 
+	{	
+		try { 
+	      FileOutputStream output = context.openFileOutput("keypair", Context.MODE_PRIVATE);
+
+	      ObjectOutput out = new ObjectOutputStream(output); 
+	      out.writeObject(keypair); 
+	      out.close(); 
+	 
+	      // Get the bytes of the serialized object 
+	 
+	      return true; 
+	    } catch(IOException ioe) { 
+	      Log.e("serializeObject", "error", ioe); 
+	 
+	      return false; 
+	    } 		
+	}
+	
+	public static KeyPair deserializeKeypair(Context context) {
+		KeyPair keypair = null;
+		try {
+			FileInputStream input = context.openFileInput("keypair");
+			ObjectInputStream in = new ObjectInputStream(input);
+			
+			keypair = (KeyPair) in.readObject();
+		} catch (IOException e) {
+			Log.e("client", e.getMessage());
+		} catch (ClassNotFoundException e) {
+			Log.e("client", e.getMessage());
+		}
+		
+		return keypair;
 	}
    
 	public static String getAccount(Context context)
@@ -115,5 +152,66 @@ public class GenCert {
 	    }
 	    return csr;
 	} 
+	
+	public static X509Certificate[] getData() throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException {
+		X509Certificate[] chain = new X509Certificate[2];
+		
+	    HttpClient httpclient = new DefaultHttpClient();
+	    HttpGet httpget = new HttpGet("http://10.10.4.40:8080/controller/rest/cert/get/melroy");
+	      
+	    HttpResponse response = null;
+	    try {
+			response = httpclient.execute(httpget);
+		} catch (ClientProtocolException e) {
+			Log.e("client", e.getMessage());
+		} catch (IOException e) {
+			Log.e("client", e.getMessage());
+		}
+	    
+	    Document doc = XMLfromIS(response.getEntity().getContent());
+	    String data = doc.toString();
+	    String servercert = doc.getElementsByTagName("server").item(0).getTextContent();
+	    servercert = servercert.replace("-----BEGIN CERTIFICATE-----", "");
+	    servercert = servercert.replace("-----END CERTIFICATE-----","");
+
+	    chain[0] = certificateFromDocument(doc, "server");
+	    chain[1] = certificateFromDocument(doc, "client");
+	    
+		return chain;
+	}
+	
+	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws javax.security.cert.CertificateException 
+	{
+	    String data = doc.toString();
+	    String servercert = doc.getElementsByTagName(tagname).item(0).getTextContent();
+	    servercert = servercert.replace("-----BEGIN CERTIFICATE-----", "");
+	    servercert = servercert.replace("-----END CERTIFICATE-----","");
+
+	    return X509Certificate.getInstance(Base64.decode(servercert));
+	}
+	
+	public static Document XMLfromIS(InputStream is){
+
+		Document doc = null;
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	
+        try {
+			DocumentBuilder db = dbf.newDocumentBuilder();
+		    doc = db.parse(is); 
+		} catch (ParserConfigurationException e) {
+			System.out.println("XML parse error: " + e.getMessage());
+			return null;
+		} catch (SAXException e) {
+			System.out.println("Wrong XML file structure: " + e.getMessage());
+            return null;
+		} catch (IOException e) {
+			System.out.println("I/O exeption: " + e.getMessage());
+			return null;
+		}
+
+        return doc;
+
+	}
 
 }
