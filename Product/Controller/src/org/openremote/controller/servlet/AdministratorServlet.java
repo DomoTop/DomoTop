@@ -109,7 +109,7 @@ public class AdministratorServlet extends HttpServlet
      
      try
      {        
-        printWriter.print(setListInTemplate(clientListService.getClientList("/usr/share/tomcat6")));
+        printWriter.print(setListInTemplate(clientListService.getClientList()));
         response.setStatus(200);
      }
      catch (NullPointerException e)
