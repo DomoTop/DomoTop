@@ -6,9 +6,11 @@
         <property name="mappings">
             <props>
                 <prop key="config.htm">configManageController</prop>
+                <prop key="admin.htm">administratorController</prop>
                 <prop key="monitor.htm">monitorController</prop>
             </props>
         </property>
+        
     </bean>
 
     <bean id="propertyConfigurer"
@@ -58,7 +60,8 @@
 	
 	<bean id="configManageController" class="org.openremote.controller.action.ConfigManageController" />
 	
+	<bean id="administratorController" class="org.openremote.controller.action.AdministratorController" />
+		
 	<bean id="monitorController" class="org.openremote.controller.action.MonitorController" />
-	
 
 </beans>

@@ -1,13 +1,15 @@
 <HTML>
 <HEAD>
-<TITLE>OpenRemote User Management</TITLE>
+<TITLE>OpenRemote Administrator Panel</TITLE>
 <link href="image/OpenRemote_Logo16x16.png" rel="shortcut icon"/>
 <link href="image/OpenRemote_Logo16x16.png" type="image/png" rel="icon"/>
 <META http-equiv=Content-Type content="text/html; charset=UTF-8">
 <link type="text/css" href="css/index.css" rel="stylesheet" />
+<link type="text/css" href="css/admin.css" rel="stylesheet" />
 <script type="text/javascript" src="jslib/jquery-1.3.1.min.js"></script>
 <script type="text/javascript" src="jslib/jquery.form-2.24.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/admin.js"></script>
 </HEAD>
 <BODY style="TABLE-LAYOUT: fixed; WORD-BREAK: break-all" topMargin=10
 	marginwidth="10" marginheight="10">
@@ -37,32 +39,38 @@
 					<TR>
 						<TD align=left colSpan=5 height=150>
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
-							<p class="welcome">OpenRemote User Management</p>
-							<p>Select the user that you want to give or remove access by clicking on the icon below the activated column.<br /></p>
-							<p><i>Users:</i><br /></p>
+							<p class="welcome">OpenRemote Administrator Panel</p>
+							<p id="errMsg" class="errMsg" />
+							<p id="msg" class="msg" />
+							<p><i>User Management:</i><br /></p>
 
 							<TABLE cellSpacing=0 cellPadding=0 width=600 align="center" bgColor=#ffffff border=0>
 							<TBODY>
 								<TR>
-									<th align="left">Username</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Activated</th><th align="left">Group</th>
+									<th align="left">Username</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
 								</TR>
 								<#list clients as client>
 								<TR>
 									<TD>${client.name}</TD><TD>${client.email}</TD><TD>${client.pinCode}</TD>
 									<TD>
-										<#if client.active>											
-									  	<a href="#deny"><img src="image/accept.gif" alt="Accepted" border=0 /></a>
+										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
+										<input type="hidden" name="clientid" value="${client.id}" />
+										<input type="hidden" name="clientfile" value="${client.fileName}" />
+										<#if client.active>
+											<input type="hidden" name="status" value="accept" />
+											<input type="submit" id="${client.id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
 										<#else>
-											<a href="#accept"><img src="image/denied.gif" alt="Denied" border=0 /></a>
+											<input type="hidden" name="status" value="deny" />
+											<input type="submit" id="${client.id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
 										</#if>
+										</form>
 									</TD>
-									<TD>		
-										${client.groupName}							
+									<TD>							
 										<select name="group">
-											<option value="">No group</option>
-											<option value="admin">Administrator</option>
-											<option value="parent">Parent</option>
-											<option value="child">Childeren</option>
+											<option value="">No Group</option>
+											<option<#if client.groupName == 'admin'> selected</#if> value="admin">Administrator</option>
+											<option<#if client.groupName == 'parent'> selected</#if> value="parent">Parent</option>
+											<option<#if client.groupName == 'child'> selected</#if> value="child">Childeren</option>
 										</select>
 									</TD>
 								</TR>

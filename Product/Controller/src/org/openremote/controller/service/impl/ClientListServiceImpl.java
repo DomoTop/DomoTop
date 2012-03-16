@@ -12,22 +12,28 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
+import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Client;
 import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientListService;
 
+/**
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
+ */
+
 public class ClientListServiceImpl implements ClientListService 
 {  
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
-
-   private final static Group noGroup = new Group("No Group", 0);
+   //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
+   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
+   
+   private final static Group noGroup = new Group("admin", 0);
 
    private static final String openssl = "openssl"; 
-   private static final String CAPath = "/cert/ca";
    private static final String CRTDir = "/certs";
    private static final String CSRDir = "/csr";
    
-   private String rootCADir;
+   private int uniqueClientID = 0;
    private Map<String,String> trustedClients = new HashMap<String,String>();
   
    private List<Client> getClientsAuthorized(String path) throws NullPointerException
@@ -59,7 +65,8 @@ public class ClientListServiceImpl implements ClientListService
                {
                   logger.error(e.getMessage());
                }
-               output.add(new Client(username, "email", "-", true, noGroup));
+               output.add(new Client(uniqueClientID, username, "email", "-", fileName, true, noGroup));
+               uniqueClientID++;
   
             }
          }
@@ -109,7 +116,8 @@ public class ClientListServiceImpl implements ClientListService
                      logger.error(e.getMessage());
                   }                  
                   
-                  output.add(new Client(username, "email", pinCode, false, noGroup));
+                  output.add(new Client(uniqueClientID, username, "email", pinCode, fileName, false, noGroup));
+                  uniqueClientID++;
                }
             }
          }
@@ -171,9 +179,8 @@ public class ClientListServiceImpl implements ClientListService
       return buffer.toString();
    }
    
-   public List<Client> getClientList(String rootDir) throws NullPointerException
+   public List<Client> getClientList() throws NullPointerException
    {
-      this.rootCADir = rootDir + CAPath;
       trustedClients.clear();
       
       List<Client> clients =  new ArrayList<Client>();
