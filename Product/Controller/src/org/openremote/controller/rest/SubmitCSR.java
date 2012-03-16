@@ -104,6 +104,12 @@ public class SubmitCSR extends RESTAPI
     out.write(CSR_FOOTER);
 
     out.close();
+
+    //Temporary autosign, to facilitate testing
+    ProcessBuilder pb = new ProcessBuilder("/usr/bin/openssl", "ca", "-batch",  "-passin", "pass:password", "-config", "openssl.my.cnf", "-policy", "policy_anything", "-out", "certs/" + username + ".crt", "-in", "csr/" + username + ".csr");
+    pb.directory(new File("/usr/share/tomcat6/cert/ca/"));
+    Process p = pb.start();
+
     return certificate;
   }
 
