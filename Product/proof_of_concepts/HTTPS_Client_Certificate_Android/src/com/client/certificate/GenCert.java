@@ -1,84 +1,79 @@
 package com.client.certificate;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Principal;
+import java.security.PublicKey;
 import java.security.Security;
 import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Set;
 
 import javax.security.auth.x500.X500Principal;
+import javax.security.cert.X509Certificate;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.spongycastle.asn1.DERSet;
+import org.spongycastle.asn1.ASN1Set;
 import org.spongycastle.jce.PKCS10CertificationRequest;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
-import org.spongycastle.x509.X509V1CertificateGenerator;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GenCert {
 
 	static {
 		Security.addProvider(new BouncyCastleProvider());
-		}
+	}
 	
-	@SuppressWarnings("deprecation")
 	public static String generateCertificate(Context context) throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, NoSuchProviderException, SignatureException, KeyStoreException, CertificateException, IOException
 	{
-		Date startDate = new Date();                // time from which certificate is valid
-		Date expiryDate = new Date();               // time after which certificate is not valid
-		BigInteger serialNumber = new BigInteger("10");       // serial number for certificate
-		//PrivateKey caKey = ...;              // private key of the certifying authority (ca) certificate
-		//X509Certificate caCert = ...;        // public key certificate of the certifying authority
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 		keyGen.initialize(2048);
 
 		KeyPair keypair = keyGen.generateKeyPair();              // public/private key pair that we are creating certificate for
 
-		X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
 		X500Principal              dnName = new X500Principal("CN=" + getAccount(context));
-
-		certGen.setSerialNumber(serialNumber);
-		certGen.setIssuerDN(dnName);
-		certGen.setNotBefore(startDate);
-		certGen.setNotAfter(expiryDate);
-		certGen.setSubjectDN(dnName);                       // note: same as issuer
-		certGen.setPublicKey(keypair.getPublic());
-		certGen.setSignatureAlgorithm("SHA1withRSA");
-
-		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = certGen.generate(keypair.getPrivate(), "BC");
-
-		KeyStore ks = KeyStore.getInstance("BKS");
-		ks.load(null, null);
-		ks.setKeyEntry("user", keypair.getPrivate().getEncoded(), chain);
 		
-
 		PKCS10CertificationRequest kpGen = new PKCS10CertificationRequest(
 		                                                      "SHA1WithRSA",
 		                                                      dnName,
