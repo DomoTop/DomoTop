@@ -1,17 +1,14 @@
 package com.client.certificate;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -20,23 +17,16 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.Principal;
-import java.security.PublicKey;
 import java.security.Security;
 import java.security.SignatureException;
-import java.security.cert.CertificateEncodingException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.security.auth.x500.X500Principal;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,7 +40,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.spongycastle.asn1.ASN1Set;
 import org.spongycastle.jce.PKCS10CertificationRequest;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
@@ -62,7 +51,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 public class GenCert {
 
@@ -75,10 +63,14 @@ public class GenCert {
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 		keyGen.initialize(2048);
 
-		KeyPair keypair = keyGen.generateKeyPair();              // public/private key pair that we are creating certificate for
+		KeyPair keypair = deserializeKeypair(context);
+		if(keypair == null)
+		{
+			keypair = keyGen.generateKeyPair(); // public/private key pair that we are creating certificate for
+			serializeKeypair(context, keypair);
+		}
 
 		X500Principal              dnName = new X500Principal("CN=" + getAccount(context));
-		
 		PKCS10CertificationRequest kpGen = new PKCS10CertificationRequest(
 		                                                      "SHA1WithRSA",
 		                                                      dnName,
@@ -86,9 +78,7 @@ public class GenCert {
 		                                                      null,
 		                                                      keypair.getPrivate());
 		
-		Log.d("client", new String(Base64.encode(kpGen.getDEREncoded())));
-		
-		serializeKeypair(context, keypair);
+		Log.d("client", "Private key CSR: " + new String(keypair.getPrivate().getEncoded()));
 		
 		String basecert = new String(Base64.encode(kpGen.getDEREncoded()));
 		return postData(basecert);
@@ -97,6 +87,15 @@ public class GenCert {
 	public static boolean serializeKeypair(Context context, KeyPair keypair) 
 	{	
 		try { 
+			File dir = context.getFilesDir();
+			File file = new File(dir, "keypair");
+			
+			if(file != null)
+			{
+				boolean deleted = file.delete();
+				Log.d("client", "Cert file deleted:" + deleted);
+			}
+			
 	      FileOutputStream output = context.openFileOutput("keypair", Context.MODE_PRIVATE);
 
 	      ObjectOutput out = new ObjectOutputStream(output); 
@@ -139,7 +138,7 @@ public class GenCert {
 	public static String postData(String csr) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://10.10.4.40:8080/controller/rest/cert/put/melroy2332");
+	    HttpPost httppost = new HttpPost("http://10.10.4.31:8080/controller/rest/cert/put/vincent6");
 
 	    try {
 	        // Add your data
@@ -158,47 +157,53 @@ public class GenCert {
 	    return csr;
 	} 
 	
-	public static KeyStore getData(Context context) throws IllegalStateException, IOException, DOMException, javax.security.cert.CertificateException, CertificateException, KeyStoreException, NoSuchAlgorithmException 
+	public static KeyStore getData(Context context) throws IllegalStateException, IOException, DOMException, CertificateException, KeyStoreException, NoSuchAlgorithmException 
 	{
-		Certificate[] chain = new X509Certificate[2];
-		
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpGet httpget = new HttpGet("http://10.10.4.40:8080/controller/rest/cert/get/melroy2332");
-	      
-	    HttpResponse response = null;
-	    try {
-			response = httpclient.execute(httpget);
-		} catch (ClientProtocolException e) {
-			Log.e("client", e.getMessage());
-		} catch (IOException e) {
-			Log.e("client", e.getMessage());
+		KeyStore keystore = KeyStore.getInstance("BKS");
+		File dir = context.getFilesDir();
+		File file = new File(dir, "keystore.bks");
+		if(file.exists()) {
+			keystore.load(context.openFileInput("keystore.bks"), "password".toCharArray());
+		} else {
+			Certificate[] chain = new X509Certificate[2];
+			
+		    HttpClient httpclient = new DefaultHttpClient();
+		    HttpGet httpget = new HttpGet("http://10.10.4.31:8080/controller/rest/cert/get/vincent6");
+		      
+		    HttpResponse response = null;
+		    try {
+				response = httpclient.execute(httpget);
+			} catch (ClientProtocolException e) {
+				Log.e("client", e.getMessage());
+			} catch (IOException e) {
+				Log.e("client", e.getMessage());
+			}
+		    
+		    Document doc = XMLfromIS(response.getEntity().getContent());
+		    
+		    chain[0] = certificateFromDocument(doc, "client");
+		    chain[1] = certificateFromDocument(doc, "server");
+		    keystore = KeyStore.getInstance("BKS");
+		    keystore.load(null, null);
+		    KeyPair kp = deserializeKeypair(context);
+		    
+			Log.d("client", "Private key CRT: " + new String(kp.getPrivate().getEncoded()));
+		    
+		    keystore.setKeyEntry("user", 
+		    		kp.getPrivate(),
+		    		"password".toCharArray(),
+		    		chain);
+		    
+		    keystore.store(context.openFileOutput("keystore.bks", Context.MODE_PRIVATE), "password".toCharArray());
 		}
-	    
-	    Document doc = XMLfromIS(response.getEntity().getContent());
-	    String data = doc.toString();
-	    String servercert = doc.getElementsByTagName("server").item(0).getTextContent();
-	    servercert = servercert.replace("-----BEGIN CERTIFICATE-----", "");
-	    servercert = servercert.replace("-----END CERTIFICATE-----","");
-
-	    chain[0] = certificateFromDocument(doc, "server");
-	    chain[1] = certificateFromDocument(doc, "client");
-	    KeyStore keystore = KeyStore.getInstance("BKS");
-	    keystore.load(null, null);
-	    keystore.setKeyEntry("user", 
-	    		deserializeKeypair(context).getPrivate().getEncoded(), 
-	    		chain);
-	    
-	    keystore.store(context.openFileOutput("keystore", Context.MODE_PRIVATE), "password".toCharArray());
 		return keystore;
 	}
 	
-	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws javax.security.cert.CertificateException, CertificateException, IOException 
+	public static X509Certificate certificateFromDocument(Document doc, String tagname) throws CertificateException, IOException 
 	{
-	    String data = doc.toString();
 	    String servercert = doc.getElementsByTagName(tagname).item(0).getTextContent();
 	    servercert = servercert.replace("-----BEGIN CERTIFICATE-----", "");
 	    servercert = servercert.replace("-----END CERTIFICATE-----","");
-
 	    
 		InputStream is = new ByteArrayInputStream(Base64.decode(servercert));
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -210,9 +215,7 @@ public class GenCert {
 	}
 	
 	public static Document XMLfromIS(InputStream is){
-
 		Document doc = null;
-
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	
         try {
@@ -228,9 +231,7 @@ public class GenCert {
 			System.out.println("I/O exeption: " + e.getMessage());
 			return null;
 		}
-
         return doc;
-
 	}
 
 }
