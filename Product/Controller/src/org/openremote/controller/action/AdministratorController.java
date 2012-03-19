@@ -114,9 +114,9 @@ public class AdministratorController extends MultiActionController {
             }
          }         
       } catch (NullPointerException e) {
-         response.getWriter().print("nullpointer");
+         response.getWriter().print("nullpointer: " + e.getMessage());
       } catch (InterruptedException e) {
-         response.getWriter().print("interrupt");
+         response.getWriter().print("interrupt: " + e.getMessage());
       }
       return null;
    }
