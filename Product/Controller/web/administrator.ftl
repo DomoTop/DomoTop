@@ -57,11 +57,11 @@
 										<input type="hidden" name="clientid" value="${client.id}" />
 										<input type="hidden" name="clientfile" value="${client.fileName}" />
 										<#if client.active>
-											<input type="hidden" name="status" value="accept" />
-											<input type="submit" id="${client.id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
+											<input type="hidden" id="action${client.id}" name="action" value="deny" />
+											<input type="submit" id="submit${client.id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
 										<#else>
-											<input type="hidden" name="status" value="deny" />
-											<input type="submit" id="${client.id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
+											<input type="hidden" id="action${client.id}" name="action" value="accept" />
+											<input type="submit" id="submit${client.id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
 										</#if>
 										</form>
 									</TD>

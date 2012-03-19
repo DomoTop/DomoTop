@@ -24,16 +24,37 @@ $(document).ready(function() {
   	var resultArray = result.split("-");
   	var resultString = resultArray[0];
   	var resultID = resultArray[1];
+  	var resultAction = resultArray[2];
   	
   	if (resultString == 'OK') {
-			message("User status changed successfully with user id: " + resultID);
-  	} else if (resultString == 'timeout') {
-			error("User status request timed out.");
-  	} else if (resultString == 'error') {
-  		error("Error..?");
+			message("User status changed successfully.");
+			
+			if(resultAction == 'accept')
+			{
+				changeValueById(resultID, "deny");
+				changeBackgroundByID(resultID, "image/accept.gif");				
+			
+			}
+			else if(resultAction == 'deny')
+			{
+				changeValueById(resultID, "accept");
+				changeBackgroundByID(resultID, "image/denied.gif");			
+			}
 		} else {
 			error("User status is unsuccessfully: " + result);
 		}
   });   
   
 });
+
+// Changes the background image of the submit element
+function changeBackgroundByID(id, image)
+{
+	document.getElementById("submit" + id).style.backgroundImage = "url(" + image + ")";
+}
+
+// Changes the value of the action input element
+function changeValueById(id, value)
+{
+	document.getElementById("action" + id).value = value;
+}
