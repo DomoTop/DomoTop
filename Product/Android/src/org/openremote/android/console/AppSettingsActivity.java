@@ -235,6 +235,8 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 
     final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
+    
+    final Button generateCertification = (Button)findViewById(R.id.ssl_clientcert_generation);
 
     // Configure UI to current settings state...
 
@@ -281,7 +283,15 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
 
-
+    generateCertification.setOnClickListener(
+    	new OnClickListener() {
+		
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+    
     // ...
 
 

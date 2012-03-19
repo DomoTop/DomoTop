@@ -42,5 +42,31 @@
 		android:hint="8443"
 		android:singleLine="true"/>
 	</TableRow>
+	<TableRow android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10px">
+		<TextView android:text="@string/ssl_clientcert"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_weight="1.0"/>
+		<ToggleButton android:id="@+id/ssl_clientcert_toggle"
+		android:layout_width="150px"
+		android:layout_height="wrap_content" 
+		android:singleLine="true" />
+	</TableRow>
+	<TableRow android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10px">
+		<TextView 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_weight="1.0"/>
+		<Button android:id="@+id/ssl_clientcert_generation"
+		android:text="@string/ssl_clientcert_gen"
+		android:layout_width="150px"
+		android:layout_height="wrap_content" 
+		android:singleLine="true" />
+	</TableRow>
+	
 
 </LinearLayout>

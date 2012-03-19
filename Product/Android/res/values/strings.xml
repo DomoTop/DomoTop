@@ -25,5 +25,7 @@
     <string name="password">Password:</string>
     <string name="ssl">SSL:</string>
     <string name="ssl_port">Port:</string>
+    <string name="ssl_clientcert">Authentication:</string>
+    <string name="ssl_clientcert_gen">Generate</string>
     <string name="default_loading_text">Loading resources...</string>
 </resources>
