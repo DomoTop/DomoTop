@@ -16,22 +16,22 @@ import org.openremote.android.console.Constants;
 import android.content.Context;
 import android.util.Log;
 
-public class MyKeyStore {
+public class MyKeyPair {
 
 	// Constants ------------------------------------------------------------------------------------
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyStore.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	
 	private static final String KEYPAIR_FILE = "keypair";
 	private static final int KEYPAIR_SIZE = 2048;
 	private static final String KEYPAIR_ALGORITHM = "RSA";
-	
+
 	/**
 	 * Generates a KeyPair to be used in a certificate, this KeyPair is generated the first time 
 	 * and then serialized. It will return the just one KeyPair, which is never deleted.
 	 * @param context The current application context
 	 * @return A KeyPair 
 	 */
-	public KeyPair getKeyPair(Context context)
+	public static KeyPair getKeyPair(Context context)
 	{
 		KeyPairGenerator keyGen = null;
 		try {
