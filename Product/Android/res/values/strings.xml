@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenRemote</string>
+    <string name="app_version">2.0.0 Beta2</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="quit">Quit</string>
+    <string name="back">Back</string>
+    <string name="configure">Configure</string>
+    <string name="config_file_at">Config file at </string>
+    <string name="has_an_error">has an error.</string>
+    <string name="error_connecting_to">Error connecting to server while fetching URL: </string>
+    <string name="activities">Activities</string>
+    <string name="enter_device_url">Enter Controller URL (i.e. 192.168.1.1:8080/controller):</string>
+    <string name="save">Save</string>
+    <string name="settings">Settings</string>
+    <string name="text_auto">AutoDiscovery:</string>
+    <string name="button_auto">Toggle</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="setting">Setting</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="ssl">SSL:</string>
+    <string name="ssl_port">Port:</string>
+    <string name="default_loading_text">Loading resources...</string>
+</resources>
