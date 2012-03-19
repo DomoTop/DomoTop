@@ -1,13 +1,25 @@
 package org.openremote.android.console.ssl;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.security.auth.x500.X500Principal;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.openremote.android.console.Constants;
 import org.spongycastle.jce.PKCS10CertificationRequest;
 import org.spongycastle.util.encoders.Base64;
@@ -21,6 +33,8 @@ public class CertificationRequest {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
+	
+	private static final String TEMP_CN = "Vinnie";
 	
 	/**
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
@@ -71,5 +85,35 @@ public class CertificationRequest {
 		}
 		
 		return kpGen;
+	}
+	
+	/**
+	 * Generate a certification request and submit it to the server, where it can be approved or disproved.
+	 * @param context The current application context
+	 * @param host The host to send CSR to
+	 * @param port The port to send CSR to 
+	 * @return The HTTP status code of the request or -1 if something local has gone wrong
+	 */
+	public static int submitCertificationRequest(Context context, String host, int port)
+	{
+	    HttpClient httpclient = new DefaultHttpClient();
+	    HttpPost httppost = new HttpPost(host + ":" + port + "/controller/rest/cert/put/" + TEMP_CN);
+
+	    try {
+	    	String csr = getCertificationRequestAsBase64(context, TEMP_CN);
+	    	
+	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+	        nameValuePairs.add(new BasicNameValuePair("csr", URLEncoder.encode(csr)));
+	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+	        // Execute HTTP Post Request
+	        HttpResponse response = httpclient.execute(httppost);
+	        return response.getStatusLine().getStatusCode();
+	    } catch (ClientProtocolException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+	    } catch (IOException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+	    }
+	    return -1;
 	}
 }
