@@ -48,9 +48,7 @@ public class CertificationRequest {
 	public static String getCertificationRequestAsBase64(Context context, String commonName)
 	{
 		String basecert = new String(Base64.encode(getCertificationRequest(context, commonName).getDEREncoded()));
-		
-		//TODO NewLine every 65 characters
-		
+				
 		return basecert;
 	}
 	
