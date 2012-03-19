@@ -55,7 +55,8 @@ public class ClientListServiceImpl implements ClientListService
                trustedClients.put(userName, fileName);              
                String message = executeOpenSSLCommand(path, fileName, true);
                
-               String username = "<i>Undefined</i>";
+               int serial = 0;
+               String username = "<i>Undefined</i>", serialString = "";
                try
                {
                   username = message.substring(message.indexOf("CN=") + 3);
@@ -65,9 +66,23 @@ public class ClientListServiceImpl implements ClientListService
                {
                   logger.error(e.getMessage());
                }
-               output.add(new Client(uniqueClientID, username, "email", "-", fileName, true, noGroup));
+               
+               try
+               {
+                  serialString = message.substring(message.indexOf("serial=") + 7);
+                  serialString = serialString.substring(0, serialString.indexOf("\n"));
+                  serial = Integer.parseInt(serialString);
+               }   
+               catch(IndexOutOfBoundsException e)
+               {
+                  logger.error(e.getMessage());
+               }
+               catch(NumberFormatException e)
+               {
+                  logger.error(e.getMessage() + " Serial: " + serialString);
+               }
+               output.add(new Client(uniqueClientID, serial, username, "email", "-", fileName, true, noGroup));
                uniqueClientID++;
-  
             }
          }
       }
@@ -93,7 +108,7 @@ public class ClientListServiceImpl implements ClientListService
                if(!trustedClients.containsKey(userName))
                {
                   String message = executeOpenSSLCommand(path, fileName, false);
-                  
+
                   String username = "<i>Undefined</i>";
                   try
                   {
@@ -116,7 +131,7 @@ public class ClientListServiceImpl implements ClientListService
                      logger.error(e.getMessage());
                   }                  
                   
-                  output.add(new Client(uniqueClientID, username, "email", pinCode, fileName, false, noGroup));
+                  output.add(new Client(uniqueClientID, 0, username, "email", pinCode, fileName, false, noGroup));
                   uniqueClientID++;
                }
             }

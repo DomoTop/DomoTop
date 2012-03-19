@@ -19,6 +19,7 @@
 */
 package org.openremote.controller.action;
 
+import java.awt.Panel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -52,52 +53,81 @@ public class AdministratorController extends MultiActionController {
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
    
-   private static final String openssl = "openssl"; 
-   private static final String CRTDir = "/certs";
-   private static final String CSRDir = "/csr";
+   private static final String openssl = "openssl";
+   private static final String rm = "rm";
+   private static final String CRTDir = "certs";
+   private static final String CSRDir = "csr";
 
    /**
     * Accept or deny user 
     */  
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
-      String status = request.getParameter("status");
+      String action = request.getParameter("action");
       String clientID = request.getParameter("clientid");
-      String clientFileName = request.getParameter("clientfile"); // @TODO: Get file name via id using a database
-      
-      boolean success = true;
-      try 
-      {         
-         if(status.equals("accept")) // trust
-         {
-            executeOpenSSLCommand(rootCADir + CSRDir, clientFileName, true);
-         }
-         else if(status.equals("deny")) // revoke
-         {
-            executeOpenSSLCommand(rootCADir + CRTDir, clientFileName, false);            
-         }
-         //success = fileService.syncConfigurationWithModeler(username, password);
+      String clientFileName = request.getParameter("clientfile"); // @TODO: Get file name via client id using a database
+      String clientUsername = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
 
-         response.getWriter().print(success ? Constants.OK + "-" + clientID : null);
-      } catch (ForbiddenException e) {
-         response.getWriter().print("forbidden");
-      } catch (BeehiveNotAvailableException e) {
-         response.getWriter().print("n/a");
-      } catch (ResourceNotFoundException e) {
-         response.getWriter().print("missing");
-      } catch (ControlCommandException e) {
-         response.getWriter().print(e.getMessage());
+      try 
+      {   
+         int result = -1;
+         if(action.equals("accept")) // trust
+         {
+            result = executeOpenSSLCommand(clientUsername, true);
+         }
+         else if(action.equals("deny")) // revoke
+         {
+            result = executeOpenSSLCommand(clientUsername, false);            
+         }
+
+         if(result == 0)
+         {
+            // @TODO: Add the serial ID to the database and use index.txt
+            // to get the right list in the administrator Panel.
+            
+            // If successfully revoked, than remove the certificate
+            if(action.equals("deny"))
+            {
+               if(executeDeleteCommand(clientUsername) == 0)
+               {
+                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
+               }
+               else
+               {
+                  response.getWriter().print("Certificate is successfully revoked, but couldn't be removed.");
+               }
+            }
+            else if(action.equals("accept"))
+            {
+               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
+            }
+         }
+         else
+         {
+            if(executeDeleteCommand(clientUsername) == 0)
+            {
+               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result);
+            }
+            else
+            {
+               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n<br/>Plus the certificate couldn't be removed.");
+            }
+         }         
+      } catch (NullPointerException e) {
+         response.getWriter().print("nullpointer");
+      } catch (InterruptedException e) {
+         response.getWriter().print("interrupt");
       }
       return null;
    }
    
-   private String executeOpenSSLCommand(String path, String fileName, boolean accept)
+   private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException, InterruptedException
    {
       List<String> command = new ArrayList<String>();
       command.add(openssl); // command
-      if(accept)
+      if(accept) // Signing
       {
-         command.add("ca"); // Signing
+         command.add("ca");
          command.add("-batch");
          command.add("-passin");
          command.add("pass:password");
@@ -106,12 +136,19 @@ public class AdministratorController extends MultiActionController {
          command.add("-policy");
          command.add("policy_anything");
          command.add("-out");
-         //command.add("certs/" + username + ".crt");      
+         command.add(CRTDir + "/" + username + ".crt");      
          command.add("-in"); 
-         //command.add("csr/" + username + ".csr");
+         command.add(CSRDir + "/" + username + ".csr");
       }
       else // revoke
       {
+         command.add("ca");
+         command.add("-passin");
+         command.add("pass:password");
+         command.add("-config");
+         command.add("openssl.my.cnf");
+         command.add("-revoke");
+         command.add(CRTDir + "/" + username + ".crt");        
       }
       
       ProcessBuilder pb = new ProcessBuilder(command);
@@ -119,24 +156,31 @@ public class AdministratorController extends MultiActionController {
 
       Process p = null;
       StringBuffer buffer = new StringBuffer();
-      try {
-         p = pb.start();
-         p.waitFor();
-         
-         BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-          
-         String line = null;
-         while ( (line = br.readLine()) != null) {
-             buffer.append(line).append("\n");
-         }
-         
-      } catch (IOException e) {
-         logger.error(e.getMessage());
-      } catch (InterruptedException e) {
-         logger.error(e.getMessage());
-      }
-      
-      return buffer.toString();
-   }
+
+      p = pb.start();
+      p.waitFor();
+      /*
+      BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+       
+      String line = null;
+      while ( (line = br.readLine()) != null) {
+          buffer.append(line).append("\n");
+      }*/
+      return p.exitValue();
+   }  
    
+   private int executeDeleteCommand(String username) throws NullPointerException, IOException, InterruptedException
+   {
+      List<String> command = new ArrayList<String>();
+      command.add(rm); // command
+      command.add(CRTDir + "/" + username + ".crt");
+      
+      ProcessBuilder pb = new ProcessBuilder(command);
+      pb.directory(new File(rootCADir));
+
+      Process p = null;
+      p = pb.start();
+      p.waitFor();
+      return p.exitValue();
+   }  
 }

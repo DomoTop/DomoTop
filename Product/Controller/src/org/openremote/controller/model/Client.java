@@ -2,14 +2,15 @@ package org.openremote.controller.model;
 
 public class Client {
    
-   private int id;
+   private int id, serial;
    private String name, email, pinCode, fileName;
    private boolean active;
    private Group group;
    
-   public Client(int id, String name, String email, String pinCode, String fileName, boolean active, Group group)
+   public Client(int id, int serial, String name, String email, String pinCode, String fileName, boolean active, Group group)
    {
       this.id = id;
+      this.serial = serial;
       this.name = name;
       this.email = email;
       this.pinCode = pinCode;
@@ -21,6 +22,11 @@ public class Client {
    public int getId()
    {
       return id;
+   }
+   
+   public int getSerial()
+   {
+      return serial;
    }
    
    public String getName()
