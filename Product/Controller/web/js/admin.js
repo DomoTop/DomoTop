@@ -25,6 +25,11 @@ $(document).ready(function() {
   	var resultString = resultArray[0];
   	var resultID = resultArray[1];
   	var resultAction = resultArray[2];
+  	var resultPinCode = 0;  	
+  	if(resultArray.length >= 4)
+  	{
+  		resultPinCode = resultArray[3];
+  	}
   	
   	if (resultString == 'OK') {
 			message("User status changed successfully.");
@@ -33,12 +38,13 @@ $(document).ready(function() {
 			{
 				changeValueById(resultID, "deny");
 				changeBackgroundByID(resultID, "image/accept.gif");				
-			
+				changePincodeById(resultID, "-");
 			}
 			else if(resultAction == 'deny')
 			{
 				changeValueById(resultID, "accept");
-				changeBackgroundByID(resultID, "image/denied.gif");			
+				changeBackgroundByID(resultID, "image/denied.gif");		
+				changePincodeById(resultID, resultPinCode);	
 			}
 		} else {
 			error("User status is unsuccessfully: " + result);
@@ -57,4 +63,10 @@ function changeBackgroundByID(id, image)
 function changeValueById(id, value)
 {
 	document.getElementById("action" + id).value = value;
+}
+
+// Changes the value of the pincode input element
+function changePincodeById(id, value)
+{
+	document.getElementById("pincode" + id).innerHTML = value;
 }
