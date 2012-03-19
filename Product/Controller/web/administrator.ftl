@@ -51,7 +51,7 @@
 								</TR>
 								<#list clients as client>
 								<TR>
-									<TD>${client.name}</TD><TD>${client.email}</TD><TD>${client.pinCode}</TD>
+									<TD>${client.name}</TD><TD>${client.email}</TD><TD><span id="pincode${client.id}">${client.pinCode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="clientid" value="${client.id}" />

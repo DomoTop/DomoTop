@@ -59,7 +59,9 @@ public class AdministratorController extends MultiActionController {
    private static final String CSRDir = "csr";
 
    /**
-    * Accept or deny user 
+    * Request handler for accepting or denying an user
+    * @param request HTTP servlet request
+    * @param response HTTP response to the servlet
     */  
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
@@ -88,9 +90,9 @@ public class AdministratorController extends MultiActionController {
             // If successfully revoked, than remove the certificate
             if(action.equals("deny"))
             {
-               if(executeDeleteCommand(clientUsername) == 0)
+               if(deleteCertificate(clientUsername))
                {
-                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
+                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + "getPinFromDatabase");
                }
                else
                {
@@ -104,13 +106,20 @@ public class AdministratorController extends MultiActionController {
          }
          else
          {
-            if(executeDeleteCommand(clientUsername) == 0)
+            if(action.equals("deny"))
             {
-               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result);
+               if(deleteCertificate(clientUsername))
+               {
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + "\n<br/>Certificate deleted.");
+               }
+               else
+               {
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n<br/>Plus the certificate couldn't be removed.");
+               }
             }
             else
             {
-               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n<br/>Plus the certificate couldn't be removed.");
+               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result);
             }
          }         
       } catch (NullPointerException e) {
@@ -121,6 +130,15 @@ public class AdministratorController extends MultiActionController {
       return null;
    }
    
+   /**
+    * Execute the OpenSSL command on command-line
+    * @param username
+    * @param accept true is for signing, false is to revoke a certificate
+    * @return the exit code of the command executed
+    * @throws NullPointerException
+    * @throws IOException
+    * @throws InterruptedException
+    */
    private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException, InterruptedException
    {
       List<String> command = new ArrayList<String>();
@@ -155,32 +173,39 @@ public class AdministratorController extends MultiActionController {
       pb.directory(new File(rootCADir));
 
       Process p = null;
-      StringBuffer buffer = new StringBuffer();
 
       p = pb.start();
       p.waitFor();
-      /*
-      BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-       
-      String line = null;
-      while ( (line = br.readLine()) != null) {
-          buffer.append(line).append("\n");
-      }*/
       return p.exitValue();
    }  
    
-   private int executeDeleteCommand(String username) throws NullPointerException, IOException, InterruptedException
-   {
-      List<String> command = new ArrayList<String>();
-      command.add(rm); // command
-      command.add(CRTDir + "/" + username + ".crt");
-      
-      ProcessBuilder pb = new ProcessBuilder(command);
-      pb.directory(new File(rootCADir));
 
-      Process p = null;
-      p = pb.start();
-      p.waitFor();
-      return p.exitValue();
+   private boolean deleteCertificate(String username) throws NullPointerException, IOException, InterruptedException
+   {
+      boolean retunvalue = true;
+      File file = new File(rootCADir + "/" + CRTDir + "/" + username + ".crt");
+      
+      if (!file.exists())
+      {
+         retunvalue = false;
+      }
+       
+      if (!file.canWrite())
+      {
+         retunvalue = false;
+      }
+
+      if (file.isDirectory()) 
+      {
+         retunvalue = false;
+      }
+
+      // Attempt to delete it
+      if(retunvalue)
+      {
+         retunvalue = file.delete();
+      }
+      
+      return retunvalue;
    }  
 }

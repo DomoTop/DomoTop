@@ -46,8 +46,8 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * This servlet is used to show the list of clients, manage clients 
- * (accept, deny, revoke and putting the client in a group)
+ * This servlet is used to show the list of clients, 
+ * manage the clients (accept, revoke and putting the client in a group)
  * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
  * 
@@ -63,7 +63,14 @@ public class AdministratorServlet extends HttpServlet
 
   private static ClientListService clientListService = (ClientListService) SpringContext.getInstance().getBean("clientListService");
 
-
+  
+  /**
+   * Transform a client list array into a HTML template.
+   * 
+   * @param clients List of Clients
+   * @return HTML formatted text in the administrator template
+   */
+  
   private String setListInTemplate(List<Client> clients)
   {
      Map<String, Object> root = new HashMap<String, Object>();
@@ -85,7 +92,13 @@ public class AdministratorServlet extends HttpServlet
      return result;
   }
 
-  // Process a template using FreeMarker and print the results
+  /**
+   *  Process a template using FreeMarker and print the results
+   * @param root HashMap with data
+   * @param template the name of the template file
+   * @return HTML template with the specified data
+   * @throws Exception FreeMarker exception
+   */
   static String freemarkerDo(Map root, String template) throws Exception
   {
      Configuration cfg = new Configuration();
@@ -101,6 +114,11 @@ public class AdministratorServlet extends HttpServlet
      return out.getBuffer().toString();
   }
   
+  /**
+   * Get request handler for the administrator URI
+   * @param request the request from HTTP servlet
+   * @param reponse where the respond can be written to
+   */  
   @Override 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException

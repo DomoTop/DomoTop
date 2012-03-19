@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
@@ -18,6 +22,10 @@ import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientListService;
 
 /**
+ * The ClientListService class generate the client list by getting the crt & csr files and
+ *  grep the information out the certificates.
+ *  The client list is used in AdministratorServlet.
+ * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
 
@@ -92,6 +100,10 @@ public class ClientListServiceImpl implements ClientListService
    private List<Client> getClientsNotAuthorized(String path) throws NullPointerException
    {
       String fileName, userName;
+      String username = "<i>Undefined</i>";
+      String pinCode = "<i>Undefined</i>";
+      String publicKey = "";
+      
       List<Client> output = new ArrayList<Client>();
       File[] listOfFiles = this.getListFromPath(path);
      
@@ -108,8 +120,8 @@ public class ClientListServiceImpl implements ClientListService
                if(!trustedClients.containsKey(userName))
                {
                   String message = executeOpenSSLCommand(path, fileName, false);
-
-                  String username = "<i>Undefined</i>";
+                                    
+                  
                   try
                   {
                      username = message.substring(message.indexOf("CN=") + 3);
@@ -119,14 +131,25 @@ public class ClientListServiceImpl implements ClientListService
                   {
                      logger.error(e.getMessage());
                   }
-                  
-                  String pinCode = "<i>Undefined</i>";
+
                   try
                   {
-                     int index = message.lastIndexOf("-----END") - 1;
-                     pinCode = message.substring(index - 4, index);
+                     publicKey = message.substring(message.indexOf("KEY-----") + 9, message.lastIndexOf("-----END") - 1);
+                     if(!publicKey.isEmpty())
+                     {
+                        pinCode = generateMD5Sum(publicKey);
+                        pinCode = pinCode.substring(pinCode.length() - 4, pinCode.length());
+                     }
+                     else
+                     {
+                        pinCode = "<i>No public key</i>";
+                     }
                   }
                   catch(IndexOutOfBoundsException e)
+                  {
+                     logger.error(e.getMessage());
+                  }
+                  catch (NoSuchAlgorithmException e)
                   {
                      logger.error(e.getMessage());
                   }                  
@@ -139,7 +162,16 @@ public class ClientListServiceImpl implements ClientListService
       }
       return output;
    }
-      
+   
+   private String generateMD5Sum(String message) throws NoSuchAlgorithmException
+   {
+      final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+      messageDigest.reset();
+      messageDigest.update(message.getBytes(Charset.forName("UTF8")));
+      final byte[] resultByte = messageDigest.digest();
+      return new String(Hex.encodeHex(resultByte));
+   }
+   
    private File[] getListFromPath(String path)
    {
       File folder = new File(path);
