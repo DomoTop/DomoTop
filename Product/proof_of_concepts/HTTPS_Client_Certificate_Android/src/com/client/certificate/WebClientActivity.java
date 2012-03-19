@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ public class WebClientActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         TextView text = new TextView(this);
-       
+
         
         /*
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -32,19 +33,19 @@ public class WebClientActivity extends Activity
         //this.getCertificate();
         //this.openConnection();
         
-//        try {
-//        	text.setText("Succes:\n");
-//        	text.append(GenCert.generateCertificate(this));
-//        } catch (Exception e) {
-//        	text.setText("Failure:\n");
-//
-//        	text.append(e.getClass().toString() + "\n");
-//        	text.append(e.getMessage() + "\n");
-//        }
+        try {
+        	text.setText("Succes:\n");
+        	text.append(GenCert.generateCertificate(this));
+        } catch (Exception e) {
+        	text.setText("Failure:\n");
+
+        	text.append(e.getClass().toString() + "\n");
+        	text.append(e.getMessage() + "\n");
+        }
         
         try {
         	KeyStore ks = GenCert.getData(this);
-        	
+        	Log.d("client", ((X509Certificate)ks.getCertificate("user")).getIssuerDN().getName());
         	openConnection();
 		} catch (Exception e) {
 			text.setText(e.getClass().getName());
@@ -90,7 +91,7 @@ public class WebClientActivity extends Activity
 		String response = "";
 		try 
 		{
-			response = AndroidHttpClientCertificate.executeHttpGet(this.getApplicationContext(), "https://192.168.1.1");
+			response = AndroidHttpClientCertificate.executeHttpGet(this.getApplicationContext(), "https://10.10.4.31");
 		} 
 		catch (Exception e) 
 		{

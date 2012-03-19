@@ -1,14 +1,13 @@
 package com.client.certificate;
 
-
-import java.io.BufferedReader; 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException; 
-import java.io.InputStream;
-import java.io.InputStreamReader; 
-import java.net.URI; 
-import java.security.KeyStore; 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.security.KeyStore;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.List;
@@ -16,32 +15,34 @@ import java.util.List;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
-import org.apache.http.HttpResponse; 
-import org.apache.http.HttpVersion; 
-import org.apache.http.NameValuePair; 
-import org.apache.http.client.HttpClient; 
-import org.apache.http.client.entity.UrlEncodedFormEntity; 
-import org.apache.http.client.methods.HttpGet; 
-import org.apache.http.client.methods.HttpPost; 
-import org.apache.http.conn.ClientConnectionManager; 
-import org.apache.http.conn.scheme.Scheme; 
-import org.apache.http.conn.scheme.SchemeRegistry; 
-import org.apache.http.conn.ssl.SSLSocketFactory; 
-import org.apache.http.impl.client.DefaultHttpClient; 
-import org.apache.http.impl.conn.SingleClientConnManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager; 
-import org.apache.http.params.BasicHttpParams; 
-import org.apache.http.params.HttpParams; 
-import org.apache.http.params.HttpProtocolParams; 
-import org.apache.http.protocol.HTTP; 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.client.certificate.AndroidSSLSocketFactory;
-
 public class AndroidHttpClientCertificate 
 { 
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+	
 	public static final int HTTP_TIMEOUT = 30 * 1000; // milliseconds 
 	
 	private static SSLSocketFactory SSLSocketFactory(Context context) 
@@ -55,7 +56,7 @@ public class AndroidHttpClientCertificate
 			FileInputStream in = null;
 			try
 			{
-				in = context.openFileInput("keystore");
+				in = context.openFileInput("keystore.bks");
 			}
 			catch (FileNotFoundException e)
 			{
@@ -89,10 +90,11 @@ public class AndroidHttpClientCertificate
 				Log.i("client", "Cert alias: " + alias + " \nCert Type: " + cert.getType() + "\nPublic key:\n" + cert.getPublicKey().toString() + "Public key Algorithm: " + cert.getPublicKey().getAlgorithm());
 			}
 			// initialize key manager factory with the read client certificate
-			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("BKS");
+			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			keyManagerFactory.init(keystore, "password".toCharArray());
 			
 			KeyManager[] managers = keyManagerFactory.getKeyManagers();
+			Log.d("client", managers[0].getClass().getName()); 
 			return new AndroidSSLSocketFactory(managers);
 		} catch (Exception e) {
 			Log.e("client", "SSL error:" + e.getMessage());
