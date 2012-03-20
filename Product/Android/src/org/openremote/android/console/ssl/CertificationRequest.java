@@ -10,6 +10,7 @@ import java.security.Security;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -22,6 +23,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.openremote.android.console.Constants;
+import org.openremote.android.console.util.PhoneInformation;
+import org.spongycastle.asn1.ASN1ObjectIdentifier;
+import org.spongycastle.asn1.DEROctetString;
+import org.spongycastle.asn1.DERSet;
+import org.spongycastle.asn1.pkcs.Attribute;
+import org.spongycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.spongycastle.asn1.x509.GeneralName;
+import org.spongycastle.asn1.x509.GeneralNames;
+import org.spongycastle.asn1.x509.X509Extension;
+import org.spongycastle.asn1.x509.X509Extensions;
 import org.spongycastle.jce.PKCS10CertificationRequest;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
@@ -39,21 +50,20 @@ public class CertificationRequest {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
-	
-	private static final String TEMP_CN = android.os.Build.MODEL;
-	
+		
 	/**
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
 	 * which can be used to authenticate to the server.
 	 * 
 	 * This method returns it Base64 encoded
 	 * @param context The current application context
-	 * @param commonName The Common Name to be included in the certificate, should be human readable
+	 * @param device The Common Name to be included in the certificate, should be the name of the device
+	 * @param email The email address of the registered user.
 	 * @return The Certification Request in Base64
 	 */
-	public static String getCertificationRequestAsBase64(Context context, String commonName)
+	public static String getCertificationRequestAsBase64(Context context, String device, String email)
 	{
-		String basecert = new String(Base64.encode(getCertificationRequest(context, commonName).getDEREncoded()));
+		String basecert = new String(Base64.encode(getCertificationRequest(context, device, email).getDEREncoded()));
 				
 		return basecert;
 	}
@@ -62,21 +72,40 @@ public class CertificationRequest {
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
 	 * which can be used to authenticate to the server.
 	 * @param context The current application context
-	 * @param commonName The Common Name to be included in the certificate, should be human readable
+	 * @param device The Common Name to be included in the certificate, should be the name of the device
+	 * @param email The email address of the registered user.
 	 * @return The Certification Request
 	 */
-	public static PKCS10CertificationRequest getCertificationRequest(Context context, String commonName)
+	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
 	{
 		KeyPair keypair = MyKeyPair.getKeyPair(context);
 		
-		X500Principal              dnName = new X500Principal("CN=" + commonName);
+		X500Principal              dnName = new X500Principal("CN=" + devicename);
 		PKCS10CertificationRequest kpGen = null;
+		
+		// create the extension value
+		GeneralNames subjectAltName = new GeneralNames(
+		                   new GeneralName(GeneralName.rfc822Name, email));
+
+		// create the extensions object and add it as an attribute
+		Vector<ASN1ObjectIdentifier> oids = new Vector<ASN1ObjectIdentifier>();
+		Vector<X509Extension> values = new Vector<X509Extension>();
+
+		oids.add(X509Extension.subjectAlternativeName);
+		values.add(new X509Extension(false, new DEROctetString(subjectAltName)));
+
+		X509Extensions extensions = new X509Extensions(oids, values);
+
+		Attribute attribute = new Attribute(
+		                           PKCSObjectIdentifiers.pkcs_9_at_extensionRequest,
+		                           new DERSet(extensions));
+		
 		try {
 			kpGen = new PKCS10CertificationRequest(
 	                                  CSR_ALGORITHM,
 	                                  dnName,
 	                                  keypair.getPublic(),
-	                                  null,
+	                                  new DERSet(attribute),
 	                                  keypair.getPrivate());
 		} catch (InvalidKeyException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
@@ -100,10 +129,15 @@ public class CertificationRequest {
 	public static int submitCertificationRequest(Context context, String host)
 	{
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + TEMP_CN);
+	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
+	    
+	    String devicename = phoneInfo.getDeviceName();
+	    String email = phoneInfo.getEmailAddress(context);
+	    
+	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
 
 	    try {
-	    	String csr = getCertificationRequestAsBase64(context, TEMP_CN);
+	    	String csr = getCertificationRequestAsBase64(context, devicename, email);
 	    	
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 	        nameValuePairs.add(new BasicNameValuePair("csr", URLEncoder.encode(csr)));

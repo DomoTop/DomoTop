@@ -39,7 +39,6 @@ public abstract class PhoneInformation {
              * resolve references to all other classes it uses. Since the pre-Eclair
              * does not have those classes, the loading of ContactAccessorSdk5 would fail.
              */
-            @SuppressWarnings("deprecation")
             int sdkVersion = Integer.parseInt(Build.VERSION.SDK);       // Cupcake style
             if (sdkVersion < 5) {
                 className = "org.openremote.android.console.util.PhoneInformationBase";

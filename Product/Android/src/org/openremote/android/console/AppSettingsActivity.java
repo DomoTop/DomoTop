@@ -290,7 +290,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 			@Override
 			public void onClick(View arg0) {
 				final String hostname = AppSettingsModel.getCurrentServer(getApplicationContext());
-				
+
 				new Thread() {
 					public void run() {
 						CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
