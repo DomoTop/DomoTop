@@ -54,7 +54,6 @@ public class AdministratorController extends MultiActionController {
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
    
    private static final String openssl = "openssl";
-   private static final String rm = "rm";
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
 

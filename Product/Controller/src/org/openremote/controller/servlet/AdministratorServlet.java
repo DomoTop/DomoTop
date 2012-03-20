@@ -34,13 +34,15 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Client;
-import org.openremote.controller.service.ClientListService;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -61,7 +63,7 @@ public class AdministratorServlet extends HttpServlet
   // @TODO Fix own logger
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
-  private static ClientListService clientListService = (ClientListService) SpringContext.getInstance().getBean("clientListService");
+  private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
 
   
   /**
@@ -126,13 +128,25 @@ public class AdministratorServlet extends HttpServlet
      PrintWriter printWriter = response.getWriter();
      
      try
-     {        
-        printWriter.print(setListInTemplate(clientListService.getClientList()));
+     {
+        ResultSet clients = clientService.getClients();
+
+        while (clients.next()) 
+        {
+           printWriter.print((clients.getString("title") + " (" + clients.getString("url") + ")"));
+        }
+        
+        //printWriter.print(setListInTemplate(clientService.getClientList()));
         response.setStatus(200);
+     }
+     catch (SQLException e) 
+     {
+        response.setStatus(406);
+        logger.error(e.getMessage());
      }
      catch (NullPointerException e)
      {
-        response.setStatus(401);
+        response.setStatus(406);
         logger.error("NullPointer client", e);
      }
   }
