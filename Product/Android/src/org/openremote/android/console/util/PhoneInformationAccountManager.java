@@ -8,7 +8,7 @@ import android.content.Context;
 public class PhoneInformationAccountManager extends PhoneInformation {
 	
 	/**
-	 * Retrieves registered e-mail address from AccountManager
+	 * Retrieves registered e-mail address from AccountManager, preferably the GMail address
 	 * @param context The current application context
 	 * @return e-mail address as a string
 	 */
@@ -16,8 +16,11 @@ public class PhoneInformationAccountManager extends PhoneInformation {
 	public String getEmailAddress(Context context) 
 	{
     	AccountManager manager = AccountManager.get(context);
-    	Account acc = manager.getAccounts()[0];
-    	return acc.name;
+    	Account[] accounts = manager.getAccountsByType("com.google");
+    	if(accounts.length <= 0) {
+    		accounts = manager.getAccounts();
+    	}
+    	return accounts[0].name;
 	}
 	
 }
