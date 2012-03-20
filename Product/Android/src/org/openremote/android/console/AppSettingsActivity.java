@@ -36,6 +36,7 @@ import org.openremote.android.console.net.IPAutoDiscoveryServer;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
+import org.openremote.android.console.ssl.CertificationRequest;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
 import org.openremote.android.console.view.PanelSelectSpinnerView;
@@ -288,7 +289,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		
 			@Override
 			public void onClick(View arg0) {
+				final String hostname = AppSettingsModel.getCurrentServer(getApplicationContext());
 				
+				new Thread() {
+					public void run() {
+						CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
+					}
+				}.run();
 			}
 		});
     
