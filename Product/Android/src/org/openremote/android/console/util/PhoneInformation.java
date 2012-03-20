@@ -18,11 +18,16 @@ public abstract class PhoneInformation {
 	
 	/**
 	 * Return the email address of the registered user. 
-	 * @return The emailaddress
+	 * @param context The current application context
+	 * @return The e-mail address
 	 */
 	public abstract String getEmailAddress(Context context);
 	
-	
+	/**
+	 * Return a PhoneInformation instance based on Android version. Used because Android supports the
+	 * AccountManager from API version 5 and up
+	 * @return A PhoneInformation implementation based on the Android version, either PhoneInformationAccountManager or PhoneInformationBase
+	 */
 	public static PhoneInformation getInstance() 
 	{
 		if (instance == null) {

@@ -7,6 +7,11 @@ import android.content.Context;
 
 public class PhoneInformationAccountManager extends PhoneInformation {
 	
+	/**
+	 * Retrieves registered e-mail address from AccountManager
+	 * @param context The current application context
+	 * @return e-mail address as a string
+	 */
 	@Override
 	public String getEmailAddress(Context context) 
 	{
