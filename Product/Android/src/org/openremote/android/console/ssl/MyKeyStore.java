@@ -114,21 +114,22 @@ public class MyKeyStore {
 		}
 	}
 	
+	public boolean isEmpty() {
+		try {
+			return keystore.size() <= 0;
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			return false;
+		}
+	}
+	
 	/**
-	 * Return the KeyStore. If the KeyStore is still empty, it will check if the client is approved
-	 * and fill the KeyStore. If it is not yet approved, it will return an empty KeyStore
+	 * Return the KeyStore, could be empty, but should never be 'null'
 	 * @param context The current application context
 	 * @return A KeyStore with 1 alias or an empty KeyStore if the client is not yet approved
 	 */
 	public KeyStore getKeyStore() 
 	{
-		try {
-			if(keystore.size() <= 0) {
-				fillKeyStore();
-			}
-		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
-		}
 		return keystore;
 	}
 	
@@ -138,7 +139,7 @@ public class MyKeyStore {
 	 * with the private key
 	 * @param context The current application context
 	 */
-	private void fillKeyStore()
+	public void fillKeyStore()
 	{
 		Certificate[] chain = getSignedChain();
 		
