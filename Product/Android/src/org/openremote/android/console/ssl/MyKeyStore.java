@@ -41,6 +41,7 @@ public class MyKeyStore {
 
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
+	private final static String KEYSTORE_PASSWORD = "password";
 	
 	private static MyKeyStore instance = null;
 	
@@ -75,6 +76,7 @@ public class MyKeyStore {
 			keystore = KeyStore.getInstance("BKS");
 			if(file.exists()) {
 				keystore.load(context.openFileInput("keystore.bks"), "password".toCharArray());
+				//keystore.load(null, null);
 			} else {
 				keystore.load(null, null);
 			}
@@ -145,14 +147,24 @@ public class MyKeyStore {
 		
 		if(chain != null)
 		{
-		    KeyPair kp = MyKeyPair.getKeyPair(context);
+		    KeyPair kp = MyKeyPair.getInstance().getKeyPair(context);
 		    	    
 		    try {
 				keystore.setKeyEntry("user", 
 						kp.getPrivate(),
 						"password".toCharArray(),
 						chain);
+				
+				keystore.store(context.openFileOutput(KEYSTORE_FILE, Context.MODE_PRIVATE), KEYSTORE_PASSWORD.toCharArray());
 			} catch (KeyStoreException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			} catch (NoSuchAlgorithmException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			} catch (CertificateException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			} catch (FileNotFoundException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			} catch (IOException e) {
 				Log.e(LOG_CATEGORY, e.getMessage());
 			}
 		}
@@ -210,7 +222,7 @@ public class MyKeyStore {
 	private boolean verifyCertificate(Certificate cert)
 	{
 		boolean valid = false;
-		KeyPair kp = MyKeyPair.getKeyPair(context);
+		KeyPair kp = MyKeyPair.getInstance().getKeyPair(context);
 		try {
 			cert.verify(kp.getPublic(), "SHA1WithRSA");
 			valid = true;

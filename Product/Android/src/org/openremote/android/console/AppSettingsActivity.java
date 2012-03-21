@@ -37,6 +37,7 @@ import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.ssl.CertificationRequest;
+import org.openremote.android.console.ssl.MyKeyPair;
 import org.openremote.android.console.ssl.MyKeyStore;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
@@ -318,7 +319,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    				builder.setMessage("05:HA")
+    				builder.setMessage(MyKeyPair.getInstance().getPIN(getApplicationContext()))
     				       .setCancelable(true)
     				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
     				           public void onClick(DialogInterface dialog, int id) {

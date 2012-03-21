@@ -9,9 +9,14 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.openremote.android.console.Constants;
+import org.spongycastle.jce.provider.JDKMessageDigest.MD5;
+import org.spongycastle.util.encoders.Base64;
+import org.spongycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.HexEncoder;
 
 import android.content.Context;
 import android.util.Log;
@@ -67,6 +72,40 @@ public class MyKeyPair {
 		}
 		
 		return keypair;
+	}
+	
+	/**
+	 * Returns a PIN code which is also generated on the server to verify a users authenticity
+	 * @param context The current application context
+	 * @return A four character string containing the PIN
+	 */
+	public String getPIN(Context context)
+	{
+		String public64 = new String(Base64.encode(getKeyPair(context).getPublic().getEncoded()));
+		String formatted = "";
+		for(int i = 0; i < public64.length(); i++)
+		{
+			if(i % 64 == 0 && i != 0)
+			{
+				formatted += "\n";
+			}
+			formatted += public64.charAt(i);
+		}
+		Log.d(LOG_CATEGORY, public64);
+
+		MessageDigest m = null;
+		try {
+			m = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		m.update(formatted.getBytes());
+
+		byte[] s = Hex.encode(m.digest());
+	
+		return new String(s).substring(s.length - 4);
 	}
 	
 	/**

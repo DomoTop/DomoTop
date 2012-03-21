@@ -137,7 +137,7 @@ public class CertificationRequest {
 	    String devicename = phoneInfo.getDeviceName();
 	    String email = phoneInfo.getEmailAddress(context);
 	    
-	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
+	    HttpPost httppost = new HttpPost("http://10.10.4.31:8080/controller/" + "/rest/cert/put/" + devicename);
 
 	    try {
 	    	String csr = getCertificationRequestAsBase64(context, devicename, email);
