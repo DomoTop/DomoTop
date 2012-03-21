@@ -30,6 +30,28 @@ public class DatabaseServiceImpl implements DatabaseService
    Statement statement = null;
    ResultSet resultSet = null;
 
+   private void createTables() throws SQLException
+   {
+      connection.prepareStatement("drop table client;")
+                  .execute();
+      connection.prepareStatement(
+                  "create table client ( client_id BIGINT NOT NULL, "+
+                  "client_serial INTEGER(5) NOT NULL, "+
+                  "client_pincode INTEGER(4,0), "+
+                  "client_device_name VARCHAR, "+
+                  "client_email VARCHAR, "+
+                  "client_file_name VARCHAR, "+ 
+                  "client_active BOOLEAN, "+ //NOT NULL
+                  "client_creation_date DATE, "+ //NOT NULL
+                  "client_group_id BIGINT, "+
+                  "name VARCHAR);")
+                  .execute();      
+      connection.prepareStatement(
+          "insert into client(client_id, client_pincode) "+
+          "values (1, 234);")
+          .execute();
+   }
+   
    public boolean databaseInit()
    { 
       boolean returnValue = true;
@@ -50,6 +72,8 @@ public class DatabaseServiceImpl implements DatabaseService
       try {
          Class.forName("org.hsqldb.jdbcDriver");
          connection = DriverManager.getConnection("jdbc:hsqldb:" + databasePath, "sa", "");
+         
+         this.createTables();
          
          statement = connection.createStatement();
       } catch (SQLException e) {
