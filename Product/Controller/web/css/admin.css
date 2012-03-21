@@ -5,3 +5,11 @@
 	cursor: pointer;
 	cursor: hand;
 }
+
+.activeErrMsg
+{
+	color:red;
+	background:none repeat scroll 0 0 #FAFEEF;
+	border:1px solid #F6E5AD;
+	padding:5px;
+}

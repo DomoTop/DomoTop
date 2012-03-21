@@ -9,4 +9,5 @@ import java.sql.ResultSet;
 public interface ClientService 
 {   
    ResultSet getClients();
+   int getNumClients();
 }

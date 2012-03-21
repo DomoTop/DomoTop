@@ -12,7 +12,6 @@ import org.openremote.controller.model.Client;
 
 public interface DatabaseService {
    
-   void initDatabase();
    ResultSet doSQL(String sql);
    int getNumRows();
    int getInsertID();

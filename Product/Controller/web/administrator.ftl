@@ -41,11 +41,14 @@
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 							<p class="welcome">OpenRemote Administrator Panel</p>
 							<p id="errMsg" class="errMsg" />
+							<#if errorMessage?has_content>
+								<p class="activeErrMsg">${errorMessage}</p>
+							</#if>
 							<p id="msg" class="msg" />
 							<p><i>User Management:</i><br /></p>
-
 							<TABLE cellSpacing=0 cellPadding=0 width=600 align="center" bgColor=#ffffff border=0>
-							<TBODY>
+							<TBODY>								
+								<#if clients?exists>
 								<TR>
 									<th align="left">Username</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
 								</TR>
@@ -75,6 +78,11 @@
 									</TD>
 								</TR>
 								</#list>
+								<#else>
+								<TR>
+									<TD><i>No users</i></TD>
+								</TR>
+								</#if>
 							</TBODY>
 							</TABLE>							
 							<br />

@@ -36,7 +36,6 @@ public class ClientServiceImpl implements ClientService
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
    
    private DatabaseService database;
-   //= (DatabaseService) SpringContext.getInstance().getBean("databaseService");
    private static String selectAllClientsQuery = "SELECT * FROM client"; // ORDER BY date
    
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
@@ -250,8 +249,29 @@ public class ClientServiceImpl implements ClientService
    @Override
    public ResultSet getClients()
    {
-      return database.doSQL(selectAllClientsQuery);
+      ResultSet returnValue = null;
+      if(database != null)
+      {
+         returnValue = database.doSQL(selectAllClientsQuery);
+      }
+      else
+      {
+         logger.error("Database is not yet set (null)");
+      }
+      return returnValue;
    }
+   
+   @Override
+   public int getNumClients()
+   {
+      int newNum = -1;
+      if(database != null)
+      {
+         newNum = database.getNumRows();
+      }
+      return newNum;
+   }
+   
    
    public void setDatabase(DatabaseService database)
    {

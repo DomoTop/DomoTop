@@ -27,17 +27,24 @@ public class DatabaseServiceImpl implements DatabaseService
    private ControllerConfiguration configuration;
    private String databasePath = "";
    private static Connection connection;
-   Statement statement;
-   ResultSet resultSet;
+   Statement statement = null;
+   ResultSet resultSet = null;
 
-   public void initDatabase()
-   {
+   public boolean databaseInit()
+   { 
+      boolean returnValue = true;
+      
       // init database path
       configuration = ControllerConfiguration.readXML();
       
       if(configuration != null)
       {
          databasePath = configuration.getResourcePath() + "/database/openremote";
+      }
+      else
+      {
+         returnValue = false;
+         logger.error("Controller configuration is null");
       }
             
       try {
@@ -46,20 +53,33 @@ public class DatabaseServiceImpl implements DatabaseService
          
          statement = connection.createStatement();
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         returnValue = false;
+         logger.error("SQL Exception:" + e.getMessage());
       } catch (ClassNotFoundException e) {
-         logger.error(e.getMessage());
+         returnValue = false;
+         logger.error("SQL Exception Class not Found: " + e.getMessage());
       }
-      
-      resultSet = null;   
+      return returnValue;
    }
 
    @Override
-   public ResultSet doSQL(String sql) {    
-      try {
-         resultSet = statement.executeQuery(sql);
+   public ResultSet doSQL(String sql) {  
+      if(statement == null)
+      {
+         if(!this.databaseInit())
+         {
+            logger.error("Database connection was unsuccessfully.");
+         }
+      }
+      
+      try 
+      {
+         if(statement != null)
+         {
+            resultSet = statement.executeQuery(sql);
+         }
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQL Exception: " + e.getMessage());
       }
       return null;
    }
@@ -70,7 +90,7 @@ public class DatabaseServiceImpl implements DatabaseService
       try {
          numRows = resultSet.getRow();
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQL Exception: " + e.getMessage());
       }
       return numRows;
    }
@@ -87,7 +107,7 @@ public class DatabaseServiceImpl implements DatabaseService
             newID = resultSet.getInt(1);   
          }
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQL Exception: " + e.getMessage());
       } 
       return newID;
    }
@@ -105,7 +125,7 @@ public class DatabaseServiceImpl implements DatabaseService
             statement.close();
          }
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQL Exception: " + e.getMessage());
       }
    }
 
@@ -117,7 +137,7 @@ public class DatabaseServiceImpl implements DatabaseService
             connection.close();
          }
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQL Exception: " + e.getMessage());
       }
    }
    

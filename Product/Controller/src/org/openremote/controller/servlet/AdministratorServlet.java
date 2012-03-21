@@ -65,14 +65,40 @@ public class AdministratorServlet extends HttpServlet
 
   private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
 
+  /**
+   * Transform a client list array into a HTML template.
+   * 
+   * @param clients List of Clients
+   * @return HTML formatted text in the administrator template
+   */  
+  private String setErrorInTemplate(String error)
+  {
+     Map<String, Object> root = new HashMap<String, Object>();
+      
+     String result = "";
+     
+     // Read the XML file and process the template using FreeMarker
+     try 
+     {     
+        root.put( "errorMessage", error );
+        result = freemarkerDo(root, "administrator.ftl");
+     }
+     catch(Exception e) 
+     {
+        result = "<h1>Template Exception</h1>";
+        result += e.getLocalizedMessage();
+        logger.error(e.getLocalizedMessage());
+     }
+     return result;
+  }  
+  
   
   /**
    * Transform a client list array into a HTML template.
    * 
    * @param clients List of Clients
    * @return HTML formatted text in the administrator template
-   */
-  
+   */  
   private String setListInTemplate(List<Client> clients)
   {
      Map<String, Object> root = new HashMap<String, Object>();
@@ -132,28 +158,35 @@ public class AdministratorServlet extends HttpServlet
         ResultSet clients = clientService.getClients();
 
         if(clients != null)
-        {        
-           while (clients.next()) 
+        {      
+           if(clientService.getNumClients() <= 0)
            {
-              printWriter.print((clients.getString("title") + " (" + clients.getString("url") + ")"));
+              printWriter.print(setErrorInTemplate("No clients in the database."));
            }
-           //printWriter.print(setListInTemplate(clientService.getClientList()));
+           else
+           {
+              while (clients.next()) 
+              {
+                 printWriter.print((clients.getString("title") + " (" + clients.getString("url") + ")"));
+              }
+              //printWriter.print(setListInTemplate(clientService.getClientList()));
+           }
         }
         else
         {
-           printWriter.print("No clients");
+           printWriter.print(setErrorInTemplate("Database problem."));
         }
         response.setStatus(200);
      }
      catch (SQLException e) 
      {
         response.setStatus(406);
-        logger.error(e.getMessage());
+        logger.error("SQL Exception: " + e.getMessage());
      }
      catch (NullPointerException e)
      {
         response.setStatus(406);
-        logger.error("NullPointer client", e);
+        logger.error("NullPointer in Administrator Servlet: ", e);
      }
   }
 }
