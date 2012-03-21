@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -160,6 +163,12 @@ public class MyKeyStore {
 		    
 			chain = new X509Certificate[2];
 		    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));
+		    
+		    if(!verifyCertificate(chain[0], context))
+		    {
+		    	Log.d(LOG_CATEGORY, "certificate invalid");
+		    }
+		    
 		    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
 			
 		} catch (ClientProtocolException e) {
@@ -169,6 +178,39 @@ public class MyKeyStore {
 		}
 	    
 		return chain;
+	}
+	
+	/**
+	 * Verify if the certificate matches with the public key which is saved on the system. 
+	 * @param cert The certificate to check
+	 * @param context The current application context
+	 * @return If the certificate matches with the public key
+	 */
+	private boolean verifyCertificate(Certificate cert, Context context)
+	{
+		boolean valid = false;
+		KeyPair kp = MyKeyPair.getKeyPair(context);
+		try {
+			cert.verify(kp.getPublic(), "SHA1WithRSA");
+			valid = true;
+		} catch (InvalidKeyException e) {
+			Log.d(LOG_CATEGORY, "Invalid key detected");
+			valid = false;
+		} catch (CertificateException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			valid = false;
+		} catch (NoSuchAlgorithmException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			valid = false;
+		} catch (NoSuchProviderException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			valid = false;
+		} catch (SignatureException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			valid = true;
+		}
+		
+		return valid;
 	}
 	
 	/**
