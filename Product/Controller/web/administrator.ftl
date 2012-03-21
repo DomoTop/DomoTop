@@ -54,26 +54,26 @@
 								</TR>
 								<#list clients as client>
 								<TR>
-									<TD>${client.name}</TD><TD>${client.email}</TD><TD><span id="pincode${client.id}">${client.pinCode}</span></TD>
+									<TD>${client.client_device_name}</TD><TD>${client.client_email}</TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
-										<input type="hidden" name="clientid" value="${client.id}" />
-										<input type="hidden" name="clientfile" value="${client.fileName}" />
+										<input type="hidden" name="clientid" value="${client.client_id}" />
+										<input type="hidden" name="clientfile" value="${client.client_file_name}" />
 										<#if client.active>
-											<input type="hidden" id="action${client.id}" name="action" value="deny" />
-											<input type="submit" id="submit${client.id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
+											<input type="hidden" id="action${client.client_id}" name="action" value="deny" />
+											<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
 										<#else>
-											<input type="hidden" id="action${client.id}" name="action" value="accept" />
-											<input type="submit" id="submit${client.id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
+											<input type="hidden" id="action${client.client_id}" name="action" value="accept" />
+											<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
 										</#if>
 										</form>
 									</TD>
 									<TD>							
 										<select name="group">
-											<option value="">No Group</option>
-											<option<#if client.groupName == 'admin'> selected</#if> value="admin">Administrator</option>
-											<option<#if client.groupName == 'parent'> selected</#if> value="parent">Parent</option>
-											<option<#if client.groupName == 'child'> selected</#if> value="child">Childeren</option>
+											<option value="">No Group</option>											
+											<option<#if client.client_group_id == '1'> selected</#if> value="admin">Administrator</option>
+											<option<#if client.client_group_id == '2'> selected</#if> value="parent">Parent</option>
+											<option<#if client.client_group_id == '3'> selected</#if> value="child">Childeren</option>
 										</select>
 									</TD>
 								</TR>

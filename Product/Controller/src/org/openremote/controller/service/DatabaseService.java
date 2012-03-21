@@ -1,9 +1,6 @@
 package org.openremote.controller.service;
 
 import java.sql.ResultSet;
-import java.util.List;
-
-import org.openremote.controller.model.Client;
 
 /**
  * The interface DatabaseService
@@ -16,5 +13,6 @@ public interface DatabaseService {
    int getNumRows();
    int getInsertID();
    void free();
-   void close();   
+   void close();
+   int doUpdateSQL(String sql);   
 }
