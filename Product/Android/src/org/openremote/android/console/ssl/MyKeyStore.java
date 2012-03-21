@@ -45,6 +45,7 @@ public class MyKeyStore {
 	private static MyKeyStore instance = null;
 	
 	private KeyStore keystore = null;
+	private Context context = null;
 		
 	/**
 	 * Returns a MyKeyStore instance. This instance is a singleton so every call should 
@@ -67,6 +68,7 @@ public class MyKeyStore {
 	 */
 	private MyKeyStore(Context context)
 	{
+		this.context = context;
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
 		try{
@@ -93,7 +95,7 @@ public class MyKeyStore {
 	 * Write the current loaded KeyStore to file, filename declared in KEYSTORE_FILE
 	 * @param context The current application context
 	 */
-	public void saveKeyStore(Context context)
+	public void saveKeyStore()
 	{
 		FileOutputStream out;
 		try {
@@ -118,11 +120,11 @@ public class MyKeyStore {
 	 * @param context The current application context
 	 * @return A KeyStore with 1 alias or an empty KeyStore if the client is not yet approved
 	 */
-	public KeyStore getKeyStore(Context context) 
+	public KeyStore getKeyStore() 
 	{
 		try {
 			if(keystore.size() <= 0) {
-				fillKeyStore(context);
+				fillKeyStore();
 			}
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
@@ -136,9 +138,9 @@ public class MyKeyStore {
 	 * with the private key
 	 * @param context The current application context
 	 */
-	private void fillKeyStore(Context context)
+	private void fillKeyStore()
 	{
-		Certificate[] chain = getSignedChain(context);
+		Certificate[] chain = getSignedChain();
 		
 		if(chain != null)
 		{
@@ -164,7 +166,7 @@ public class MyKeyStore {
 	 * @return A chain with the client certificate and the CA certificate, or null if not yet
 	 * approved
 	 */
-	public Certificate[] getSignedChain(Context context)
+	public Certificate[] getSignedChain()
 	{
 		Certificate[] chain = null;
 
@@ -181,7 +183,7 @@ public class MyKeyStore {
 			chain = new X509Certificate[2];
 		    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));
 		    
-		    if(!verifyCertificate(chain[0], context))
+		    if(!verifyCertificate(chain[0]))
 		    {
 		    	Log.d(LOG_CATEGORY, "certificate invalid");
 		    	return null;
@@ -204,7 +206,7 @@ public class MyKeyStore {
 	 * @param context The current application context
 	 * @return If the certificate matches with the public key
 	 */
-	private boolean verifyCertificate(Certificate cert, Context context)
+	private boolean verifyCertificate(Certificate cert)
 	{
 		boolean valid = false;
 		KeyPair kp = MyKeyPair.getKeyPair(context);
