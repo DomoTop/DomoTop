@@ -34,7 +34,11 @@ public class DatabaseServiceImpl implements DatabaseService
    {
       // init database path
       configuration = ControllerConfiguration.readXML();
-      databasePath = configuration.getResourcePath() + "/database/openremote";
+      
+      if(configuration != null)
+      {
+         databasePath = configuration.getResourcePath() + "/database/openremote";
+      }
             
       try {
          Class.forName("org.hsqldb.jdbcDriver");

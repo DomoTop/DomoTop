@@ -23,6 +23,7 @@ import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.spring.SpringContext;
+import org.springframework.orm.jpa.vendor.Database;
 
 /**
  * Get client information out the (request) certificates
@@ -34,7 +35,8 @@ public class ClientServiceImpl implements ClientService
 {  
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
    
-   //private static DatabaseService database = (DatabaseService) SpringContext.getInstance().getBean("databaseService");
+   private DatabaseService database;
+   //= (DatabaseService) SpringContext.getInstance().getBean("databaseService");
    private static String selectAllClientsQuery = "SELECT * FROM client"; // ORDER BY date
    
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
@@ -245,9 +247,14 @@ public class ClientServiceImpl implements ClientService
       return clients;
    }
    
+   @Override
    public ResultSet getClients()
    {
-      //return database.doSQL(selectAllClientsQuery);
-      return null;
+      return database.doSQL(selectAllClientsQuery);
    }
+   
+   public void setDatabase(DatabaseService database)
+   {
+      this.database = database;
+   } 
 }

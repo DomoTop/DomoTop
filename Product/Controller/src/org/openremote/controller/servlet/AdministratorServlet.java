@@ -131,12 +131,18 @@ public class AdministratorServlet extends HttpServlet
      {
         ResultSet clients = clientService.getClients();
 
-        while (clients.next()) 
-        {
-           printWriter.print((clients.getString("title") + " (" + clients.getString("url") + ")"));
+        if(clients != null)
+        {        
+           while (clients.next()) 
+           {
+              printWriter.print((clients.getString("title") + " (" + clients.getString("url") + ")"));
+           }
+           //printWriter.print(setListInTemplate(clientService.getClientList()));
         }
-        
-        //printWriter.print(setListInTemplate(clientService.getClientList()));
+        else
+        {
+           printWriter.print("No clients");
+        }
         response.setStatus(200);
      }
      catch (SQLException e) 
