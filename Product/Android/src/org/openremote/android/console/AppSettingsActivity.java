@@ -307,7 +307,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
-    				ks.getKeyStore(getApplicationContext());
+    				ks.getKeyStore();
     			}
     		});
     
