@@ -46,6 +46,12 @@ public class MyKeyStore {
 	
 	private KeyStore keystore = null;
 		
+	/**
+	 * Returns a MyKeyStore instance. This instance is a singleton so every call should 
+	 * return the same MyKeyStore
+	 * @param context The current application context
+	 * @return The MyKeyStore instance
+	 */
 	public static MyKeyStore getInstance(Context context)
 	{
 		if(instance == null)
