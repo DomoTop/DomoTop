@@ -37,6 +37,7 @@ import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.ssl.CertificationRequest;
+import org.openremote.android.console.ssl.MyKeyStore;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
 import org.openremote.android.console.view.PanelSelectSpinnerView;
@@ -238,6 +239,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
     final Button generateCertification = (Button)findViewById(R.id.ssl_clientcert_generation);
+    final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
 
     // Configure UI to current settings state...
 
@@ -298,6 +300,16 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				}.run();
 			}
 		});
+    
+    fetchCertificate.setOnClickListener(
+        	new OnClickListener() {
+    		
+    			@Override
+    			public void onClick(View arg0) {
+    				MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
+    				ks.getKeyStore(getApplicationContext());
+    			}
+    		});
     
     // ...
 
