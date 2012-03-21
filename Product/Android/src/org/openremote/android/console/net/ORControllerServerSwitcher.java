@@ -116,7 +116,7 @@ public class ORControllerServerSwitcher
 
       if ("https".equals(uri.getProtocol()))
       {
-        Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(), uri.getPort());
+        Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(context), uri.getPort());
         httpClient.getConnectionManager().getSchemeRegistry().register(sch);
       }
 

@@ -117,7 +117,7 @@ public class HTTPUtil {
       try {
          URL uri = new URL(serverUrl);
          if ("https".equals(uri.getProtocol())) {
-            Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(), uri.getPort());
+            Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(context), uri.getPort());
             client.getConnectionManager().getSchemeRegistry().register(sch);
          }
          HttpGet get = new HttpGet(serverUrl);

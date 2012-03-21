@@ -117,7 +117,7 @@ public class ORConnection
        targetUrl.toURI();
        if ("https".equals(targetUrl.getProtocol()))
        {
-          Scheme sch = new Scheme(targetUrl.getProtocol(), new SelfCertificateSSLSocketFactory(), targetUrl.getPort());
+          Scheme sch = new Scheme(targetUrl.getProtocol(), new SelfCertificateSSLSocketFactory(context), targetUrl.getPort());
           httpClient.getConnectionManager().getSchemeRegistry().register(sch);
        }
     }
@@ -317,7 +317,7 @@ public class ORConnection
     {
       Scheme sch = new Scheme(
           targetURL.getProtocol(),
-          new SelfCertificateSSLSocketFactory(),
+          new SelfCertificateSSLSocketFactory(context),
           targetURL.getPort()
       );
 

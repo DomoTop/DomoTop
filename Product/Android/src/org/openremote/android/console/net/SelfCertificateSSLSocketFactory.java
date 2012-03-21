@@ -37,6 +37,8 @@ import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.content.Context;
+
 /**
  * This socket factory will create ssl socket that accepts self signed certificate.
  * 
@@ -44,7 +46,13 @@ import org.apache.http.params.HttpParams;
 public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
 
    private SSLContext sslcontext = null;
+   private Context context;
 
+   public SelfCertificateSSLSocketFactory(Context context)
+   {
+	   this.context = context;
+   }
+   
    /**
     * Creates a new SelfCertificateSSLSocket object.
     * 

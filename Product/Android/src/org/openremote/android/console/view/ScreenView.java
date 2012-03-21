@@ -137,7 +137,7 @@ public class ScreenView extends AbsoluteLayout {
       if (polling != null) {
          new Thread(new Runnable() {
             public void run() {
-               polling.requestCurrentStatusAndStartPolling();
+               polling.requestCurrentStatusAndStartPolling(getContext().getApplicationContext());
             }
          }).start(); 
       }

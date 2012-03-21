@@ -114,7 +114,7 @@ public class PollingHelper {
    /**
     * Request current status and start polling.
     */
-   public void requestCurrentStatusAndStartPolling() {
+   public void requestCurrentStatusAndStartPolling(Context context) {
       HttpParams params = new BasicHttpParams();
       HttpConnectionParams.setConnectionTimeout(params, 50 * 1000);
       
@@ -130,7 +130,7 @@ public class PollingHelper {
          URL uri = new URL(serverUrl);
          uri.toURI();
          if ("https".equals(uri.getProtocol())) {
-            Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(), uri.getPort());
+            Scheme sch = new Scheme(uri.getProtocol(), new SelfCertificateSSLSocketFactory(context), uri.getPort());
             client.getConnectionManager().getSchemeRegistry().register(sch);
          }
       } catch (MalformedURLException e) {
