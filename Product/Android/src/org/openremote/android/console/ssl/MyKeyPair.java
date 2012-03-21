@@ -24,27 +24,44 @@ public class MyKeyPair {
 	private static final String KEYPAIR_FILE = "keypair";
 	private static final int KEYPAIR_SIZE = 2048;
 	private static final String KEYPAIR_ALGORITHM = "RSA";
-
+	
+	private KeyPair keypair;
+	
+	private static MyKeyPair instance = null;
+	
+	public static MyKeyPair getInstance() 
+	{
+		if(instance == null)
+		{
+			instance = new MyKeyPair();
+		}
+		return instance;
+	}
+	
 	/**
 	 * Generates a KeyPair to be used in a certificate, this KeyPair is generated the first time 
 	 * and then serialized. It will return the just one KeyPair, which is never deleted.
 	 * @param context The current application context
 	 * @return A KeyPair 
 	 */
-	public static KeyPair getKeyPair(Context context)
+	public KeyPair getKeyPair(Context context)
 	{
-		KeyPairGenerator keyGen = null;
-		try {
-			keyGen = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
-		} catch (NoSuchAlgorithmException e) {
-			Log.e(LOG_CATEGORY, "KeyPairGenerator could not be initialized with algorithm: " + KEYPAIR_ALGORITHM);
-		}
-		
-		keyGen.initialize(KEYPAIR_SIZE);
-
-		KeyPair keypair = deserializeKeypair(context);
 		if(keypair == null)
 		{
+			keypair = deserializeKeypair(context);
+		}
+
+		if(keypair == null)
+		{		
+			KeyPairGenerator keyGen = null;
+			try {
+				keyGen = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
+			} catch (NoSuchAlgorithmException e) {
+				Log.e(LOG_CATEGORY, "KeyPairGenerator could not be initialized with algorithm: " + KEYPAIR_ALGORITHM);
+			}
+			
+			keyGen.initialize(KEYPAIR_SIZE);
+			
 			keypair = keyGen.generateKeyPair(); 
 			serializeKeypair(context, keypair);
 		}
@@ -57,7 +74,7 @@ public class MyKeyPair {
 	 * @param context The current application context
 	 * @param keypair The KeyPair that has to be serialized
 	 */
-	private static void serializeKeypair(Context context, KeyPair keypair) 
+	private void serializeKeypair(Context context, KeyPair keypair) 
 	{	
 		try { 
 			File dir = context.getFilesDir();
@@ -86,7 +103,7 @@ public class MyKeyPair {
 	 * @param context The current application context
 	 * @return The "de"serialized KeyPair
 	 */
-	private static KeyPair deserializeKeypair(Context context) {
+	private KeyPair deserializeKeypair(Context context) {
 		KeyPair keypair = null;
 		try {
 			FileInputStream input = context.openFileInput(KEYPAIR_FILE);

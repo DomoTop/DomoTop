@@ -81,7 +81,7 @@ public class CertificationRequest {
 	 */
 	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
 	{
-		KeyPair keypair = MyKeyPair.getKeyPair(context);
+		KeyPair keypair = MyKeyPair.getInstance().getKeyPair(context);
 		
 		X500Principal              dnName = new X500Principal("CN=" + devicename);
 		PKCS10CertificationRequest kpGen = null;
