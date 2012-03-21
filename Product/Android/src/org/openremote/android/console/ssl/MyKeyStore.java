@@ -42,13 +42,24 @@ public class MyKeyStore {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	
+	private static MyKeyStore instance = null;
+	
 	private KeyStore keystore = null;
 		
+	public static MyKeyStore getInstance(Context context)
+	{
+		if(instance == null)
+		{
+			instance = new MyKeyStore(context);
+		}
+		return instance;
+	}
+	
 	/**
-	 * Instantiates the KeyStore with either one found on the filesytem or create a new empty one
+	 * Instantiates the KeyStore with either one found on the filesystem or create a new empty one
 	 * @param context The current application context
 	 */
-	public MyKeyStore(Context context)
+	private MyKeyStore(Context context)
 	{
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
@@ -167,6 +178,7 @@ public class MyKeyStore {
 		    if(!verifyCertificate(chain[0], context))
 		    {
 		    	Log.d(LOG_CATEGORY, "certificate invalid");
+		    	return null;
 		    }
 		    
 		    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
