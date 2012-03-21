@@ -27,6 +27,8 @@ import java.net.UnknownHostException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
@@ -36,6 +38,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.openremote.android.console.ssl.MyKeyStore;
 
 import android.content.Context;
 
@@ -60,7 +63,7 @@ public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
     * 
     * @throws IOException Signals that an I/O exception has occurred.
     */
-   private static SSLContext createEasySSLContext() throws IOException {
+   private static SSLContext createEasySSLContext(Context context) throws IOException {
       TrustManager easyTrustManager = new X509TrustManager() {
          @Override
          public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
@@ -75,10 +78,27 @@ public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
             return null;
          }
       };
+
+      
       try {
-         SSLContext context = SSLContext.getInstance("TLS");
-         context.init(null, new TrustManager[] { easyTrustManager }, null);
-         return context;
+         MyKeyStore keystore = MyKeyStore.getInstance(context);
+         KeyManager[] managers = null;
+         
+         keystore.fillKeyStore();
+         //keystore.saveKeyStore();
+         
+         if(!keystore.isEmpty())
+         {
+	         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+	         keyManagerFactory.init(keystore.getKeyStore(), "password".toCharArray());
+	    	 
+	         managers = keyManagerFactory.getKeyManagers();
+         }
+	         
+         
+         SSLContext sslcontext = SSLContext.getInstance("TLS");
+         sslcontext.init(managers, new TrustManager[] { easyTrustManager }, null);
+         return sslcontext;
       } catch (Exception e) {
          throw new IOException(e.getMessage());
       }
@@ -86,7 +106,7 @@ public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
 
    private SSLContext getSSLContext() throws IOException {
       if (this.sslcontext == null) {
-         this.sslcontext = createEasySSLContext();
+         this.sslcontext = createEasySSLContext(context);
       }
       return this.sslcontext;
    }
