@@ -36,6 +36,7 @@ import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Client;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.ResultSetUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -45,7 +46,9 @@ import freemarker.template.TemplateSequenceModel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
 
@@ -103,9 +106,36 @@ public class AdministratorServlet extends HttpServlet
   {
      Map<String, Object> root = new HashMap<String, Object>();
     
+     Collection clients = null;
+     
      String result = "";
-   
-        
+     
+     try 
+     {
+        clients = ResultSetUtil.getMaps(resultSet);
+     } 
+     catch (SQLException e)
+     {
+         logger.error("SQLException: " + e.getMessage());
+     }
+     
+     Iterator itr = clients.iterator(); 
+     while(itr.hasNext()) {
+         Object element = itr.next(); 
+         logger.error("element: "  + element.toString());
+     }
+     
+     try 
+     {     
+        root.put( "clients", clients );
+        result = freemarkerDo(root, "administrator.ftl");
+     }
+     catch(Exception e) 
+     {
+        result = "<h1>Template Exception</h1>";
+        result += e.getLocalizedMessage();
+        logger.error(e.getLocalizedMessage());
+     }
      return result;
   }
   
@@ -180,13 +210,13 @@ public class AdministratorServlet extends HttpServlet
         { 
            //printWriter.print(setErrorInTemplate("No clients in the database. Number of clients: " + clientService.getNumClients()));
            
-           //printWriter.print(setResultListInTemplate(clients));
+           printWriter.print(setResultListInTemplate(clients));
 
-                                
+           /*
            while (clients.next()) 
            {
               printWriter.print(clients.getString("client_serial") + " (" + clients.getString("client_pincode") + ")");
-           }
+           }*/
   
         }
         else
@@ -195,11 +225,12 @@ public class AdministratorServlet extends HttpServlet
         }
         response.setStatus(200);
      }
+     /*
      catch (SQLException e) 
      {
         response.setStatus(406);
         logger.error("SQL Exception: " + e.getMessage());
-     }
+     }*/
      catch (NullPointerException e)
      {
         response.setStatus(406);

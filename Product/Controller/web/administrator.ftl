@@ -59,7 +59,7 @@
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="clientid" value="${client.client_id}" />
 										<input type="hidden" name="clientfile" value="${client.client_file_name}" />
-										<#if client.active>
+										<#if client.client_active == 'TRUE'>
 											<input type="hidden" id="action${client.client_id}" name="action" value="deny" />
 											<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
 										<#else>

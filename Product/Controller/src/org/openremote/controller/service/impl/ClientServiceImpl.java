@@ -37,7 +37,7 @@ public class ClientServiceImpl implements ClientService
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
    
    private DatabaseService database;
-   private static String selectAllClientsQuery = "SELECT * FROM CLIENT"; // ORDER BY date
+   private static String selectAllClientsQuery = "SELECT * FROM client"; // ORDER BY date
    
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
@@ -268,7 +268,7 @@ public class ClientServiceImpl implements ClientService
       int resultValue = -1;
       if(database != null)
       {
-         resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.CLIENT (CLIENT_ID, CLIENT_SERIAL, CLIENT_PINCODE, CLIENT_DEVICE_NAME, CLIENT_EMAIL, CLIENT_FILE_NAME, CLIENT_ACTIVE, CLIENT_CREATION_TIMESTAMP, CLIENT_MODIFICATION_TIMESTAMP, CLIENT_GROUP_ID) " +
+         resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
          "VALUES " +
          "(null, '', '" + pinCode + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW, null);");
       }
@@ -289,8 +289,7 @@ public class ClientServiceImpl implements ClientService
          newNum = database.getNumRows();
       }
       return newNum;
-   }
-   
+   }   
    
    public void setDatabase(DatabaseService database)
    {
