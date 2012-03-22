@@ -155,8 +155,9 @@ public class SubmitCSR extends RESTAPI
   /**
    * Retrieve the client information from an CSR file
    * @param filename the file name of the CSR
+   * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
    */
-  private void getClientInformation(String filename)
+  private int getClientInformation(String filename)
   {
       String message = executeOpenSSL(filename);
       String username = null;
@@ -194,10 +195,8 @@ public class SubmitCSR extends RESTAPI
       {
          logger.error(e.getMessage());
       }
-      if(!clientService.addClient(pinCode, username, email, filename))
-      {
-          logger.error("Database insertion went WRONG");
-      }
+
+      return clientService.addClient(pinCode, username, email, filename);
   }
 
   /**
@@ -222,7 +221,12 @@ public class SubmitCSR extends RESTAPI
     out.write(CSR_FOOTER);
     out.close();
 
-    getClientInformation(filename);
+    int retvalue = getClientInformation(filename);
+    if(retvalue != 1)
+    {
+        File file = new File(CA_LOCATION + "csr/" + filename);
+        file.delete();
+    }
 
     return timestamp;
   }
