@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -238,34 +239,47 @@ public class ClientServiceImpl implements ClientService
    @Override
    /**
     * Add new client to the database.
-    * @param pinCode the client pincode
+    * @param pinCode the client pin
     * @param deviceName the client device name
     * @param email the client e-mail address
     * @param fileName the client file name (certificate request file)
-    * @return boolean true is OK false is something went wrong
+    * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
+ 
+ * @return boolean true is user is successfully added or already exist in the database, returns false when the select or insert query went wrong
     */
-   public boolean addClient(String pinCode, String deviceName, String email, String fileName)
+   public int addClient(String pin, String deviceName, String email, String fileName)
    {
+      int returnValue = 0;
       int resultValue = -1;
-      if(database != null)
-      {
-         resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) " +
-         "VALUES " +
-         "('', '" + pinCode + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW);");
-      }
-      else
-      {
-         logger.error("Database is not yet set (null)");
-      }
       
-      if(resultValue >= 1)
-      {
-         return true;
+      database.doSQL("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = '" + pin + "' AND client_device_name = '" + deviceName + "' LIMIT 1");
+      int numRows = database.getNumRows();
+      
+      // Check if client doesn't exist in the database
+      if(numRows == 0)
+      {      
+         if(database != null)
+         {
+            resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) " +
+            "VALUES " +
+            "('', '" + pin + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW);");
+         }
+         else
+         {
+            logger.error("Database is not yet set (null)");
+         }
+         
+         if(resultValue >= 1)
+         {
+            returnValue = 1;
+         }
       }
       else
       {
-         return false;
+         // ignore a second user with the same device name and pin
+         returnValue = 2;
       }
+      return returnValue;
    }     
    
    @Override

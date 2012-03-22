@@ -10,5 +10,5 @@ public interface ClientService
 {   
    ResultSet getClients();
    int getNumClients();
-   boolean addClient(String pinCode, String deviceName, String email, String fileName);
+   int addClient(String pinCode, String deviceName, String email, String fileName);
 }

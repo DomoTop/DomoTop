@@ -305,5 +305,8 @@ public class MyKeyStore {
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
 		file.delete();
+		
+		file = new File(dir, CertificationRequest.TIMESTAMP_FILE);
+		file.delete();
 	}
 }

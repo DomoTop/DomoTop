@@ -1,6 +1,15 @@
 package org.openremote.android.console.ssl;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -39,6 +48,7 @@ import org.spongycastle.util.encoders.Base64;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView.SavedState;
 
 public class CertificationRequest {
 	
@@ -53,6 +63,8 @@ public class CertificationRequest {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
+
+	public static final String TIMESTAMP_FILE = "timestamp";
 		
 	/**
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
@@ -148,6 +160,17 @@ public class CertificationRequest {
 
 	        // Execute HTTP Post Request
 	        HttpResponse response = httpclient.execute(httppost);
+	        
+	        InputStreamReader is = new InputStreamReader(response.getEntity().getContent());
+	        BufferedReader br = new BufferedReader(is);
+	        String read = br.readLine();
+
+	        while(read != null) {
+	            read += br.readLine();
+	        }
+	        
+	        saveTimestamp(read, context);
+	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
@@ -155,5 +178,32 @@ public class CertificationRequest {
 			Log.e(LOG_CATEGORY, e.getMessage());
 	    }
 	    return -1;
+	}
+	
+	/**
+	 * Write a timestamp to a file, used later to retrieve signed certificate
+	 * @param timestamp The timestamp to write 
+	 * @param context The current application context
+	 */
+	private static void saveTimestamp(String timestamp, Context context)
+	{
+		timestamp.trim();
+		OutputStreamWriter out;
+		try {
+			out = new OutputStreamWriter(
+					context.openFileOutput(TIMESTAMP_FILE, Context.MODE_PRIVATE));
+			out.write(timestamp);
+			out.close();
+		} catch (FileNotFoundException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		} catch (IOException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		} 
+	}
+
+	public static boolean isPending(Context context) {
+		File dir = context.getFilesDir();
+		File file = new File(dir, TIMESTAMP_FILE);	
+		return file.exists();
 	}
 }
