@@ -34,13 +34,17 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Client;
-import org.openremote.controller.service.ClientListService;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
+import freemarker.template.TemplateSequenceModel;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -61,23 +65,63 @@ public class AdministratorServlet extends HttpServlet
   // @TODO Fix own logger
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
-  private static ClientListService clientListService = (ClientListService) SpringContext.getInstance().getBean("clientListService");
+  private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
 
-  
   /**
    * Transform a client list array into a HTML template.
    * 
    * @param clients List of Clients
    * @return HTML formatted text in the administrator template
-   */
-  
-  private String setListInTemplate(List<Client> clients)
+   */  
+  private String setErrorInTemplate(String error)
   {
      Map<String, Object> root = new HashMap<String, Object>();
       
      String result = "";
      
      // Read the XML file and process the template using FreeMarker
+     try 
+     {     
+        root.put( "errorMessage", error );
+        result = freemarkerDo(root, "administrator.ftl");
+     }
+     catch(Exception e) 
+     {
+        result = "<h1>Template Exception</h1>";
+        result += e.getLocalizedMessage();
+        logger.error(e.getLocalizedMessage());
+     }
+     return result;
+  }  
+  
+  /**
+   * 
+   * @param resultSet
+   * @return
+   */
+  private String setResultListInTemplate(ResultSet resultSet)
+  {
+     Map<String, Object> root = new HashMap<String, Object>();
+    
+     String result = "";
+   
+        
+     return result;
+  }
+  
+  
+  /**
+   * Transform a client list array into a HTML template.
+   * 
+   * @param clients List of Clients
+   * @return HTML formatted text in the administrator template
+   */  
+  private String setListInTemplate(List<Client> clients)
+  {
+     Map<String, Object> root = new HashMap<String, Object>();
+      
+     String result = "";
+     
      try 
      {     
         root.put( "clients", clients );
@@ -102,17 +146,20 @@ public class AdministratorServlet extends HttpServlet
   static String freemarkerDo(Map root, String template) throws Exception
   {
      Configuration cfg = new Configuration();
+     // Read the XML file and process the template using FreeMarker
      ControllerConfiguration configuration = ControllerConfiguration.readXML();
      
      cfg.setDirectoryForTemplateLoading(new File(configuration.getResourcePath()));
      //cfg.setClassForTemplateLoading( FreemarkerUtils.class, "/templates" );
      cfg.setObjectWrapper( new DefaultObjectWrapper() );
+     // @TODO : cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
      Template temp = cfg.getTemplate(template);
      StringWriter out = new StringWriter();
      temp.process( root, out );
 
      return out.getBuffer().toString();
   }
+
   
   /**
    * Get request handler for the administrator URI
@@ -126,14 +173,37 @@ public class AdministratorServlet extends HttpServlet
      PrintWriter printWriter = response.getWriter();
      
      try
-     {        
-        printWriter.print(setListInTemplate(clientListService.getClientList()));
+     {
+        ResultSet clients = clientService.getClients();
+
+        if(clients != null)
+        { 
+           //printWriter.print(setErrorInTemplate("No clients in the database. Number of clients: " + clientService.getNumClients()));
+           
+           //printWriter.print(setResultListInTemplate(clients));
+
+                                
+           while (clients.next()) 
+           {
+              printWriter.print(clients.getString("client_serial") + " (" + clients.getString("client_pincode") + ")");
+           }
+  
+        }
+        else
+        {
+           printWriter.print(setErrorInTemplate("Database problem."));
+        }
         response.setStatus(200);
+     }
+     catch (SQLException e) 
+     {
+        response.setStatus(406);
+        logger.error("SQL Exception: " + e.getMessage());
      }
      catch (NullPointerException e)
      {
-        response.setStatus(401);
-        logger.error("NullPointer client", e);
+        response.setStatus(406);
+        logger.error("NullPointer in Administrator Servlet: ", e);
      }
   }
 }

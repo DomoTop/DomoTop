@@ -133,9 +133,16 @@
     
     <!-- service for status command from panel -->
     <bean id="statusCommandService" class="org.openremote.controller.service.impl.StatusCommandServiceImpl" />
+
+   	<!-- service for the database -->
+    <bean id="databaseService" class="org.openremote.controller.service.impl.DatabaseServiceImpl" >
+    	<property name="configuration" ref="configuration"></property>
+    </bean>        
     
-    <!-- service for client list for administrator -->
-    <bean id="clientListService" class="org.openremote.controller.service.impl.ClientListServiceImpl" />
+    <!-- service for client for getting client information for administrator panel -->
+    <bean id="clientService" class="org.openremote.controller.service.impl.ClientServiceImpl" >
+    	<property name="database" ref="databaseService"></property>
+    </bean>
     
     <!-- service for listening the status of device -->
     <bean id="statusPollingService" class="org.openremote.controller.service.impl.StatusPollingServiceImpl" />
