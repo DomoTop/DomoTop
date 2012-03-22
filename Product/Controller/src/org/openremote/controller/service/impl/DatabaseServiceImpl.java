@@ -82,9 +82,9 @@ public class DatabaseServiceImpl implements DatabaseService
                      "client_email VARCHAR(250), "+
                      "client_file_name VARCHAR(200), "+
                      "client_active BOOLEAN DEFAULT FALSE NOT NULL, "+
-                     "client_creation_timestamp TIMESTAMP DEFAULT now,  "+
-                     "client_modification_timestamp TIMESTAMP DEFAULT now,  "+
-                     "client_group_id BIGINT, "+
+                     "client_creation_timestamp TIMESTAMP DEFAULT NOW,  "+
+                     "client_modification_timestamp TIMESTAMP DEFAULT NOW,  "+
+                     "client_group_id BIGINT DEFAULT '0' NOT NULL, "+
                      "PRIMARY KEY (client_id), "+
                      "UNIQUE (client_file_name))")
                      .execute();

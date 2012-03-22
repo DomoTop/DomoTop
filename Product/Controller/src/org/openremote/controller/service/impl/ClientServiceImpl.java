@@ -236,21 +236,36 @@ public class ClientServiceImpl implements ClientService
    }
    
    @Override
-   public int addClient(String pinCode, String deviceName, String email, String fileName)
+   /**
+    * Add new client to the database.
+    * @param pinCode the client pincode
+    * @param deviceName the client device name
+    * @param email the client e-mail address
+    * @param fileName the client file name (certificate request file)
+    * @return boolean true is OK false is something went wrong
+    */
+   public boolean addClient(String pinCode, String deviceName, String email, String fileName)
    {
       int resultValue = -1;
       if(database != null)
       {
-         resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
+         resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) " +
          "VALUES " +
-         "(null, '', '" + pinCode + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW, null);");
+         "('', '" + pinCode + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW);");
       }
       else
       {
          logger.error("Database is not yet set (null)");
       }
-            
-      return resultValue;      
+      
+      if(resultValue >= 1)
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
    }     
    
    @Override
