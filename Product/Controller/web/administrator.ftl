@@ -59,7 +59,7 @@
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="clientid" value="${client.client_id}" />
 										<input type="hidden" name="clientfile" value="${client.client_file_name}" />
-										<#if client.client_active == 'TRUE'>
+										<#if client.client_active>
 											<input type="hidden" id="action${client.client_id}" name="action" value="deny" />
 											<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
 										<#else>
@@ -71,9 +71,9 @@
 									<TD>							
 										<select name="group">
 											<option value="">No Group</option>											
-											<option<#if client.client_group_id == '1'> selected</#if> value="admin">Administrator</option>
-											<option<#if client.client_group_id == '2'> selected</#if> value="parent">Parent</option>
-											<option<#if client.client_group_id == '3'> selected</#if> value="child">Childeren</option>
+											<option<#if client.client_group_id == 1> selected</#if> value="admin">Administrator</option>
+											<option<#if client.client_group_id == 2> selected</#if> value="parent">Parent</option>
+											<option<#if client.client_group_id == 3> selected</#if> value="child">Childeren</option>
 										</select>
 									</TD>
 								</TR>

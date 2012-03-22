@@ -8,9 +8,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +16,9 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
-import org.openremote.controller.ControllerConfiguration;
-import org.openremote.controller.model.Client;
 import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
-import org.openremote.controller.spring.SpringContext;
-import org.springframework.orm.jpa.vendor.Database;
 
 /**
  * Get client information out the (request) certificates
@@ -48,13 +42,11 @@ public class ClientServiceImpl implements ClientService
    private static final String CRTDir = "/certs";
    private static final String CSRDir = "/csr";
    
-   private int uniqueClientID = 0;
    private Map<String,String> trustedClients = new HashMap<String,String>();  
    
-   private List<Client> getClientsAuthorized(String path) throws NullPointerException
+   private void getClientsAuthorized(String path) throws NullPointerException
    {
       String fileName, userName;
-      List<Client> output = new ArrayList<Client>();
       File[] listOfFiles = this.getListFromPath(path);
       
       for (int i = 0; i < listOfFiles.length; i++) 
@@ -96,22 +88,19 @@ public class ClientServiceImpl implements ClientService
                {
                   logger.error(e.getMessage() + " Serial: " + serialString);
                }
-               output.add(new Client(uniqueClientID, serial, username, "email", "-", fileName, true, noGroup));
-               uniqueClientID++;
+               //output.add(new Client(uniqueClientID, serial, username, "email", "-", fileName, true, noGroup));
             }
          }
       }
-      return output;
    }
 
-   private List<Client> getClientsNotAuthorized(String path) throws NullPointerException
+   private void getClientsNotAuthorized(String path) throws NullPointerException
    {
       String fileName, userName;
       String username = "<i>Undefined</i>";
       String pinCode = "<i>Undefined</i>";
       String publicKey = "";
       
-      List<Client> output = new ArrayList<Client>();
       File[] listOfFiles = this.getListFromPath(path);
      
       for (int i = 0; i < listOfFiles.length; i++) 
@@ -161,13 +150,11 @@ public class ClientServiceImpl implements ClientService
                      logger.error(e.getMessage());
                   }                  
                   
-                  output.add(new Client(uniqueClientID, 0, username, "email", pinCode, fileName, false, noGroup));
-                  uniqueClientID++;
+                  //output.add(new Client(uniqueClientID, 0, username, "email", pinCode, fileName, false, noGroup));
                }
             }
          }
       }
-      return output;
    }
    
    private String generateMD5Sum(String message) throws NoSuchAlgorithmException
@@ -232,21 +219,7 @@ public class ClientServiceImpl implements ClientService
       
       return buffer.toString();
    }
-   
-   @Deprecated
-   public List<Client> getClientList() throws NullPointerException
-   {
-      trustedClients.clear();
-      
-      List<Client> clients =  new ArrayList<Client>();
-      List<Client> authorizedClients = this.getClientsAuthorized(rootCADir + CRTDir);
-      List<Client> notAuthorizedClients = (this.getClientsNotAuthorized(rootCADir + CSRDir));
-      
-      clients.addAll(notAuthorizedClients);
-      clients.addAll(authorizedClients);
-      return clients;
-   }
-   
+     
    @Override
    public ResultSet getClients()
    {

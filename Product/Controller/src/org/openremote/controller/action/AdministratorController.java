@@ -109,11 +109,11 @@ public class AdministratorController extends MultiActionController {
             {
                if(deleteCertificate(clientUsername))
                {
-                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + "\n<br/>Certificate deleted.");
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + "\n\rCertificate deleted.");
                }
                else
                {
-                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n<br/>Plus the certificate couldn't be removed.");
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n\rPlus the certificate couldn't be removed.");
                }
             }
             else

@@ -10,9 +10,9 @@ import java.sql.ResultSet;
 public interface DatabaseService {
    
    ResultSet doSQL(String sql);
-   int getNumRows();
+   int getNumRows();   
    int getInsertID();
    void free();
    void close();
-   int doUpdateSQL(String sql);   
+   int doUpdateSQL(String sql);
 }
