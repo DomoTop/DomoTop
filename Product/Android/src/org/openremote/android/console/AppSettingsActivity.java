@@ -291,7 +291,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
 
-    generateCertification.setEnabled(CertificationRequest.isPending(getApplicationContext()));
     generateCertification.setOnClickListener(
     	new OnClickListener() {
 		
