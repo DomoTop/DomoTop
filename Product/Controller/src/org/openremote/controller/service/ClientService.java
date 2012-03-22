@@ -11,4 +11,6 @@ public interface ClientService
    ResultSet getClients();
    int getNumClients();
    int addClient(String pinCode, String deviceName, String email, String fileName);
+   ResultSet getClient(int clientID);
+   int updateClientStatus(int clientID, boolean active);
 }

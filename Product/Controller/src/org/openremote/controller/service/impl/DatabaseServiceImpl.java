@@ -88,9 +88,9 @@ public class DatabaseServiceImpl implements DatabaseService
                      "PRIMARY KEY (client_id), "+
                      "UNIQUE (client_file_name))")
                      .execute();
-         //connection.prepareStatement("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
-         //		"VALUES " +
-         //		"(null, 'sadkjad', '1234', 'HTC_DESIRE', 'webmaster1989@gmail.com', 'sad.csr', TRUE, NOW, NOW, 1);")
+        // connection.prepareStatement("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
+        // 		"VALUES " +
+        // 		"(null, 'sadkjad', '1234', 'HTC_DESIRE', 'webmaster1989@gmail.com', 'sad.csr', TRUE, NOW, NOW, 1);")
          //		.execute();
       } catch (SQLException e) {
          // ignore exceptions, because table creations can be done multiple times

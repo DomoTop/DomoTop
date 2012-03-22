@@ -32,7 +32,10 @@ public class ClientServiceImpl implements ClientService
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
    
    private DatabaseService database;
-   private static String selectAllClientsQuery = "SELECT * FROM client"; // ORDER BY date
+   private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
+   private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC"; 
+   private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
+   private static String limitByOne = " LIMIT 1";
    
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
@@ -251,17 +254,20 @@ public class ClientServiceImpl implements ClientService
    {
       int returnValue = 0;
       int resultValue = -1;
+      int numRows = -1;
       
-      database.doSQL("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = '" + pin + "' AND client_device_name = '" + deviceName + "' LIMIT 1");
-      int numRows = database.getNumRows();
+      if(database != null)
+      {
+         database.doSQL("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = '" + pin + "' AND client_device_name = '" + deviceName + "' LIMIT 1");
+         numRows = database.getNumRows();
+      }
       
       // Check if client doesn't exist in the database
       if(numRows == 0)
       {      
          if(database != null)
          {
-            resultValue = database.doUpdateSQL("INSERT INTO PUBLIC.client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) " +
-            "VALUES " +
+            resultValue = database.doUpdateSQL(insertClientQuery +
             "('', '" + pin + "', '" + deviceName + "', '" + email + "', '" + fileName + "', FALSE, NOW, NOW);");
          }
          else
@@ -281,6 +287,34 @@ public class ClientServiceImpl implements ClientService
       }
       return returnValue;
    }     
+   
+   @Override
+   public ResultSet getClient(int clientID)
+   {
+      ResultSet returnValue = null;
+      if(database != null)
+      {
+         returnValue = database.doSQL(selectClientQuery + clientID + limitByOne);
+      }
+      else
+      {
+         logger.error("Database is not yet set (null)");
+      }
+      return returnValue;
+   }
+   
+   @Override
+   public int updateClientStatus(int clientID, boolean active)
+   {
+      int resultValue = -1;
+      
+      if(database != null)
+      {
+         resultValue = database.doUpdateSQL("UPDATE client SET client_active = " + active + " WHERE client_id = " + clientID);
+      }
+      return resultValue;
+   }
+   
    
    @Override
    public int getNumClients()

@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,8 @@ import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.exception.ForbiddenException;
 import org.openremote.controller.exception.ResourceNotFoundException;
 import org.openremote.controller.model.Group;
+import org.openremote.controller.service.ClientService;
+import org.openremote.controller.spring.SpringContext;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
@@ -50,6 +54,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  */
 public class AdministratorController extends MultiActionController {
       
+   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
+
    //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
    
@@ -64,11 +70,27 @@ public class AdministratorController extends MultiActionController {
     */  
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
-      String action = request.getParameter("action");
-      String clientID = request.getParameter("clientid");
-      String clientFileName = request.getParameter("clientfile"); // @TODO: Get file name via client id using a database
-      String clientUsername = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
+      String action = request.getParameter("action");      
+      int clientID = Integer.parseInt(request.getParameter("client_id"));
+      String pin = "";
+      String clientUsername = ""; 
 
+      try 
+      {
+         ResultSet resultSet = clientService.getClient(clientID);
+         
+         while(resultSet.next())
+         {
+            String clientFileName = resultSet.getString("client_file_name");
+            clientUsername = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
+
+            pin = resultSet.getString("client_pincode");
+         }
+      }
+      catch (SQLException e) {
+         logger.error(e.getMessage());
+      }
+            
       try 
       {   
          int result = -1;
@@ -81,6 +103,7 @@ public class AdministratorController extends MultiActionController {
             result = executeOpenSSLCommand(clientUsername, false);            
          }
 
+         // OpenSSL Command successful
          if(result == 0)
          {
             // @TODO: Add the serial ID to the database and use index.txt
@@ -91,7 +114,9 @@ public class AdministratorController extends MultiActionController {
             {
                if(deleteCertificate(clientUsername))
                {
-                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + "getPinFromDatabase");
+                  int status = clientService.updateClientStatus(clientID, false);
+                  logger.error("Update return value : " + status);
+                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
                }
                else
                {
@@ -100,6 +125,8 @@ public class AdministratorController extends MultiActionController {
             }
             else if(action.equals("accept"))
             {
+               int status = clientService.updateClientStatus(clientID, true);
+               logger.error("Update return value : " + status);
                response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
             }
          }

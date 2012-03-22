@@ -57,8 +57,7 @@
 									<TD>${client.client_device_name} (${client.client_file_name})</TD><TD><#if client.client_email?has_content><i>No e-mail</i><#else>${client.client_email}</#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
-										<input type="hidden" name="clientid" value="${client.client_id}" />
-										<input type="hidden" name="clientfile" value="${client.client_file_name}" />
+										<input type="hidden" name="client_id" value="${client.client_id}" />
 										<#if client.client_active>
 											<input type="hidden" id="action${client.client_id}" name="action" value="deny" />
 											<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
