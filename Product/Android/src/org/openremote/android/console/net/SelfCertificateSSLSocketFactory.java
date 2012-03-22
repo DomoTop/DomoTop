@@ -84,7 +84,7 @@ public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
          MyKeyStore keystore = MyKeyStore.getInstance(context);
          KeyManager[] managers = null;
          
-         keystore.fillKeyStore();
+         //keystore.fillKeyStore();
          //keystore.saveKeyStore();
          
          if(!keystore.isEmpty())

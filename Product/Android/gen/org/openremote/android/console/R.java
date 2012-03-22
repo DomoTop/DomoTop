@@ -77,7 +77,7 @@ containing a value of this type.
         public static final int vertical_seekbar_progress=0x7f020016;
     }
     public static final class id {
-        public static final int app_version=0x7f080018;
+        public static final int app_version=0x7f080019;
         public static final int button_bar=0x7f080000;
         public static final int choose_controller_progress=0x7f080003;
         public static final int details=0x7f08000c;
@@ -85,12 +85,13 @@ containing a value of this type.
         public static final int horizontal_seekbar_maxvalue_image=0x7f080007;
         public static final int horizontal_seekbar_minvalue_image=0x7f080005;
         public static final int horizontal_seekbar_root_layout=0x7f080004;
-        public static final int loading_text=0x7f080019;
+        public static final int loading_text=0x7f08001a;
         public static final int login=0x7f08000a;
         public static final int login_cancel=0x7f08000b;
         public static final int password=0x7f080009;
         public static final int setting_cancel=0x7f080002;
         public static final int setting_done=0x7f080001;
+        public static final int ssl_clientcert_delete=0x7f080013;
         public static final int ssl_clientcert_fetch=0x7f080012;
         public static final int ssl_clientcert_generation=0x7f080010;
         public static final int ssl_clientcert_pin=0x7f080011;
@@ -98,11 +99,11 @@ containing a value of this type.
         public static final int ssl_port=0x7f08000e;
         public static final int ssl_toggle=0x7f08000d;
         public static final int username=0x7f080008;
-        public static final int vertical_seekbar=0x7f080015;
-        public static final int vertical_seekbar_maxvalue_image=0x7f080014;
-        public static final int vertical_seekbar_minvalue_image=0x7f080016;
-        public static final int vertical_seekbar_root_layout=0x7f080013;
-        public static final int welcome_view=0x7f080017;
+        public static final int vertical_seekbar=0x7f080016;
+        public static final int vertical_seekbar_maxvalue_image=0x7f080015;
+        public static final int vertical_seekbar_minvalue_image=0x7f080017;
+        public static final int vertical_seekbar_root_layout=0x7f080014;
+        public static final int welcome_view=0x7f080018;
     }
     public static final class layout {
         public static final int bottom_button_bar=0x7f030000;

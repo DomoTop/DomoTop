@@ -54,6 +54,8 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -242,6 +244,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final Button generateCertification = (Button)findViewById(R.id.ssl_clientcert_generation);
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
     final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
+    final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
 
     // Configure UI to current settings state...
 
@@ -303,13 +306,41 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 			}
 		});
     
+    final ProgressDialog dialog = new ProgressDialog(this);
+    
+    final MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
+    final Handler fetchHandler = new Handler(){
+    	@Override
+    	public void handleMessage(Message msg) {
+    		super.handleMessage(msg);
+    		dialog.cancel();
+    	    fetchCertificate.setEnabled(ks.isEmpty());
+    	}
+    };
+    
+    fetchCertificate.setEnabled(ks.isEmpty());
+    
     fetchCertificate.setOnClickListener(
         	new OnClickListener() {
     		
     			@Override
     			public void onClick(View arg0) {
-    				MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
-    				ks.getKeyStore();
+    				new Thread() {
+    					public void run() {
+    						ks.fillKeyStore();
+    						fetchHandler.sendEmptyMessage(0);
+    					}
+    				}.run();
+    			}
+    		});
+    
+    
+    delete.setOnClickListener(
+        	new OnClickListener() {
+    		
+    			@Override
+    			public void onClick(View arg0) {
+    				ks.delete();
     			}
     		});
     
