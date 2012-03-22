@@ -243,12 +243,13 @@ public class ClientServiceImpl implements ClientService
     * @param deviceName the client device name
     * @param email the client e-mail address
     * @param fileName the client file name (certificate request file)
-    * @return boolean true is user is successfully added or already exist in the database, 
-    *          returns false when the select or insert query went wrong
+    * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
+ 
+ * @return boolean true is user is successfully added or already exist in the database, returns false when the select or insert query went wrong
     */
-   public boolean addClient(String pin, String deviceName, String email, String fileName)
+   public int addClient(String pin, String deviceName, String email, String fileName)
    {
-      boolean returnValue = false;
+      int returnValue = 0;
       int resultValue = -1;
       
       database.doSQL("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = '" + pin + "' AND client_device_name = '" + deviceName + "' LIMIT 1");
@@ -270,13 +271,13 @@ public class ClientServiceImpl implements ClientService
          
          if(resultValue >= 1)
          {
-            returnValue = true;
+            returnValue = 1;
          }
       }
       else
       {
          // ignore a second user with the same device name and pin
-         returnValue = true;
+         returnValue = 2;
       }
       return returnValue;
    }     
