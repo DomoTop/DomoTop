@@ -3,6 +3,7 @@ package org.openremote.controller.service.impl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.apache.log4j.Logger;
@@ -87,10 +88,10 @@ public class DatabaseServiceImpl implements DatabaseService
                      "PRIMARY KEY (client_id), "+
                      "UNIQUE (client_file_name))")
                      .execute();
-         connection.prepareStatement("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
-         		"VALUES " +
-         		"(null, 'sadkjad', '1234', 'HTC_DESIRE', 'webmaster1989@gmail.com', 'sad.csr', TRUE, NOW, NOW, 1);")
-         		.execute();
+         //connection.prepareStatement("INSERT INTO PUBLIC.client (client_id, client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp, client_group_id) " +
+         //		"VALUES " +
+         //		"(null, 'sadkjad', '1234', 'HTC_DESIRE', 'webmaster1989@gmail.com', 'sad.csr', TRUE, NOW, NOW, 1);")
+         //		.execute();
       } catch (SQLException e) {
          // ignore exceptions, because table creations can be done multiple times
          logger.error("SQL exception table creation: " + e.getMessage());
@@ -101,7 +102,8 @@ public class DatabaseServiceImpl implements DatabaseService
    {
       boolean returnValue = true;
       try {
-         statement = connection.createStatement();
+         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                                          ResultSet.CONCUR_UPDATABLE);
       } catch (SQLException e) {
          returnValue = false;
          logger.error("SQL Exception: " + e.getMessage());
@@ -174,7 +176,8 @@ public class DatabaseServiceImpl implements DatabaseService
    }   
    
    @Override
-   public int getNumRows() {   
+   public int getNumRows()
+   {
       int numRows = 0;
       try 
       {
@@ -182,7 +185,7 @@ public class DatabaseServiceImpl implements DatabaseService
          numRows = resultSet.getRow();
          resultSet.beforeFirst();
       } catch (SQLException e) {
-         logger.error(e.getMessage());
+         logger.error("SQLException: "  + e.getMessage());
       }
       return numRows;
    }

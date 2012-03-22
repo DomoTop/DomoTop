@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
-import org.openremote.controller.model.Client;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.ResultSetUtil;
@@ -146,6 +145,7 @@ public class AdministratorServlet extends HttpServlet
    * @param clients List of Clients
    * @return HTML formatted text in the administrator template
    */  
+  /*
   private String setListInTemplate(List<Client> clients)
   {
      Map<String, Object> root = new HashMap<String, Object>();
@@ -164,7 +164,7 @@ public class AdministratorServlet extends HttpServlet
         logger.error(e.getLocalizedMessage());
      }
      return result;
-  }
+  }*/
 
   /**
    *  Process a template using FreeMarker and print the results
@@ -205,19 +205,18 @@ public class AdministratorServlet extends HttpServlet
      try
      {
         ResultSet clients = clientService.getClients();
-
+        int numClients = clientService.getNumClients();
+        
         if(clients != null)
-        { 
-           //printWriter.print(setErrorInTemplate("No clients in the database. Number of clients: " + clientService.getNumClients()));
-           
-           printWriter.print(setResultListInTemplate(clients));
-
-           /*
-           while (clients.next()) 
+        {
+           if(numClients <= 0)
            {
-              printWriter.print(clients.getString("client_serial") + " (" + clients.getString("client_pincode") + ")");
-           }*/
-  
+              printWriter.print(setErrorInTemplate("No clients in the database."));
+           }
+           else
+           {
+              printWriter.print(setResultListInTemplate(clients));
+           }  
         }
         else
         {
@@ -225,12 +224,6 @@ public class AdministratorServlet extends HttpServlet
         }
         response.setStatus(200);
      }
-     /*
-     catch (SQLException e) 
-     {
-        response.setStatus(406);
-        logger.error("SQL Exception: " + e.getMessage());
-     }*/
      catch (NullPointerException e)
      {
         response.setStatus(406);

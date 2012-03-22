@@ -23,12 +23,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * General purpose utility methods related to ResultSets
  *
- * @author Ted Husted
- * @version $Revision$ $Date$
+ * @author Ted Husted, Melroy van den Berg
  */
 public class ResultSetUtil {
 
@@ -87,9 +85,9 @@ public class ResultSetUtil {
            // Scroll to each record, make map of row, add to list
        while (resultSet.next()) {
            HashMap row = new HashMap(cols,1);
-           for (int i=1; i<=cols ; i++) {
+           for (int i=1; i<=cols ; i++) {              
                row.put(metaData.getColumnName(i).toLowerCase(),
-                   resultSet.getString(i));
+                   resultSet.getObject(i)); //toString(i)
            }
            list.add(row);
        } // end while
