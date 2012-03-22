@@ -297,4 +297,13 @@ public class MyKeyStore {
 		}
         return doc;
 	}
+
+	/**
+	 * Delete the current KeyStore saved in KEYSTORE_FILE
+	 */
+	public void delete() {
+		File dir = context.getFilesDir();
+		File file = new File(dir, KEYSTORE_FILE);
+		file.delete();
+	}
 }
