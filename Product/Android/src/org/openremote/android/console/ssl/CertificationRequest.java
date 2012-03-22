@@ -163,10 +163,10 @@ public class CertificationRequest {
 	        
 	        InputStreamReader is = new InputStreamReader(response.getEntity().getContent());
 	        BufferedReader br = new BufferedReader(is);
-	        String read = br.readLine();
-
-	        while(read != null) {
-	            read += br.readLine();
+	        String tmp, read = "";
+	        
+	        while((tmp = br.readLine()) != null) {
+	            read += tmp;
 	        }
 	        
 	        saveTimestamp(read, context);
