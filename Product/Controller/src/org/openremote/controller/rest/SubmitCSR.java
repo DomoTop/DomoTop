@@ -206,7 +206,8 @@ public class SubmitCSR extends RESTAPI
   protected String putCsr(String username, String cert) throws IOException
   {
     String certificate = URLDecoder.decode(cert);
-    BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + username + ".csr"));
+    String filename = username + System.currentTimeMillis() + ".csr";
+    BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + filename));
 
     out.write(CSR_HEADER);
     int j = 0;
@@ -220,7 +221,7 @@ public class SubmitCSR extends RESTAPI
     out.write(CSR_FOOTER);
     out.close();
 
-    getClientInformation(username + ".csr");
+    getClientInformation(filename);
 
     return certificate;
   }
