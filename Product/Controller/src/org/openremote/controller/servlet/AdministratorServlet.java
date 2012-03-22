@@ -117,13 +117,7 @@ public class AdministratorServlet extends HttpServlet
      {
          logger.error("SQLException: " + e.getMessage());
      }
-     
-     Iterator itr = clients.iterator(); 
-     while(itr.hasNext()) {
-         Object element = itr.next(); 
-         logger.error("element: "  + element.toString());
-     }
-     
+          
      try 
      {     
         root.put( "clients", clients );
