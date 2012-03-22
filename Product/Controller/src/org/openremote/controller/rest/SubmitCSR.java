@@ -97,6 +97,11 @@ public class SubmitCSR extends RESTAPI
 
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
 
+  /**
+   * Execute a openssl command
+   * @param filename the file to examine
+   * @return OpenSSL's output
+   */
   private String executeOpenSSL(String filename)
   {
     List<String> command = new ArrayList<String>();
@@ -133,6 +138,11 @@ public class SubmitCSR extends RESTAPI
     return buffer.toString();
   }
 
+   /**
+    * Gerate an md5sum from a base64 encoded message
+    * @param message the Base64 encoded message
+    * @return MD5Sum as a hex encoded string
+    */
    private String generateMD5Sum(String message) throws NoSuchAlgorithmException
    {
       final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
@@ -142,12 +152,16 @@ public class SubmitCSR extends RESTAPI
       return new String(Hex.encodeHex(resultByte));
    }
 
+  /**
+   * Retrieve the client information from an CSR file
+   * @param filename the file name of the CSR
+   */
   private void getClientInformation(String filename)
   {
       String message = executeOpenSSL(filename);
       String username = null;
       String pinCode = null;
-      String email = null;
+      String email = "";
       
       try
       {
@@ -180,10 +194,15 @@ public class SubmitCSR extends RESTAPI
       {
          logger.error(e.getMessage());
       }
-      int returncode = clientService.addClient(pinCode, username, email, filename);
-      logger.error("Returncode for database insertion = " + returncode);
+      if(!clientService.addClient(pinCode, username, email, filename))
+      {
+          logger.error("Database insertion went WRONG");
+      }
   }
 
+  /**
+   * Write CSR to file
+   */
   protected String putCsr(String username, String cert) throws IOException
   {
     String certificate = URLDecoder.decode(cert);
