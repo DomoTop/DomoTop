@@ -180,8 +180,8 @@ public class SubmitCSR extends RESTAPI
       {
          logger.error(e.getMessage());
       }
-      
-      clientService.addClient(pinCode, username, email, filename); 
+      int returncode = clientService.addClient(pinCode, username, email, filename);
+      logger.error("Returncode for database insertion = " + returncode);
   }
 
   protected String putCsr(String username, String cert) throws IOException
