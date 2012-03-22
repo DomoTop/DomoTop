@@ -203,10 +203,11 @@ public class SubmitCSR extends RESTAPI
   /**
    * Write CSR to file
    */
-  protected String putCsr(String username, String cert) throws IOException
+  protected long putCsr(String username, String cert) throws IOException
   {
     String certificate = URLDecoder.decode(cert);
-    String filename = username + System.currentTimeMillis() + ".csr";
+    long timestamp = System.currentTimeMillis();
+    String filename = username + timestamp + ".csr";
     BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + filename));
 
     out.write(CSR_HEADER);
@@ -223,7 +224,7 @@ public class SubmitCSR extends RESTAPI
 
     getClientInformation(filename);
 
-    return certificate;
+    return timestamp;
   }
 
   // Implement REST API ---------------------------------------------------------------------------
@@ -236,7 +237,7 @@ public class SubmitCSR extends RESTAPI
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(url);
         if(matcher.find()) 
-            sendResponse(response, putCsr(matcher.group(1), request.getParameter("csr")));
+            sendResponse(response, "" + putCsr(matcher.group(1), request.getParameter("csr")));
     }
 
     catch (ControlCommandException e)
