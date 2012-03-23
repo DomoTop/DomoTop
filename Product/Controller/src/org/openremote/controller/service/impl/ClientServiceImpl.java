@@ -194,6 +194,7 @@ public class ClientServiceImpl implements ClientService
             clientCRTFileName = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
             clientCRTFileName += ".crt";
          }
+         this.free();
       } 
       catch (SQLException e) 
       {

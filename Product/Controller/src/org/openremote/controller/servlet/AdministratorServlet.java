@@ -205,12 +205,13 @@ public class AdministratorServlet extends HttpServlet
            else
            {
               printWriter.print(setResultListInTemplate(clients));
-           }
+           }           
         }
         else
         {
            printWriter.print(setErrorInTemplate("Database problem."));
         }
+        clientService.free();
         response.setStatus(200);
      }
      catch (NullPointerException e)

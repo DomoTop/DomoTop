@@ -85,6 +85,7 @@ public class AdministratorController extends MultiActionController {
 
             pin = resultSet.getString("client_pincode");
          }
+         clientService.free();
       }
       catch (SQLException e) {
          logger.error(e.getMessage());
