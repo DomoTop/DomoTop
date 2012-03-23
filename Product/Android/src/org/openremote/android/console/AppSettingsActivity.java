@@ -290,7 +290,36 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
           }
         }
     );
-
+    
+    final ProgressDialog generationProgress = new ProgressDialog(this);
+    generationProgress.setTitle(R.string.generation_progress);
+    
+    final Handler generationHandler = new Handler()
+    {
+    	@Override
+    	public void handleMessage(Message msg) {
+    		super.handleMessage(msg);
+    		generationProgress.cancel();
+    		
+    		String dialogmessage = 
+    				String.format(getString(R.string.pin_dialog), 
+						AppSettingsModel.getCurrentServer(getApplicationContext()),
+						MyKeyPair.getInstance().getPIN(getApplicationContext())
+					);
+    		
+			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
+			builder.setMessage(dialogmessage)
+			       .setCancelable(true)
+			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();    	
+		}
+    };
+    
     generateCertification.setOnClickListener(
     	new OnClickListener() {
 		
@@ -300,7 +329,9 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 
 				new Thread() {
 					public void run() {
+						generationProgress.show();
 						CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
+						generationHandler.sendEmptyMessage(0);
 					}
 				}.run();
 			}
