@@ -184,7 +184,12 @@ public class DatabaseServiceImpl implements DatabaseService
          resultSet.last();
          numRows = resultSet.getRow();
          resultSet.beforeFirst();
-      } catch (SQLException e) {
+      } 
+      catch (NullPointerException e) 
+      {
+         logger.error(e.getMessage());
+      }
+      catch (SQLException e) {
          logger.error("SQLException: "  + e.getMessage());
       }
       return numRows;
@@ -214,11 +219,6 @@ public class DatabaseServiceImpl implements DatabaseService
          {
             resultSet.close();
          }
-         
-         if(statement != null)
-         {
-            statement.close();
-         }
       } catch (SQLException e) {
          logger.error("SQL Exception: " + e.getMessage());
       }
@@ -226,7 +226,12 @@ public class DatabaseServiceImpl implements DatabaseService
 
    @Override
    public void close() {
-      try {
+      try {         
+         if(statement != null)
+         {
+            statement.close();
+         }
+         
          if(connection != null)
          {
             connection.close();
