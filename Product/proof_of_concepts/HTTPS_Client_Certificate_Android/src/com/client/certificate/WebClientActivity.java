@@ -35,7 +35,7 @@ public class WebClientActivity extends Activity
         
         try {
         	text.setText("Succes:\n");
-        	text.append(GenCert.generateCertificate(this));
+       // 	text.append(GenCert.generateCertificate(this));
         } catch (Exception e) {
         	text.setText("Failure:\n");
 

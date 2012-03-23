@@ -121,10 +121,10 @@ public class MyKeyStore {
 	 */
 	public void saveKeyStore()
 	{
-		FileOutputStream out;
+		FileOutputStream out = null;
 		try {
 			out = context.openFileOutput(KEYSTORE_FILE, Context.MODE_PRIVATE);
-		    keystore.store(out, "password".toCharArray());
+			keystore.store(out, KEYSTORE_PASSWORD.toCharArray());
 		} catch (FileNotFoundException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (KeyStoreException e) {
