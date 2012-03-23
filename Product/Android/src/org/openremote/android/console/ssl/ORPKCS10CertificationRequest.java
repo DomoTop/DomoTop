@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
@@ -28,6 +29,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.openremote.android.console.Constants;
+import org.openremote.android.console.net.ORConnection;
+import org.openremote.android.console.net.ORConnectionDelegate;
+import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.util.PhoneInformation;
 import org.spongycastle.asn1.ASN1ObjectIdentifier;
 import org.spongycastle.asn1.DEROctetString;
@@ -45,7 +49,7 @@ import org.spongycastle.util.encoders.Base64;
 import android.content.Context;
 import android.util.Log;
 
-public class ORPKCS10CertificationRequest {
+public class ORPKCS10CertificationRequest implements ORConnectionDelegate {
 	
 	/**
 	 * Register the SpongyCastle Provider
@@ -58,9 +62,30 @@ public class ORPKCS10CertificationRequest {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
-
 	public static final String TIMESTAMP_FILE = "timestamp";
+	
+	private static ORPKCS10CertificationRequest instance = null;
+	
+	private Context context = null;
 		
+	public static ORPKCS10CertificationRequest getInstance(Context context)
+	{
+		if(instance == null)
+		{
+			instance = new ORPKCS10CertificationRequest(context);
+		}
+		return instance;
+	}
+	
+	/**
+	 * Create a new ORPKCS10CertificationRequest with the applcation context
+	 * @param context The current application context
+	 */
+	private ORPKCS10CertificationRequest(Context context)
+	{
+		this.context = context;
+	}
+	
 	/**
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
 	 * which can be used to authenticate to the server.
@@ -71,9 +96,9 @@ public class ORPKCS10CertificationRequest {
 	 * @param email The email address of the registered user.
 	 * @return The Certification Request in Base64
 	 */
-	public static String getCertificationRequestAsBase64(Context context, String device, String email)
+	private String getCertificationRequestAsBase64(Context context, String device, String email)
 	{
-		String basecert = new String(Base64.encode(getCertificationRequest(context, device, email).getDEREncoded()));
+		String basecert = new String(Base64.encode(getCertificationRequest(device, email).getDEREncoded()));
 				
 		return basecert;
 	}
@@ -86,7 +111,7 @@ public class ORPKCS10CertificationRequest {
 	 * @param email The email address of the registered user.
 	 * @return The Certification Request
 	 */
-	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
+	private PKCS10CertificationRequest getCertificationRequest(String devicename, String email)
 	{
 		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
 		
@@ -136,8 +161,10 @@ public class ORPKCS10CertificationRequest {
 	 * @param host The host to send CSR to, should be entire url to OpenRemote controller root, for example http://192.168.1.2:8080/controller
 	 * @return The HTTP status code of the request or -1 if something local has gone wrong
 	 */
-	public static int submitCertificationRequest(Context context, String host)
+	public int submitCertificationRequest(String host)
 	{
+
+		
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
@@ -145,7 +172,7 @@ public class ORPKCS10CertificationRequest {
 	    String email = phoneInfo.getEmailAddress(context);
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
-
+		
 	    try {
 	    	String csr = getCertificationRequestAsBase64(context, devicename, email);
 	    	
@@ -164,7 +191,7 @@ public class ORPKCS10CertificationRequest {
 	            read += tmp;
 	        }
 	        
-	        saveTimestamp(read, context);
+	        saveTimestamp(read);
 	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
@@ -180,7 +207,7 @@ public class ORPKCS10CertificationRequest {
 	 * @param timestamp The timestamp to write 
 	 * @param context The current application context
 	 */
-	private static void saveTimestamp(String timestamp, Context context)
+	private void saveTimestamp(String timestamp)
 	{
 		File dir = context.getFilesDir();
 		File file = new File(dir, TIMESTAMP_FILE);
@@ -200,9 +227,27 @@ public class ORPKCS10CertificationRequest {
 		} 
 	}
 
-	public static boolean isPending(Context context) {
+	public boolean isPending() {
 		File dir = context.getFilesDir();
 		File file = new File(dir, TIMESTAMP_FILE);	
 		return file.exists();
+	}
+
+	@Override
+	public void urlConnectionDidFailWithException(Exception e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void urlConnectionDidReceiveData(InputStream data) {
+		// TODO Auto-generated method stub
+		
 	}
 }

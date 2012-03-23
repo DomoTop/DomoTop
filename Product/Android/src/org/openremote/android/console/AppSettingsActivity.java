@@ -328,7 +328,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				new Thread() {
 					public void run() {
 						generationProgress.show();
-						ORPKCS10CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
+						ORPKCS10CertificationRequest.getInstance(getApplicationContext()).submitCertificationRequest(hostname);
 						generationHandler.sendEmptyMessage(0);
 					}
 				}.run();
