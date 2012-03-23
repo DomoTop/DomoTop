@@ -41,15 +41,12 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
-import freemarker.template.TemplateSequenceModel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.List;
 
 /**
  * This servlet is used to show the list of clients, 
@@ -174,9 +171,7 @@ public class AdministratorServlet extends HttpServlet
      ControllerConfiguration configuration = ControllerConfiguration.readXML();
      
      cfg.setDirectoryForTemplateLoading(new File(configuration.getResourcePath()));
-     //cfg.setClassForTemplateLoading( FreemarkerUtils.class, "/templates" );
-     cfg.setObjectWrapper( new DefaultObjectWrapper() );
-     // @TODO : cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
+     cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
      Template temp = cfg.getTemplate(template);
      StringWriter out = new StringWriter();
      temp.process( root, out );
