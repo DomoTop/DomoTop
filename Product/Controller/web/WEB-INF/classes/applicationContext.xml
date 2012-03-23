@@ -71,7 +71,8 @@
     <property name = "multicastAddress" value = "${multicast.address}"/>
     <property name = "multicastPort" value = "${multicast.port}"/>
     <property name = "resourcePath" value = "${resource.path}"/>
-    <property name = "resourceUpload" value = "${resource.upload.enable}"/>
+    <property name = "resourceUpload" value = "${resource.upload.enable}"/>    
+    <property name = "caPath" value = "${ca.path}"/>
     <property name = "macroIRExecutionDelay" value = "${Macro.IR.Execution.Delay}" />
     <property name = "beehiveRESTRootUrl" value="${beehive.REST.Root.Url}" />
     <property name = "webappName" value="${controller.applicationname}" />
@@ -142,6 +143,7 @@
     <!-- service for client for getting client information for administrator panel -->
     <bean id="clientService" class="org.openremote.controller.service.impl.ClientServiceImpl" >
     	<property name="database" ref="databaseService"></property>
+    	<property name="configuration" ref="configuration"></property>
     </bean>
     
     <!-- service for listening the status of device -->

@@ -60,6 +60,7 @@ public class ControllerConfiguration extends Configuration
   public static final String RESOURCE_UPLOAD_ENABLE = "resource.upload.enable";
   public static final String RESOURCE_PATH = "resource.path";
   public static final String IRSEND_PATH = "irsend.path";
+  public static final String CA_PATH = "ca.path";  
   public static final String MULTICAST_PORT = "multicast.port";
   public static final String MULTICAST_ADDRESS = "multicast.address";
   public static final String WEBAPP_PORT = "webapp.port";
@@ -120,6 +121,7 @@ public class ControllerConfiguration extends Configuration
   private String webappName;
   private String irsendPath;
   private String lircdconfPath;
+  private String CaPath;
 
   /** Whether copy lircd.conf for user. */
   private boolean copyLircdconf;
@@ -351,6 +353,17 @@ public class ControllerConfiguration extends Configuration
   public boolean isResourceUpload() {
     return preferAttrCustomValue(RESOURCE_UPLOAD_ENABLE, resourceUpload);
   }
+  
+  /**
+   * Get the CA Path from the configuration file
+   * 
+   * @see #setCaPath(String)
+   * @return
+   */
+  public String getCaPath()
+  {
+     return preferAttrCustomValue(CA_PATH, CaPath);     
+  }
 
   /**
    * Enables the ability to upload controller event and command mappings
@@ -378,6 +391,10 @@ public class ControllerConfiguration extends Configuration
     this.resourceUpload = resourceUpload;
   }
 
+  public void setCaPath(String caPath)
+  {
+     this.CaPath = caPath;
+  }
 
   /**
    * Returns the name of the serial port configured for X10 serial PLM unit
