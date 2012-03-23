@@ -356,7 +356,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			public void onClick(View arg0) {
     				new Thread() {
     					public void run() {
-    						ks.fillKeyStore();
+    						ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext()));
     						fetchHandler.sendEmptyMessage(0);
     					}
     				}.run();

@@ -30,7 +30,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
-import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.util.PhoneInformation;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
@@ -114,9 +113,8 @@ public class ORKeyStore {
 	
 	/**
 	 * Write the current loaded KeyStore to file, filename declared in KEYSTORE_FILE
-	 * @param context The current application context
 	 */
-	public void saveKeyStore()
+	private void saveKeyStore()
 	{
 		FileOutputStream out = null;
 		try {
@@ -158,18 +156,19 @@ public class ORKeyStore {
 	 * Fill the KeyStore. First, download the signed certificate and public key of the 
 	 * Certificate Authority. If that is available it will import it into the KeyStore 
 	 * with the private key
+	 * @param host The host from which we want to fetch our certificate
 	 * @param context The current application context
 	 */
-	public void fillKeyStore()
+	public void addCertificate(String host)
 	{
-		Certificate[] chain = getSignedChain();
+		Certificate[] chain = getSignedChain(host);
 		
 		if(chain != null)
 		{
 		    KeyPair kp = ORKeyPair.getInstance().getKeyPair(context);
 		    	    
 		    try {
-				keystore.setKeyEntry("user", 
+				keystore.setKeyEntry(host, 
 						kp.getPrivate(),
 						KEYSTORE_PASSWORD.toCharArray(),
 						chain);
@@ -186,15 +185,15 @@ public class ORKeyStore {
 	 * that the client is approved. It will then parse it into a chain. The first element in 
 	 * the chain is the clients public certificate, the second one is the certificate of the 
 	 * Certificate Authority
-	 * @param context The current application context
+	 * @param host The host from which we want to fetch our certificate
 	 * @return A chain with the client certificate and the CA certificate, or null if not yet
 	 * approved
 	 */
-	public Certificate[] getSignedChain()
+	private Certificate[] getSignedChain(String host)
 	{
 		Certificate[] chain = null;
 
-		String url = AppSettingsModel.getCurrentServer(context);
+		String url = host;
 		url += "/rest/cert/get/";
 		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
 		
@@ -268,7 +267,8 @@ public class ORKeyStore {
 	 * @param is The InputStream containing XML
 	 * @return The XML Document
 	 */
-	private Document XMLfromIS(InputStream is){
+	private Document XMLfromIS(InputStream is)
+	{
 		Document doc = null;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	
@@ -291,9 +291,24 @@ public class ORKeyStore {
 	/**
 	 * Delete the current KeyStore saved in KEYSTORE_FILE
 	 */
-	public void delete() {
+	public void delete() 
+	{
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
 		file.delete();
+	}
+	
+	/**
+	 * Delete a host from the KeyStore
+	 * @param host The hostname that is to be deleted
+	 */
+	public void deleteHost(String host) 
+	{
+		try {
+			keystore.deleteEntry(host);
+			saveKeyStore();
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		}
 	}
 }
