@@ -17,4 +17,5 @@ public interface ClientService
    String getSerial();
    void free();
    int clearClientSerial(int clientID);
+   int addClient(String csrFileName);
 }

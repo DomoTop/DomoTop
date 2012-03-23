@@ -69,6 +69,7 @@ import org.openremote.controller.spring.SpringContext;
  *
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
  */
+@SuppressWarnings("serial")
 public class SubmitCSR extends RESTAPI
 {
 
@@ -157,6 +158,7 @@ public class SubmitCSR extends RESTAPI
    * @param filename the file name of the CSR
    * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
    */
+  @Deprecated
   private int getClientInformation(String filename)
   {
       String message = executeOpenSSL(filename);
@@ -221,7 +223,7 @@ public class SubmitCSR extends RESTAPI
     out.write(CSR_FOOTER);
     out.close();
 
-    int retvalue = getClientInformation(filename);
+    int retvalue = clientService.addClient(filename);
     if(retvalue != 1)
     {
         File file = new File(CA_LOCATION + "csr/" + filename);
