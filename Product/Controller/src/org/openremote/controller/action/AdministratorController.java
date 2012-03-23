@@ -149,16 +149,19 @@ public class AdministratorController extends MultiActionController {
             {
                if(deleteCertificate(clientUsername))
                {
-                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + "\n\rCertificate deleted.");
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + "" +
+                  		"\n\rCertificate deleted.");
                }
                else
                {
-                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n\rPlus the certificate couldn't be removed.");
+                  response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". " +
+                  		"\n\rPlus the certificate couldn't be removed.");
                }
             }
             else
             {
-               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n\rProbably a index.txt and/or serial problem of the CA, please check these files located in the CA path.");
+               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". " +
+               		"\n\rProbably database index.txt file problem from the CA, please check this file which is located in the CA path.");
             }
          }         
       } catch (NullPointerException e) {

@@ -91,7 +91,7 @@ public class SubmitCSR extends RESTAPI
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
-  // TODO grep the caPath from the configuration file 
+  // TODO grab the caPath from the configuration file 
   private final static String CA_LOCATION = "/usr/share/tomcat6/cert/ca/";
   private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----";
   private final static String CSR_FOOTER = "\n-----END NEW CERTIFICATE REQUEST-----\n";

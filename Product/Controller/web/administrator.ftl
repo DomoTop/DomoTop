@@ -37,7 +37,7 @@
 						<TD align=left background="image/rbox_6.gif" rowSpan=2></TD>
 					</TR>
 					<TR>
-						<TD align=left colSpan=5 height=150>
+						<TD align=left colSpan=5 height=180>
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 							<p class="welcome">OpenRemote Administrator Panel</p>
 							<p id="errMsg" class="errMsg" />
@@ -54,7 +54,7 @@
 								</TR>
 								<#list clients as client>
 								<TR>
-									<TD><span id="serial${client.client_id}">${client.client_serial}</span></TD><TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content><i>${client.client_email}</i><#else>No e-mail</#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
+									<TD><span id="serial${client.client_id}">${client.client_serial}</span></TD><TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="client_id" value="${client.client_id}" />
@@ -83,8 +83,8 @@
 								</TR>
 								</#if>
 							</TBODY>
-							</TABLE>							
-							<br />
+							</TABLE>			
+							<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 						</TD>
 					</TR>

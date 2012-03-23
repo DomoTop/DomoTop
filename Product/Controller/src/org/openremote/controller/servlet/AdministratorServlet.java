@@ -210,7 +210,7 @@ public class AdministratorServlet extends HttpServlet
            else
            {
               printWriter.print(setResultListInTemplate(clients));
-           }  
+           }
         }
         else
         {
