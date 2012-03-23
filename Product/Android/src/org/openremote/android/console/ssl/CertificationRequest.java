@@ -55,7 +55,7 @@ public class CertificationRequest {
 	}
 	
 	// Constants ------------------------------------------------------------------------------------
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
 
@@ -88,7 +88,7 @@ public class CertificationRequest {
 	 */
 	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
 	{
-		KeyPair keypair = MyKeyPair.getInstance().getKeyPair(context);
+		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
 		
 		X500Principal              dnName = new X500Principal("CN=" + devicename);
 		PKCS10CertificationRequest kpGen = null;

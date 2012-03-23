@@ -54,7 +54,7 @@ public class ORKeyStore {
 		Security.addProvider(new BouncyCastleProvider());
 	}
 	
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	private final static String KEYSTORE_PASSWORD = "password";
 	
@@ -170,7 +170,7 @@ public class ORKeyStore {
 		
 		if(chain != null)
 		{
-		    KeyPair kp = MyKeyPair.getInstance().getKeyPair(context);
+		    KeyPair kp = ORKeyPair.getInstance().getKeyPair(context);
 		    	    
 		    try {
 				keystore.setKeyEntry("user", 
