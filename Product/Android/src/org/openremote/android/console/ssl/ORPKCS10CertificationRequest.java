@@ -29,9 +29,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.openremote.android.console.Constants;
-import org.openremote.android.console.net.ORConnection;
-import org.openremote.android.console.net.ORConnectionDelegate;
-import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.util.PhoneInformation;
 import org.spongycastle.asn1.ASN1ObjectIdentifier;
 import org.spongycastle.asn1.DEROctetString;
@@ -49,7 +46,7 @@ import org.spongycastle.util.encoders.Base64;
 import android.content.Context;
 import android.util.Log;
 
-public class ORPKCS10CertificationRequest implements ORConnectionDelegate {
+public class ORPKCS10CertificationRequest {
 	
 	/**
 	 * Register the SpongyCastle Provider
@@ -231,23 +228,5 @@ public class ORPKCS10CertificationRequest implements ORConnectionDelegate {
 		File dir = context.getFilesDir();
 		File file = new File(dir, TIMESTAMP_FILE);	
 		return file.exists();
-	}
-
-	@Override
-	public void urlConnectionDidFailWithException(Exception e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void urlConnectionDidReceiveData(InputStream data) {
-		// TODO Auto-generated method stub
-		
 	}
 }
