@@ -1,15 +1,11 @@
 package org.openremote.android.console.ssl;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -48,7 +44,6 @@ import org.spongycastle.util.encoders.Base64;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.TextView.SavedState;
 
 public class CertificationRequest {
 	
