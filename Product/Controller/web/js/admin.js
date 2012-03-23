@@ -42,8 +42,7 @@ $(document).ready(function() {
 			if(resultAction == 'accept')
 			{
 				changeValueById(resultID, "deny");
-				changeBackgroundByID(resultID, "image/accept.gif");				
-				changePincodeById(resultID, "-");
+				changeBackgroundByID(resultID, "image/accept.gif");
 				changeSerialById(resultID, serial);
 			}
 			else if(resultAction == 'deny')
@@ -82,4 +81,9 @@ function changePincodeById(id, value)
 function changeSerialById(id, value)
 {
 	document.getElementById("serial" + id).innerHTML = value;
+}
+
+function refreshPage()
+{
+	location.reload(true);
 }
