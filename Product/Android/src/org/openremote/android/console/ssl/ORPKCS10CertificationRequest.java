@@ -45,7 +45,7 @@ import org.spongycastle.util.encoders.Base64;
 import android.content.Context;
 import android.util.Log;
 
-public class CertificationRequest {
+public class ORPKCS10CertificationRequest {
 	
 	/**
 	 * Register the SpongyCastle Provider

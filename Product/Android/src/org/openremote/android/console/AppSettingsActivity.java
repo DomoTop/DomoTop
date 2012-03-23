@@ -36,7 +36,7 @@ import org.openremote.android.console.net.IPAutoDiscoveryServer;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
-import org.openremote.android.console.ssl.CertificationRequest;
+import org.openremote.android.console.ssl.ORPKCS10CertificationRequest;
 import org.openremote.android.console.ssl.ORKeyPair;
 import org.openremote.android.console.ssl.ORKeyStore;
 import org.openremote.android.console.util.FileUtil;
@@ -62,8 +62,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -330,7 +328,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				new Thread() {
 					public void run() {
 						generationProgress.show();
-						CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
+						ORPKCS10CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
 						generationHandler.sendEmptyMessage(0);
 					}
 				}.run();

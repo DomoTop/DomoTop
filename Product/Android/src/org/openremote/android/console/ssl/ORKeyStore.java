@@ -205,7 +205,7 @@ public class ORKeyStore {
 	    HttpResponse response = null;
 	    try {	
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					context.openFileInput(CertificationRequest.TIMESTAMP_FILE)));
+					context.openFileInput(ORPKCS10CertificationRequest.TIMESTAMP_FILE)));
 			String timestamp = in.readLine();
 			in.close();
 			
