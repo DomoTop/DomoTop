@@ -163,10 +163,10 @@ public class CertificationRequest {
 	        
 	        InputStreamReader is = new InputStreamReader(response.getEntity().getContent());
 	        BufferedReader br = new BufferedReader(is);
-	        String read = br.readLine();
-
-	        while(read != null) {
-	            read += br.readLine();
+	        String tmp, read = "";
+	        
+	        while((tmp = br.readLine()) != null) {
+	            read += tmp;
 	        }
 	        
 	        saveTimestamp(read, context);
@@ -187,6 +187,10 @@ public class CertificationRequest {
 	 */
 	private static void saveTimestamp(String timestamp, Context context)
 	{
+		File dir = context.getFilesDir();
+		File file = new File(dir, TIMESTAMP_FILE);
+		file.delete();
+		
 		timestamp.trim();
 		OutputStreamWriter out;
 		try {
