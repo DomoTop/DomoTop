@@ -114,7 +114,8 @@ public class AdministratorController extends MultiActionController {
                if(deleteCertificate(clientUsername))
                {
                   int statusReturn = clientService.updateClientStatus(clientID, false);
-                  if(statusReturn == 1)
+                  int serialReturn = clientService.clearClientSerial(clientID);
+                  if(statusReturn == 1 && serialReturn == 1)
                   {
                      response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);                     
                   }

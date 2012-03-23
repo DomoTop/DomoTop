@@ -16,4 +16,5 @@ public interface ClientService
    int updateClientSerial(int clientID);
    String getSerial();
    void free();
+   int clearClientSerial(int clientID);
 }

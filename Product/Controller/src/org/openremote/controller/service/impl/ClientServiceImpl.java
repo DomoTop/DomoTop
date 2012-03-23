@@ -379,6 +379,18 @@ public class ClientServiceImpl implements ClientService
    }
    
    @Override
+   public int clearClientSerial(int clientID)
+   {
+      int resultValue = -1;
+      
+      if(database != null)
+      {
+         resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '' WHERE client_id = " + clientID);
+      }      
+      return resultValue;
+   }
+   
+   @Override
    public String getSerial()
    {
       return serial;

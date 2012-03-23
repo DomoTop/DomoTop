@@ -31,9 +31,9 @@ $(document).ready(function() {
   	{
   		resultPinCode = resultArray[3];
   	}
-		if(resultArray.length >= 5)
+		if(resultArray.length >= 4)
   	{
-  		serial = resultArray[4];
+  		serial = resultArray[3];
   	}
   	
   	if (resultString == 'OK') {
@@ -50,7 +50,8 @@ $(document).ready(function() {
 			{
 				changeValueById(resultID, "accept");
 				changeBackgroundByID(resultID, "image/denied.gif");		
-				changePincodeById(resultID, resultPinCode);	
+				changePincodeById(resultID, resultPinCode);					
+				changeSerialById(resultID, "");
 			}
 		} else {
 			error("User status is unsuccessfully: " + result);
