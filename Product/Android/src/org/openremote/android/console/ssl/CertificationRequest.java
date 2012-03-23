@@ -187,6 +187,10 @@ public class CertificationRequest {
 	 */
 	private static void saveTimestamp(String timestamp, Context context)
 	{
+		File dir = context.getFilesDir();
+		File file = new File(dir, TIMESTAMP_FILE);
+		file.delete();
+		
 		timestamp.trim();
 		OutputStreamWriter out;
 		try {
