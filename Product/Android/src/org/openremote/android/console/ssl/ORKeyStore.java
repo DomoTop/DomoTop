@@ -6,18 +6,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.InvalidKeyException;
+import java.net.URLEncoder;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
-import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -33,7 +30,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
-import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.util.PhoneInformation;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
@@ -44,7 +40,7 @@ import org.xml.sax.SAXException;
 import android.content.Context;
 import android.util.Log;
 
-public class MyKeyStore {
+public class ORKeyStore {
 	
 	/**
 	 * Register the SpongyCastle Provider
@@ -53,11 +49,11 @@ public class MyKeyStore {
 		Security.addProvider(new BouncyCastleProvider());
 	}
 	
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	private final static String KEYSTORE_PASSWORD = "password";
 	
-	private static MyKeyStore instance = null;
+	private static ORKeyStore instance = null;
 	
 	private KeyStore keystore = null;
 	private Context context = null;
@@ -68,11 +64,11 @@ public class MyKeyStore {
 	 * @param context The current application context
 	 * @return The MyKeyStore instance
 	 */
-	public static MyKeyStore getInstance(Context context)
+	public static ORKeyStore getInstance(Context context)
 	{
 		if(instance == null)
 		{
-			instance = new MyKeyStore(context);
+			instance = new ORKeyStore(context);
 		}
 		return instance;
 	}
@@ -81,7 +77,7 @@ public class MyKeyStore {
 	 * Instantiates the KeyStore with either one found on the filesystem or create a new empty one
 	 * @param context The current application context
 	 */
-	private MyKeyStore(Context context)
+	private ORKeyStore(Context context)
 	{
 		this.context = context;
 		File dir = context.getFilesDir();
@@ -117,9 +113,8 @@ public class MyKeyStore {
 	
 	/**
 	 * Write the current loaded KeyStore to file, filename declared in KEYSTORE_FILE
-	 * @param context The current application context
 	 */
-	public void saveKeyStore()
+	private void saveKeyStore()
 	{
 		FileOutputStream out = null;
 		try {
@@ -161,27 +156,30 @@ public class MyKeyStore {
 	 * Fill the KeyStore. First, download the signed certificate and public key of the 
 	 * Certificate Authority. If that is available it will import it into the KeyStore 
 	 * with the private key
+	 * @param host The host from which we want to fetch our certificate
 	 * @param context The current application context
 	 */
-	public void fillKeyStore()
+	public boolean addCertificate(String host)
 	{
-		Certificate[] chain = getSignedChain();
+		Certificate[] chain = getSignedChain(host);
 		
 		if(chain != null)
 		{
-		    KeyPair kp = MyKeyPair.getInstance().getKeyPair(context);
+		    KeyPair kp = ORKeyPair.getInstance().getKeyPair(context);
 		    	    
 		    try {
-				keystore.setKeyEntry("user", 
+				keystore.setKeyEntry(host, 
 						kp.getPrivate(),
 						KEYSTORE_PASSWORD.toCharArray(),
 						chain);
 				
 				saveKeyStore();
+				return true;
 			} catch (KeyStoreException e) {
 				Log.e(LOG_CATEGORY, e.getMessage());
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -189,17 +187,17 @@ public class MyKeyStore {
 	 * that the client is approved. It will then parse it into a chain. The first element in 
 	 * the chain is the clients public certificate, the second one is the certificate of the 
 	 * Certificate Authority
-	 * @param context The current application context
+	 * @param host The host from which we want to fetch our certificate
 	 * @return A chain with the client certificate and the CA certificate, or null if not yet
 	 * approved
 	 */
-	public Certificate[] getSignedChain()
+	private Certificate[] getSignedChain(String host)
 	{
 		Certificate[] chain = null;
 
-		String url = AppSettingsModel.getCurrentServer(context);
+		String url = host;
 		url += "/rest/cert/get/";
-		url += PhoneInformation.getInstance().getDeviceName();
+		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
 		
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpGet httpget = null;
@@ -214,6 +212,9 @@ public class MyKeyStore {
 			httpget = new HttpGet(url + timestamp);
 			
 			response = httpclient.execute(httpget);
+			
+			if(response.getStatusLine().getStatusCode() != 200)
+				return null;
 			
 			Document doc = XMLfromIS(response.getEntity().getContent());
 		    
@@ -271,7 +272,8 @@ public class MyKeyStore {
 	 * @param is The InputStream containing XML
 	 * @return The XML Document
 	 */
-	private Document XMLfromIS(InputStream is){
+	private Document XMLfromIS(InputStream is)
+	{
 		Document doc = null;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	
@@ -294,9 +296,24 @@ public class MyKeyStore {
 	/**
 	 * Delete the current KeyStore saved in KEYSTORE_FILE
 	 */
-	public void delete() {
+	public void delete() 
+	{
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
 		file.delete();
+	}
+	
+	/**
+	 * Delete a host from the KeyStore
+	 * @param host The hostname that is to be deleted
+	 */
+	public void deleteHost(String host) 
+	{
+		try {
+			keystore.deleteEntry(host);
+			saveKeyStore();
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		}
 	}
 }

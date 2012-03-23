@@ -159,7 +159,8 @@ public class FindCertificateByID extends RESTAPI
     catch (Exception e) 
     {
         logger.error("Failed to create certificate");
-        sendResponse(response, "FAILURE");
+        response.setStatus(404);
+        sendResponse(response, "No certificate by that name");
        // sendResponse(response, "IOException" + profileService.getAllPanels() + "/certificates/create.sh");
         //sendResponse(response, e.getMessage());
     }

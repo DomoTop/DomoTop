@@ -37,8 +37,8 @@ import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.ssl.CertificationRequest;
-import org.openremote.android.console.ssl.MyKeyPair;
-import org.openremote.android.console.ssl.MyKeyStore;
+import org.openremote.android.console.ssl.ORKeyPair;
+import org.openremote.android.console.ssl.ORKeyStore;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
 import org.openremote.android.console.view.PanelSelectSpinnerView;
@@ -290,7 +290,36 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
           }
         }
     );
-
+    
+    final ProgressDialog generationProgress = new ProgressDialog(this);
+    generationProgress.setTitle(R.string.generation_progress);
+    
+    final Handler generationHandler = new Handler()
+    {
+    	@Override
+    	public void handleMessage(Message msg) {
+    		super.handleMessage(msg);
+    		generationProgress.cancel();
+    		
+    		String dialogmessage = 
+    				String.format(getString(R.string.pin_dialog), 
+						AppSettingsModel.getCurrentServer(getApplicationContext()),
+						ORKeyPair.getInstance().getPIN(getApplicationContext())
+					);
+    		
+			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
+			builder.setMessage(dialogmessage)
+			       .setCancelable(true)
+			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();    	
+		}
+    };
+    
     generateCertification.setOnClickListener(
     	new OnClickListener() {
 		
@@ -300,7 +329,9 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 
 				new Thread() {
 					public void run() {
+						generationProgress.show();
 						CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
+						generationHandler.sendEmptyMessage(0);
 					}
 				}.run();
 			}
@@ -308,13 +339,24 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     
     final ProgressDialog dialog = new ProgressDialog(this);
     
-    final MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
+    final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
     final Handler fetchHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		dialog.cancel();
-    	    fetchCertificate.setEnabled(ks.isEmpty());
+    	    if(msg.what == 1) {
+    			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
+    			builder.setMessage("Administrator has not yet approved you")
+    			       .setCancelable(true)
+    			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+    			           public void onClick(DialogInterface dialog, int id) {
+    			                dialog.cancel();
+    			           }
+    			       });
+    			AlertDialog alert = builder.create();
+    			alert.show(); 
+    	    }
     	}
     };
 
@@ -323,10 +365,15 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     		
     			@Override
     			public void onClick(View arg0) {
+    				dialog.show();
     				new Thread() {
     					public void run() {
-    						ks.fillKeyStore();
-    						fetchHandler.sendEmptyMessage(0);
+    						int what;
+    						if(ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext())))
+    							what = 0;
+    						else
+    							what = 1;
+    						fetchHandler.sendEmptyMessage(what);
     					}
     				}.run();
     			}
@@ -350,7 +397,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    				builder.setMessage(MyKeyPair.getInstance().getPIN(getApplicationContext()))
+    				builder.setMessage(ORKeyPair.getInstance().getPIN(getApplicationContext()))
     				       .setCancelable(true)
     				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
     				           public void onClick(DialogInterface dialog, int id) {

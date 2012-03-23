@@ -38,7 +38,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.openremote.android.console.ssl.MyKeyStore;
+import org.openremote.android.console.ssl.ORKeyStore;
 
 import android.content.Context;
 
@@ -81,7 +81,7 @@ public class SelfCertificateSSLSocketFactory implements LayeredSocketFactory {
 
       
       try {
-         MyKeyStore keystore = MyKeyStore.getInstance(context);
+         ORKeyStore keystore = ORKeyStore.getInstance(context);
          KeyManager[] managers = null;
          
          //keystore.fillKeyStore();

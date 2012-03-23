@@ -21,10 +21,10 @@ import org.spongycastle.util.encoders.HexEncoder;
 import android.content.Context;
 import android.util.Log;
 
-public class MyKeyPair {
+public class ORKeyPair {
 
 	// Constants ------------------------------------------------------------------------------------
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	
 	private static final String KEYPAIR_FILE = "keypair";
 	private static final int KEYPAIR_SIZE = 2048;
@@ -32,13 +32,13 @@ public class MyKeyPair {
 	
 	private KeyPair keypair;
 	
-	private static MyKeyPair instance = null;
+	private static ORKeyPair instance = null;
 	
-	public static MyKeyPair getInstance() 
+	public static ORKeyPair getInstance() 
 	{
 		if(instance == null)
 		{
-			instance = new MyKeyPair();
+			instance = new ORKeyPair();
 		}
 		return instance;
 	}

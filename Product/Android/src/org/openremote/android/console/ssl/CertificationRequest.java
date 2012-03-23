@@ -1,15 +1,11 @@
 package org.openremote.android.console.ssl;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -48,7 +44,6 @@ import org.spongycastle.util.encoders.Base64;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.TextView.SavedState;
 
 public class CertificationRequest {
 	
@@ -60,7 +55,7 @@ public class CertificationRequest {
 	}
 	
 	// Constants ------------------------------------------------------------------------------------
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
 
@@ -93,7 +88,7 @@ public class CertificationRequest {
 	 */
 	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
 	{
-		KeyPair keypair = MyKeyPair.getInstance().getKeyPair(context);
+		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
 		
 		X500Principal              dnName = new X500Principal("CN=" + devicename);
 		PKCS10CertificationRequest kpGen = null;
@@ -146,7 +141,7 @@ public class CertificationRequest {
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
-	    String devicename = phoneInfo.getDeviceName();
+	    String devicename = phoneInfo.getDeviceName().replace(' ', '_');
 	    String email = phoneInfo.getEmailAddress(context);
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
