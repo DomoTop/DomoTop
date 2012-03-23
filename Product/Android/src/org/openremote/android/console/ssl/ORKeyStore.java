@@ -206,7 +206,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					context.openFileInput(ORPKCS10CertificationRequest.TIMESTAMP_FILE)));
+					context.openFileInput(URLEncoder.encode(host) + ORPKCS10CertificationRequest.TIMESTAMP_FILE)));
 			String timestamp = in.readLine();
 			in.close();
 			

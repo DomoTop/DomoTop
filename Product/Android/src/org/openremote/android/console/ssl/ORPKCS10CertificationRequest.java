@@ -188,7 +188,7 @@ public class ORPKCS10CertificationRequest {
 	            read += tmp;
 	        }
 	        
-	        saveTimestamp(read);
+	        saveTimestamp(read, host);
 	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
@@ -204,17 +204,17 @@ public class ORPKCS10CertificationRequest {
 	 * @param timestamp The timestamp to write 
 	 * @param context The current application context
 	 */
-	private void saveTimestamp(String timestamp)
+	private void saveTimestamp(String timestamp, String host)
 	{
 		File dir = context.getFilesDir();
-		File file = new File(dir, TIMESTAMP_FILE);
+		File file = new File(dir, URLEncoder.encode(host) + TIMESTAMP_FILE);
 		file.delete();
 		
 		timestamp.trim();
 		OutputStreamWriter out;
 		try {
 			out = new OutputStreamWriter(
-					context.openFileOutput(TIMESTAMP_FILE, Context.MODE_PRIVATE));
+					context.openFileOutput(file.getName(), Context.MODE_PRIVATE));
 			out.write(timestamp);
 			out.close();
 		} catch (FileNotFoundException e) {
