@@ -25,10 +25,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
@@ -306,13 +302,16 @@ public class ORKeyStore implements ORConnectionDelegate {
 
 	@Override
 	public void urlConnectionDidFailWithException(Exception e) {
-		// TODO Auto-generated method stub
-		
+	    if(fetchHandler != null) {
+	    	fetchHandler.sendEmptyMessage(1);
+	    }		
 	}
 
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
-		// TODO Auto-generated method stub
+	    if(fetchHandler != null) {
+	    	fetchHandler.sendEmptyMessage(1);
+	    }	
 	}
 
 	@Override
