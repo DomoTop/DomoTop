@@ -18,15 +18,15 @@
 	<TBODY>
 		<TR vAlign="center" align="middle">
 			<TD>
-			<TABLE cellSpacing=0 cellPadding=0 width=668 bgColor=#ffffff border=0>
+			<TABLE cellSpacing=0 cellPadding=0 width=768 bgColor=#ffffff border=0>
 				<TBODY>
 					<TR>
 						<TD width=20 background="image/rbox_1.gif" height=20></TD>
-						<TD width=178 background="image/rbox_2.gif" height=20></TD>
+						<TD width=205 background="image/rbox_2.gif" height=20></TD>
 						<TD width=56><IMG height=20 src="image/rbox_2.gif" width=56></TD>
-						<TD width=170 background="image/rbox_2.gif"></TD>
+						<TD width=205 background="image/rbox_2.gif"></TD>
 						<TD width=56><IMG height=20 src="image/rbox_2.gif" width=56></TD>
-						<TD width=178 background="image/rbox_2.gif"></TD>
+						<TD width=205 background="image/rbox_2.gif"></TD>
 						<TD width=20 background="image/rbox_3.gif" height=20></TD>
 					</TR>
 					<TR>
@@ -46,15 +46,15 @@
 							</#if>
 							<p id="msg" class="msg" />
 							<p><i>User Management:</i><br /></p>
-							<TABLE cellSpacing=0 cellPadding=0 width=600 align="center" bgColor=#ffffff border=0>
+							<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
 							<TBODY>								
 								<#if clients?exists>
 								<TR>
-									<th align="left">Serial</th><th align="left">Device name (Filename)</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
+									<th align="left">Serial</th><th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
 								</TR>
 								<#list clients as client>
 								<TR>
-									<TD><span id="serial${client.client_id}">${client.client_serial}</span></TD><TD>${client.client_device_name} (${client.client_file_name})</TD><TD><#if client.client_email?has_content><i>No e-mail</i><#else>${client.client_email}</#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
+									<TD><span id="serial${client.client_id}">${client.client_serial}</span></TD><TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content><i>${client.client_email}</i><#else>No e-mail</#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="client_id" value="${client.client_id}" />
