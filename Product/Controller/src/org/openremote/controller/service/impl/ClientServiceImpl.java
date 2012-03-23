@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
+import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
@@ -30,21 +31,21 @@ import org.openremote.controller.service.DatabaseService;
 public class ClientServiceImpl implements ClientService 
 {  
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
+   private final static Group noGroup = new Group("admin", 0);
    
-   private DatabaseService database;
+   private static final String openssl = "openssl"; 
+   private static final String CRTDir = "/certs";
+   private static final String CSRDir = "/csr";
+   
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC"; 
    private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
    private static String limitByOne = " LIMIT 1";
-   
-   //private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
-   
-   private final static Group noGroup = new Group("admin", 0);
 
-   private static final String openssl = "openssl"; 
-   private static final String CRTDir = "/certs";
-   private static final String CSRDir = "/csr";
+   private DatabaseService database;
+   private ControllerConfiguration configuration;   
+   private String rootCADir = "";   
+  // private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
    
    private Map<String,String> trustedClients = new HashMap<String,String>();  
    
@@ -199,6 +200,11 @@ public class ClientServiceImpl implements ClientService
       command.add("-in"); // input file
       command.add(path + "/" + fileName); // file path
       
+      if(rootCADir.isEmpty())
+      {
+         this.rootCADir = configuration.getCaPath();
+      }
+      
       ProcessBuilder pb = new ProcessBuilder(command);
       pb.directory(new File(rootCADir));
 
@@ -330,5 +336,15 @@ public class ClientServiceImpl implements ClientService
    public void setDatabase(DatabaseService database)
    {
       this.database = database;
+   } 
+   
+   /**
+    * Sets the configuration.
+    * 
+    * @param configuration the new configuration
+    */   
+   public void setConfiguration(ControllerConfiguration configuration)
+   {
+      this.configuration = configuration;
    } 
 }
