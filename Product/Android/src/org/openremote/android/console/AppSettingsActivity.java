@@ -317,9 +317,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     	    fetchCertificate.setEnabled(ks.isEmpty());
     	}
     };
-    
-    fetchCertificate.setEnabled(ks.isEmpty());
-    
+
     fetchCertificate.setOnClickListener(
         	new OnClickListener() {
     		

@@ -1,17 +1,22 @@
 package org.openremote.android.console.ssl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -29,6 +34,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.model.AppSettingsModel;
+import org.openremote.android.console.util.PhoneInformation;
+import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -38,7 +45,14 @@ import android.content.Context;
 import android.util.Log;
 
 public class MyKeyStore {
-
+	
+	/**
+	 * Register the SpongyCastle Provider
+	 */
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+	
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + MyKeyPair.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	private final static String KEYSTORE_PASSWORD = "password";
@@ -75,11 +89,19 @@ public class MyKeyStore {
 		try{
 			keystore = KeyStore.getInstance("BKS");
 			if(file.exists()) {
-				keystore.load(context.openFileInput("keystore.bks"), "password".toCharArray());
-				//keystore.load(null, null);
+				keystore.load(context.openFileInput(KEYSTORE_FILE), "password".toCharArray());
 			} else {
 				keystore.load(null, null);
+				
+				FileInputStream in = new FileInputStream(file);
+				FileOutputStream out = new FileOutputStream(file);
+
+				keystore.store(out, 
+						null);
+				keystore.load(in, 
+						null);
 			}
+
 		} catch(KeyStoreException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
@@ -152,19 +174,11 @@ public class MyKeyStore {
 		    try {
 				keystore.setKeyEntry("user", 
 						kp.getPrivate(),
-						"password".toCharArray(),
+						KEYSTORE_PASSWORD.toCharArray(),
 						chain);
 				
-				keystore.store(context.openFileOutput(KEYSTORE_FILE, Context.MODE_PRIVATE), KEYSTORE_PASSWORD.toCharArray());
+				saveKeyStore();
 			} catch (KeyStoreException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
-			} catch (NoSuchAlgorithmException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
-			} catch (CertificateException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
-			} catch (FileNotFoundException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
-			} catch (IOException e) {
 				Log.e(LOG_CATEGORY, e.getMessage());
 			}
 		}
@@ -183,12 +197,22 @@ public class MyKeyStore {
 	{
 		Certificate[] chain = null;
 
-		String host = AppSettingsModel.getCurrentServer(context);
+		String url = AppSettingsModel.getCurrentServer(context);
+		url += "/rest/cert/get/";
+		url += PhoneInformation.getInstance().getDeviceName();
+		
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpGet httpget = new HttpGet(host + "/rest/cert/get/Vega");
+	    HttpGet httpget = null;
 	    
 	    HttpResponse response = null;
 	    try {	
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					context.openFileInput(CertificationRequest.TIMESTAMP_FILE)));
+			String timestamp = in.readLine();
+			in.close();
+			
+			httpget = new HttpGet(url + timestamp);
+			
 			response = httpclient.execute(httpget);
 			
 			Document doc = XMLfromIS(response.getEntity().getContent());
@@ -196,14 +220,16 @@ public class MyKeyStore {
 			chain = new X509Certificate[2];
 		    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));
 		    
-		    if(!verifyCertificate(chain[0]))
-		    {
-		    	Log.d(LOG_CATEGORY, "certificate invalid");
-		    	return null;
-		    }
-		    
 		    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
 			
+		    try {
+				keystore.setCertificateEntry("ca", chain[1]);
+			} catch (KeyStoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    saveKeyStore();
 		} catch (ClientProtocolException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (IOException e) {
@@ -214,40 +240,7 @@ public class MyKeyStore {
 	}
 	
 	/**
-	 * Verify if the certificate matches with the public key which is saved on the system. 
-	 * @param cert The certificate to check
-	 * @param context The current application context
-	 * @return If the certificate matches with the public key
-	 */
-	private boolean verifyCertificate(Certificate cert)
-	{
-		boolean valid = false;
-		KeyPair kp = MyKeyPair.getInstance().getKeyPair(context);
-		try {
-			cert.verify(kp.getPublic(), "SHA1WithRSA");
-			valid = true;
-		} catch (InvalidKeyException e) {
-			Log.d(LOG_CATEGORY, "Invalid key detected");
-			valid = false;
-		} catch (CertificateException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
-			valid = false;
-		} catch (NoSuchAlgorithmException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
-			valid = false;
-		} catch (NoSuchProviderException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
-			valid = false;
-		} catch (SignatureException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
-			valid = true;
-		}
-		
-		return valid;
-	}
-	
-	/**
-	 * Parse the node into just BASE65 (strip header and footer). After that parse it into a X509Certificate 
+	 * Parse the node into just BASE64 (strip header and footer). After that parse it into a X509Certificate 
 	 * and return that certificate.
 	 * @param node The node containing the BASE64 encoded certificate
 	 * @return The certificate
@@ -304,9 +297,6 @@ public class MyKeyStore {
 	public void delete() {
 		File dir = context.getFilesDir();
 		File file = new File(dir, KEYSTORE_FILE);
-		file.delete();
-		
-		file = new File(dir, CertificationRequest.TIMESTAMP_FILE);
 		file.delete();
 	}
 }
