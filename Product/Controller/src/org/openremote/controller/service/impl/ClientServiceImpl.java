@@ -31,11 +31,10 @@ import org.openremote.controller.service.DatabaseService;
 public class ClientServiceImpl implements ClientService 
 {  
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
-   private final static Group noGroup = new Group("admin", 0);
    
    private static final String openssl = "openssl"; 
-   private static final String CRTDir = "/certs";
-   private static final String CSRDir = "/csr";
+   private static final String CRTDir = "certs";
+   private static final String CSRDir = "csr";
    
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC"; 
@@ -44,8 +43,8 @@ public class ClientServiceImpl implements ClientService
 
    private DatabaseService database;
    private ControllerConfiguration configuration;   
-   private String rootCADir = "";   
-  // private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
+   private String rootCADir = "";
+   private String serial = "";
    
    private Map<String,String> trustedClients = new HashMap<String,String>();  
    
@@ -199,7 +198,7 @@ public class ClientServiceImpl implements ClientService
       }
       command.add("-in"); // input file
       command.add(path + "/" + fileName); // file path
-      
+            
       if(rootCADir.isEmpty())
       {
          this.rootCADir = configuration.getCaPath();
@@ -230,6 +229,11 @@ public class ClientServiceImpl implements ClientService
       return buffer.toString();
    }
      
+   /**
+    * Get all clients.
+    * 
+    * @return The result set from the database with all the information from every client
+    */
    @Override
    public ResultSet getClients()
    {
@@ -245,7 +249,6 @@ public class ClientServiceImpl implements ClientService
       return returnValue;
    }
    
-   @Override
    /**
     * Add new client to the database.
     * @param pinCode the client pin
@@ -253,9 +256,8 @@ public class ClientServiceImpl implements ClientService
     * @param email the client e-mail address
     * @param fileName the client file name (certificate request file)
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
- 
- * @return boolean true is user is successfully added or already exist in the database, returns false when the select or insert query went wrong
     */
+   @Override
    public int addClient(String pin, String deviceName, String email, String fileName)
    {
       int returnValue = 0;
@@ -294,6 +296,12 @@ public class ClientServiceImpl implements ClientService
       return returnValue;
    }     
    
+   /**
+    * Get one client result set from the database.
+    * 
+    * @param clientID id from the client
+    * @return ResultSet the result from the database with client information
+    */
    @Override
    public ResultSet getClient(int clientID)
    {
@@ -309,6 +317,13 @@ public class ClientServiceImpl implements ClientService
       return returnValue;
    }
    
+   /**
+    * Updates the client active boolean flag in the database.
+    * 
+    * @param clientID is the client id 
+    * @param active boolean true is active false is non-active
+    * @return int value -1 or 0 is incorrect, 1 is action succeed 
+    */
    @Override
    public int updateClientStatus(int clientID, boolean active)
    {
@@ -321,7 +336,83 @@ public class ClientServiceImpl implements ClientService
       return resultValue;
    }
    
+   /**
+    * Update client serial number.
+    * @param clientID id client
+    * @return value -1 or 0 is , 1 is correct 
+    */
+   @Override
+   public int updateClientSerial(int clientID)
+   {
+      int resultValue = -1;
+      String clientCRTFileName = "";
+      
+      try 
+      {
+         ResultSet resultSet = this.getClient(clientID);
+         while(resultSet.next())
+         {
+            String clientFileName = resultSet.getString("client_file_name");
+            clientCRTFileName = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
+            clientCRTFileName += ".crt";
+         }
+      } 
+      catch (SQLException e) 
+      {
+         logger.error("SQL exception: " + e.getMessage());
+      }
+      
+      if(!clientCRTFileName.isEmpty())
+      {
+         serial = this.getSerial(clientCRTFileName);
+      }
+      else
+      {
+         logger.error("File name is empty");
+      }
+            
+      if(database != null && !serial.isEmpty())
+      {
+         resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '" + serial + "' WHERE client_id = " + clientID);
+      }      
+      return resultValue;
+   }
    
+   @Override
+   public int clearClientSerial(int clientID)
+   {
+      int resultValue = -1;
+      
+      if(database != null)
+      {
+         resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '' WHERE client_id = " + clientID);
+      }      
+      return resultValue;
+   }
+   
+   @Override
+   public String getSerial()
+   {
+      return serial;
+   }
+   
+   /**
+    * Close the result set.
+    */
+   @Override
+   public void free()
+   {
+      database.free();
+   }
+   
+   /**
+    * Returns the number of clients.
+    * Note: You should use getClients() first and directly a getNumClients()
+    * 
+    * @see #getClients()
+    * 
+    * @return int of the number of clients
+    */
    @Override
    public int getNumClients()
    {
@@ -332,6 +423,12 @@ public class ClientServiceImpl implements ClientService
       }
       return newNum;
    }   
+   
+   /**
+    * Sets the database.
+    * 
+    * @param database service
+    */
    
    public void setDatabase(DatabaseService database)
    {
@@ -347,4 +444,14 @@ public class ClientServiceImpl implements ClientService
    {
       this.configuration = configuration;
    } 
+   
+   private String getSerial(String crtFileName)
+   {
+      String returnValue = "";
+      String message = this.executeOpenSSLCommand(CRTDir, crtFileName, true);
+      
+      returnValue = message.substring(message.indexOf("serial=") + 7);
+      returnValue = returnValue.substring(0, returnValue.indexOf("\n"));      
+      return returnValue;
+   }
 }

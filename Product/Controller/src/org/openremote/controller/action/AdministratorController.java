@@ -77,8 +77,7 @@ public class AdministratorController extends MultiActionController {
 
       try 
       {
-         ResultSet resultSet = clientService.getClient(clientID);
-         
+         ResultSet resultSet = clientService.getClient(clientID);         
          while(resultSet.next())
          {
             String clientFileName = resultSet.getString("client_file_name");
@@ -114,9 +113,16 @@ public class AdministratorController extends MultiActionController {
             {
                if(deleteCertificate(clientUsername))
                {
-                  int status = clientService.updateClientStatus(clientID, false);
-                  logger.error("Update return value : " + status);
-                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
+                  int statusReturn = clientService.updateClientStatus(clientID, false);
+                  int serialReturn = clientService.clearClientSerial(clientID);
+                  if(statusReturn == 1 && serialReturn == 1)
+                  {
+                     response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);                     
+                  }
+                  else
+                  {
+                     response.getWriter().print("Client is not successfully updated in the database");
+                  }
                }
                else
                {
@@ -125,9 +131,16 @@ public class AdministratorController extends MultiActionController {
             }
             else if(action.equals("accept"))
             {
-               int status = clientService.updateClientStatus(clientID, true);
-               logger.error("Update return value : " + status);
-               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
+               int statusReturn = clientService.updateClientStatus(clientID, true);
+               int serialReturn = clientService.updateClientSerial(clientID);
+               if(statusReturn == 1 & serialReturn == 1)
+               {
+                  response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + clientService.getSerial());
+               }
+               else
+               {
+                  response.getWriter().print("Client is not successfully updated in the database");                  
+               }               
             }
          }
          else
@@ -145,7 +158,7 @@ public class AdministratorController extends MultiActionController {
             }
             else
             {
-               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result);
+               response.getWriter().print("OpenSSL command failed, exit with exit code: " + result + ". \n\rProbably a index.txt and/or serial problem of the CA, please check these files located in the CA path.");
             }
          }         
       } catch (NullPointerException e) {

@@ -25,10 +25,15 @@ $(document).ready(function() {
   	var resultString = resultArray[0];
   	var resultID = resultArray[1];
   	var resultAction = resultArray[2];
-  	var resultPinCode = 0;  	
+  	var resultPinCode = 0;  
+  	var serial = "";	
   	if(resultArray.length >= 4)
   	{
   		resultPinCode = resultArray[3];
+  	}
+		if(resultArray.length >= 4)
+  	{
+  		serial = resultArray[3];
   	}
   	
   	if (resultString == 'OK') {
@@ -39,12 +44,14 @@ $(document).ready(function() {
 				changeValueById(resultID, "deny");
 				changeBackgroundByID(resultID, "image/accept.gif");				
 				changePincodeById(resultID, "-");
+				changeSerialById(resultID, serial);
 			}
 			else if(resultAction == 'deny')
 			{
 				changeValueById(resultID, "accept");
 				changeBackgroundByID(resultID, "image/denied.gif");		
-				changePincodeById(resultID, resultPinCode);	
+				changePincodeById(resultID, resultPinCode);					
+				changeSerialById(resultID, "");
 			}
 		} else {
 			error("User status is unsuccessfully: " + result);
@@ -65,8 +72,14 @@ function changeValueById(id, value)
 	document.getElementById("action" + id).value = value;
 }
 
-// Changes the value of the pincode input element
+// Changes the value of the pincode span element
 function changePincodeById(id, value)
 {
 	document.getElementById("pincode" + id).innerHTML = value;
+}
+
+// Changes the value of the serial span element
+function changeSerialById(id, value)
+{
+	document.getElementById("serial" + id).innerHTML = value;
 }
