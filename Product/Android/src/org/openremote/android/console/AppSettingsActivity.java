@@ -38,7 +38,7 @@ import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.ssl.CertificationRequest;
 import org.openremote.android.console.ssl.MyKeyPair;
-import org.openremote.android.console.ssl.MyKeyStore;
+import org.openremote.android.console.ssl.ORKeyStore;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
 import org.openremote.android.console.view.PanelSelectSpinnerView;
@@ -339,7 +339,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     
     final ProgressDialog dialog = new ProgressDialog(this);
     
-    final MyKeyStore ks = MyKeyStore.getInstance(getApplicationContext());
+    final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
     final Handler fetchHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg) {

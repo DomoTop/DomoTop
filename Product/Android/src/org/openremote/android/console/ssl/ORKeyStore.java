@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 import android.content.Context;
 import android.util.Log;
 
-public class MyKeyStore {
+public class ORKeyStore {
 	
 	/**
 	 * Register the SpongyCastle Provider
@@ -58,7 +58,7 @@ public class MyKeyStore {
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	private final static String KEYSTORE_PASSWORD = "password";
 	
-	private static MyKeyStore instance = null;
+	private static ORKeyStore instance = null;
 	
 	private KeyStore keystore = null;
 	private Context context = null;
@@ -69,11 +69,11 @@ public class MyKeyStore {
 	 * @param context The current application context
 	 * @return The MyKeyStore instance
 	 */
-	public static MyKeyStore getInstance(Context context)
+	public static ORKeyStore getInstance(Context context)
 	{
 		if(instance == null)
 		{
-			instance = new MyKeyStore(context);
+			instance = new ORKeyStore(context);
 		}
 		return instance;
 	}
@@ -82,7 +82,7 @@ public class MyKeyStore {
 	 * Instantiates the KeyStore with either one found on the filesystem or create a new empty one
 	 * @param context The current application context
 	 */
-	private MyKeyStore(Context context)
+	private ORKeyStore(Context context)
 	{
 		this.context = context;
 		File dir = context.getFilesDir();
