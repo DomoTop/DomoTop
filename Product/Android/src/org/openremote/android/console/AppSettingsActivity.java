@@ -367,11 +367,10 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     				new Thread() {
     					public void run() {
     						int what;
-    						if(ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext())))
-    							what = 0;
-    						else
-    							what = 1;
-    						fetchHandler.sendEmptyMessage(what);
+    						ks.getSignedChain(
+    								AppSettingsModel.getCurrentServer(getApplicationContext()),
+    								fetchHandler
+    							);
     					}
     				}.run();
     			}

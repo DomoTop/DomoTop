@@ -30,6 +30,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
+import org.openremote.android.console.net.ORConnection;
+import org.openremote.android.console.net.ORConnectionDelegate;
+import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.util.PhoneInformation;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.util.encoders.Base64;
@@ -38,9 +41,10 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
-public class ORKeyStore {
+public class ORKeyStore implements ORConnectionDelegate {
 	
 	/**
 	 * Register the SpongyCastle Provider
@@ -57,7 +61,11 @@ public class ORKeyStore {
 	
 	private KeyStore keystore = null;
 	private Context context = null;
-		
+	
+	//To hand data to the delegate functions
+	private Handler fetchHandler = null;
+	private String host = null;
+	
 	/**
 	 * Returns a MyKeyStore instance. This instance is a singleton so every call should 
 	 * return the same MyKeyStore
@@ -159,10 +167,8 @@ public class ORKeyStore {
 	 * @param host The host from which we want to fetch our certificate
 	 * @param context The current application context
 	 */
-	public boolean addCertificate(String host)
-	{
-		Certificate[] chain = getSignedChain(host);
-		
+	private boolean addCertificate(String host, Certificate[] chain)
+	{		
 		if(chain != null)
 		{
 		    KeyPair kp = ORKeyPair.getInstance().getKeyPair(context);
@@ -188,56 +194,37 @@ public class ORKeyStore {
 	 * the chain is the clients public certificate, the second one is the certificate of the 
 	 * Certificate Authority
 	 * @param host The host from which we want to fetch our certificate
+	 * @param handler The handler to be called when retrieval is done
 	 * @return A chain with the client certificate and the CA certificate, or null if not yet
 	 * approved
 	 */
-	private Certificate[] getSignedChain(String host)
+	public void getSignedChain(String host, Handler handler)
 	{
-		Certificate[] chain = null;
-
+		//Save pointer so we can call it later
+		this.fetchHandler = handler;
+		this.host = host;
+		
 		String url = host;
 		url += "/rest/cert/get/";
 		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
-		
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpGet httpget = null;
-	    
-	    HttpResponse response = null;
-	    try {	
+
+		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					context.openFileInput(ORPKCS10CertificationRequest.TIMESTAMP_FILE)));
 			String timestamp = in.readLine();
 			in.close();
 			
-			httpget = new HttpGet(url + timestamp);
+			url += timestamp;
 			
-			response = httpclient.execute(httpget);
-			
-			if(response.getStatusLine().getStatusCode() != 200)
-				return null;
-			
-			Document doc = XMLfromIS(response.getEntity().getContent());
-		    
-			chain = new X509Certificate[2];
-		    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));
-		    
-		    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
-			
-		    try {
-				keystore.setCertificateEntry("ca", chain[1]);
-			} catch (KeyStoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		    
-		    saveKeyStore();
-		} catch (ClientProtocolException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			ORConnection connection = new ORConnection(context,
+														ORHttpMethod.GET,
+														false,
+														url,
+														this);
+			connection.execute();											
 		} catch (IOException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
-		}
-	    
-		return chain;
+		}		
 	}
 	
 	/**
@@ -315,5 +302,31 @@ public class ORKeyStore {
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		}
+	}
+
+	@Override
+	public void urlConnectionDidFailWithException(Exception e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void urlConnectionDidReceiveData(InputStream data) {
+		Document doc = XMLfromIS(data);
+	    
+		Certificate[] chain = new X509Certificate[2];
+	    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));   
+	    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
+	    
+	    int what = addCertificate(host, chain) ? 0 : 1;
+	    
+	    if(fetchHandler != null) {
+	    	fetchHandler.sendEmptyMessage(what);
+	    }
 	}
 }
