@@ -146,7 +146,7 @@ public class CertificationRequest {
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
-	    String devicename = phoneInfo.getDeviceName();
+	    String devicename = phoneInfo.getDeviceName().replace(' ', '_');
 	    String email = phoneInfo.getEmailAddress(context);
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);

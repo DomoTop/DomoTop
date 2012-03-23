@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyStore;
@@ -199,7 +200,7 @@ public class MyKeyStore {
 
 		String url = AppSettingsModel.getCurrentServer(context);
 		url += "/rest/cert/get/";
-		url += PhoneInformation.getInstance().getDeviceName();
+		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
 		
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpGet httpget = null;
