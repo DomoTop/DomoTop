@@ -91,115 +91,12 @@ public class SubmitCSR extends RESTAPI
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
+  // TODO grep the caPath from the configuration file 
   private final static String CA_LOCATION = "/usr/share/tomcat6/cert/ca/";
   private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----";
   private final static String CSR_FOOTER = "\n-----END NEW CERTIFICATE REQUEST-----\n";
-  private final static String openssl = "/usr/bin/openssl";
 
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
-
-  /**
-   * Execute a openssl command
-   * @param filename the file to examine
-   * @return OpenSSL's output
-   */
-  private String executeOpenSSL(String filename)
-  {
-    List<String> command = new ArrayList<String>();
-    command.add(openssl);
-    command.add("req");
-    command.add("-subject");
-    command.add("-pubkey");
-    command.add("-noout");
-    command.add("-in");
-    command.add("csr/" + filename);
-
-    ProcessBuilder pb = new ProcessBuilder(command);
-    pb.directory(new File(CA_LOCATION));
-    
-    Process p = null;
-    StringBuffer buffer = new StringBuffer();
-
-    try {
-        p = pb.start();
-        p.waitFor();
-
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(p.getInputStream()));
-
-        String line = null;
-        while((line = br.readLine()) != null) {
-            buffer.append(line).append("\n");
-        }
-    } catch (IOException e) {
-        logger.error(e.getMessage());
-    } catch (InterruptedException e) {
-        logger.error(e.getMessage());
-    }
-    return buffer.toString();
-  }
-
-   /**
-    * Gerate an md5sum from a base64 encoded message
-    * @param message the Base64 encoded message
-    * @return MD5Sum as a hex encoded string
-    */
-   private String generateMD5Sum(String message) throws NoSuchAlgorithmException
-   {
-      final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-      messageDigest.reset();
-      messageDigest.update(message.getBytes(Charset.forName("UTF8")));
-      final byte[] resultByte = messageDigest.digest();
-      return new String(Hex.encodeHex(resultByte));
-   }
-
-  /**
-   * Retrieve the client information from an CSR file
-   * @param filename the file name of the CSR
-   * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
-   */
-  @Deprecated
-  private int getClientInformation(String filename)
-  {
-      String message = executeOpenSSL(filename);
-      String username = null;
-      String pinCode = null;
-      String email = "";
-      
-      try
-      {
-         username = message.substring(message.indexOf("CN=") + 3);
-         username = username.substring(0, username.indexOf("/"));
-      }
-      catch(IndexOutOfBoundsException e)
-      {
-         logger.error(e.getMessage());
-      }
-
-      try
-      {
-         String publicKey = message.substring(message.indexOf("KEY-----") + 9, message.lastIndexOf("-----END") - 1);
-         if(!publicKey.isEmpty())
-         {
-            pinCode = generateMD5Sum(publicKey);
-            pinCode = pinCode.substring(pinCode.length() - 4, pinCode.length());
-         }
-         else
-         {
-            pinCode = "<i>No public key</i>";
-         }
-      }
-      catch(IndexOutOfBoundsException e)
-      {
-         logger.error(e.getMessage());
-      }
-      catch (NoSuchAlgorithmException e)
-      {
-         logger.error(e.getMessage());
-      }
-
-      return clientService.addClient(pinCode, username, email, filename);
-  }
 
   /**
    * Write CSR to file
