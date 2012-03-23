@@ -345,7 +345,18 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		dialog.cancel();
-    	    fetchCertificate.setEnabled(ks.isEmpty());
+    	    if(msg.what == 1) {
+    			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
+    			builder.setMessage("Administrator has not yet approved you")
+    			       .setCancelable(true)
+    			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+    			           public void onClick(DialogInterface dialog, int id) {
+    			                dialog.cancel();
+    			           }
+    			       });
+    			AlertDialog alert = builder.create();
+    			alert.show(); 
+    	    }
     	}
     };
 
@@ -354,10 +365,15 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     		
     			@Override
     			public void onClick(View arg0) {
+    				dialog.show();
     				new Thread() {
     					public void run() {
-    						ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext()));
-    						fetchHandler.sendEmptyMessage(0);
+    						int what;
+    						if(ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext())))
+    							what = 0;
+    						else
+    							what = 1;
+    						fetchHandler.sendEmptyMessage(what);
     					}
     				}.run();
     			}

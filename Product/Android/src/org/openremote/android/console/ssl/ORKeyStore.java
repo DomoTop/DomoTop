@@ -159,7 +159,7 @@ public class ORKeyStore {
 	 * @param host The host from which we want to fetch our certificate
 	 * @param context The current application context
 	 */
-	public void addCertificate(String host)
+	public boolean addCertificate(String host)
 	{
 		Certificate[] chain = getSignedChain(host);
 		
@@ -174,10 +174,12 @@ public class ORKeyStore {
 						chain);
 				
 				saveKeyStore();
+				return true;
 			} catch (KeyStoreException e) {
 				Log.e(LOG_CATEGORY, e.getMessage());
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -210,6 +212,9 @@ public class ORKeyStore {
 			httpget = new HttpGet(url + timestamp);
 			
 			response = httpclient.execute(httpget);
+			
+			if(response.getStatusLine().getStatusCode() != 200)
+				return null;
 			
 			Document doc = XMLfromIS(response.getEntity().getContent());
 		    
