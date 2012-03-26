@@ -131,7 +131,9 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
 
       initOrientationListener();
       
-      if(AppSettingsModel.isSSLEnabled(this)) {
+      //Temporarily assume port 8443 == client authentication
+      //TODO come up with a better way
+      if(AppSettingsModel.isSSLEnabled(this) && AppSettingsModel.getSSLPort(this) == 8443) {
     	  this.contentLayout.setBackgroundResource(R.drawable.lock);
       }
    }
