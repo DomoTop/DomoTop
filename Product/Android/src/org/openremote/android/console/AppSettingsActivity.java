@@ -366,7 +366,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     				dialog.show();
     				new Thread() {
     					public void run() {
-    						int what;
     						ks.getSignedChain(
     								AppSettingsModel.getCurrentServer(getApplicationContext()),
     								fetchHandler

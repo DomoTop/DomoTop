@@ -130,7 +130,10 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
       addControllerRefreshEventListener();
 
       initOrientationListener();
-
+      
+      if(AppSettingsModel.isSSLEnabled(this)) {
+    	  this.contentLayout.setBackgroundResource(R.drawable.lock);
+      }
    }
 
    /**
