@@ -312,14 +312,16 @@ public class ORKeyStore implements ORConnectionDelegate {
 	}
 
 	/**
-	 * This method gets called when an ORConnection get's a response different from 200 OK
+	 * This method gets called when an ORConnection get's a response
 	 * @param httpResponse the HttpResponse object associated with this request
 	 */
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
-	    if(fetchHandler != null) {
-	    	fetchHandler.sendEmptyMessage(1);
-	    }	
+		if(httpResponse.getStatusLine().getStatusCode() != 200) {
+		    if(fetchHandler != null) {
+		    	fetchHandler.sendEmptyMessage(1);
+		    }
+		}
 	}
 
 	/**
@@ -349,6 +351,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 			X509Certificate cert = (X509Certificate) certs[0];
 			info.append("\tSubject: \t" + cert.getSubjectDN() + "\n");
 			info.append("\tIssuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t\t\t") + "\n");
+			info.append("\tValid till: \t" + cert.getNotAfter());
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		}
