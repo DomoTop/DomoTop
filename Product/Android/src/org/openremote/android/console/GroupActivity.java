@@ -42,12 +42,15 @@ import org.openremote.android.console.model.XMLEntityDataBase;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.net.ORRoundRobinConnection;
+import org.openremote.android.console.ssl.ORKeyStore;
 import org.openremote.android.console.util.ImageUtil;
 import org.openremote.android.console.view.GroupView;
 import org.openremote.android.console.view.ScreenView;
 import org.openremote.android.console.view.ScreenViewFlipper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -61,11 +64,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.GestureDetector.OnGestureListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * Controls all the screen views in a group.
@@ -138,6 +144,25 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
     	  ImageView iv = new ImageView(this);
     	  iv.setImageResource(R.drawable.lock);
     	  contentLayout.addView(iv);
+    	  
+    	  iv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
+				builder.setMessage(ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
+							AppSettingsModel.getCurrentServer(getApplicationContext())
+						))
+				       .setCancelable(false)
+				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
       }
    }
 

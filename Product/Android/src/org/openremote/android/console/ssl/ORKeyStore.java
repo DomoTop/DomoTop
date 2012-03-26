@@ -300,6 +300,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 		}
 	}
 
+	/**
+	 * This method gets called when an ORConnection fails
+	 * @param e The exception that occurred
+	 */
 	@Override
 	public void urlConnectionDidFailWithException(Exception e) {
 	    if(fetchHandler != null) {
@@ -307,6 +311,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    }		
 	}
 
+	/**
+	 * This method gets called when an ORConnection get's a response different from 200 OK
+	 * @param httpResponse the HttpResponse object associated with this request
+	 */
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
 	    if(fetchHandler != null) {
@@ -314,6 +322,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    }	
 	}
 
+	/**
+	 * This method gets called when an ORConnection finished succesfully
+	 * @param data The InputStream containing the body of the request 
+	 */
 	@Override
 	public void urlConnectionDidReceiveData(InputStream data) {
 		Document doc = XMLfromIS(data);
@@ -328,4 +340,19 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    	fetchHandler.sendEmptyMessage(what);
 	    }
 	}
+	
+	public String aliasInformation(String alias)
+	{
+		StringBuilder info = new StringBuilder("Certificate information:\n");
+		try {
+			Certificate[] certs = keystore.getCertificateChain(alias);
+			X509Certificate cert = (X509Certificate) certs[0];
+			info.append("\tSubject: \t" + cert.getSubjectDN() + "\n");
+			info.append("\tIssuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t\t\t") + "\n");
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		}
+		return info.toString();
+	}
+	
 }

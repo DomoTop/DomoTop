@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
@@ -65,6 +64,10 @@ public class ORPKCS10CertificationRequest {
 	
 	private Context context = null;
 		
+	/**
+	 * Returns a singleton ORPKCS10CertificationRequest instance. Every call will return the same object.
+	 * @return The ORPKCS10CertificationRequest object
+	 */
 	public static ORPKCS10CertificationRequest getInstance(Context context)
 	{
 		if(instance == null)

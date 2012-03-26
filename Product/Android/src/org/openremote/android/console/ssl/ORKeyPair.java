@@ -13,10 +13,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.openremote.android.console.Constants;
-import org.spongycastle.jce.provider.JDKMessageDigest.MD5;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
-import org.spongycastle.util.encoders.HexEncoder;
 
 import android.content.Context;
 import android.util.Log;
@@ -34,6 +32,10 @@ public class ORKeyPair {
 	
 	private static ORKeyPair instance = null;
 	
+	/**
+	 * Returns a singleton ORKeyPair instance. Every call will return the same object.
+	 * @return The ORKeyPair object
+	 */
 	public static ORKeyPair getInstance() 
 	{
 		if(instance == null)
