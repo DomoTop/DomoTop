@@ -163,8 +163,6 @@ public class ORPKCS10CertificationRequest {
 	 */
 	public int submitCertificationRequest(String host)
 	{
-
-		
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
