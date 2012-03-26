@@ -64,6 +64,7 @@ import android.view.OrientationEventListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.GestureDetector.OnGestureListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -134,7 +135,9 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
       //Temporarily assume port 8443 == client authentication
       //TODO come up with a better way
       if(AppSettingsModel.isSSLEnabled(this) && AppSettingsModel.getSSLPort(this) == 8443) {
-    	  this.contentLayout.setBackgroundResource(R.drawable.lock);
+    	  ImageView iv = new ImageView(this);
+    	  iv.setImageResource(R.drawable.lock);
+    	  contentLayout.addView(iv);
       }
    }
 
