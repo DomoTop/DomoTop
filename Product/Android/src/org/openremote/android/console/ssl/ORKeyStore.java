@@ -212,6 +212,8 @@ public class ORKeyStore implements ORConnectionDelegate {
 			
 			url += timestamp;
 			
+			Log.d(LOG_CATEGORY, "Fetching certificate from: " + url);
+			
 			ORConnection connection = new ORConnection(context,
 														ORHttpMethod.GET,
 														false,
@@ -307,7 +309,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 	@Override
 	public void urlConnectionDidFailWithException(Exception e) {
 	    if(fetchHandler != null) {
-	    	fetchHandler.sendEmptyMessage(1);
+	    	//fetchHandler.sendEmptyMessage(1);
 	    }		
 	}
 

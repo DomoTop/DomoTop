@@ -149,18 +149,10 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
 			
 			@Override
 			public void onClick(View arg0) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
-				builder.setMessage(ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
-							AppSettingsModel.getCurrentServer(getApplicationContext())
-						))
-				       .setCancelable(false)
-				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
+		        ViewHelper.showAlertViewWithSetting(GroupActivity.this, "Using cached content", 
+		        	ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
+						AppSettingsModel.getCurrentServer(getApplicationContext())
+					));
 			}
 		});
       }

@@ -189,7 +189,9 @@ public class ORPKCS10CertificationRequest {
 	            read += tmp;
 	        }
 	        
-	        saveTimestamp(read, host);
+	        if(response.getStatusLine().getStatusCode() == 200) {
+	        	saveTimestamp(read, host);
+	        }
 	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
