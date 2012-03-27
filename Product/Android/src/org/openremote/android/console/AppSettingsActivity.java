@@ -165,11 +165,18 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       addOnclickListenerOnCancelButton();
       progressLayout = (LinearLayout)findViewById(R.id.choose_controller_progress);
 
-      if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
-    	  Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
-      }
    }
 
+   @Override
+	protected void onResume() {
+	   super.onResume();
+
+	   if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
+		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
+		   ViewHelper.showAlertViewWithTitle(this, "NO ACCESS", "WHAT!");
+	   }
+   }
+   
    /**
     * Creates the image cache text view.
     * 

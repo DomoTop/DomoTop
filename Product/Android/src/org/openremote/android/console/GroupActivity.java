@@ -149,7 +149,7 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
 			
 			@Override
 			public void onClick(View arg0) {
-		        ViewHelper.showAlertViewWithSetting(GroupActivity.this, "Using cached content", 
+		        ViewHelper.showAlertViewWithTitle(GroupActivity.this, "Using cached content", 
 		        	ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
 						AppSettingsModel.getCurrentServer(getApplicationContext())
 					));
