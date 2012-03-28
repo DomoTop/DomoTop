@@ -58,9 +58,34 @@ public class ORPKCS10CertificationRequest {
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
-
 	public static final String TIMESTAMP_FILE = "timestamp";
+	
+	private static ORPKCS10CertificationRequest instance = null;
+	
+	private Context context = null;
 		
+	/**
+	 * Returns a singleton ORPKCS10CertificationRequest instance. Every call will return the same object.
+	 * @return The ORPKCS10CertificationRequest object
+	 */
+	public static ORPKCS10CertificationRequest getInstance(Context context)
+	{
+		if(instance == null)
+		{
+			instance = new ORPKCS10CertificationRequest(context);
+		}
+		return instance;
+	}
+	
+	/**
+	 * Create a new ORPKCS10CertificationRequest with the applcation context
+	 * @param context The current application context
+	 */
+	private ORPKCS10CertificationRequest(Context context)
+	{
+		this.context = context;
+	}
+	
 	/**
 	 * Generate a PKCS10 Certification Request. This request could be used to sing a certificate
 	 * which can be used to authenticate to the server.
@@ -71,9 +96,9 @@ public class ORPKCS10CertificationRequest {
 	 * @param email The email address of the registered user.
 	 * @return The Certification Request in Base64
 	 */
-	public static String getCertificationRequestAsBase64(Context context, String device, String email)
+	private String getCertificationRequestAsBase64(Context context, String device, String email)
 	{
-		String basecert = new String(Base64.encode(getCertificationRequest(context, device, email).getDEREncoded()));
+		String basecert = new String(Base64.encode(getCertificationRequest(device, email).getDEREncoded()));
 				
 		return basecert;
 	}
@@ -86,7 +111,7 @@ public class ORPKCS10CertificationRequest {
 	 * @param email The email address of the registered user.
 	 * @return The Certification Request
 	 */
-	public static PKCS10CertificationRequest getCertificationRequest(Context context, String devicename, String email)
+	private PKCS10CertificationRequest getCertificationRequest(String devicename, String email)
 	{
 		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
 		
@@ -132,11 +157,10 @@ public class ORPKCS10CertificationRequest {
 	
 	/**
 	 * Generate a certification request and submit it to the server, where it can be approved or disproved.
-	 * @param context The current application context
 	 * @param host The host to send CSR to, should be entire url to OpenRemote controller root, for example http://192.168.1.2:8080/controller
 	 * @return The HTTP status code of the request or -1 if something local has gone wrong
 	 */
-	public static int submitCertificationRequest(Context context, String host)
+	public int submitCertificationRequest(String host)
 	{
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
@@ -145,7 +169,7 @@ public class ORPKCS10CertificationRequest {
 	    String email = phoneInfo.getEmailAddress(context);
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
-
+		
 	    try {
 	    	String csr = getCertificationRequestAsBase64(context, devicename, email);
 	    	
@@ -164,7 +188,9 @@ public class ORPKCS10CertificationRequest {
 	            read += tmp;
 	        }
 	        
-	        saveTimestamp(read, context);
+	        if(response.getStatusLine().getStatusCode() == 200) {
+	        	saveTimestamp(read, host);
+	        }
 	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
@@ -180,17 +206,17 @@ public class ORPKCS10CertificationRequest {
 	 * @param timestamp The timestamp to write 
 	 * @param context The current application context
 	 */
-	private static void saveTimestamp(String timestamp, Context context)
+	private void saveTimestamp(String timestamp, String host)
 	{
 		File dir = context.getFilesDir();
-		File file = new File(dir, TIMESTAMP_FILE);
+		File file = new File(dir, URLEncoder.encode(host) + TIMESTAMP_FILE);
 		file.delete();
 		
 		timestamp.trim();
 		OutputStreamWriter out;
 		try {
 			out = new OutputStreamWriter(
-					context.openFileOutput(TIMESTAMP_FILE, Context.MODE_PRIVATE));
+					context.openFileOutput(file.getName(), Context.MODE_PRIVATE));
 			out.write(timestamp);
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -200,7 +226,7 @@ public class ORPKCS10CertificationRequest {
 		} 
 	}
 
-	public static boolean isPending(Context context) {
+	public boolean isPending() {
 		File dir = context.getFilesDir();
 		File file = new File(dir, TIMESTAMP_FILE);	
 		return file.exists();

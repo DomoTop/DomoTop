@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.io.IOException;
 
 import org.apache.http.HttpResponse;
+import org.openremote.android.console.AppSettingsActivity;
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.GroupActivity;
 import org.openremote.android.console.LoginViewActivity;
@@ -54,7 +55,7 @@ import android.widget.TextView;
  */
 public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLoaderResult> {
    private static final int TO_LOGIN = 0xF00A;
-//   private static final int TO_SETTING = 0xF00B;
+   private static final int TO_SETTING = 0xF00B;
    private static final int TO_GROUP = 0xF00C;
    private static final int SWITCH_TO_OTHER_CONTROLER = 0xF00D;
    
@@ -97,6 +98,13 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
         //   So for now, an empty catch block, until I can build proper test cases for these
         //                                                                                    [JPL]
         //
+    	
+    	if(e.getMessage().contains("SSL")) {
+    		//Handle error
+    		//Probably no access/
+    		result.setAction(TO_SETTING);
+    		return result;
+    	}
       }
 
      
@@ -212,6 +220,10 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          intent.setClass(activity, LoginViewActivity.class);
          intent.setData(Uri.parse(Main.LOAD_RESOURCE));
          break;
+      case TO_SETTING:
+    	  intent.setClass(activity, AppSettingsActivity.class);
+    	  intent.putExtra("SSL_CLIENT", true);
+    	  break;
       case SWITCH_TO_OTHER_CONTROLER:
         
          ORControllerServerSwitcher.doSwitch(activity);

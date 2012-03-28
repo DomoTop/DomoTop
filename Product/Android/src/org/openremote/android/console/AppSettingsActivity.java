@@ -112,7 +112,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    private LinearLayout progressLayout;
    
    private ProgressDialog loadingPanelProgress;
-   
+      
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -164,8 +164,19 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       addOnclickListenerOnDoneButton();
       addOnclickListenerOnCancelButton();
       progressLayout = (LinearLayout)findViewById(R.id.choose_controller_progress);
+
    }
 
+   @Override
+	protected void onResume() {
+	   super.onResume();
+
+	   if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
+		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
+		   ViewHelper.showAlertViewWithTitle(this, "NO ACCESS", "WHAT!");
+	   }
+   }
+   
    /**
     * Creates the image cache text view.
     * 
@@ -239,7 +250,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
-    final Button generateCertification = (Button)findViewById(R.id.ssl_clientcert_generation);
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
     final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
     final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
@@ -289,52 +299,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    final ProgressDialog generationProgress = new ProgressDialog(this);
-    generationProgress.setTitle(R.string.generation_progress);
-    
-    final Handler generationHandler = new Handler()
-    {
-    	@Override
-    	public void handleMessage(Message msg) {
-    		super.handleMessage(msg);
-    		generationProgress.cancel();
-    		
-    		String dialogmessage = 
-    				String.format(getString(R.string.pin_dialog), 
-						AppSettingsModel.getCurrentServer(getApplicationContext()),
-						ORKeyPair.getInstance().getPIN(getApplicationContext())
-					);
-    		
-			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-			builder.setMessage(dialogmessage)
-			       .setCancelable(true)
-			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
-			           }
-			       });
-			AlertDialog alert = builder.create();
-			alert.show();    	
-		}
-    };
-    
-    generateCertification.setOnClickListener(
-    	new OnClickListener() {
-		
-			@Override
-			public void onClick(View arg0) {
-				final String hostname = AppSettingsModel.getCurrentServer(getApplicationContext());
-
-				new Thread() {
-					public void run() {
-						generationProgress.show();
-						ORPKCS10CertificationRequest.submitCertificationRequest(getApplicationContext(), hostname);
-						generationHandler.sendEmptyMessage(0);
-					}
-				}.run();
-			}
-		});
-    
     final ProgressDialog dialog = new ProgressDialog(this);
     
     final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
@@ -343,6 +307,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		dialog.cancel();
+        	fetchCertificate.setEnabled(true);
     	    if(msg.what == 1) {
     			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
     			builder.setMessage("Administrator has not yet approved you")
@@ -364,14 +329,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				dialog.show();
+    				fetchCertificate.setEnabled(false);
     				new Thread() {
     					public void run() {
-    						int what;
-    						if(ks.addCertificate(AppSettingsModel.getCurrentServer(getApplicationContext())))
-    							what = 0;
-    						else
-    							what = 1;
-    						fetchHandler.sendEmptyMessage(what);
+    						ks.getSignedChain(
+    								AppSettingsModel.getCurrentServer(getApplicationContext()),
+    								fetchHandler
+    							);
     					}
     				}.run();
     			}
@@ -384,7 +348,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				ks.delete();
-    			    generateCertification.setEnabled(true);
     				
     			}
     		});
@@ -448,9 +411,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     });
       
   }
-
-
-
 
    /**
     * Adds the onclick listener on done button.
@@ -670,6 +630,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             writeCustomServerToFile();
             requestPanelList();
+            requestAccess();
          }
          
       });
@@ -754,6 +715,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             currentServer = (String)parent.getItemAtPosition(position);
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             requestPanelList();
+            requestAccess();
          }
       });
       
@@ -784,6 +746,32 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       }
    }
 
+   /**
+    * Submits a Certification Request to the controller
+    */
+   private void requestAccess()
+   {
+	   final String hostname = AppSettingsActivity.currentServer;
+	   final ProgressDialog progress = new ProgressDialog(this);
+	   final Handler handler = new Handler()
+	   {
+		   public void handleMessage(Message msg) {
+			   progress.dismiss();
+		   }
+	   };
+	   
+	   progress.show();
+	   new Thread()
+	   {
+		   public void run() {
+			   handler.sendEmptyMessage(
+					   ORPKCS10CertificationRequest.getInstance(getApplicationContext())
+			   			.submitCertificationRequest(hostname)
+			   		);
+		   }
+	   }.start();
+   }
+   
    /**
     * Request panel identity list from controller.
     */
