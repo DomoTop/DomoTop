@@ -108,6 +108,8 @@ public class SubmitCSR extends RESTAPI
     String filename = username + timestamp + ".csr";
     BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + filename));
 
+    /*
+    Makes it OpenSSL command compatible
     out.write(CSR_HEADER);
     int j = 0;
     for(int i = 0; i < certificate.length(); ++i)
@@ -118,6 +120,9 @@ public class SubmitCSR extends RESTAPI
         out.write(certificate.charAt(i));
     }
     out.write(CSR_FOOTER);
+    */
+    
+    out.write(certificate);
     out.close();
 
     int retvalue = clientService.addClient(filename);

@@ -65,6 +65,7 @@
     <fileset dir = "${lib.dir}/onewire"/>
   	<fileset dir = "${lib.dir}/freemarker"/>  	
   	<fileset dir = "${lib.dir}/hsqldb"/>
+  	<fileset dir = "${lib.dir}/bouncycastle"/>
     <path location = "${classes.dir}"/>
   </path>
   
@@ -82,6 +83,7 @@
     <fileset dir = "${lib.dir}/onewire"/>
   	<fileset dir = "${lib.dir}/freemarker"/>
   	<fileset dir = "${lib.dir}/hsqldb"/>
+  	<fileset dir = "${lib.dir}/bouncycastle"/>
   </path>
 
   <path id = "container.libs">
@@ -96,6 +98,7 @@
     <fileset dir = "${lib.dir}/apache" includes = "**/*.jar"/>
   	<fileset dir = "${lib.dir}/freemarker" includes = "**/*.jar"/>
   	<fileset dir = "${lib.dir}/hsqldb" includes = "**/*.jar"/>
+  	<fileset dir = "${lib.dir}/bouncycastle" includes = "**/*.jar"/>
   </path>
 
 
@@ -154,6 +157,9 @@
       <fileset dir = "${lib.dir}/hsqldb">
         <include name = "**/*.jar"/>
       </fileset>
+      <fileset dir = "${lib.dir}/bouncycastle">
+        <include name = "**/*.jar"/>
+      </fileset>      
     </copy>
     <copy todir = "${build.dir}/lib/native" flatten = "true">
       <fileset dir = "${lib.dir}/rxtx">
