@@ -112,7 +112,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    private LinearLayout progressLayout;
    
    private ProgressDialog loadingPanelProgress;
-   
+      
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -250,7 +250,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
-    final Button generateCertification = (Button)findViewById(R.id.ssl_clientcert_generation);
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
     final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
     final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
@@ -300,52 +299,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    final ProgressDialog generationProgress = new ProgressDialog(this);
-    generationProgress.setTitle(R.string.generation_progress);
-    
-    final Handler generationHandler = new Handler()
-    {
-    	@Override
-    	public void handleMessage(Message msg) {
-    		super.handleMessage(msg);
-    		generationProgress.cancel();
-    		
-    		String dialogmessage = 
-    				String.format(getString(R.string.pin_dialog), 
-						AppSettingsModel.getCurrentServer(getApplicationContext()),
-						ORKeyPair.getInstance().getPIN(getApplicationContext())
-					);
-    		
-			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-			builder.setMessage(dialogmessage)
-			       .setCancelable(true)
-			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
-			           }
-			       });
-			AlertDialog alert = builder.create();
-			alert.show();    	
-		}
-    };
-    
-    generateCertification.setOnClickListener(
-    	new OnClickListener() {
-		
-			@Override
-			public void onClick(View arg0) {
-				final String hostname = AppSettingsModel.getCurrentServer(getApplicationContext());
-
-				new Thread() {
-					public void run() {
-						generationProgress.show();
-						ORPKCS10CertificationRequest.getInstance(getApplicationContext()).submitCertificationRequest(hostname);
-						generationHandler.sendEmptyMessage(0);
-					}
-				}.run();
-			}
-		});
-    
     final ProgressDialog dialog = new ProgressDialog(this);
     
     final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
@@ -354,6 +307,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		dialog.cancel();
+        	fetchCertificate.setEnabled(true);
     	    if(msg.what == 1) {
     			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
     			builder.setMessage("Administrator has not yet approved you")
@@ -375,6 +329,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				dialog.show();
+    				fetchCertificate.setEnabled(false);
     				new Thread() {
     					public void run() {
     						ks.getSignedChain(
@@ -393,7 +348,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     			@Override
     			public void onClick(View arg0) {
     				ks.delete();
-    			    generateCertification.setEnabled(true);
     				
     			}
     		});
@@ -457,9 +411,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     });
       
   }
-
-
-
 
    /**
     * Adds the onclick listener on done button.

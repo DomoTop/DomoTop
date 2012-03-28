@@ -157,7 +157,6 @@ public class ORPKCS10CertificationRequest {
 	
 	/**
 	 * Generate a certification request and submit it to the server, where it can be approved or disproved.
-	 * @param context The current application context
 	 * @param host The host to send CSR to, should be entire url to OpenRemote controller root, for example http://192.168.1.2:8080/controller
 	 * @return The HTTP status code of the request or -1 if something local has gone wrong
 	 */
