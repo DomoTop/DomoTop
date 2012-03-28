@@ -303,6 +303,21 @@ public class ORKeyStore implements ORConnectionDelegate {
 	}
 
 	/**
+	 * Check if a alias is in the keystore
+	 * @param alias The alias to check
+	 * @return if a alias is in the keystore
+	 */
+	public boolean contains(String alias)
+	{
+		try {
+			return keystore.containsAlias(alias);
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
 	 * This method gets called when an ORConnection fails
 	 * @param e The exception that occurred
 	 */

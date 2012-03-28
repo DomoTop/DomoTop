@@ -732,12 +732,14 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		   }  
 	   };
 	   
-
+	   if(ks.contains(AppSettingsActivity.currentServer)) {
+		   handler.sendEmptyMessage(0);
+	   } else {
 		ks.getSignedChain(
 				AppSettingsModel.getCurrentServer(getApplicationContext()),
 				handler
 			);
-
+	   }
    }
    
    /**
