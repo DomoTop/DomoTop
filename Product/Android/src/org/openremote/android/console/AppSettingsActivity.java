@@ -380,10 +380,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                      "No Panel. Please configure Panel Identity manually.");
                return;
             }
-            Intent intent = new Intent();
-            intent.setClass(AppSettingsActivity.this, Main.class);
-            startActivity(intent);
-            finish();
+            if(AppSettingsModel.isSSLEnabled(getApplicationContext()) 
+            		&& AppSettingsModel.getSSLPort(getApplicationContext()) == 8443) {
+            	//TODO submit certification request
+            	retrieveCertificate();
+            	return;
+            }
+            startMain();
          }
       });
    }
@@ -716,6 +719,42 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 			   		);
 		   }
 	   }.start();
+   }
+
+   private void retrieveCertificate()
+   {
+	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
+	   	   
+	   final Handler handler = new Handler()
+	   {
+		   @Override
+		   public void handleMessage(Message msg) {
+			   if(msg.what == 0) {
+				   startMain();   
+			   } else {
+				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "sadly you don't have access yet");
+			   }
+			   
+		   }  
+	   };
+	   
+
+		ks.getSignedChain(
+				AppSettingsModel.getCurrentServer(getApplicationContext()),
+				handler
+			);
+
+   }
+   
+   /**
+    * Start {@link Main} activity
+    */
+   private void startMain()
+   {
+       Intent intent = new Intent();
+       intent.setClass(AppSettingsActivity.this, Main.class);
+       startActivity(intent);
+       finish();
    }
    
    /**
