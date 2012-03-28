@@ -630,7 +630,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             writeCustomServerToFile();
             requestPanelList();
-            //TODO add client certificate request
+            requestAccess();
          }
          
       });
