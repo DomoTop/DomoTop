@@ -45,6 +45,11 @@
 								<p class="activeErrMsg">${errorMessage}</p>
 							</#if>
 							<p id="msg" class="msg" />
+							<form class="statusForm" action="admin.htm?method=setupCA" method="post">
+								<input type="submit" value="Ca init" />
+							</form>
+							
+							
 							<p><i>User Management:</i><br /></p>
 							<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
 							<TBODY>								
