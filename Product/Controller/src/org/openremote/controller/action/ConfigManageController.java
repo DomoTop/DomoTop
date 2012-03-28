@@ -21,6 +21,9 @@ package org.openremote.controller.action;
 
 import java.io.IOException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -95,6 +98,7 @@ public class ConfigManageController extends MultiActionController {
       boolean success = false;
       try {
          success = fileService.syncConfigurationWithModeler(username, password);
+         response.getWriter().print(getUsername());
          if (success) {
             controllerXMLChangeService.refreshController();
             saveUsername(username);
@@ -114,6 +118,17 @@ public class ConfigManageController extends MultiActionController {
 
    private void saveUsername(String username) {
       databaseService.doUpdateSQL("INSERT INTO configuration (configuration_name, configuration_value) VALUES ('composer_username', '" + username + "');");
+   }
+
+   private String getUsername() {
+       try {
+           ResultSet result = databaseService.doSQL("SELECT * FROM configuration");// WHERE configuration_name = 'composer_username'");
+           result.next();
+           return result.getString("configuration_value");
+       } catch (SQLException e) {
+           //logger.error(e.getMessage());
+           return e.getMessage();
+       }
    }
 
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,
