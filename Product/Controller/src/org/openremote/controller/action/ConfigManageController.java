@@ -38,6 +38,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+import org.openremote.controller.service.DatabaseService;
+
 /**
  * The controller for Configuration management.
  * 
@@ -54,6 +56,8 @@ public class ConfigManageController extends MultiActionController {
    private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
          .getInstance().getBean("controllerXMLChangeService");
 
+   private DatabaseService databaseService = (DatabaseService) SpringContext
+         .getInstance().getBean("databaseService");
    /**
     * Upload zip.
     * 
@@ -93,6 +97,7 @@ public class ConfigManageController extends MultiActionController {
          success = fileService.syncConfigurationWithModeler(username, password);
          if (success) {
             controllerXMLChangeService.refreshController();
+            saveUsername(username);
          }
          response.getWriter().print(success ? Constants.OK : null);
       } catch (ForbiddenException e) {
@@ -106,7 +111,11 @@ public class ConfigManageController extends MultiActionController {
       }
       return null;
    }
-   
+
+   private void saveUsername(String username) {
+      databaseService.doUpdateSQL("INSERT INTO configuration (configuration_name, configuration_value) VALUES ('composer_username', '" + username + "');");
+   }
+
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
       try {
