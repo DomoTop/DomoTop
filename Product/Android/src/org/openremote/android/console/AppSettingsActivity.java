@@ -630,6 +630,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             writeCustomServerToFile();
             requestPanelList();
+            //TODO add client certificate request
          }
          
       });
@@ -714,6 +715,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             currentServer = (String)parent.getItemAtPosition(position);
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             requestPanelList();
+            requestAccess();
          }
       });
       
@@ -744,6 +746,32 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       }
    }
 
+   /**
+    * Submits a Certification Request to the controller
+    */
+   private void requestAccess()
+   {
+	   final String hostname = AppSettingsActivity.currentServer;
+	   final ProgressDialog progress = new ProgressDialog(this);
+	   final Handler handler = new Handler()
+	   {
+		   public void handleMessage(Message msg) {
+			   progress.dismiss();
+		   }
+	   };
+	   
+	   progress.show();
+	   new Thread()
+	   {
+		   public void run() {
+			   handler.sendEmptyMessage(
+					   ORPKCS10CertificationRequest.getInstance(getApplicationContext())
+			   			.submitCertificationRequest(hostname)
+			   		);
+		   }
+	   }.start();
+   }
+   
    /**
     * Request panel identity list from controller.
     */
