@@ -4,7 +4,10 @@ import android.accounts.AccountManager;
 import android.accounts.Account;
 import android.content.Context;
 
-
+/**
+ * Retrieve information stored on the Android device
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class PhoneInformationAccountManager extends PhoneInformation {
 	
 	/**

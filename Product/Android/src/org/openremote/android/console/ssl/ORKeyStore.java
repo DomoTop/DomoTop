@@ -39,7 +39,11 @@ import org.xml.sax.SAXException;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-
+ 
+/**
+ * Generates and manages the keystore used to authenticate in OpenRemote
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class ORKeyStore implements ORConnectionDelegate {
 	
 	/**
