@@ -251,7 +251,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
-    final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
 
     // Configure UI to current settings state...
 
@@ -303,16 +302,11 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         		
     			@Override
     			public void onClick(View arg0) {
-    				AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    				builder.setMessage(ORKeyPair.getInstance().getPIN(getApplicationContext()))
-    				       .setCancelable(true)
-    				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-    				           public void onClick(DialogInterface dialog, int id) {
-    				                dialog.cancel();
-    				           }
-    				       });
-    				AlertDialog alert = builder.create();
-    				alert.show();
+    				ViewHelper.showAlertViewWithTitle(
+    						AppSettingsActivity.this, 
+    						"PIN", 
+    						ORKeyPair.getInstance().getPIN(getApplicationContext())
+    					);
     			}
     		});
     // ...

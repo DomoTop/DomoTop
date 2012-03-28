@@ -25,10 +25,8 @@
     <string name="password">Password:</string>
     <string name="ssl">SSL:</string>
     <string name="ssl_port">Port:</string>
-    <string name="ssl_clientcert">Authentication:</string>
-    <string name="ssl_clientcert_gen">Generate</string>
+    <string name="ssl_clientcert">PIN:</string>
     <string name="ssl_clientcert_pin">PIN</string>
-    <string name="ssl_clientcert_fetch">Fetch</string>
     <string name="generation_progress">Submitting access request to the Controller</string>
     <string name="pin_dialog">Your access request has been submitted to the Controller at %1$s. The administrator of this controller should accept before you can use the system. \nYou have been assigned this PIN: %2$s</string>
     <string name="default_loading_text">Loading resources&#8230;</string>
