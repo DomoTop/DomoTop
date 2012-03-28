@@ -251,7 +251,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
-    final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
     final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
 
     // Configure UI to current settings state...
@@ -298,59 +297,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
           }
         }
     );
-    
-    final ProgressDialog dialog = new ProgressDialog(this);
-    
-    final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
-    final Handler fetchHandler = new Handler(){
-    	@Override
-    	public void handleMessage(Message msg) {
-    		super.handleMessage(msg);
-    		dialog.cancel();
-        	fetchCertificate.setEnabled(true);
-    	    if(msg.what == 1) {
-    			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    			builder.setMessage("Administrator has not yet approved you")
-    			       .setCancelable(true)
-    			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-    			           public void onClick(DialogInterface dialog, int id) {
-    			                dialog.cancel();
-    			           }
-    			       });
-    			AlertDialog alert = builder.create();
-    			alert.show(); 
-    	    }
-    	}
-    };
-
-    fetchCertificate.setOnClickListener(
-        	new OnClickListener() {
-    		
-    			@Override
-    			public void onClick(View arg0) {
-    				dialog.show();
-    				fetchCertificate.setEnabled(false);
-    				new Thread() {
-    					public void run() {
-    						ks.getSignedChain(
-    								AppSettingsModel.getCurrentServer(getApplicationContext()),
-    								fetchHandler
-    							);
-    					}
-    				}.run();
-    			}
-    		});
-    
-    
-    delete.setOnClickListener(
-        	new OnClickListener() {
-    		
-    			@Override
-    			public void onClick(View arg0) {
-    				ks.delete();
-    				
-    			}
-    		});
     
     showPIN.setOnClickListener(
         	new OnClickListener() {

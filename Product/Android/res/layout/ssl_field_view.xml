@@ -65,12 +65,7 @@
 	</TableRow>
 	<TableRow android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:paddingLeft="10px">
-		<Button android:id="@+id/ssl_clientcert_fetch"
-		android:text="@string/ssl_clientcert_fetch"
-		android:layout_width="150px"
-		android:layout_height="wrap_content" 
-		android:singleLine="true" />		
+		android:paddingLeft="10px">	
 		<Button android:id="@+id/ssl_clientcert_delete"
 		android:text="DELETE"
 		android:layout_width="150px"
