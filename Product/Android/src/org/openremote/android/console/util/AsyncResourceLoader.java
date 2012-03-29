@@ -20,6 +20,7 @@
 
 package org.openremote.android.console.util;
 
+import java.security.KeyStore;
 import java.util.Iterator;
 import java.io.IOException;
 
@@ -103,8 +104,11 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
     	if(e.getMessage().contains("SSL")) {
     		//Handle error
     		//Probably no access/
+    		ORKeyStore ks =  ORKeyStore.getInstance(activity);
     		result.setAction(TO_SETTING);
     		return result;
+    	} else {
+    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
     	}
       }
 
