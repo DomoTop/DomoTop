@@ -22,6 +22,11 @@
 package org.openremote.controller.rest;
 
 import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
+
+import java.security.cert.CertificateException;
+import java.security.NoSuchAlgorithmException;
+import java.security.KeyStoreException;
 
 import java.lang.ProcessBuilder;
 import java.lang.InterruptedException;
@@ -38,6 +43,8 @@ import java.io.BufferedWriter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import java.security.KeyStore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,24 +94,30 @@ public class FindCertificateByID extends RESTAPI
     String certname = username; 
     String openssl = "/usr/bin/openssl";
     String caloc = "/usr/share/tomcat6/cert/ca/certs/";
+    String keystore = "/usr/share/tomcat6/cert/server.jks";
     
     StringBuffer sb = new StringBuffer();
     sb.append(Constants.STATUS_XML_HEADER);
    
     sb.append("\n<chain>\n<server>\n");
 
-    //TODO Filename of CA should be a contant in the future
-    FileReader fr = new FileReader(caloc + "myca.crt");
-    BufferedReader reader = new BufferedReader(fr);
-    
-    String st = "";
-    while((st = reader.readLine()) != null) {
-       sb.append(st + "\n");
+    try { 
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(new FileInputStream(keystore), "password".toCharArray());
+        Certificate certificate = ks.getCertificate("ca.alias");
+        sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
+    } catch (KeyStoreException e) {
+        logger.error(e.getMessage());
+    } catch (NoSuchAlgorithmException e) {
+        logger.error(e.getMessage());
+    } catch (CertificateException e) {
+        logger.error(e.getMessage());
     }
 
     sb.append("</server>\n<client>\n");
-    fr = new FileReader(caloc + username + ".crt");
-    reader = new BufferedReader(fr);
+    FileReader fr = new FileReader(caloc + username + ".crt");
+    BufferedReader reader = new BufferedReader(fr);
+    String st = "";
 
     boolean cert = false;
     while((st = reader.readLine()) != null) {
