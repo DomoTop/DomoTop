@@ -2,8 +2,13 @@ package org.openremote.controller.service.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,11 +21,22 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.pkcs.Attribute;
+import org.bouncycastle.asn1.pkcs.CertificationRequest;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
+
+import sun.awt.geom.PathConsumer2D;
+import sun.misc.BASE64Decoder;
+import sun.nio.cs.ext.PCK;
+import sun.security.pkcs.PKCS10Attributes;
 
 /**
  * Get client information out the (request) certificates
@@ -77,7 +93,9 @@ public class ClientServiceImpl implements ClientService
    @Override
    public int addClient(String csrFileName)
    {
-      this.parseCSRFile(csrFileName);
+      String userName = csrFileName.substring(0, csrFileName.lastIndexOf('.'));
+      
+      this.parseCSRFile(userName);
       
       logger.error(" Add client pin: "+ this.getPin());
       logger.error(" Add client device name: "+ this.getDeviceName());
@@ -194,6 +212,7 @@ public class ClientServiceImpl implements ClientService
             clientCRTFileName = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
             clientCRTFileName += ".crt";
          }
+         this.free();
       } 
       catch (SQLException e) 
       {
@@ -293,6 +312,100 @@ public class ClientServiceImpl implements ClientService
       return returnValue;
    }
    
+   private void parseCSRFile(String userName)
+   {
+      // init
+      pin = "";
+      email = "";
+      deviceName = "";
+      PKCS10CertificationRequest certificationRequest = null;
+      try {
+         certificationRequest = this.getCertificationRequest(userName);
+      } catch (IOException e) {
+         logger.error("Parse CSR error: " + e.getMessage());
+      }
+      
+      if(certificationRequest != null)
+      {      
+         // Get pin         
+         BASE64Decoder decoder = new BASE64Decoder();
+         byte[] decodedBytes;
+         
+         try
+         {
+            decodedBytes = decoder.decodeBuffer(certificationRequest.getSubjectPublicKeyInfo().getEncoded().toString());
+            pin = generateMD5Sum(decodedBytes);
+            pin = pin.substring(pin.length() - 4, pin.length());
+         } catch (IOException e) {
+            logger.error("Pin code error: " + e.getMessage());
+         }
+         // Get email
+         Attribute[] attributes = certificationRequest.getAttributes(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest);
+         if(attributes != null && attributes.length >= 1)
+         {
+            ASN1Set set = attributes[0].getAttrValues();
+            if(set != null)
+            {
+                  email = set.getObjectAt(0).toString();
+            }
+         }
+         // Get device name
+         deviceName = certificationRequest.getSubject().toString();
+         deviceName = deviceName.substring(deviceName.indexOf("CN=") + 3);
+         //deviceName = deviceName.substring(0, deviceName.indexOf("\n"));
+      }
+      else
+      {
+         logger.error("Certification request couldn't be decoded.");
+      }
+     
+   }
+   
+   private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException
+   {
+      if(rootCADir.isEmpty())
+      {
+         this.rootCADir = configuration.getCaPath();
+      }
+      
+      File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
+      String data = "";
+      
+      FileInputStream fis = new FileInputStream(file);
+      data = convertStreamToString(fis);
+      
+      BASE64Decoder decoder = new BASE64Decoder();
+      byte[] decodedBytes = decoder.decodeBuffer(data);
+
+      return new PKCS10CertificationRequest(decodedBytes);
+   }
+   
+   private String convertStreamToString(InputStream is) throws IOException
+   {
+      if (is != null)
+      {
+         Writer writer = new StringWriter();
+   
+         char[] buffer = new char[1024];
+         try {
+            Reader reader = new BufferedReader(
+            new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) 
+            {
+               writer.write(buffer, 0, n);
+            }
+         } finally {
+            is.close();
+         }
+         return writer.toString();
+      } else {       
+         return "";
+      }
+   }
+   
+   
+   /*   
    private void parseCSRFile(String csrFileName)
    {
       // init
@@ -341,7 +454,7 @@ public class ClientServiceImpl implements ClientService
       {
          logger.error("Parsing error: " + e.getMessage());
       }      
-   }
+   }*/
    
    private String getPin()
    {
@@ -411,6 +524,7 @@ public class ClientServiceImpl implements ClientService
       return buffer.toString();
    }
    
+   @Deprecated
    private String generateMD5Sum(String message)
    {
       byte[] resultByte = null;
@@ -420,6 +534,24 @@ public class ClientServiceImpl implements ClientService
          final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
          messageDigest.reset();
          messageDigest.update(message.getBytes(Charset.forName("UTF8")));
+         resultByte = messageDigest.digest();
+      }
+      catch (NoSuchAlgorithmException e)
+      {
+         logger.error(e.getMessage());
+      }      
+      return new String(Hex.encodeHex(resultByte));
+   }   
+   
+   private String generateMD5Sum(byte[] message)
+   {
+      byte[] resultByte = null;
+      
+      try
+      {
+         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+         messageDigest.reset();
+         messageDigest.update(message);
          resultByte = messageDigest.digest();
       }
       catch (NoSuchAlgorithmException e)

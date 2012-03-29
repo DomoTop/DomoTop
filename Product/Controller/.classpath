@@ -39,5 +39,7 @@
 	<classpathentry kind="lib" path="lib/freemarker/freemarker.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb/sqltool.jar"/>
+	<classpathentry kind="lib" path="lib/bouncycastle/bcpkix-jdk15on-147.jar"/>
+	<classpathentry kind="lib" path="lib/bouncycastle/bcprov-jdk15on-147.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>
