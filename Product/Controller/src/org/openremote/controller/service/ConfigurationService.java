@@ -50,4 +50,12 @@ public interface ConfigurationService {
     * @return true if the deletion was succesful
     */
    public boolean deleteItem(String name);
+
+   /**
+    * Retrieve a configuration item
+    *
+    * @param name The key of the configuration item
+    * @return The value of the configuration item
+    */
+   public String getItem(String name);
 }

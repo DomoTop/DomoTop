@@ -19,6 +19,9 @@
 */
 package org.openremote.controller.service.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 
 import org.openremote.controller.Constants;
@@ -44,7 +47,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     */
    public boolean addItem(String name, String value)
    {
-        return false;
+      database.doUpdateSQL("INSERT INTO configuration (configuration_name, configuration_value) VALUES ('" + name + "', '" + value + "');");
+      return false;
    }
 
    /**
@@ -59,6 +63,23 @@ public class ConfigurationServiceImpl implements ConfigurationService {
    }
 
    /**
+    * Retrieve a configuration item
+    *
+    * @param name The key of the configuration item
+    * @return The value of the configuration item
+    */
+   public String getItem(String name)
+   {
+       try {
+           ResultSet result = database.doSQL("SELECT * FROM configuration WHERE configuration_name = '" + name + "';");
+           result.next();
+           return result.getString("configuration_value");
+       } catch (SQLException e) {
+           return e.getMessage();
+       }
+   }
+
+   /**
     * Delete a configuration item
     *
     * @param name The key of the configuration item
@@ -68,7 +89,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
    {
        return false;
    }
-
 
    /**
     * Sets the database.

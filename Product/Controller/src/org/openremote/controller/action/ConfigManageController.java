@@ -41,7 +41,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import org.openremote.controller.service.DatabaseService;
+import org.openremote.controller.service.ConfigurationService;
 
 /**
  * The controller for Configuration management.
@@ -59,8 +59,8 @@ public class ConfigManageController extends MultiActionController {
    private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
          .getInstance().getBean("controllerXMLChangeService");
 
-   private DatabaseService databaseService = (DatabaseService) SpringContext
-         .getInstance().getBean("databaseService");
+   private ConfigurationService configurationService = (ConfigurationService) SpringContext
+         .getInstance().getBean("configurationService");
    /**
     * Upload zip.
     * 
@@ -117,18 +117,11 @@ public class ConfigManageController extends MultiActionController {
    }
 
    private void saveUsername(String username) {
-      databaseService.doUpdateSQL("INSERT INTO configuration (configuration_name, configuration_value) VALUES ('composer_username', '" + username + "');");
+      configurationService.addItem("composer_username", username);
    }
 
    private String getUsername() {
-       try {
-           ResultSet result = databaseService.doSQL("SELECT * FROM configuration");// WHERE configuration_name = 'composer_username'");
-           result.next();
-           return result.getString("configuration_value");
-       } catch (SQLException e) {
-           //logger.error(e.getMessage());
-           return e.getMessage();
-       }
+      return configurationService.getItem("composer_username");
    }
 
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,
