@@ -70,6 +70,11 @@ public class Constants
    */
   public final static String DEPLOYER_LOG_CATEGORY = CONTROLLER_ROOT_LOG_CATEGORY + ".deployer";
 
+  /**
+   * Specific log category for services.
+   */
+  public final static String SERVICE_LOG_CATEGORY = CONTROLLER_ROOT_LOG_CATEGORY + ".service";
+
   
 
   public final static String LIRCD_CONF = "lircd.conf";

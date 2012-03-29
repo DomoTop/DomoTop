@@ -145,7 +145,12 @@
     	<property name="database" ref="databaseService"></property>
     	<property name="configuration" ref="configuration"></property>
     </bean>
-    
+
+    <!-- service for saving and retrieving dynamic configurations --> 
+    <bean id="configurationService" class="org.openremote.controller.service.impl.ConfigurationServiceImpl" >
+    	<property name="database" ref="databaseService"></property>
+    </bean>
+
     <!-- service for listening the status of device -->
     <bean id="statusPollingService" class="org.openremote.controller.service.impl.StatusPollingServiceImpl" />
     
