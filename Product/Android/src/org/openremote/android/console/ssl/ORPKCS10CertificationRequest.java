@@ -45,6 +45,10 @@ import org.spongycastle.util.encoders.Base64;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * Class to generate and submit PKCS10 Certification Requests
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class ORPKCS10CertificationRequest {
 	
 	/**

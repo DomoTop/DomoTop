@@ -2,6 +2,10 @@ package org.openremote.android.console.util;
 
 import android.content.Context;
 
+/**
+ * Retrieve information stored on the Android device
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class PhoneInformationBase extends PhoneInformation {
 	
 	/**

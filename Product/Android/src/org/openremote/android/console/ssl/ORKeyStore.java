@@ -39,7 +39,11 @@ import org.xml.sax.SAXException;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-
+ 
+/**
+ * Generates and manages the keystore used to authenticate in OpenRemote
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class ORKeyStore implements ORConnectionDelegate {
 	
 	/**
@@ -302,6 +306,21 @@ public class ORKeyStore implements ORConnectionDelegate {
 		}
 	}
 
+	/**
+	 * Check if a alias is in the keystore
+	 * @param alias The alias to check
+	 * @return if a alias is in the keystore
+	 */
+	public boolean contains(String alias)
+	{
+		try {
+			return keystore.containsAlias(alias);
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+			return false;
+		}
+	}
+	
 	/**
 	 * This method gets called when an ORConnection fails
 	 * @param e The exception that occurred

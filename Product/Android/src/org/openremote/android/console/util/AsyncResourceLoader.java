@@ -36,6 +36,7 @@ import org.openremote.android.console.model.ViewHelper;
 import org.openremote.android.console.model.XMLEntityDataBase;
 import org.openremote.android.console.net.ORControllerServerSwitcher;
 import org.openremote.android.console.net.ORNetworkCheck;
+import org.openremote.android.console.ssl.ORKeyStore;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -221,6 +222,9 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          intent.setData(Uri.parse(Main.LOAD_RESOURCE));
          break;
       case TO_SETTING:
+    	  //If the host is in the keystore, delete it. It is obviously invalid.
+    	  ORKeyStore.getInstance(activity).deleteHost(AppSettingsModel.getCurrentServer(activity));
+    	  
     	  intent.setClass(activity, AppSettingsActivity.class);
     	  intent.putExtra("SSL_CLIENT", true);
     	  break;

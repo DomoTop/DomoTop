@@ -19,6 +19,10 @@ import org.spongycastle.util.encoders.Hex;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * Generates and stores the keypair used to sign request in OpenRemote
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 public class ORKeyPair {
 
 	// Constants ------------------------------------------------------------------------------------

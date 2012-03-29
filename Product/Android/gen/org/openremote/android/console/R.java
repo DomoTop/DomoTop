@@ -78,7 +78,7 @@ containing a value of this type.
         public static final int vertical_seekbar_progress=0x7f020017;
     }
     public static final class id {
-        public static final int app_version=0x7f080018;
+        public static final int app_version=0x7f080015;
         public static final int button_bar=0x7f080000;
         public static final int choose_controller_progress=0x7f080003;
         public static final int details=0x7f08000c;
@@ -86,24 +86,21 @@ containing a value of this type.
         public static final int horizontal_seekbar_maxvalue_image=0x7f080007;
         public static final int horizontal_seekbar_minvalue_image=0x7f080005;
         public static final int horizontal_seekbar_root_layout=0x7f080004;
-        public static final int loading_text=0x7f080019;
+        public static final int loading_text=0x7f080016;
         public static final int login=0x7f08000a;
         public static final int login_cancel=0x7f08000b;
         public static final int password=0x7f080009;
         public static final int setting_cancel=0x7f080002;
         public static final int setting_done=0x7f080001;
-        public static final int ssl_clientcert_delete=0x7f080012;
-        public static final int ssl_clientcert_fetch=0x7f080011;
-        public static final int ssl_clientcert_pin=0x7f080010;
-        public static final int ssl_clientcert_toggle=0x7f08000f;
+        public static final int ssl_clientcert_pin=0x7f08000f;
         public static final int ssl_port=0x7f08000e;
         public static final int ssl_toggle=0x7f08000d;
         public static final int username=0x7f080008;
-        public static final int vertical_seekbar=0x7f080015;
-        public static final int vertical_seekbar_maxvalue_image=0x7f080014;
-        public static final int vertical_seekbar_minvalue_image=0x7f080016;
-        public static final int vertical_seekbar_root_layout=0x7f080013;
-        public static final int welcome_view=0x7f080017;
+        public static final int vertical_seekbar=0x7f080012;
+        public static final int vertical_seekbar_maxvalue_image=0x7f080011;
+        public static final int vertical_seekbar_minvalue_image=0x7f080013;
+        public static final int vertical_seekbar_root_layout=0x7f080010;
+        public static final int welcome_view=0x7f080014;
     }
     public static final class layout {
         public static final int bottom_button_bar=0x7f030000;
@@ -126,26 +123,24 @@ containing a value of this type.
         public static final int cancel=0x7f060010;
         public static final int config_file_at=0x7f060007;
         public static final int configure=0x7f060006;
-        public static final int default_loading_text=0x7f06001f;
+        public static final int default_loading_text=0x7f06001d;
         public static final int done=0x7f060011;
         public static final int enter_device_url=0x7f06000b;
         public static final int error_connecting_to=0x7f060009;
-        public static final int generation_progress=0x7f06001d;
+        public static final int generation_progress=0x7f06001b;
         public static final int has_an_error=0x7f060008;
         public static final int login=0x7f060012;
         public static final int logout=0x7f060013;
         public static final int no=0x7f060003;
         public static final int password=0x7f060016;
-        public static final int pin_dialog=0x7f06001e;
+        public static final int pin_dialog=0x7f06001c;
         public static final int quit=0x7f060004;
         public static final int save=0x7f06000c;
         public static final int setting=0x7f060014;
         public static final int settings=0x7f06000d;
         public static final int ssl=0x7f060017;
         public static final int ssl_clientcert=0x7f060019;
-        public static final int ssl_clientcert_fetch=0x7f06001c;
-        public static final int ssl_clientcert_gen=0x7f06001a;
-        public static final int ssl_clientcert_pin=0x7f06001b;
+        public static final int ssl_clientcert_pin=0x7f06001a;
         public static final int ssl_port=0x7f060018;
         public static final int text_auto=0x7f06000e;
         public static final int username=0x7f060015;

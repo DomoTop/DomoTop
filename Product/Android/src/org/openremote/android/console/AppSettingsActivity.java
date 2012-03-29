@@ -251,8 +251,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
     final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
-    final Button fetchCertificate = (Button)findViewById(R.id.ssl_clientcert_fetch);
-    final Button delete = (Button)findViewById(R.id.ssl_clientcert_delete);
 
     // Configure UI to current settings state...
 
@@ -299,74 +297,16 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    final ProgressDialog dialog = new ProgressDialog(this);
-    
-    final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
-    final Handler fetchHandler = new Handler(){
-    	@Override
-    	public void handleMessage(Message msg) {
-    		super.handleMessage(msg);
-    		dialog.cancel();
-        	fetchCertificate.setEnabled(true);
-    	    if(msg.what == 1) {
-    			AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    			builder.setMessage("Administrator has not yet approved you")
-    			       .setCancelable(true)
-    			       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-    			           public void onClick(DialogInterface dialog, int id) {
-    			                dialog.cancel();
-    			           }
-    			       });
-    			AlertDialog alert = builder.create();
-    			alert.show(); 
-    	    }
-    	}
-    };
-
-    fetchCertificate.setOnClickListener(
-        	new OnClickListener() {
-    		
-    			@Override
-    			public void onClick(View arg0) {
-    				dialog.show();
-    				fetchCertificate.setEnabled(false);
-    				new Thread() {
-    					public void run() {
-    						ks.getSignedChain(
-    								AppSettingsModel.getCurrentServer(getApplicationContext()),
-    								fetchHandler
-    							);
-    					}
-    				}.run();
-    			}
-    		});
-    
-    
-    delete.setOnClickListener(
-        	new OnClickListener() {
-    		
-    			@Override
-    			public void onClick(View arg0) {
-    				ks.delete();
-    				
-    			}
-    		});
-    
     showPIN.setOnClickListener(
         	new OnClickListener() {
         		
     			@Override
     			public void onClick(View arg0) {
-    				AlertDialog.Builder builder = new AlertDialog.Builder(AppSettingsActivity.this);
-    				builder.setMessage(ORKeyPair.getInstance().getPIN(getApplicationContext()))
-    				       .setCancelable(true)
-    				       .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-    				           public void onClick(DialogInterface dialog, int id) {
-    				                dialog.cancel();
-    				           }
-    				       });
-    				AlertDialog alert = builder.create();
-    				alert.show();
+    				ViewHelper.showAlertViewWithTitle(
+    						AppSettingsActivity.this, 
+    						"PIN", 
+    						ORKeyPair.getInstance().getPIN(getApplicationContext())
+    					);
     			}
     		});
     // ...
@@ -434,10 +374,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                      "No Panel. Please configure Panel Identity manually.");
                return;
             }
-            Intent intent = new Intent();
-            intent.setClass(AppSettingsActivity.this, Main.class);
-            startActivity(intent);
-            finish();
+            if(AppSettingsModel.isSSLEnabled(getApplicationContext()) 
+            		&& AppSettingsModel.getSSLPort(getApplicationContext()) == 8443) {
+            	//TODO submit certification request
+            	retrieveCertificate();
+            	return;
+            }
+            startMain();
          }
       });
    }
@@ -770,6 +713,44 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 			   		);
 		   }
 	   }.start();
+   }
+
+   private void retrieveCertificate()
+   {
+	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
+	   	   
+	   final Handler handler = new Handler()
+	   {
+		   @Override
+		   public void handleMessage(Message msg) {
+			   if(msg.what == 0) {
+				   startMain();   
+			   } else {
+				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "sadly you don't have access yet");
+			   }
+			   
+		   }  
+	   };
+	   
+	   if(ks.contains(AppSettingsActivity.currentServer)) {
+		   handler.sendEmptyMessage(0);
+	   } else {
+		ks.getSignedChain(
+				AppSettingsModel.getCurrentServer(getApplicationContext()),
+				handler
+			);
+	   }
+   }
+   
+   /**
+    * Start {@link Main} activity
+    */
+   private void startMain()
+   {
+       Intent intent = new Intent();
+       intent.setClass(AppSettingsActivity.this, Main.class);
+       startActivity(intent);
+       finish();
    }
    
    /**
