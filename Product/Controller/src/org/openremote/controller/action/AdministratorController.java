@@ -17,6 +17,7 @@
 package org.openremote.controller.action;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,6 +25,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -31,6 +35,7 @@ import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -40,6 +45,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -54,8 +60,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -63,8 +71,6 @@ import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMReader;
-import org.bouncycastle.openssl.PasswordFinder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.DefaultSignatureAlgorithmIdentifierFinder;
@@ -86,102 +92,81 @@ import sun.misc.BASE64Encoder;
  * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
-public class AdministratorController extends MultiActionController {
+public class AdministratorController extends MultiActionController 
+{
+   // private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
+   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
+   private static final String KEY_STORE = "/usr/share/tomcat6/cert/server.jks";
+   private static final String openssl = "openssl";
+   private static final String CRTDir = "certs";
+   private static final String CSRDir = "csr";
 
+   private static final String KEYSTORE_PASSWORD = "password";
+   private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
+
+   private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_Melroy");
+   
+   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
+         "clientService");    
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
    
-   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
-         "clientService");
-
-   // private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
-
-   private static final String openssl = "openssl";
-   private static final String mycaKey = "myca.key";
-   private static final String CRTDir = "certs";
-   private static final String CSRDir = "csr";
-   private static final String PRIVATEDir = "private";
-
-   private static final String privateKeyPassword = "password";
-
+   private PrivateKey privateKey = null;
+   
+   /**
+    * Create a new CA, imports the certificate into the server's key store and saves the private key
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {      
-      JcaX509ExtensionUtils extUtils = null;
       KeyPair KPair = null;
+      X509Certificate cert = null;
+            
+      boolean success = false;
+      
+      KPair = this.createKeyPair();      
+      cert = this.buildCertificate(KPair, CA_NAME);
+            
+      if(cert != null && KPair != null)
+      {
+         success = this.saveToKeyStore(KPair, cert);
+      }
+      else
+      {
+         logger.error("No CA certificate generated or no key pair generated.");
+      }
+
+      if(success)
+      {
+         response.getWriter().print(Constants.OK);
+      }
+      else
+      {
+         response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
+      }      
+      return null;
+   }
+   
+   /**
+    * Create a key pair (public & private key) using the RSA algorithm 
+    * @return Generated KeyPair
+    */
+   private KeyPair createKeyPair() 
+   {
+      KeyPair KPair = null;
+      
       try {
          KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(1024);
+         keyPairGenerator.initialize(2048);
          KPair = keyPairGenerator.generateKeyPair();
-
-         extUtils = new JcaX509ExtensionUtils();
       } catch (NoSuchAlgorithmException e) {
          logger.error("Ca: " + e.getMessage());
       }
-
-      SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
-
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(new X500Name("CN=CAMelroy"),
-            new BigInteger("41"), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() + 30 * 365
-                  * 24 * 60 * 60 * 1000), new X500Name("CN=CAMelroy"), keyInfo);
-      
-
-      myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
-            extUtils.createSubjectKeyIdentifier(KPair.getPublic()));
-
-      // prepare the signer with the private Key
-      AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
-      AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-
-      // hopefully format is PKCS#8
-      AsymmetricKeyParameter foo = PrivateKeyFactory.createKey(KPair.getPrivate().getEncoded());
-
-      ContentSigner sigGen;
-      X509Certificate cert = null;
-      try {
-         sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(foo);
-
-         // Build
-         X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
-         cert = new JcaX509CertificateConverter().getCertificate(holder);
-      } catch (OperatorCreationException e) {
-         logger.error("Ca: " + e.getMessage());
-      } catch (CertificateException e) {
-         logger.error("Ca: " + e.getMessage());
-      }
-      
-      logger.error("Output ca: " + cert.getSubjectDN());
-      /*
-      // Load the key store to memory.
-      String keyStore = "/path/to/sample-key-store.jks";
-      KeyStore privateKS;
-      try 
-      {
-         privateKS = KeyStore.getInstance("JKS");
-         
-         FileInputStream fis = new FileInputStream("/path/to/sample-key-store.jks");  
-         privateKS.load(fis, "keyStorePass".toCharArray());  
-       
-         // Import the private key to the key store
-         privateKS.setKeyEntry("ca.alias", KPair.getPrivate(),  
-                          "password".toCharArray(),  
-                          new java.security.cert.Certificate[]{cert});  
-         // Write the key store back to disk                 
-         privateKS.store( new FileOutputStream(keyStore), "keyStorePass".toCharArray());                        
-      } catch (KeyStoreException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      } catch (NoSuchAlgorithmException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      } catch (CertificateException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }  
-      
-      */
-      return null;
+      return KPair;
    }
 
    /**
@@ -218,16 +203,15 @@ public class AdministratorController extends MultiActionController {
          {
             // result = executeOpenSSLCommand(clientUsername, true);
 
-            logger.error("Trying to accept certificate:");
+            if(privateKey == null)
+            {
+               privateKey = this.getPrivateKey();
+            }
+            
             try {
                PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(clientUsername);
-               logger.error("Private Key:");
-               PrivateKey caPrivateKey = getPrivateKey(rootCADir + "/" + PRIVATEDir + "/" + mycaKey);
-               logger.error("CA: " + caPrivateKey.getFormat());
-               logger.error("CA: " + caPrivateKey.getAlgorithm());
-               logger.error("CA: " + caPrivateKey.getEncoded().toString());
-
-               X509Certificate certificate = this.sign(certificateRequest, caPrivateKey);
+               
+               X509Certificate certificate = this.signCertificate(certificateRequest, privateKey);
                if (certificate != null
                      && this.saveCertificate(certificate, rootCADir + "/" + CRTDir + "/" + clientUsername + ".crt")) {
                   result = 0;
@@ -316,7 +300,14 @@ public class AdministratorController extends MultiActionController {
       }
       return null;
    }
-
+   
+   /**
+    * Get the certificate file from the csr directory and create and returns a certificationRequest
+    * @param username
+    * @return
+    * @throws IOException
+    */
+   @Deprecated
    private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException {
       File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
       String data = "";
@@ -330,6 +321,12 @@ public class AdministratorController extends MultiActionController {
       return new PKCS10CertificationRequest(decodedBytes);
    }
 
+   /**
+    * Convert a Inputstream to a String
+    * @param is
+    * @return
+    * @throws IOException
+    */
    private String convertStreamToString(InputStream is) throws IOException {
       if (is != null) {
          Writer writer = new StringWriter();
@@ -349,22 +346,156 @@ public class AdministratorController extends MultiActionController {
          return "";
       }
    }
+   
+   /**
+    * Build a new X509 certificate, using the key pair earlier created and X500Name
+    * @param KPair is the KeyPair object
+    * @param name X500Name with information about the issuer
+    * @return a new X509Certificate, returns null if something went wrong
+    */
+   private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
+   {
+      @SuppressWarnings("unused")
+      boolean success = false;
+      ContentSigner sigGen;
+      X509Certificate cert = null;
+      JcaX509ExtensionUtils extUtils = null;
+      
+      try {
+         extUtils = new JcaX509ExtensionUtils();
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Generate CA certificate: " + e.getMessage());
+      }
+      SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
 
-   private PrivateKey getPrivateKey(String keyPath) throws IOException {
-      BufferedReader br = new BufferedReader(new FileReader(keyPath));
+      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
+            new BigInteger("41"), 
+            new Date(System.currentTimeMillis()), 
+            new Date(System.currentTimeMillis() + 40 * 365 * 24 * 60 * 60 * 1000), 
+            name,
+            keyInfo);
+      try
+      {
+         myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
+               extUtils.createSubjectKeyIdentifier(KPair.getPublic()));
+   
+         myCertificateGenerator.addExtension(X509Extension.authorityKeyIdentifier, false,
+               extUtils.createAuthorityKeyIdentifier(KPair.getPublic()));
+         
+         myCertificateGenerator.addExtension(X509Extension.basicConstraints, false,
+               new BasicConstraints(NUM_ALLOWED_INTERMEDIATE_CAS ));
+         
+         // prepare the signer with the private Key
+         AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
+         AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
+   
+         // hopefully format is PKCS#8
+         AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(KPair.getPrivate().getEncoded());
 
-      PasswordFinder passwordFinder = new PasswordFinder() {
-         @Override
-         public char[] getPassword() {
-            return privateKeyPassword.toCharArray();
-         }
-      };
 
-      KeyPair kp = (KeyPair) new PEMReader(br, passwordFinder).readObject();
+         sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
 
-      return kp.getPrivate();
+         // Build
+         X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
+         cert = new JcaX509CertificateConverter().getCertificate(holder);
+         success = true;
+      } catch (OperatorCreationException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (CertIOException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (IOException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      }
+      return cert;
    }
 
+   /**
+    * And the certificate to the server's key store file
+    * @param KPair the KeyPair object
+    * @param cert X509Certificate
+    * @return true if success or false if not success
+    */
+   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
+   {
+      boolean success = false;
+      KeyStore privateKS;
+      try
+      {
+         privateKS = KeyStore.getInstance("JKS");
+
+         // Load the key store to memory.
+         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+       
+         // Import the private key to the key store
+         privateKS.setKeyEntry("ca.alias", KPair.getPrivate(),  
+               KEYSTORE_PASSWORD.toCharArray(),  
+               new java.security.cert.Certificate[]{cert});
+         
+         // Write the key store back to disk                 
+         privateKS.store(new FileOutputStream(KEY_STORE), KEYSTORE_PASSWORD.toCharArray());      
+         success = true;
+      } catch (KeyStoreException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Key store: " + e.getMessage());
+      }
+      return success;
+   }
+   
+   /**
+    * Get the private key from the CA, using the server key store file   
+    * @return PrivateKey Object
+    */
+   private PrivateKey getPrivateKey()
+   {
+      PrivateKey privateKey = null;
+      KeyStore privateKS;
+      try
+      {
+         privateKS = KeyStore.getInstance("JKS");
+         
+         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+         Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
+         if(key instanceof PrivateKey) 
+         {
+            privateKey = (PrivateKey)key;            
+         }
+      } catch (UnrecoverableKeyException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (KeyStoreException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (CertificateException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Get private key: " + e.getMessage());
+      }
+      return privateKey;
+   }
+
+   /**
+    * Saves the certificate
+    * @param certificate
+    * @param fileName
+    * @return
+    */
+   @Deprecated
    private boolean saveCertificate(X509Certificate certificate, String fileName) {
       boolean returnValue = false;
       try {
@@ -390,23 +521,47 @@ public class AdministratorController extends MultiActionController {
 
       return returnValue;
    }
+   // TODO: 
+   /*
+   private boolean saveCertificate(X509Certificate certificate, String alias)
+   {
+      return false;
+   }
+   */
 
-   private X509Certificate sign(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
+   /**
+    * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
+    * 
+    * @param inputCSR PCKS10 Certification Request file
+    * @param caPrivate PrivateKey from CA
+    * @return a new signed certificate
+    * @throws InvalidKeyException
+    * @throws NoSuchAlgorithmException
+    * @throws NoSuchProviderException
+    * @throws SignatureException
+    * @throws IOException
+    * @throws OperatorCreationException
+    * @throws CertificateException
+    */
+   private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
          // , KeyPair pair
          throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
-         IOException, OperatorCreationException, CertificateException {
-
+         IOException, OperatorCreationException, CertificateException
+   {
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
 
-      AsymmetricKeyParameter foo = PrivateKeyFactory.createKey(caPrivate.getEncoded());
+      AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(caPrivate.getEncoded());
       // SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(pair
       // .getPublic().getEncoded());
 
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(new X500Name("CN=issuer"),
-            new BigInteger("1"), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() + 30 * 365
-                  * 24 * 60 * 60 * 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
-      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(foo);
+      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(CA_NAME,
+            new BigInteger("1"), 
+            new Date(System.currentTimeMillis()),
+            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
+            inputCSR.getSubject(), 
+            inputCSR.getSubjectPublicKeyInfo());
+      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
 
       X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
       /*
@@ -417,7 +572,7 @@ public class AdministratorController extends MultiActionController {
        * X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1); is1.close();
        */
 
-      X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(holder);
+      X509Certificate cert = new JcaX509CertificateConverter().getCertificate(holder);
       return cert;
    }
 
@@ -432,6 +587,7 @@ public class AdministratorController extends MultiActionController {
     * @throws IOException
     * @throws InterruptedException
     */
+   @Deprecated
    private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException,
          InterruptedException {
       List<String> command = new ArrayList<String>();
