@@ -35,6 +35,7 @@ import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -44,6 +45,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -92,12 +94,11 @@ import sun.misc.BASE64Encoder;
  * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
-public class AdministratorController extends MultiActionController {
-
-   private static final String PRIVATECA_KEY = "privateca.key";
+public class AdministratorController extends MultiActionController 
+{
    // private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
-
+   private static final String KEY_STORE = "/usr/share/tomcat6/cert/server.jks";
    private static final String openssl = "openssl";
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
@@ -114,150 +115,55 @@ public class AdministratorController extends MultiActionController {
    private PrivateKey privateKey = null;
    
    /**
-    * Create a new CA, imports the certificate into the server keystore and saves the private key
+    * Create a new CA, imports the certificate into the server's key store and saves the private key
     * @param request
+    *           HTTP servlet request
     * @param response
-    * @return
-    * @throws IOException
-    * @throws ServletRequestBindingException
+    *           HTTP response to the servlet
     */
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {      
       KeyPair KPair = null;
       X509Certificate cert = null;
       X500Name name = new X500Name("CN=CA_Melroy");
+            
       boolean success = false;
       
-      try {
-         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(1024); // 2048
-         KPair = keyPairGenerator.generateKeyPair();
-         success = true;
-      } catch (NoSuchAlgorithmException e) {
-         logger.error("Ca: " + e.getMessage());
-      }
-      
+      KPair = this.createKeyPair();      
       cert = this.buildCertificate(KPair, name);
             
-      if(cert != null)
+      if(cert != null && KPair != null)
       {
          success = this.saveToKeyStore(KPair, cert);
       }
       else
       {
-         logger.error("No CA certificate generated.");
+         logger.error("No CA certificate generated or no key pair generated.");
       }
-      
-      
-      // Save the private key for signing
+
       if(success)
       {
-         success = this.savePrivateKey(KPair.getPrivate());
+         response.getWriter().print(Constants.OK);
       }
       else
       {
-         logger.error("Private key is not saved, due to an error(s) above.");
-      }
-      
+         response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
+      }      
       return null;
    }
    
-   private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
+   private KeyPair createKeyPair() 
    {
-      boolean success = false;
-      JcaX509ExtensionUtils extUtils = null;
+      KeyPair KPair = null;
       
       try {
-         extUtils = new JcaX509ExtensionUtils();
+         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+         keyPairGenerator.initialize(1024); // 2048
+         KPair = keyPairGenerator.generateKeyPair();
       } catch (NoSuchAlgorithmException e) {
-         logger.error("Generate CA certificate: " + e.getMessage());
+         logger.error("Ca: " + e.getMessage());
       }
-      SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
-
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
-            new BigInteger("41"), 
-            new Date(System.currentTimeMillis()), 
-            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
-            name,
-            keyInfo);
-      
-      ContentSigner sigGen;
-      X509Certificate cert = null;
-      try
-      {
-         myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
-               extUtils.createSubjectKeyIdentifier(KPair.getPublic()));
-   
-         myCertificateGenerator.addExtension(X509Extension.authorityKeyIdentifier, false,
-               extUtils.createAuthorityKeyIdentifier(KPair.getPublic()));
-         
-         myCertificateGenerator.addExtension(X509Extension.basicConstraints, false,
-               new BasicConstraints(NUM_ALLOWED_INTERMEDIATE_CAS ));
-         
-         // prepare the signer with the private Key
-         AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
-         AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-   
-         // hopefully format is PKCS#8
-         AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(KPair.getPrivate().getEncoded());
-
-
-         sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
-
-         // Build
-         X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
-         cert = new JcaX509CertificateConverter().getCertificate(holder);
-         success = true;
-      } catch (OperatorCreationException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (CertIOException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (IOException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      }
-      return cert;
-   }
-
-   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
-   {
-      boolean success = false;
-      // Load the key store to memory.
-      String keyStore = "/usr/share/tomcat6/cert/server.jks";
-      KeyStore privateKS;
-      try
-      {
-         privateKS = KeyStore.getInstance("JKS");
-         
-         FileInputStream fis = new FileInputStream(keyStore);  
-         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
-       
-         // Import the private key to the key store
-         privateKS.setKeyEntry("ca.alias", KPair.getPrivate(),  
-               KEYSTORE_PASSWORD.toCharArray(),  
-               new java.security.cert.Certificate[]{cert});
-         
-         // Write the key store back to disk                 
-         privateKS.store(new FileOutputStream(keyStore), KEYSTORE_PASSWORD.toCharArray());      
-         success = true;
-      } catch (KeyStoreException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (NoSuchAlgorithmException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (IOException e) {
-         logger.error("Key store: " + e.getMessage());
-      }
-      return success;
+      return KPair;
    }
 
    /**
@@ -438,8 +344,131 @@ public class AdministratorController extends MultiActionController {
       }
    }
    
+   private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
+   {
+      boolean success = false;
+      JcaX509ExtensionUtils extUtils = null;
+      
+      try {
+         extUtils = new JcaX509ExtensionUtils();
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Generate CA certificate: " + e.getMessage());
+      }
+      SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
+
+      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
+            new BigInteger("41"), 
+            new Date(System.currentTimeMillis()), 
+            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
+            name,
+            keyInfo);
+      
+      ContentSigner sigGen;
+      X509Certificate cert = null;
+      try
+      {
+         myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
+               extUtils.createSubjectKeyIdentifier(KPair.getPublic()));
+   
+         myCertificateGenerator.addExtension(X509Extension.authorityKeyIdentifier, false,
+               extUtils.createAuthorityKeyIdentifier(KPair.getPublic()));
+         
+         myCertificateGenerator.addExtension(X509Extension.basicConstraints, false,
+               new BasicConstraints(NUM_ALLOWED_INTERMEDIATE_CAS ));
+         
+         // prepare the signer with the private Key
+         AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
+         AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
+   
+         // hopefully format is PKCS#8
+         AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(KPair.getPrivate().getEncoded());
+
+
+         sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
+
+         // Build
+         X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
+         cert = new JcaX509CertificateConverter().getCertificate(holder);
+         success = true;
+      } catch (OperatorCreationException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (CertIOException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      } catch (IOException e) {
+         success = false;
+         logger.error("Generate CA certificate: " + e.getMessage());
+      }
+      return cert;
+   }
+
+   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
+   {
+      boolean success = false;
+      // Load the key store to memory.
+      KeyStore privateKS;
+      try
+      {
+         privateKS = KeyStore.getInstance("JKS");
+         
+         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+       
+         // Import the private key to the key store
+         privateKS.setKeyEntry("ca.alias", KPair.getPrivate(),  
+               KEYSTORE_PASSWORD.toCharArray(),  
+               new java.security.cert.Certificate[]{cert});
+         
+         // Write the key store back to disk                 
+         privateKS.store(new FileOutputStream(KEY_STORE), KEYSTORE_PASSWORD.toCharArray());      
+         success = true;
+      } catch (KeyStoreException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Key store: " + e.getMessage());
+      }
+      return success;
+   }
+   
    private PrivateKey getPrivateKey()
    {
+      PrivateKey privateKey = null;
+      KeyStore privateKS;
+      try
+      {
+         privateKS = KeyStore.getInstance("JKS");
+         
+         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+         Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
+         if(key instanceof PrivateKey) 
+         {
+            privateKey = (PrivateKey)key;            
+         }
+      } catch (UnrecoverableKeyException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (KeyStoreException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (CertificateException e) {
+         logger.error("Get private key: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Get private key: " + e.getMessage());
+      }
+      
+      /*
       PrivateKey returnValue = null;
       try {
          // Deserialize from a file
@@ -453,26 +482,8 @@ public class AdministratorController extends MultiActionController {
          logger.error("Deserialize private key: " + e.getMessage());
       } catch (ClassNotFoundException e) {
          logger.error("Deserialize private key: " + e.getMessage());
-      }
-      return returnValue;
-   }
-   
-   private boolean savePrivateKey(PrivateKey object)
-   {
-      boolean returnValue = false;
-      try 
-      {
-         // Serialize to a file
-         ObjectOutput out = new ObjectOutputStream(new FileOutputStream(rootCADir + "/" + PRIVATECA_KEY));
-         out.writeObject(object);
-         out.close();
-         
-         returnValue = true;
-      } catch (IOException e) {
-         returnValue = false;
-         logger.error("Serialize private key: " + e.getMessage());
-      }
-      return returnValue;
+      }*/
+      return privateKey;
    }
 
    private boolean saveCertificate(X509Certificate certificate, String fileName) {

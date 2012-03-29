@@ -57,6 +57,14 @@ $(document).ready(function() {
 		}
   });   
   
+  $('#caForm').ajaxForm(function(result) {
+  	if (result == 'OK') {
+			message("CA successfully created.");
+		} else {
+			error("CA creation was unsuccessfully: " + result);
+		}
+  });   
+  
 });
 
 // Changes the background image of the submit element

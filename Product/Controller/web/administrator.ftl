@@ -45,7 +45,7 @@
 								<p class="activeErrMsg">${errorMessage}</p>
 							</#if>
 							<p id="msg" class="msg" />
-							<form class="statusForm" action="admin.htm?method=setupCA" method="post">
+							<form id="caForm" action="admin.htm?method=setupCA" method="post">
 								<input type="submit" value="Ca init" />
 							</form>
 							
