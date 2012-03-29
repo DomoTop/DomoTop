@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
@@ -40,6 +41,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
@@ -314,26 +316,22 @@ public class ClientServiceImpl implements ClientService {
       {      
          // Get pin
          pin = "2";
-
+         
          Attribute[] attributes = certificationRequest.getAttributes(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest);
          if(attributes != null && attributes.length >= 1)
          {
             
             ASN1Set attributeSet = attributes[0].getAttrValues();
-
             for (int i = 0; i != attributeSet.size(); i++)
             {
                ASN1Encodable object = attributeSet.getObjectAt(i);
                X509Extensions extensions = X509Extensions.getInstance(object);
-
-               X509Extension extVal = extensions.getExtension(X509Extension.subjectAlternativeName);
-               try
-               {
-                  email = new String(extVal.getValue().getEncoded()).substring(6);
+               
+               X509Extension ext = extensions.getExtension(X509Extension.subjectAlternativeName);
+              
+                  email = new String(ext.getValue().getOctets()).substring(4);
                   
-               } catch (IOException e1) {
-                  logger.error(e1.getMessage());
-               }
+             
                
             }
             // Get device name

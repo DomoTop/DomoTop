@@ -52,6 +52,7 @@ import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -104,7 +105,7 @@ public class AdministratorController extends MultiActionController
    private static final String KEYSTORE_PASSWORD = "password";
    private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
 
-   private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_Melroy");
+   private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
    
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
          "clientService");    
@@ -151,24 +152,6 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
-   /**
-    * Create a key pair (public & private key) using the RSA algorithm 
-    * @return Generated KeyPair
-    */
-   private KeyPair createKeyPair() 
-   {
-      KeyPair KPair = null;
-      
-      try {
-         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(2048);
-         KPair = keyPairGenerator.generateKeyPair();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error("Ca: " + e.getMessage());
-      }
-      return KPair;
-   }
-
    /**
     * Request handler for accepting or denying an user
     * 
@@ -348,6 +331,24 @@ public class AdministratorController extends MultiActionController
    }
    
    /**
+    * Create a key pair (public & private key) using the RSA algorithm 
+    * @return Generated KeyPair
+    */
+   private KeyPair createKeyPair() 
+   {
+      KeyPair KPair = null;
+      
+      try {
+         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+         keyPairGenerator.initialize(2048);
+         KPair = keyPairGenerator.generateKeyPair();
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Ca: " + e.getMessage());
+      }
+      return KPair;
+   }   
+   
+   /**
     * Build a new X509 certificate, using the key pair earlier created and X500Name
     * @param KPair is the KeyPair object
     * @param name X500Name with information about the issuer
@@ -367,11 +368,14 @@ public class AdministratorController extends MultiActionController
          logger.error("Generate CA certificate: " + e.getMessage());
       }
       SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
-
+      
+      Calendar cal = Calendar.getInstance();
+      cal.set(cal.get(Calendar.YEAR) + 100, 04, 18, 13, 30);
+      
       X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
             new BigInteger("41"), 
             new Date(System.currentTimeMillis()), 
-            new Date(System.currentTimeMillis() + 40 * 365 * 24 * 60 * 60 * 1000), 
+            cal.getTime(), 
             name,
             keyInfo);
       try
@@ -555,10 +559,13 @@ public class AdministratorController extends MultiActionController
       // SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(pair
       // .getPublic().getEncoded());
 
+      Calendar cal = Calendar.getInstance();
+      cal.set(cal.get(Calendar.YEAR) + 100, 04, 18, 13, 30);
+      
       X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(CA_NAME,
             new BigInteger("1"), 
             new Date(System.currentTimeMillis()),
-            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
+            cal.getTime(), 
             inputCSR.getSubject(), 
             inputCSR.getSubjectPublicKeyInfo());
       ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
