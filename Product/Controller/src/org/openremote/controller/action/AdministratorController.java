@@ -153,13 +153,17 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
+   /**
+    * Create a key pair (public & private key) using the RSA algorithm 
+    * @return Generated KeyPair
+    */
    private KeyPair createKeyPair() 
    {
       KeyPair KPair = null;
       
       try {
          KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(2048); // 2048
+         keyPairGenerator.initialize(2048);
          KPair = keyPairGenerator.generateKeyPair();
       } catch (NoSuchAlgorithmException e) {
          logger.error("Ca: " + e.getMessage());
@@ -206,10 +210,8 @@ public class AdministratorController extends MultiActionController
                privateKey = this.getPrivateKey();
             }
             
-            logger.error("Trying to accept certificate:");
             try {
                PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(clientUsername);
-               logger.error("test: " + privateKey.getFormat() +  " - " + privateKey.getEncoded().toString());
                
                X509Certificate certificate = this.signCertificate(certificateRequest, privateKey);
                if (certificate != null
@@ -307,6 +309,7 @@ public class AdministratorController extends MultiActionController
     * @return
     * @throws IOException
     */
+   @Deprecated
    private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException {
       File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
       String data = "";
@@ -346,10 +349,18 @@ public class AdministratorController extends MultiActionController
       }
    }
    
+   /**
+    * Build a new X509 certificate, using the key pair earlier created and X500Name
+    * @param KPair is the KeyPair object
+    * @param name X500Name with information about the issuer
+    * @return a new X509Certificate, returns null if something went wrong
+    */
    private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
    {
       @SuppressWarnings("unused")
       boolean success = false;
+      ContentSigner sigGen;
+      X509Certificate cert = null;
       JcaX509ExtensionUtils extUtils = null;
       
       try {
@@ -366,8 +377,6 @@ public class AdministratorController extends MultiActionController
             name,
             keyInfo);
       
-      ContentSigner sigGen;
-      X509Certificate cert = null;
       try
       {
          myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
@@ -409,6 +418,12 @@ public class AdministratorController extends MultiActionController
       return cert;
    }
 
+   /**
+    * And the certificate to the server's key store file
+    * @param KPair the KeyPair object
+    * @param cert X509Certificate
+    * @return true if success or false if not success
+    */
    private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
    {
       boolean success = false;
@@ -444,6 +459,10 @@ public class AdministratorController extends MultiActionController
       return success;
    }
    
+   /**
+    * Get the private key from the CA, using the server key store file   
+    * @return PrivateKey Object
+    */
    private PrivateKey getPrivateKey()
    {
       PrivateKey privateKey = null;
@@ -470,25 +489,16 @@ public class AdministratorController extends MultiActionController
       } catch (IOException e) {
          logger.error("Get private key: " + e.getMessage());
       }
-      
-      /*
-      PrivateKey returnValue = null;
-      try {
-         // Deserialize from a file
-         File file = new File(rootCADir + "/" + PRIVATECA_KEY);
-         ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-         // Deserialize the object
-         returnValue = (PrivateKey) in.readObject();
-     
-         in.close();
-      } catch (IOException e) {
-         logger.error("Deserialize private key: " + e.getMessage());
-      } catch (ClassNotFoundException e) {
-         logger.error("Deserialize private key: " + e.getMessage());
-      }*/
       return privateKey;
    }
 
+   /**
+    * Saves the certificate
+    * @param certificate
+    * @param fileName
+    * @return
+    */
+   @Deprecated
    private boolean saveCertificate(X509Certificate certificate, String fileName) {
       boolean returnValue = false;
       try {
@@ -514,7 +524,28 @@ public class AdministratorController extends MultiActionController
 
       return returnValue;
    }
+   // TODO: 
+   /*
+   private boolean saveCertificate(X509Certificate certificate, String alias)
+   {
+      return false;
+   }
+   */
 
+   /**
+    * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
+    * 
+    * @param inputCSR PCKS10 Certification Request file
+    * @param caPrivate PrivateKey from CA
+    * @return a new signed certificate
+    * @throws InvalidKeyException
+    * @throws NoSuchAlgorithmException
+    * @throws NoSuchProviderException
+    * @throws SignatureException
+    * @throws IOException
+    * @throws OperatorCreationException
+    * @throws CertificateException
+    */
    private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
          // , KeyPair pair
          throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
@@ -559,6 +590,7 @@ public class AdministratorController extends MultiActionController
     * @throws IOException
     * @throws InterruptedException
     */
+   @Deprecated
    private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException,
          InterruptedException {
       List<String> command = new ArrayList<String>();
