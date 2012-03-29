@@ -96,11 +96,7 @@ public class ClientServiceImpl implements ClientService
       String userName = csrFileName.substring(0, csrFileName.lastIndexOf('.'));
       
       this.parseCSRFile(userName);
-      
-      logger.error(" Add client pin: "+ this.getPin());
-      logger.error(" Add client device name: "+ this.getDeviceName());
-      logger.error(" Add client email: "+ this.getEmail());
-      
+            
       return this.addClient(this.getPin(), this.getDeviceName(), this.getEmail(), csrFileName);
    }
    

@@ -105,6 +105,8 @@ public class AdministratorController extends MultiActionController
 
    private static final String KEYSTORE_PASSWORD = "password";
    private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
+
+   private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_Melroy");
    
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
          "clientService");    
@@ -125,12 +127,11 @@ public class AdministratorController extends MultiActionController
          ServletRequestBindingException {      
       KeyPair KPair = null;
       X509Certificate cert = null;
-      X500Name name = new X500Name("CN=CA_Melroy");
             
       boolean success = false;
       
       KPair = this.createKeyPair();      
-      cert = this.buildCertificate(KPair, name);
+      cert = this.buildCertificate(KPair, CA_NAME);
             
       if(cert != null && KPair != null)
       {
@@ -158,7 +159,7 @@ public class AdministratorController extends MultiActionController
       
       try {
          KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(1024); // 2048
+         keyPairGenerator.initialize(2048); // 2048
          KPair = keyPairGenerator.generateKeyPair();
       } catch (NoSuchAlgorithmException e) {
          logger.error("Ca: " + e.getMessage());
@@ -208,8 +209,9 @@ public class AdministratorController extends MultiActionController
             logger.error("Trying to accept certificate:");
             try {
                PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(clientUsername);
-
-               X509Certificate certificate = this.sign(certificateRequest, privateKey);
+               logger.error("test: " + privateKey.getFormat() +  " - " + privateKey.getEncoded().toString());
+               
+               X509Certificate certificate = this.signCertificate(certificateRequest, privateKey);
                if (certificate != null
                      && this.saveCertificate(certificate, rootCADir + "/" + CRTDir + "/" + clientUsername + ".crt")) {
                   result = 0;
@@ -346,6 +348,7 @@ public class AdministratorController extends MultiActionController
    
    private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
    {
+      @SuppressWarnings("unused")
       boolean success = false;
       JcaX509ExtensionUtils extUtils = null;
       
@@ -359,7 +362,7 @@ public class AdministratorController extends MultiActionController
       X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
             new BigInteger("41"), 
             new Date(System.currentTimeMillis()), 
-            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
+            new Date(System.currentTimeMillis() + 40 * 365 * 24 * 60 * 60 * 1000), 
             name,
             keyInfo);
       
@@ -409,12 +412,12 @@ public class AdministratorController extends MultiActionController
    private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
    {
       boolean success = false;
-      // Load the key store to memory.
       KeyStore privateKS;
       try
       {
          privateKS = KeyStore.getInstance("JKS");
-         
+
+         // Load the key store to memory.
          FileInputStream fis = new FileInputStream(KEY_STORE);  
          privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
        
@@ -512,22 +515,25 @@ public class AdministratorController extends MultiActionController
       return returnValue;
    }
 
-   private X509Certificate sign(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
+   private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
          // , KeyPair pair
          throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
-         IOException, OperatorCreationException, CertificateException {
-
+         IOException, OperatorCreationException, CertificateException
+   {
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
 
-      AsymmetricKeyParameter foo = PrivateKeyFactory.createKey(caPrivate.getEncoded());
+      AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(caPrivate.getEncoded());
       // SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(pair
       // .getPublic().getEncoded());
 
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(new X500Name("CN=issuer"),
-            new BigInteger("1"), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() + 30 * 365
-                  * 24 * 60 * 60 * 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
-      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(foo);
+      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(CA_NAME,
+            new BigInteger("1"), 
+            new Date(System.currentTimeMillis()),
+            new Date(System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60 * 1000), 
+            inputCSR.getSubject(), 
+            inputCSR.getSubjectPublicKeyInfo());
+      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
 
       X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
       /*
@@ -538,7 +544,7 @@ public class AdministratorController extends MultiActionController
        * X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1); is1.close();
        */
 
-      X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(holder);
+      X509Certificate cert = new JcaX509CertificateConverter().getCertificate(holder);
       return cert;
    }
 
