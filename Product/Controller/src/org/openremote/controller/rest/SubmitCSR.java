@@ -101,7 +101,7 @@ public class SubmitCSR extends RESTAPI
   /**
    * Write CSR to file
    */
-  protected long putCsr(String username, String cert) throws IOException, Exception
+  protected long putCsr(String username, String cert) throws IOException
   {
     String certificate = URLDecoder.decode(cert);
     long timestamp = System.currentTimeMillis();
@@ -130,7 +130,7 @@ public class SubmitCSR extends RESTAPI
     {
         File file = new File(CA_LOCATION + "csr/" + filename);
         file.delete();
-        throw new Exception("CSR was already submitted");
+        throw new IOException("CSR was already submitted");
     }
 
     return timestamp;
@@ -161,9 +161,9 @@ public class SubmitCSR extends RESTAPI
 
       //sendResponse(response, e.getErrorCode(), e.getMessage());
     }
-    catch (Exception e) 
+    catch (IOException e) 
     {
-        logger.error("Failed to create certificate");
+        logger.error("Failed to create certificate: " + e.getMessage());
         //sendResponse(response, e.getMessage());
         sendResponse(response, 500, e.getMessage());
     }

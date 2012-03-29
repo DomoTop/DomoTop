@@ -71,8 +71,6 @@ import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMReader;
-import org.bouncycastle.openssl.PasswordFinder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.DefaultSignatureAlgorithmIdentifierFinder;
@@ -376,7 +374,6 @@ public class AdministratorController extends MultiActionController
             new Date(System.currentTimeMillis() + 40 * 365 * 24 * 60 * 60 * 1000), 
             name,
             keyInfo);
-      
       try
       {
          myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
