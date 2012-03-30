@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     $('#checkForm').ajaxForm(function(result) {
     	if (result == 'OK') {
-			message("Sync complete!");
+			message("Correct credentials!");
     	} else if (result == 'forbidden') {
 			error("The username you entered is incorrect.");
     	} else if (result == 'wrong') {
