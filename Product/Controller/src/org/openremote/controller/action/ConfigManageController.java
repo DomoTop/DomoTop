@@ -19,10 +19,28 @@
 */
 package org.openremote.controller.action;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.io.IOException;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.commons.codec.binary.Base64;
 
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.Constants;
@@ -37,6 +55,12 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.springframework.security.providers.encoding.Md5PasswordEncoder;
+
+import org.openremote.controller.utils.PathUtil;
+
+
+import org.openremote.controller.service.ConfigurationService;
 
 /**
  * The controller for Configuration management.
@@ -54,6 +78,8 @@ public class ConfigManageController extends MultiActionController {
    private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
          .getInstance().getBean("controllerXMLChangeService");
 
+   private ConfigurationService configurationService = (ConfigurationService) SpringContext
+         .getInstance().getBean("configurationService");
    /**
     * Upload zip.
     * 
@@ -91,8 +117,10 @@ public class ConfigManageController extends MultiActionController {
       boolean success = false;
       try {
          success = fileService.syncConfigurationWithModeler(username, password);
+         response.getWriter().print(getUsername());
          if (success) {
             controllerXMLChangeService.refreshController();
+            saveUsername(username);
          }
          response.getWriter().print(success ? Constants.OK : null);
       } catch (ForbiddenException e) {
@@ -106,7 +134,47 @@ public class ConfigManageController extends MultiActionController {
       }
       return null;
    }
-   
+
+   public ModelAndView checkOnline(HttpServletRequest request, HttpServletResponse response) throws IOException,
+         ServletRequestBindingException {
+      String username = request.getParameter("username");
+      String password = request.getParameter("password");
+
+      if(!username.equals(getUsername())) {
+         response.getWriter().print("forbidden");
+         return null;
+      }
+
+      HttpClient httpClient = new DefaultHttpClient();
+      HttpGet httpGet = new HttpGet(PathUtil.addSlashSuffix(configuration.getBeehiveRESTRootUrl()) + "user/" + username
+            + "/openremote.zip");
+      
+      httpGet.setHeader(Constants.HTTP_AUTHORIZATION_HEADER, Constants.HTTP_BASIC_AUTHORIZATION
+            + encode(username, password));
+
+      try {
+         HttpResponse resp= httpClient.execute(httpGet);
+         if (200 == resp.getStatusLine().getStatusCode()) {
+            response.getWriter().print(Constants.OK);
+         } else if (401 == resp.getStatusLine().getStatusCode()) {
+            response.getWriter().print("wrong");
+         } else if (404 == resp.getStatusLine().getStatusCode()) {
+             response.getWriter().print("missing");
+         }
+      } catch (IOException e) {
+         response.getWriter().print(e.getMessage());
+      }
+      return null;
+   }
+
+   private void saveUsername(String username) {
+      configurationService.addItem("composer_username", username);
+   }
+
+   private String getUsername() {
+      return configurationService.getItem("composer_username");
+   }
+
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
       try {
@@ -135,4 +203,12 @@ public class ConfigManageController extends MultiActionController {
       this.configuration = configuration;
    }
 
+   private String encode(String username, String password) {
+      Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+      String encodedPwd = encoder.encodePassword(password, username);
+      if (username == null || encodedPwd == null) {
+         return null;
+      }
+      return new String(Base64.encodeBase64((username + ":" + encodedPwd).getBytes()));
+   }
 }
