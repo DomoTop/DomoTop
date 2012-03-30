@@ -54,6 +54,27 @@ $(document).ready(function() {
     	clearMessage();
     	showUpdateIndicator();
     });
+
+    $('#checkForm').ajaxForm(function(result) {
+    	if (result == 'OK') {
+			message("Sync complete!");
+    	} else if (result == 'forbidden') {
+			error("The username you entered is incorrect.");
+    	} else if (result == 'wrong') {
+			error("The username or password you entered is incorrect.");
+    	} else if (result == 'n/a') {
+    		error("Can't connect to Beehive.");
+    	} else if (result == 'missing') {
+    		error("openremote.zip not found in account, please edit UI and save.");
+		} else {
+			error("Sync failed! " + result);
+		}
+    }); 
+    $('#checkSubmit').click(function(){
+    	clearMessage();
+    	showUpdateIndicator();
+    });
+
 	$('#uploadSubmit').click(function(){
 		clearMessage();
 		showUpdateIndicator();
