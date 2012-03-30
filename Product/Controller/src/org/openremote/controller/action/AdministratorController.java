@@ -91,10 +91,9 @@ import sun.misc.BASE64Encoder;
  */
 public class AdministratorController extends MultiActionController 
 {
-   // private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
-   private static final String KEY_STORE = "/usr/share/tomcat6/cert/server.jks";
-   private static final String CLIENT_KEY_STORE = "/usr/share/tomcat6/cert/client_certificates.jks";
+   private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
+   private static final String KEY_STORE = rootCADir + "/../server.jks";
+   private static final String CLIENT_KEY_STORE = rootCADir + "/../client_certificates.jks";
    private static final String openssl = "openssl";
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
@@ -173,14 +172,13 @@ public class AdministratorController extends MultiActionController
       String action = request.getParameter("action");
       int clientID = Integer.parseInt(request.getParameter("client_id"));
       String pin = "";
-      String clientUsername = "";
+      String alias = "";
 
       try {
          ResultSet resultSet = clientService.getClient(clientID);
-         while (resultSet.next()) {
-            String clientFileName = resultSet.getString("client_file_name");
-            clientUsername = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
-
+         while (resultSet.next()) 
+         {
+            alias = resultSet.getString("client_alias");
             pin = resultSet.getString("client_pincode");
          }
          clientService.free();
@@ -200,7 +198,7 @@ public class AdministratorController extends MultiActionController
             }
             
             try {
-               PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(clientUsername);
+               PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(alias);
                
                X509Certificate certificate = this.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
                               
@@ -214,7 +212,7 @@ public class AdministratorController extends MultiActionController
                      }
                   }
                   
-                  if(this.saveToClientKeyStore(certificate, CLIENT_KEY_STORE, clientUsername))
+                  if(this.saveToClientKeyStore(certificate, CLIENT_KEY_STORE, alias))
                   {
                      result = 0;
                   }
@@ -252,7 +250,7 @@ public class AdministratorController extends MultiActionController
          } 
          else if (action.equals("deny")) // revoke
          {
-            result = executeOpenSSLCommand(clientUsername, false);
+            result = executeOpenSSLCommand(alias, false);
          }
          
          // OpenSSL Command successful
@@ -261,7 +259,7 @@ public class AdministratorController extends MultiActionController
             // If successfully revoked, than remove the certificate
             if (action.equals("deny")) 
             {
-               if (deleteCertificate(clientUsername)) {
+               if (deleteCertificate(alias)) {
                   int statusReturn = clientService.updateClientStatus(clientID, false);
                   int serialReturn = clientService.clearClientSerial(clientID);
                   if (statusReturn == 1 && serialReturn == 1) {
@@ -290,7 +288,7 @@ public class AdministratorController extends MultiActionController
          {
             if (action.equals("deny"))
             {
-               if (deleteCertificate(clientUsername))
+               if (deleteCertificate(alias))
                {
                   response.getWriter().print(
                         "OpenSSL command failed, exit with exit code: " + result + "" + "\n\rCertificate deleted.");
@@ -299,14 +297,10 @@ public class AdministratorController extends MultiActionController
                         "OpenSSL command failed, exit with exit code: " + result + ". "
                               + "\n\rPlus the certificate couldn't be removed.");
                }
-            } else {
-               response
-                     .getWriter()
-                     .print(
-                           "OpenSSL command failed, exit with exit code: "
-                                 + result
-                                 + ". "
-                                 + "\n\rProbably database index.txt file problem from the CA, please check this file which is located in the CA path.");
+            } 
+            else 
+            {
+               response.getWriter().print("Certificate has not been created and/or added to the client key store.");
             }
          }
       } catch (NullPointerException e) {
@@ -324,8 +318,8 @@ public class AdministratorController extends MultiActionController
     * @throws IOException
     */
    @Deprecated
-   private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException {
-      File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
+   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
+      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -732,9 +726,9 @@ public class AdministratorController extends MultiActionController
       return p.exitValue();
    }
 
-   private boolean deleteCertificate(String username) throws NullPointerException, IOException, InterruptedException {
+   private boolean deleteCertificate(String alias) throws NullPointerException, IOException, InterruptedException {
       boolean retunvalue = true;
-      File file = new File(rootCADir + "/" + CRTDir + "/" + username + ".crt");
+      File file = new File(rootCADir + "/" + CRTDir + "/" + alias + ".crt");
 
       if (!file.exists()) {
          retunvalue = false;

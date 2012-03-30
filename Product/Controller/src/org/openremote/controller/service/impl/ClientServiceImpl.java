@@ -11,9 +11,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,10 +69,11 @@ public class ClientServiceImpl implements ClientService {
    private static final String openssl = "openssl";
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
-
+   private static final String KEYSTORE_PASSWORD = "password";
+   
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
-   private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_file_name, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
+   private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
@@ -98,17 +103,14 @@ public class ClientServiceImpl implements ClientService {
    /**
     * Add new client to the database.
     * 
-    * @param csrFileName
-    *           it the file name including the .csr as extension
+    * @param alias clients alias
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
    @Override
-   public int addClient(String csrFileName) {
-      String userName = csrFileName.substring(0, csrFileName.lastIndexOf('.'));
+   public int addClient(String alias) {
+      this.parseCSRFile(alias);
 
-      this.parseCSRFile(userName);
-
-      return this.addClient(this.getPin(), this.getDeviceName(), this.getEmail(), csrFileName);
+      return this.addClient(this.getPin(), this.getDeviceName(), this.getEmail(), alias);
    }
 
    /**
@@ -120,12 +122,12 @@ public class ClientServiceImpl implements ClientService {
     *           the client device name
     * @param email
     *           the client e-mail address
-    * @param fileName
-    *           the client file name (certificate request file)
+    * @param alias
+    *           the client alias
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
    @Override
-   public int addClient(String pin, String deviceName, String email, String fileName) {
+   public int addClient(String pin, String deviceName, String email, String alias) {
       int returnValue = 0;
       int resultValue = -1;
       int numRows = -1;
@@ -140,7 +142,7 @@ public class ClientServiceImpl implements ClientService {
       if (numRows == 0) {
          if (database != null) {
             resultValue = database.doUpdateSQL(insertClientQuery + "('', '" + pin + "', '" + deviceName + "', '"
-                  + email + "', '" + fileName + "', FALSE, NOW, NOW);");
+                  + email + "', '" + alias + "', FALSE, NOW, NOW);");
          } else {
             logger.error("Database is not yet set (null)");
          }
@@ -209,8 +211,8 @@ public class ClientServiceImpl implements ClientService {
                + clientID);
       }
       return resultValue;
-   }
-
+   }  
+   
    @Override
    public int clearClientSerial(int clientID) {
       int resultValue = -1;
@@ -220,12 +222,48 @@ public class ClientServiceImpl implements ClientService {
       }
       return resultValue;
    }
-
+   
    @Override
    public String getSerial() {
       return serial;
    }
 
+   /**
+    * Get the X509 Certificate from the client key store file via username alias
+    * @param alias is the certificate alias name
+    */
+   @Override
+   public X509Certificate getClientCertificate(String alias)
+   {
+      if (rootCADir.isEmpty()) {
+         this.rootCADir = configuration.getCaPath();
+      }
+      KeyStore clientKS;
+      X509Certificate certificate = null;
+      String client_key_store = this.rootCADir + "/../client_certificates.jks";
+      
+      try
+      {
+         clientKS = KeyStore.getInstance("JKS");
+
+         // Load the key store to memory.
+         FileInputStream fis = new FileInputStream(client_key_store);  
+         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray()); 
+         
+         certificate = (X509Certificate) clientKS.getCertificate(alias);
+         logger.error("Client certificate test: " + certificate.getIssuerDN());
+      } catch (NoSuchAlgorithmException e) {
+         logger.error("Client certificate: " + e.getMessage());
+      } catch (CertificateException e) {
+         logger.error("Client certificate: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Client certificate: " + e.getMessage());
+      } catch (KeyStoreException e) {
+         logger.error("Client certificate: " + e.getMessage());
+      }
+      return certificate;
+   }   
+   
    /**
     * Close the result set.
     */
@@ -271,7 +309,7 @@ public class ClientServiceImpl implements ClientService {
       this.configuration = configuration;
    }
 
-   private void parseCSRFile(String userName)
+   private void parseCSRFile(String alias)
    {
       // init
       pin = "";
@@ -279,7 +317,7 @@ public class ClientServiceImpl implements ClientService {
       deviceName = "";
       PKCS10CertificationRequest certificationRequest = null;
       try {
-         certificationRequest = this.getCertificationRequest(userName);
+         certificationRequest = this.getCertificationRequest(alias);
       } catch (IOException e) {
          logger.error("Parse CSR error: " + e.getMessage());
       }
@@ -316,12 +354,12 @@ public class ClientServiceImpl implements ClientService {
 
    }
 
-   private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException {
+   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
       if (rootCADir.isEmpty()) {
          this.rootCADir = configuration.getCaPath();
       }
 
-      File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
+      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -353,23 +391,6 @@ public class ClientServiceImpl implements ClientService {
       }
    }
 
-   /*
-    * private void parseCSRFile(String csrFileName) { // init pin = ""; email = ""; deviceName = "";
-    * 
-    * String message = this.executeOpenSSLCommand(CSRDir, csrFileName, false);
-    * 
-    * // Get pin try { String publicKey = message.substring(message.indexOf("KEY-----") + 9,
-    * message.lastIndexOf("-----END") - 1); if(!publicKey.isEmpty()) { pin = generateMD5Sum(publicKey); pin =
-    * pin.substring(pin.length() - 4, pin.length()); } else { pin = "<i>No public key</i>"; } }
-    * catch(IndexOutOfBoundsException e) { logger.error("Parsing error: " + e.getMessage()); } // Get email try { email
-    * = message.substring(message.indexOf("email:") + 6); email = email.substring(0, email.indexOf("\n")); }
-    * catch(IndexOutOfBoundsException e) { logger.error("Parsing error: " + e.getMessage()); }
-    * 
-    * // Get device name try { deviceName = message.substring(message.indexOf("CN=") + 3); deviceName =
-    * deviceName.substring(0, deviceName.indexOf("\n")); } catch(IndexOutOfBoundsException e) {
-    * logger.error("Parsing error: " + e.getMessage()); } }
-    */
-
    private String getPin() {
       return pin;
    }
@@ -382,6 +403,7 @@ public class ClientServiceImpl implements ClientService {
       return deviceName;
    }
 
+   /*
    private String executeOpenSSLCommand(String path, String fileName, boolean isCert) {
       List<String> command = new ArrayList<String>();
       command.add(openssl); // command
@@ -431,8 +453,9 @@ public class ClientServiceImpl implements ClientService {
 
       return buffer.toString();
    }
+   
+   */
 
-   @Deprecated
    private String generateMD5Sum(String message) {
       byte[] resultByte = null;
 
@@ -446,7 +469,7 @@ public class ClientServiceImpl implements ClientService {
       }
       return new String(Hex.encodeHex(resultByte));
    }
-
+   
    private String generateMD5Sum(byte[] message) {
       byte[] resultByte = null;
 
