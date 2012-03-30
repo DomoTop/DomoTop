@@ -554,7 +554,6 @@ public class AdministratorController extends MultiActionController
    {
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-
       AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(caPrivate.getEncoded());
       // SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(pair
       // .getPublic().getEncoded());
