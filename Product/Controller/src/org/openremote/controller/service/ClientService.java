@@ -13,7 +13,7 @@ public interface ClientService
    int addClient(String pinCode, String deviceName, String email, String fileName);
    ResultSet getClient(int clientID);
    int updateClientStatus(int clientID, boolean active);
-   int updateClientSerial(int clientID);
+   int updateClientSerial(int clientID, String serial);
    String getSerial();
    void free();
    int clearClientSerial(int clientID);

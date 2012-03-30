@@ -201,27 +201,8 @@ public class ClientServiceImpl implements ClientService {
     * @return value -1 or 0 is , 1 is correct
     */
    @Override
-   public int updateClientSerial(int clientID) {
+   public int updateClientSerial(int clientID, String serial) {
       int resultValue = -1;
-      String clientCRTFileName = "";
-
-      try {
-         ResultSet resultSet = this.getClient(clientID);
-         while (resultSet.next()) {
-            String clientFileName = resultSet.getString("client_file_name");
-            clientCRTFileName = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
-            clientCRTFileName += ".crt";
-         }
-         this.free();
-      } catch (SQLException e) {
-         logger.error("SQL exception: " + e.getMessage());
-      }
-
-      if (!clientCRTFileName.isEmpty()) {
-         serial = this.getSerial(clientCRTFileName);
-      } else {
-         logger.error("File name is empty");
-      }
 
       if (database != null && !serial.isEmpty()) {
          resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '" + serial + "' WHERE client_id = "
@@ -290,15 +271,6 @@ public class ClientServiceImpl implements ClientService {
       this.configuration = configuration;
    }
 
-   private String getSerial(String crtFileName) {
-      String returnValue = "";
-      String message = this.executeOpenSSLCommand(CRTDir, crtFileName, true);
-
-      returnValue = message.substring(message.indexOf("serial=") + 7);
-      returnValue = returnValue.substring(0, returnValue.indexOf("\n"));
-      return returnValue;
-   }
-
    private void parseCSRFile(String userName)
    {
       // init
@@ -329,10 +301,7 @@ public class ClientServiceImpl implements ClientService {
                
                X509Extension ext = extensions.getExtension(X509Extension.subjectAlternativeName);
               
-                  email = new String(ext.getValue().getOctets()).substring(4);
-                  
-             
-               
+               email = new String(ext.getValue().getOctets()).substring(4);               
             }
             // Get device name
             deviceName = certificationRequest.getSubject().toString();

@@ -55,11 +55,11 @@
 							<TBODY>								
 								<#if clients?exists>
 								<TR>
-									<th align="left">Serial</th><th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
+									<th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
 								</TR>
 								<#list clients as client>
 								<TR>
-									<TD><span id="serial${client.client_id}">${client.client_serial}</span></TD><TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
+									<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
 									<TD>
 										<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 										<input type="hidden" name="client_id" value="${client.client_id}" />
