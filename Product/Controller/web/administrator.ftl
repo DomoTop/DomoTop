@@ -33,7 +33,7 @@
 						<TD align=left background="image/rbox_4.gif" rowSpan=2></TD>
 						<TD style="border-bottom: 1px solid #ccc; vertical-align: middle;" colSpan=5 height=50>
 						<a href="http://www.openremote.org/"><img alt=""
-							src="image/global.logo.gif" align="middle"></a><span class="heading">OpenRemote Administrator Panel</span></TD>
+							src="image/global.logo.gif" align="middle"></a><span class="heading">Administrator Panel</span></TD>
 						<TD align=left background="image/rbox_6.gif" rowSpan=2></TD>
 					</TR>
 					<TR>
