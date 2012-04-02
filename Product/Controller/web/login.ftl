@@ -37,6 +37,8 @@
 					</TR>
 					<TR>
 						<TD align=left colSpan=5 height=140>
+						<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
+						
 						<p class="welcome">Welcome to OpenRemote Controller</p>					
 						<p>
 							Here you can login to the administrator panel using the credentials you used to sync the configuration from 
@@ -62,6 +64,7 @@
 						</div>
 						<br />
 
+						<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 						</TD>
 					</TR>
 					<TR>

@@ -117,7 +117,6 @@ public class ConfigManageController extends MultiActionController {
       boolean success = false;
       try {
          success = fileService.syncConfigurationWithModeler(username, password);
-         response.getWriter().print(getUsername());
          if (success) {
             controllerXMLChangeService.refreshController();
             saveUsername(username);
@@ -139,11 +138,6 @@ public class ConfigManageController extends MultiActionController {
          ServletRequestBindingException {
       String username = request.getParameter("username");
       String password = request.getParameter("password");
-
-      if(!username.equals(getUsername())) {
-         response.getWriter().print("forbidden");
-         return null;
-      }
 
       HttpClient httpClient = new DefaultHttpClient();
       HttpGet httpGet = new HttpGet(PathUtil.addSlashSuffix(configuration.getBeehiveRESTRootUrl()) + "user/" + username
@@ -169,10 +163,6 @@ public class ConfigManageController extends MultiActionController {
 
    private void saveUsername(String username) {
       configurationService.addItem("composer_username", username);
-   }
-
-   private String getUsername() {
-      return configurationService.getItem("composer_username");
    }
 
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,
