@@ -72,13 +72,18 @@ public class LoginServlet extends HttpServlet
    * Check username and password against the online interface
    * @param username The OpenRemote Composer username
    * @param password The OpenRemote Composer password
-   * @return 0 if valid, -1 if not yet synced, -2 if invalid
+   * @return 0 if valid, -1 if not yet synced, -2 if invalid, -3 if different user
    */
   public int checkOnline(String username, String password)
   {
-
-     if(!username.equals(configurationService.getItem("composer_username"))) {
+     String databaseuser = configurationService.getItem("composer_username");
+     logger.error(databaseuser);
+     if(databaseuser == null) {
         return -1;
+     }
+     
+     if(!username.equals(databaseuser)) {
+        return -3;
      }
 
      HttpClient httpClient = new DefaultHttpClient();
@@ -129,21 +134,20 @@ public class LoginServlet extends HttpServlet
      HttpSession session = request.getSession(true);
      PrintWriter out = response.getWriter();
      Object auth = session.getAttribute("authenticated");
-     
-     logger.error("username: " + username + "password: " + password);
-     
+         
      if(auth != null) {
         out.write(auth.toString());
      }
      
      int ret = checkOnline(username, password);
+     logger.error(ret);
      if(ret == 0) {
         session.setAttribute(AuthenticationUtil.AUTH_SESSION, true);
         
         response.sendRedirect("/controller/administrator");
      } else if(ret == -1) {
         returnLoginPage(response, "Controller did not yet sync with the composer");
-     } else if(ret == -2) {
+     } else {
         returnLoginPage(response, "Wrong login credentials");
      }
   }
