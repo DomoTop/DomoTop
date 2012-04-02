@@ -329,10 +329,10 @@ public class ClientServiceImpl implements ClientService {
          // Get pin
          try {
             ASN1Sequence seqkey = ASN1Sequence.getInstance(certificationRequest.getSubjectPublicKeyInfo().getPublicKey());
-
             RSAPublicKeyStructure publicKey = new RSAPublicKeyStructure(seqkey);
-            pin = generateMD5Sum(publicKey.getEncoded());
-            logger.error("Public Exponent: "  +publicKey.getPublicExponent());
+            
+            pin = generateMD5Sum(publicKey.getModulus().toByteArray());
+            logger.error("Public modulus: "  +publicKey.getModulus());
 
             logger.error("MD5 key: " + pin);
             pin = pin.substring(pin.length() - 4);
