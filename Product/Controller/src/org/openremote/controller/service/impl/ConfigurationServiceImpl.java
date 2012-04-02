@@ -75,7 +75,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
            result.next();
            return result.getString("configuration_value");
        } catch (SQLException e) {
-           return e.getMessage();
+           logger.error(e.getMessage());
+           return null;
        }
    }
 
