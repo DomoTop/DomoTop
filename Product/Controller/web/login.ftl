@@ -45,7 +45,7 @@
 							the OpenRemote Composer.
 						</p>
 						<#if errorMessage?has_content>
-							<p class="activeErrMsg">${errorMessage}</p>
+							<p class="activeErrMsg" style="display:block">${errorMessage}</p>
 						</#if>	
 						<div id="online-cont">
 							<p>This requires your <b>Modeler</b> account.</p>
@@ -57,7 +57,7 @@
 									<label for="password">password : </label> <input id="password" name="password" type="password" />
 								</p>
 								<p>
-									<input id="syncSubmit" type="submit" value="Sync with Online Designer" />
+									<input type="submit" value="Login" />
 								</p> 
 							</form>
 							<span>Don't have OpenRemote Designer account? <a href="http://composer.openremote.org/demo/">Create account now!</a></span>
