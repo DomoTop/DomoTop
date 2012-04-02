@@ -403,6 +403,20 @@
     <servlet-name>AdministratorServlet</servlet-name>
     <servlet-class>org.openremote.controller.servlet.AdministratorServlet</servlet-class>
   </servlet>
+  
+    <!--
+   | Servlet for 'login' implementation
+   +-->
+  <servlet>
+    <description>
+        Log's in a user and sets a session
+    </description>
+
+    <display-name>LoginServlet - Log's in a user and sets a session -- /login/</display-name>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>org.openremote.controller.servlet.LoginServlet</servlet-class>
+  </servlet>
+  
 
 
   <servlet-mapping>
@@ -491,6 +505,16 @@
   <servlet-mapping>
     <servlet-name>AdministratorServlet</servlet-name>
     <url-pattern>/administrator/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login/</url-pattern>
   </servlet-mapping>
 
 

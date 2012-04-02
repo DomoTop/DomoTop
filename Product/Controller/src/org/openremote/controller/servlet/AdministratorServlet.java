@@ -29,6 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
@@ -189,6 +190,12 @@ public class AdministratorServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
+     //If not a valid session, redirect to login
+     HttpSession session = request.getSession(true);
+     if(session.getAttribute("authenticated") == null) {   
+        response.sendRedirect("/controller/login");
+     }
+     
      PrintWriter printWriter = response.getWriter();
      
      try

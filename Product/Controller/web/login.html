@@ -42,11 +42,10 @@
 						<p >
 							<a id="refresh" value="refresh" href="javascript:void(0);">Reload configuration and clear cache</a>
 							<img id="refresh_indicator" style="display:none" title="refreshing" src="image/progress.gif">
-						</p>
+						</p> 
 						<div id="online-cont">
 							<p>This requires your <b>Modeler</b> account.</p>
-							<form id="checkForm" action="config.htm?method=checkOnline" 
-							method="post" enctype="multipart/form-data">
+							<form id="checkForm2" action="login" method="post">
 								<p>
 									<label for="username">username : </label> <input id="username" name="username" type="text" />
 								</p>
@@ -54,7 +53,7 @@
 									<label for="password">password : </label> <input id="password" name="password" type="password" />
 								</p>
 								<p>
-									<input id="checkSubmit" type="submit" value="Check with Online Designer" />
+									<input id="checkSubmit2" type="submit" value="Check with Online Designer" />
 								</p> 
 							</form>
 							<span>Don't have OpenRemote Designer account? <a href="http://composer.openremote.org/demo/">Create account now!</a></span>
