@@ -77,6 +77,7 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.AuthenticationUtil;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
@@ -121,7 +122,11 @@ public class AdministratorController extends MultiActionController
     *           HTTP response to the servlet
     */
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
-         ServletRequestBindingException {      
+         ServletRequestBindingException {    
+      if(!AuthenticationUtil.isAuth(request)){
+         return null;
+      }
+      
       KeyPair KPair = null;
       X509Certificate cert = null;
             
@@ -167,6 +172,9 @@ public class AdministratorController extends MultiActionController
     */
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
+      if(!AuthenticationUtil.isAuth(request)){
+         return null;
+      }
       
       // TODO: Check if client ID exists in database and is valid
       String action = request.getParameter("action");

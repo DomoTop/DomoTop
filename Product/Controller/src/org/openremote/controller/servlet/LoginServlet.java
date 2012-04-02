@@ -20,12 +20,8 @@
  */
 package org.openremote.controller.servlet;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.File;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,14 +41,11 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.FreemarkerUtil;
 import org.openremote.controller.utils.PathUtil;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
@@ -145,7 +138,7 @@ public class LoginServlet extends HttpServlet
      
      int ret = checkOnline(username, password);
      if(ret == 0) {
-        session.setAttribute("authenticated", true);
+        session.setAttribute(AuthenticationUtil.AUTH_SESSION, true);
         
         response.sendRedirect("/controller/administrator");
      } else if(ret == -1) {

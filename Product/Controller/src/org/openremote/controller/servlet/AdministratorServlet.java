@@ -36,6 +36,7 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.ResultSetUtil;
 
 import freemarker.template.Configuration;
@@ -190,10 +191,9 @@ public class AdministratorServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
-     //If not a valid session, redirect to login
-     HttpSession session = request.getSession(true);
-     if(session.getAttribute("authenticated") == null) {   
+     if(!AuthenticationUtil.isAuth(request)){
         response.sendRedirect("/controller/login");
+        return;
      }
      
      PrintWriter printWriter = response.getWriter();
