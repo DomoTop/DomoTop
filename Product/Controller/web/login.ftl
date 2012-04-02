@@ -5,6 +5,7 @@
 <link href="image/OpenRemote_Logo16x16.png" type="image/png" rel="icon"/>
 <META http-equiv=Content-Type content="text/html; charset=UTF-8">
 <link type="text/css" href="css/index.css" rel="stylesheet" />
+<link type="text/css" href="css/admin.css" rel="stylesheet" />
 <script type="text/javascript" src="jslib/jquery-1.3.1.min.js"></script>
 <script type="text/javascript" src="jslib/jquery.form-2.24.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
@@ -36,16 +37,17 @@
 					</TR>
 					<TR>
 						<TD align=left colSpan=5 height=140>
-						<p class="welcome">Welcome to OpenRemote Controller</p>
-						<p id="errMsg" class="errMsg" />
-						<p id="msg" class="msg" />
-						<p >
-							<a id="refresh" value="refresh" href="javascript:void(0);">Reload configuration and clear cache</a>
-							<img id="refresh_indicator" style="display:none" title="refreshing" src="image/progress.gif">
-						</p> 
+						<p class="welcome">Welcome to OpenRemote Controller</p>					
+						<p>
+							Here you can login to the administrator panel using the credentials you used to sync the configuration from 
+							the OpenRemote Composer.
+						</p>
+						<#if errorMessage?has_content>
+							<p class="activeErrMsg">${errorMessage}</p>
+						</#if>	
 						<div id="online-cont">
 							<p>This requires your <b>Modeler</b> account.</p>
-							<form id="checkForm2" action="login" method="post">
+							<form action="login" method="post">
 								<p>
 									<label for="username">username : </label> <input id="username" name="username" type="text" />
 								</p>
@@ -53,12 +55,12 @@
 									<label for="password">password : </label> <input id="password" name="password" type="password" />
 								</p>
 								<p>
-									<input id="checkSubmit2" type="submit" value="Check with Online Designer" />
+									<input id="syncSubmit" type="submit" value="Sync with Online Designer" />
 								</p> 
 							</form>
 							<span>Don't have OpenRemote Designer account? <a href="http://composer.openremote.org/demo/">Create account now!</a></span>
 						</div>
-						<p align="center"><a href="./administrator"><img src="image/users.png" alt="Administrator Panel" border=0  style="vertical-align: middle; margin-bottom: .25em;"/><b>Administrator Panel</b></a></p>
+						<br />
 
 						</TD>
 					</TR>

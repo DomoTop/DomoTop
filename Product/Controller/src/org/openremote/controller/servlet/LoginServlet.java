@@ -25,6 +25,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,8 +45,15 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.FreemarkerUtil;
 import org.openremote.controller.utils.PathUtil;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
+
+import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * This servlet is used to authenticate an administrator and set a session if successful
@@ -115,7 +125,7 @@ public class LoginServlet extends HttpServlet
   /**
    * Handle login request, redirect to administrator if successful, show login age if not
    * @param request the request from HTTP servlet
-   * @param reponse where the respond can be written to
+   * @param reponse Response that will be sent to the client
    */  
   @Override 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -138,27 +148,38 @@ public class LoginServlet extends HttpServlet
         
         response.sendRedirect("/controller/administrator");
      } else {
-        doGet(request, response);
+        returnLoginPage(response, "Wrong login credentials");
      }
   }
   
   /**
    * Return the login page
    * @param request the request from HTTP servlet
-   * @param reponse where the respond can be written to
+   * @param reponse Response that will be sent to the client
    */  
   @Override 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
+     returnLoginPage(response, "");
+  }
+  
+  /**
+   * Load the login page template and insert a possible error message
+   * @param response Response that will be sent to the client
+   * @param error Error message to be shown in login panel
+   * @throws IOException
+   */
+  private void returnLoginPage(HttpServletResponse response, String error) throws IOException
+  {
      PrintWriter out = response.getWriter();
+     Map<String, String> data = new HashMap<String, String>();
+     data.put("errorMessage", error);
      
-     File file = new File(configuration.getResourcePath() + "/login.html");
-     BufferedReader read = new BufferedReader(new FileReader(file));
-     String line = null;
-     while((line = read.readLine()) != null) 
-     {
-        out.write(line);
-     }
+     try {
+      out.write(FreemarkerUtil.freemarkerDo(data, "login.ftl"));
+   } catch (TemplateException e) {
+      logger.error(e.getMessage());
+   }
   }
 }
