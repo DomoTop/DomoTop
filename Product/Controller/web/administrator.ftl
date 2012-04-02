@@ -55,7 +55,7 @@
 							<TBODY>								
 								<#if clients?exists>
 								<TR>
-									<th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin Code</th><th align="left">Status</th><th align="left">Group</th>
+									<th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin</th><th align="left">Status</th><th align="left">Group</th>
 								</TR>
 								<#list clients as client>
 								<TR>
