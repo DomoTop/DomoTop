@@ -43,15 +43,15 @@ BODY {
     margin-left:5px;
 }
 .errMsg{
-    color:red;
-    background:none repeat scroll 0 0 #FAFEEF;
+	color:red;
+  background:none repeat scroll 0 0 #FAFEEF;
 	border:1px solid #F6E5AD;
 	padding:5px;
 	display: none;
 }
 .msg{
-    color:green;
-    background:none repeat scroll 0 0 #FAFEEF;
+  color:green;
+  background:none repeat scroll 0 0 #FAFEEF;
 	border:1px solid #F6E5AD;
 	padding:5px;
 	display: none;

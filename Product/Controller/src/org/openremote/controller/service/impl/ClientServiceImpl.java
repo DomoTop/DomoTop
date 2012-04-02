@@ -15,6 +15,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -39,6 +40,7 @@ import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.util.ASN1Dump;
+import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -325,7 +327,19 @@ public class ClientServiceImpl implements ClientService {
       if(certificationRequest != null)
       {      
          // Get pin
-         pin = "2";
+         try {
+            ASN1Sequence seqkey = ASN1Sequence.getInstance(certificationRequest.getSubjectPublicKeyInfo().getPublicKey());
+            RSAPublicKeyStructure publicKey = new RSAPublicKeyStructure(seqkey);
+            
+            pin = generateMD5Sum(publicKey.getModulus().toByteArray());
+            logger.error("Public modulus: "  +publicKey.getModulus());
+
+            logger.error("MD5 key: " + pin);
+            pin = pin.substring(pin.length() - 4);
+         } catch (IOException e) {
+            logger.error("Can't get public key.");
+         }
+         
          
          Attribute[] attributes = certificationRequest.getAttributes(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest);
          if(attributes != null && attributes.length >= 1)

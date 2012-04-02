@@ -14,8 +14,34 @@
  * http://www.fsf.org.
  */
 
-$(document).ready(function() {
+window.onload=function() {
+  // get tab container
+  var container = document.getElementById("tabContainer");
+    
+  // set current tab
+  var navitem = container.querySelector(".tabs ul li");
+  //store which tab we are on
+  var ident = navitem.id.split("_")[1];
+  navitem.parentNode.setAttribute("data-current",ident);
+  //set current tab with class of activetabheader
+  navitem.setAttribute("class","tabActiveHeader");
 
+  //hide two tab contents we don't need
+  var pages = container.querySelectorAll(".tabpage");
+  for (var i = 1; i < pages.length; i++) {
+ 		pages[i].style.display="none";
+  }
+  
+  //this adds click event to tabs
+  var tabs = container.querySelectorAll(".tabs ul li");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].onclick=displayPage;
+	}
+}
+
+$(document).ready(function() {
+	showErrorMessage();
+ 	
   $('.statusSubmit').click(function(){
   	clearMessage();
   	showUpdateIndicator();
@@ -49,16 +75,44 @@ $(document).ready(function() {
 			error("User status is unsuccessfully: " + result);
 		}
   });   
-  
+
+	  
   $('#caForm').ajaxForm(function(result) {
   	if (result == 'OK') {
 			message("CA successfully created.");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
-  });   
-  
+  });
 });
+
+// on click of one of tabs
+function displayPage() 
+{
+	// clear msg & err div boxes
+	clearMessage();
+	
+  var current = this.parentNode.getAttribute("data-current");
+  //remove class of activetabheader and hide old contents
+  document.getElementById("tabHeader_" + current).removeAttribute("class");
+  document.getElementById("tabpage_" + current).style.display="none";
+
+  var ident = this.id.split("_")[1];
+ 	if(ident == 1) // first tab
+ 	{
+ 		showErrorMessage();
+ 	}
+ 	else
+ 	{
+		hideErrorMessage();
+	}
+   
+  //add class of activetabheader to new active tab and show contents
+  this.setAttribute("class","tabActiveHeader");
+  document.getElementById("tabpage_" + ident).style.display="block";
+  this.parentNode.setAttribute("data-current",ident);
+}
+
 
 // Changes the background image of the submit element
 function changeBackgroundByID(id, image)
@@ -82,3 +136,14 @@ function refreshPage()
 {
 	location.reload(true);
 }
+
+function showErrorMessage()
+{
+	$('#activeErrMsg').show();
+}
+
+function hideErrorMessage()
+{	
+	$('#activeErrMsg').hide();
+}
+		
