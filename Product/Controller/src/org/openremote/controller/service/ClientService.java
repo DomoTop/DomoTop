@@ -1,5 +1,6 @@
 package org.openremote.controller.service;
 
+import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 
 /**
@@ -13,8 +14,9 @@ public interface ClientService
    int addClient(String pinCode, String deviceName, String email, String fileName);
    ResultSet getClient(int clientID);
    int updateClientStatus(int clientID, boolean active);
-   int updateClientSerial(int clientID);
+   int updateClientSerial(int clientID, String serial);
    String getSerial();
+   X509Certificate getClientCertificate(String alias);
    void free();
    int clearClientSerial(int clientID);
    int addClient(String csrFileName);

@@ -124,8 +124,8 @@ public class SubmitCSR extends RESTAPI
     
     out.write(certificate);
     out.close();
-
-    int retvalue = clientService.addClient(filename);
+    String alias = filename.substring(0, filename.lastIndexOf('.'));
+    int retvalue = clientService.addClient(alias);
     if(retvalue != 1)
     {
         File file = new File(CA_LOCATION + "csr/" + filename);

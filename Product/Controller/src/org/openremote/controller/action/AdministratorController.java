@@ -17,17 +17,12 @@
 package org.openremote.controller.action;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -79,6 +74,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
+import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -95,9 +91,9 @@ import sun.misc.BASE64Encoder;
  */
 public class AdministratorController extends MultiActionController 
 {
-   // private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String rootCADir = "/usr/share/tomcat6/cert/ca";
-   private static final String KEY_STORE = "/usr/share/tomcat6/cert/server.jks";
+   private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
+   private static final String KEY_STORE = rootCADir + "/../server.jks";
+   private static final String CLIENT_KEY_STORE = rootCADir + "/../client_certificates.jks";
    private static final String openssl = "openssl";
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
@@ -106,6 +102,8 @@ public class AdministratorController extends MultiActionController
    private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
 
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
+   
+   
    
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
          "clientService");    
@@ -134,7 +132,14 @@ public class AdministratorController extends MultiActionController
             
       if(cert != null && KPair != null)
       {
-         success = this.saveToKeyStore(KPair, cert);
+         if(!this.keyStoreExists(KEY_STORE))
+         {
+            if(!createKeyStore(KEY_STORE))
+            {
+               logger.error("Failed to create CA keystore.");
+            }
+         }
+         success = this.saveToKeyStore(KPair, cert, KEY_STORE, "ca.alias");
       }
       else
       {
@@ -162,17 +167,18 @@ public class AdministratorController extends MultiActionController
     */
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
+      
+      // TODO: Check if client ID exists in database and is valid
       String action = request.getParameter("action");
       int clientID = Integer.parseInt(request.getParameter("client_id"));
       String pin = "";
-      String clientUsername = "";
+      String alias = "";
 
       try {
          ResultSet resultSet = clientService.getClient(clientID);
-         while (resultSet.next()) {
-            String clientFileName = resultSet.getString("client_file_name");
-            clientUsername = clientFileName.substring(0, clientFileName.lastIndexOf('.'));
-
+         while (resultSet.next()) 
+         {
+            alias = resultSet.getString("client_alias");
             pin = resultSet.getString("client_pincode");
          }
          clientService.free();
@@ -192,14 +198,32 @@ public class AdministratorController extends MultiActionController
             }
             
             try {
-               PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(clientUsername);
+               PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(alias);
                
-               X509Certificate certificate = this.signCertificate(certificateRequest, privateKey);
-               if (certificate != null
-                     && this.saveCertificate(certificate, rootCADir + "/" + CRTDir + "/" + clientUsername + ".crt")) {
-                  result = 0;
-               } else {
-                  logger.error("Certificate is null");
+               X509Certificate certificate = this.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
+                              
+               if (certificate != null)
+               {
+                  if(!this.keyStoreExists(CLIENT_KEY_STORE))
+                  {
+                     if(!createKeyStore(CLIENT_KEY_STORE))
+                     {
+                        logger.error("Failed to create client keystore.");
+                     }
+                  }
+                  
+                  if(this.saveToClientKeyStore(certificate, CLIENT_KEY_STORE, alias))
+                  {
+                     result = 0;
+                  }
+                  else
+                  {
+                     logger.error("Couldn't save the certificate into the key store.");
+                  }
+               }
+               else
+               {
+                  logger.error("Certificate is null.");
                }
             } catch (InvalidKeyException e) {
                result = -1;
@@ -223,19 +247,19 @@ public class AdministratorController extends MultiActionController
                result = -1;
                logger.error("Signing error - IO Exception: " + e.getMessage());
             }
-         } else if (action.equals("deny")) // revoke
+         } 
+         else if (action.equals("deny")) // revoke
          {
-            result = executeOpenSSLCommand(clientUsername, false);
+            result = executeOpenSSLCommand(alias, false);
          }
-
+         
          // OpenSSL Command successful
-         if (result == 0) {
-            // @TODO: Add the serial ID to the database and use index.txt
-            // to get the right list in the administrator Panel.
-
+         if (result == 0) 
+         {            
             // If successfully revoked, than remove the certificate
-            if (action.equals("deny")) {
-               if (deleteCertificate(clientUsername)) {
+            if (action.equals("deny")) 
+            {
+               if (deleteCertificate(alias)) {
                   int statusReturn = clientService.updateClientStatus(clientID, false);
                   int serialReturn = clientService.clearClientSerial(clientID);
                   if (statusReturn == 1 && serialReturn == 1) {
@@ -246,19 +270,26 @@ public class AdministratorController extends MultiActionController
                } else {
                   response.getWriter().print("Certificate is successfully revoked, but couldn't be removed.");
                }
-            } else if (action.equals("accept")) {
+            }
+            else if (action.equals("accept"))
+            {
                int statusReturn = clientService.updateClientStatus(clientID, true);
-               int serialReturn = clientService.updateClientSerial(clientID);
-               if (statusReturn == 1 & serialReturn == 1) {
+               // why update it if I cant revoke it? int serialReturn = clientService.updateClientSerial(clientID, Integer.toString(clientID));
+               
+               if (statusReturn == 1) {
                   response.getWriter().print(
-                        Constants.OK + "-" + clientID + "-" + action + "-" + clientService.getSerial());
+                        Constants.OK + "-" + clientID + "-" + action);
                } else {
                   response.getWriter().print("Client is not successfully updated in the database");
                }
             }
-         } else {
-            if (action.equals("deny")) {
-               if (deleteCertificate(clientUsername)) {
+         } 
+         else 
+         {
+            if (action.equals("deny"))
+            {
+               if (deleteCertificate(alias))
+               {
                   response.getWriter().print(
                         "OpenSSL command failed, exit with exit code: " + result + "" + "\n\rCertificate deleted.");
                } else {
@@ -266,14 +297,10 @@ public class AdministratorController extends MultiActionController
                         "OpenSSL command failed, exit with exit code: " + result + ". "
                               + "\n\rPlus the certificate couldn't be removed.");
                }
-            } else {
-               response
-                     .getWriter()
-                     .print(
-                           "OpenSSL command failed, exit with exit code: "
-                                 + result
-                                 + ". "
-                                 + "\n\rProbably database index.txt file problem from the CA, please check this file which is located in the CA path.");
+            } 
+            else 
+            {
+               response.getWriter().print("Certificate has not been created and/or added to the client key store.");
             }
          }
       } catch (NullPointerException e) {
@@ -291,8 +318,8 @@ public class AdministratorController extends MultiActionController
     * @throws IOException
     */
    @Deprecated
-   private PKCS10CertificationRequest getCertificationRequest(String username) throws IOException {
-      File file = new File(rootCADir + "/" + CSRDir + "/" + username + ".csr");
+   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
+      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -305,7 +332,7 @@ public class AdministratorController extends MultiActionController
    }
 
    /**
-    * Convert a Inputstream to a String
+    * Convert a input stream to a String
     * @param is
     * @return
     * @throws IOException
@@ -423,9 +450,11 @@ public class AdministratorController extends MultiActionController
     * And the certificate to the server's key store file
     * @param KPair the KeyPair object
     * @param cert X509Certificate
-    * @return true if success or false if not success
+    * @param keyStoreFile the path of the file where the key store is located
+    * @param the alias of the certificate
+    * @return true if success or false if unsuccessfully
     */
-   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert) 
+   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert, String keyStoreFile, String alias) 
    {
       boolean success = false;
       KeyStore privateKS;
@@ -434,16 +463,55 @@ public class AdministratorController extends MultiActionController
          privateKS = KeyStore.getInstance("JKS");
 
          // Load the key store to memory.
-         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         FileInputStream fis = new FileInputStream(keyStoreFile);  
          privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
        
          // Import the private key to the key store
-         privateKS.setKeyEntry("ca.alias", KPair.getPrivate(),  
+         privateKS.setKeyEntry(alias, KPair.getPrivate(),  
                KEYSTORE_PASSWORD.toCharArray(),  
-               new java.security.cert.Certificate[]{cert});
+               new java.security.cert.Certificate[]{cert});                  
+         // Write the key store back to disk                 
+         privateKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
+         success = true;
+      } catch (KeyStoreException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Key store: " + e.getMessage());
+      }
+      return success;
+   }
+   
+   /**
+    * Saves the client certificate into a client key store file
+    * @param cert the X509 certificate
+    * @param keyStoreFile the file path to the key store
+    * @param alias the alias of the certificate
+    * @return true if success, false if unsuccessfully
+    */
+   private boolean saveToClientKeyStore(X509Certificate cert, String keyStoreFile, String alias) 
+   {
+      boolean success = false;
+      KeyStore clientKS;
+      try
+      {
+         clientKS = KeyStore.getInstance("JKS");
+
+         // Load the key store to memory.
+         FileInputStream fis = new FileInputStream(keyStoreFile);  
+         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+       
+         // Import the certificate to the key store
+         clientKS.setCertificateEntry(alias, cert);
          
          // Write the key store back to disk                 
-         privateKS.store(new FileOutputStream(KEY_STORE), KEYSTORE_PASSWORD.toCharArray());      
+         clientKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
          success = true;
       } catch (KeyStoreException e) {
          success = false;
@@ -493,6 +561,49 @@ public class AdministratorController extends MultiActionController
       return privateKey;
    }
 
+   private boolean keyStoreExists(String keyStoreFile)
+   {
+      File f = new File(keyStoreFile);
+      return (f.exists() ? true : false);
+   }
+   
+   private boolean createKeyStore(String keyStoreFile)
+   {
+      boolean returnValue = false;
+      // CREATE A KEYSTORE OF TYPE "Java Key Store"  
+      try
+      {
+         KeyStore ks = KeyStore.getInstance("JKS");  
+         /* 
+          * LOAD THE STORE 
+          * The first time you're doing this (i.e. the keystore does not 
+          * yet exist - you're creating it), you HAVE to load the keystore 
+          * from a null source with null password. Before any methods can 
+          * be called on your keystore you HAVE to load it first. Loading 
+          * it from a null source and null password simply creates an empty 
+          * keystore.
+          */  
+         ks.load( null, null ); 
+         //SAVE THE KEYSTORE TO A FILE  
+         ks.store( new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray() );  
+         returnValue = true;
+      } catch (NoSuchAlgorithmException e) {
+         returnValue = false;
+         logger.error("KeyStore: " + e.getMessage());
+      } catch (CertificateException e) {
+         returnValue = false;
+         logger.error("KeyStore: " + e.getMessage());
+      } catch (IOException e) {
+         returnValue = false;
+         logger.error("KeyStore: " + e.getMessage());
+      } catch (KeyStoreException e) {
+         returnValue = false;
+         logger.error("KeyStore: " + e.getMessage());
+      } 
+      
+      return returnValue;
+   }
+   
    /**
     * Saves the certificate
     * @param certificate
@@ -525,13 +636,6 @@ public class AdministratorController extends MultiActionController
 
       return returnValue;
    }
-   // TODO: 
-   /*
-   private boolean saveCertificate(X509Certificate certificate, String alias)
-   {
-      return false;
-   }
-   */
 
    /**
     * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
@@ -547,22 +651,19 @@ public class AdministratorController extends MultiActionController
     * @throws OperatorCreationException
     * @throws CertificateException
     */
-   private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate)
-         // , KeyPair pair
+   private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate, String serial)
          throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
          IOException, OperatorCreationException, CertificateException
    {
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
       AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(caPrivate.getEncoded());
-      // SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(pair
-      // .getPublic().getEncoded());
 
       Calendar cal = Calendar.getInstance();
       cal.set(cal.get(Calendar.YEAR) + 100, 04, 18, 13, 30);
       
       X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(CA_NAME,
-            new BigInteger("1"), 
+            new BigInteger(serial), 
             new Date(System.currentTimeMillis()),
             cal.getTime(), 
             inputCSR.getSubject(), 
@@ -570,14 +671,6 @@ public class AdministratorController extends MultiActionController
       ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
 
       X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
-      /*
-       * Very old code: Certificate eeX509CertificateStructure = holder.toASN1Structure(); CertificateFactory cf =
-       * CertificateFactory.getInstance("X.509", "BC");
-       * 
-       * // Read Certificate InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
-       * X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1); is1.close();
-       */
-
       X509Certificate cert = new JcaX509CertificateConverter().getCertificate(holder);
       return cert;
    }
@@ -633,9 +726,9 @@ public class AdministratorController extends MultiActionController
       return p.exitValue();
    }
 
-   private boolean deleteCertificate(String username) throws NullPointerException, IOException, InterruptedException {
+   private boolean deleteCertificate(String alias) throws NullPointerException, IOException, InterruptedException {
       boolean retunvalue = true;
-      File file = new File(rootCADir + "/" + CRTDir + "/" + username + ".crt");
+      File file = new File(rootCADir + "/" + CRTDir + "/" + alias + ".crt");
 
       if (!file.exists()) {
          retunvalue = false;
