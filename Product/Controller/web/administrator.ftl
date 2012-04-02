@@ -31,7 +31,7 @@
 					</TR>
 					<TR>
 						<TD align=left background="image/rbox_4.gif" rowSpan=2></TD>
-						<TD style="border-bottom: 1px solid #ccc;" colSpan=5 height=50>
+						<TD style="border-bottom: 1px solid #ccc; vertical-align: middle;" colSpan=5 height=50>
 						<a href="http://www.openremote.org/"><img alt=""
 							src="image/global.logo.gif" align="middle"></a><span class="heading">OpenRemote Administrator Panel</span></TD>
 						<TD align=left background="image/rbox_6.gif" rowSpan=2></TD>
@@ -55,7 +55,7 @@
 						    	${info_messsage_line}
 						      <div class="tabpage" id="tabpage_1">        
 						    		<p class="welcome">User Management</p>	
-										<p><i>User Management:</i><br /></p>
+										<p><i>User table:</i><br /></p>
 										<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
 										<TBODY>								
 											<#if clients?exists>
