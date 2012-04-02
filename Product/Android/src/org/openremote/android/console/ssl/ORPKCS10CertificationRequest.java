@@ -155,7 +155,7 @@ public class ORPKCS10CertificationRequest {
 		} catch (SignatureException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		}
-		
+
 		return kpGen;
 	}
 	

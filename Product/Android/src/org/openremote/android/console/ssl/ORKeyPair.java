@@ -11,6 +11,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPublicKey;
 
 import org.openremote.android.console.Constants;
 import org.spongycastle.util.encoders.Base64;
@@ -87,18 +88,6 @@ public class ORKeyPair {
 	 */
 	public String getPIN(Context context)
 	{
-		String public64 = new String(Base64.encode(getKeyPair(context).getPublic().getEncoded()));
-		String formatted = "";
-		for(int i = 0; i < public64.length(); i++)
-		{
-			if(i % 64 == 0 && i != 0)
-			{
-				formatted += "\n";
-			}
-			formatted += public64.charAt(i);
-		}
-		Log.d(LOG_CATEGORY, public64);
-
 		MessageDigest m = null;
 		try {
 			m = MessageDigest.getInstance("MD5");
@@ -107,7 +96,8 @@ public class ORKeyPair {
 			e.printStackTrace();
 		}
 		
-		m.update(formatted.getBytes());
+		RSAPublicKey publicKey = (RSAPublicKey) getKeyPair(context).getPublic();
+		m.update(publicKey.getModulus().toByteArray()); 
 
 		byte[] s = Hex.encode(m.digest());
 	
