@@ -40,7 +40,6 @@ public class ConfigurationServiceImpl implements ConfigurationService
     *
     * @param name The key of the configuration item
     * @param value The value of the configuration item
-    * 
     * @return int value -1 or 0 is incorrect, 1 is action succeed
     */
    @Override

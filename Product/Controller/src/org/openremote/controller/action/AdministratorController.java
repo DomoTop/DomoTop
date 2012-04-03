@@ -49,6 +49,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +77,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.servlet.ModelAndView;
@@ -103,10 +105,11 @@ public class AdministratorController extends MultiActionController
 
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
    
-   
-   
+      
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
-         "clientService");    
+         "clientService");  
+   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
+         "configurationService");   
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
@@ -157,10 +160,34 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
+   @SuppressWarnings("rawtypes")
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
-   ServletRequestBindingException {
+   ServletRequestBindingException 
+   {
+      Enumeration names = request.getParameterNames(); 
+      boolean success = false;
+      while(names.hasMoreElements())
+      {
+         String name = (String) names.nextElement();
+         if(!name.equals("method"))
+         {
+            success = (configurationService.updateItem(name, request.getParameter(name)) == 1) ? true : false;
+         }  
+         
+         if(!success)
+         {
+            break;
+         }
+      }
       
-      response.getWriter().print(Constants.OK);
+      if(success)
+      {      
+         response.getWriter().print(Constants.OK);
+      }
+      else
+      {
+         response.getWriter().print("Failed to save the configuration into the database");
+      }
       return null;
    }
    
