@@ -21,40 +21,25 @@
  */
 package org.openremote.controller.rest;
 
-import java.security.cert.X509Certificate;
-import java.security.cert.Certificate;
-
-import java.security.cert.CertificateException;
-import java.security.NoSuchAlgorithmException;
-import java.security.KeyStoreException;
-
-import java.lang.ProcessBuilder;
-import java.lang.InterruptedException;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.BufferedWriter;
-
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.security.KeyStore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.exception.ControlCommandException;
-import org.openremote.controller.service.ProfileService;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.spring.SpringContext;
 
 /**
@@ -88,12 +73,11 @@ public class FindCertificateByID extends RESTAPI
    * Common log category for HTTP REST API.
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
+  private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
+
 
   protected String signCsr(String username) throws IOException, InterruptedException
   {
-    String certname = username; 
-    String openssl = "/usr/bin/openssl";
-    String caloc = "/usr/share/tomcat6/cert/ca/certs/";
     String keystore = "/usr/share/tomcat6/cert/server.jks";
     
     StringBuffer sb = new StringBuffer();
@@ -115,21 +99,14 @@ public class FindCertificateByID extends RESTAPI
     }
 
     sb.append("</server>\n<client>\n");
-    FileReader fr = new FileReader(caloc + username + ".crt");
-    BufferedReader reader = new BufferedReader(fr);
-    String st = "";
+    
+      try {
+         Certificate certificate = clientService.getClientCertificate(username);
+         sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
+      } catch (CertificateEncodingException e) {
+         logger.error(e.getMessage());
+      }
 
-    boolean cert = false;
-    while((st = reader.readLine()) != null) {
-       if(cert) {
-           sb.append(st + "\n");
-       } else {
-           if(st.startsWith("-----BEGIN CERTIFICATE-----")) {
-               cert = true;
-               sb.append(st + "\n");
-           }
-       }
-    }
 
     sb.append("</client>\n</chain>");
     sb.append(Constants.STATUS_XML_TAIL);
