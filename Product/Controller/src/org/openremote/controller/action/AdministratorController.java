@@ -202,12 +202,11 @@ public class AdministratorController extends MultiActionController
       if(!AuthenticationUtil.isAuth(request)){
          return null;
       }
-      
-      // TODO: Check if client ID exists in database and is valid
-      String action = request.getParameter("action");
-      int clientID = Integer.parseInt(request.getParameter("client_id"));
+      String clientKeyStorePath = rootCADir + CLIENT_KEY_STORE;
       String pin = "";
       String alias = "";
+      String action = request.getParameter("action");
+      int clientID = Integer.parseInt(request.getParameter("client_id"));
 
       try {
          ResultSet resultSet = clientService.getClient(clientID);
@@ -221,77 +220,21 @@ public class AdministratorController extends MultiActionController
          logger.error(e.getMessage());
       }
 
-      String clientKeyStorePath = rootCADir + CLIENT_KEY_STORE;
       try {
          int result = -1;
          if (action.equals("accept")) // trust
          {
-            if(privateKey == null)
-            {
-               privateKey = this.getPrivateKey();
-            }
-            
-            try {
-               PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(alias);
-               
-               X509Certificate certificate = this.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
-                              
-               if (certificate != null)
-               {
-                  if(!this.keyStoreExists(clientKeyStorePath))
-                  {
-                     if(!createKeyStore(clientKeyStorePath))
-                     {
-                        logger.error("Failed to create client keystore.");
-                     }
-                  }
-                  
-                  if(this.saveToClientKeyStore(certificate, clientKeyStorePath, alias))
-                  {
-                     result = 0;
-                  }
-                  else
-                  {
-                     logger.error("Couldn't save the certificate into the key store.");
-                  }
-               }
-               else
-               {
-                  logger.error("Certificate is null.");
-               }
-            } catch (InvalidKeyException e) {
-               result = -1;
-               logger.error("Signing error - Invalid Key: " + e.getMessage());
-            } catch (NoSuchAlgorithmException e) {
-               result = -1;
-               logger.error("Signing error - No Such Algorithem: " + e.getMessage());
-            } catch (NoSuchProviderException e) {
-               result = -1;
-               logger.error("Signing error - No Such Provider: " + e.getMessage());
-            } catch (SignatureException e) {
-               result = -1;
-               logger.error("Signing error - Signature: " + e.getMessage());
-            } catch (OperatorCreationException e) {
-               result = -1;
-               logger.error("Signing error - Operator Creation: " + e.getMessage());
-            } catch (CertificateException e) {
-               result = -1;
-               logger.error("Signing error - Certificate: " + e.getMessage());
-            } catch (IOException e) {
-               result = -1;
-               logger.error("Signing error - IO Exception: " + e.getMessage());
-            }
+            result = this.acceptClient(clientKeyStorePath, alias, clientID);
          } 
-         else if (action.equals("deny")) // revoke
+         else if (action.equals("deny")) // deny
          {
-            // TODO : revoke via alias
-            result = -1;
+            result = this.denyClient(alias, clientID);
          }
          
-         // OpenSSL Command successful
+         // if the user is successfully accepted or denied
          if (result == 0) 
          {            
-            // If successfully revoked, than remove the certificate
+            // ...
             if (action.equals("deny")) 
             {
                if (deleteCertificate(alias)) {
@@ -319,7 +262,7 @@ public class AdministratorController extends MultiActionController
                }
             }
          } 
-         else 
+         else // user was not successfully accepted or denied
          {
             if (action.equals("deny"))
             {
@@ -333,7 +276,7 @@ public class AdministratorController extends MultiActionController
                               + "\n\rPlus the certificate couldn't be removed.");
                }
             } 
-            else 
+            else if (action.equals("accept"))
             {
                response.getWriter().print("Certificate has not been created and/or added to the client key store.");
             }
@@ -346,6 +289,72 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
+   private int denyClient(String alias, int clientID) 
+   {
+      return -1;
+   }
+
+   private int acceptClient(String clientKeyStorePath, String alias, int clientID)
+   {
+      int result = -1;
+      if(privateKey == null)
+      {
+         privateKey = this.getPrivateKey();
+      }
+      
+      try {
+         PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(alias);
+         
+         X509Certificate certificate = this.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
+                        
+         if (certificate != null)
+         {
+            if(!this.keyStoreExists(clientKeyStorePath))
+            {
+               if(!createKeyStore(clientKeyStorePath))
+               {
+                  logger.error("Failed to create client keystore.");
+               }
+            }
+            
+            if(this.saveToClientKeyStore(certificate, clientKeyStorePath, alias))
+            {
+               result = 0;
+            }
+            else
+            {
+               logger.error("Couldn't save the certificate into the key store.");
+            }
+         }
+         else
+         {
+            logger.error("Certificate is null.");
+         }
+      } catch (InvalidKeyException e) {
+         result = -1;
+         logger.error("Signing error - Invalid Key: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         result = -1;
+         logger.error("Signing error - No Such Algorithem: " + e.getMessage());
+      } catch (NoSuchProviderException e) {
+         result = -1;
+         logger.error("Signing error - No Such Provider: " + e.getMessage());
+      } catch (SignatureException e) {
+         result = -1;
+         logger.error("Signing error - Signature: " + e.getMessage());
+      } catch (OperatorCreationException e) {
+         result = -1;
+         logger.error("Signing error - Operator Creation: " + e.getMessage());
+      } catch (CertificateException e) {
+         result = -1;
+         logger.error("Signing error - Certificate: " + e.getMessage());
+      } catch (IOException e) {
+         result = -1;
+         logger.error("Signing error - IO Exception: " + e.getMessage());
+      }      
+      return result;
+   }
+
    /**
     * Get the certificate file from the csr directory and create and returns a certificationRequest
     * @param username
