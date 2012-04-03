@@ -29,6 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
@@ -36,6 +37,7 @@ import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
+import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.ResultSetUtil;
 
 import freemarker.template.Configuration;
@@ -170,8 +172,12 @@ public class AdministratorServlet extends HttpServlet
                                                               throws ServletException, IOException
   {
      clientService.initCaPath();
-     PrintWriter printWriter = response.getWriter();   
+     if(!AuthenticationUtil.isAuth(request)){
+        response.sendRedirect("/controller/login");
+        return;
+     }
      
+     PrintWriter printWriter = response.getWriter();     
      try
      {
         printWriter.print(setDataInTemplate());

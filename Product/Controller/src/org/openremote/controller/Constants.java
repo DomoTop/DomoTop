@@ -59,7 +59,12 @@ public class Constants
    * Specific logging subcategory for /rest/panel/[id] related incoming HTTP requests on REST API.
    */
   public final static String REST_GET_PANEL_DEF_LOG_CATEGORY = HTTP_REST_LOG_CATEGORY + ".panel.id";
-
+  
+  /**
+   * log subcategory for servlets
+   */
+  public static final String SERVLET_LOG_CATEGORY = CONTROLLER_ROOT_LOG_CATEGORY + ".servlet";
+  
   /**
    * Specific log category for reporting runtime system properties.
    */
@@ -75,7 +80,10 @@ public class Constants
    */
   public final static String SERVICE_LOG_CATEGORY = CONTROLLER_ROOT_LOG_CATEGORY + ".service";
 
-  
+  /**
+   * Specific log category for login servlet
+   */
+  public static final String LOGIN_SERVLET_LOG_CATEGORY = SERVLET_LOG_CATEGORY + ".login";
 
   public final static String LIRCD_CONF = "lircd.conf";
 
@@ -213,5 +221,6 @@ public class Constants
    * HTTP parameter name used for JSON-P function callback name.
    */
   public final static String CALLBACK_PARAM_NAME = "callback";
+
 
 }
