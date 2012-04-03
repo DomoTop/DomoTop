@@ -168,7 +168,7 @@ public class ConfigManageController extends MultiActionController {
    }
 
    private void saveUsername(String username) {
-      configurationService.addItem("composer_username", username);
+      configurationService.updateItem("composer_username", username);
    }
 
    private String getUsername() {

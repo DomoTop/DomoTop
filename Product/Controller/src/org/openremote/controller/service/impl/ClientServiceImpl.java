@@ -469,20 +469,6 @@ public class ClientServiceImpl implements ClientService {
    }
    
    */
-
-   private String generateMD5Sum(String message) {
-      byte[] resultByte = null;
-
-      try {
-         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-         messageDigest.reset();
-         messageDigest.update(message.getBytes(Charset.forName("UTF8")));
-         resultByte = messageDigest.digest();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error(e.getMessage());
-      }
-      return new String(Hex.encodeHex(resultByte));
-   }
    
    private String generateMD5Sum(byte[] message) {
       byte[] resultByte = null;

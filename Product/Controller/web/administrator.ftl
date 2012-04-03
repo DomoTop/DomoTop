@@ -98,6 +98,26 @@
 						      </div>
 						      <div class="tabpage" id="tabpage_2">
 						        <p class="welcome">Configuration</p>
+						        <form id="saveSettings" action="admin.htm?method=saveSettings" method="post">
+						        	<table border="0">
+						        		<tr>
+						        			<td align="left">
+						        				<b>CA Path:</b> <span class="info"><img src="image/info_icon.png" alt=""/><span>The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.</span></span>
+						        			</td>
+						        			<td>
+														<input type="text" name="ca_path" id="ca_path" value="" />
+													</td>
+												</tr>
+												<tr>
+													<td colspan="2" align="right">
+														<input type="submit" value="Save settings"/>
+													</td>
+												</tr>
+											</table>
+										</form>
+										<br/><br/>
+										<hr noshade size="1">
+										<br/>
 										<form id="caForm" action="admin.htm?method=setupCA" method="post">
 											<b>Reset all devices:</b> <input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/>
 										</form>

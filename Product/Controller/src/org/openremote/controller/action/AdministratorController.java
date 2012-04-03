@@ -157,6 +157,13 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
+   public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException {
+      
+      response.getWriter().print(Constants.OK);
+      return null;
+   }
+   
    /**
     * Request handler for accepting or denying an user
     * 

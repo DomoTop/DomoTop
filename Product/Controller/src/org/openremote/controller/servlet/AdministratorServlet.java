@@ -34,11 +34,11 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.ResultSetUtil;
 
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 
@@ -52,7 +52,7 @@ import java.util.Map;
  * This servlet is used to show the list of clients, 
  * manage the clients (accept, revoke and putting the client in a group)
  * 
- * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  * 
  */
 @SuppressWarnings("serial")
@@ -65,98 +65,75 @@ public class AdministratorServlet extends HttpServlet
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
   private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
-
-  /**
-   * Transform a client list array into a HTML template.
-   * 
-   * @param clients List of Clients
-   * @return HTML formatted text in the administrator template
-   */  
-  private String setErrorInTemplate(String error)
-  {
-     Map<String, Object> root = new HashMap<String, Object>();
-      
-     String result = "";
-     
-     // Read the XML file and process the template using FreeMarker
-     try 
-     {     
-        root.put( "errorMessage", error );
-        result = freemarkerDo(root, "administrator.ftl");
-     }
-     catch(Exception e) 
-     {
-        result = "<h1>Template Exception</h1>";
-        result += e.getLocalizedMessage();
-        logger.error(e.getLocalizedMessage());
-     }
-     return result;
-  }  
-  
+  private static ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
+ 
   /**
    * 
    * @param resultSet
    * @return
    */
-  private String setResultListInTemplate(ResultSet resultSet)
-  {
-     Map<String, Object> root = new HashMap<String, Object>();
-    
-     Collection clients = null;
-     
-     String result = "";
-     
+  private Collection resultSetToCollection(ResultSet resultSet)
+  {    
+     Collection collection = null;
+          
      try 
      {
-        clients = ResultSetUtil.getMaps(resultSet);
+        collection = ResultSetUtil.getMaps(resultSet);
      } 
      catch (SQLException e)
      {
          logger.error("SQLException: " + e.getMessage());
      }
-          
-     try 
-     {     
-        root.put( "clients", clients );
-        result = freemarkerDo(root, "administrator.ftl");
-     }
-     catch(Exception e) 
-     {
-        result = "<h1>Template Exception</h1>";
-        result += e.getLocalizedMessage();
-        logger.error(e.getLocalizedMessage());
-     }
-     return result;
+     return collection;
   }
-  
-  
-  /**
-   * Transform a client list array into a HTML template.
-   * 
-   * @param clients List of Clients
-   * @return HTML formatted text in the administrator template
-   */  
-  /*
-  private String setListInTemplate(List<Client> clients)
-  {
-     Map<String, Object> root = new HashMap<String, Object>();
-      
-     String result = "";
-     
-     try 
-     {     
-        root.put( "clients", clients );
-        result = freemarkerDo(root, "administrator.ftl");
-     }
-     catch(Exception e) 
-     {
-        result = "<h1>Template Exception</h1>";
-        result += e.getLocalizedMessage();
-        logger.error(e.getLocalizedMessage());
-     }
-     return result;
-  }*/
+            
 
+
+   private String setDataInTemplate() 
+   {
+      Map<String, Object> root = new HashMap<String, Object>();
+      String result = "";
+      int numClients = 0;
+      Collection clientCollection = null, settingCollection = null;
+      
+      ResultSet clients = clientService.getClients();     
+      numClients = clientService.getNumClients();
+      clientCollection = resultSetToCollection(clients);
+      clientService.free();
+      
+      ResultSet settings = configurationService.getAllItems();
+      settingCollection = resultSetToCollection(settings);
+      configurationService.free();
+      
+      try 
+      {     
+         if(clientCollection != null && settingCollection != null)
+         {
+            if(numClients > 0)
+            {
+               root.put( "clients", clientCollection );
+            }
+            else
+            {
+               root.put( "errorMessage", "No clients in the database." );
+            }
+            root.put( "settings", settingCollection );
+         }
+         else
+         {
+            root.put( "errorMessage", "Database problem!" );
+         }
+         result = freemarkerDo(root, "administrator.ftl");
+      }
+      catch(Exception e) 
+      {
+         result = "<h1>Template Exception</h1>";
+         result += e.getLocalizedMessage();
+         logger.error(e.getMessage());
+      }
+      return result;
+   }
+  
   /**
    *  Process a template using FreeMarker and print the results
    * @param root HashMap with data
@@ -190,28 +167,10 @@ public class AdministratorServlet extends HttpServlet
                                                               throws ServletException, IOException
   {
      PrintWriter printWriter = response.getWriter();
-     
+ 
      try
      {
-        ResultSet clients = clientService.getClients();
-        int numClients = clientService.getNumClients();
-        
-        if(clients != null)
-        {
-           if(numClients <= 0)
-           {
-              printWriter.print(setErrorInTemplate("No clients in the database."));
-           }
-           else
-           {
-              printWriter.print(setResultListInTemplate(clients));
-           }           
-        }
-        else
-        {
-           printWriter.print(setErrorInTemplate("Database problem."));
-        }
-        clientService.free();
+        printWriter.print(setDataInTemplate());
         response.setStatus(200);
      }
      catch (NullPointerException e)

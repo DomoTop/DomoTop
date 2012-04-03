@@ -7,6 +7,13 @@ TD {
     FONT-SIZE: 12px;
     FONT-FAMILY: inherit;
 }
+
+hr {
+  height: 0px;
+	margin: 0px;
+	border-bottom: 1px solid #afafaf;
+}
+
 a img{
     border:none;
 }

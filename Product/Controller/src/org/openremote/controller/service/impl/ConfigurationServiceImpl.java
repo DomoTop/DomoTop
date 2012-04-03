@@ -1,5 +1,5 @@
 /* OpenRemote, the Home of the Digital Home.
-* Copyright 2008-2011, OpenRemote Inc.
+* Copyright 2008-2012, OpenRemote Inc.
 *
 * See the contributors.txt file in the distribution for a
 * full listing of individual contributors.
@@ -22,9 +22,6 @@ package org.openremote.controller.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
-
-import org.openremote.controller.Constants;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ConfigurationService;
 
@@ -32,35 +29,47 @@ import org.openremote.controller.service.ConfigurationService;
  * The implementation for dynamic configuration settings service;
  * 
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a> 2012-03-29
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
-public class ConfigurationServiceImpl implements ConfigurationService {
-   private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
-
+public class ConfigurationServiceImpl implements ConfigurationService 
+{
    private DatabaseService database;
    
    /**
-    * Add a configuration item
+    * Update a configuration item
     *
     * @param name The key of the configuration item
     * @param value The value of the configuration item
-    * @return true if it did not exist and was added, false if it already exists and it will not be added
+    * 
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
     */
-   public boolean addItem(String name, String value)
+   @Override
+   public int updateItem(String name, String value)
    {
-      database.doUpdateSQL("INSERT INTO configuration (configuration_name, configuration_value) VALUES ('" + name + "', '" + value + "');");
-      return false;
-   }
+      int resultValue = -1;
 
-   /**
-    * Add or update a configuration item
-    *
-    * @param name The key of the configuration item
-    * @param value The value of the configuration item
-    */
-   public boolean updateItem(String name, String value)
-   {
-        return false;
+      if (database != null) {
+         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + value + "' WHERE " +
+         		"configuration_name = '" + name + "' LIMIT 1");
+      }
+      return resultValue;
    }
+   
+   /**
+    * Get all items (configurations values and names) from the database
+    * @return resultSet with the result
+    */
+   @Override
+   public ResultSet getAllItems()
+   {
+      ResultSet result = null;
+      if(database != null)
+      {
+         result = database.doSQL("SELECT * FROM configuration");
+      }      
+      return result;
+   }
+   
 
    /**
     * Retrieve a configuration item
@@ -68,10 +77,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     * @param name The key of the configuration item
     * @return The value of the configuration item
     */
+   @Override
    public String getItem(String name)
    {
        try {
-           ResultSet result = database.doSQL("SELECT * FROM configuration WHERE configuration_name = '" + name + "';");
+           ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_name = '" + name + "'");
            result.next();
            return result.getString("configuration_value");
        } catch (SQLException e) {
@@ -80,16 +90,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
    }
 
    /**
-    * Delete a configuration item
+    * Empty a configuration value of the configuration name specified
     *
     * @param name The key of the configuration item
-    * @return true if the deletion was succesful
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
     */
-   public boolean deleteItem(String name)
+   @Override
+   public int emptyItem(String name)
    {
-       return false;
-   }
+      int resultValue = -1;
 
+      if (database != null) {
+         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '' WHERE configuration_name = '" + name + "' LIMIT 1");
+      }
+      return resultValue;
+   }
+   
    /**
     * Sets the database.
     * 
@@ -98,5 +114,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
    public void setDatabase(DatabaseService database)
    {
       this.database = database;
+   }
+
+   /**
+    * Free the result set
+    */
+   @Override
+   public void free() {
+      this.database.free();      
    } 
 }
