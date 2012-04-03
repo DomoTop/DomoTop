@@ -50,7 +50,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
 
       if (database != null) {
          resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + value + "' WHERE " +
-         		"configuration_name = '" + name + "' LIMIT 1");
+         		"configuration_name = '" + name + "'");
       }
       return resultValue;
    }
@@ -75,7 +75,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
     * Retrieve a configuration item
     *
     * @param name The key of the configuration item
-    * @return The value of the configuration item
+    * @return The  of the configuration item
     */
    @Override
    public String getItem(String name)

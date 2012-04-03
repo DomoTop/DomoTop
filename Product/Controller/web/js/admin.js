@@ -41,9 +41,7 @@ window.onload=function() {
 
 $(document).ready(function() {
 	showErrorMessage();
- 	
- 	setCAPath("/test/test/");
- 	
+ 	 	
   $('.statusSubmit').click(function(){
   	clearMessage();
   	showUpdateIndicator();
@@ -140,12 +138,6 @@ function changeValueById(id, value)
 function changePincodeById(id, value)
 {
 	document.getElementById("pincode" + id).innerHTML = value;
-}
-
-// Set CA Path
-function setCAPath(value)
-{
-	document.getElementById("ca_path").value = value;
 }
 
 function refreshPage()

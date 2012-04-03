@@ -20,4 +20,5 @@ public interface ClientService
    void free();
    int clearClientSerial(int clientID);
    int addClient(String csrFileName);
+   void initCaPath();
 }

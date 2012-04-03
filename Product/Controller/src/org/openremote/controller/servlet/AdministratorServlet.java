@@ -68,7 +68,7 @@ public class AdministratorServlet extends HttpServlet
   private static ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
  
   /**
-   * 
+   * Set the result set into a collection
    * @param resultSet
    * @return
    */
@@ -86,9 +86,12 @@ public class AdministratorServlet extends HttpServlet
      }
      return collection;
   }
-            
 
-
+  /**
+   * Set the result sets in a hash map and give it to freemarker
+   * 
+   * @return String a HTML template with the data
+   */
    private String setDataInTemplate() 
    {
       Map<String, Object> root = new HashMap<String, Object>();
@@ -117,7 +120,7 @@ public class AdministratorServlet extends HttpServlet
             {
                root.put( "errorMessage", "No clients in the database." );
             }
-            root.put( "settings", settingCollection );
+            root.put( "configurations", settingCollection );
          }
          else
          {
@@ -166,8 +169,9 @@ public class AdministratorServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
-     PrintWriter printWriter = response.getWriter();
- 
+     clientService.initCaPath();
+     PrintWriter printWriter = response.getWriter();   
+     
      try
      {
         printWriter.print(setDataInTemplate());

@@ -51,6 +51,7 @@ import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
 
 import sun.misc.BASE64Decoder;
@@ -63,6 +64,7 @@ import sun.nio.cs.ext.PCK;
  */
 
 public class ClientServiceImpl implements ClientService {
+
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
@@ -72,15 +74,16 @@ public class ClientServiceImpl implements ClientService {
    private static final String CRTDir = "certs";
    private static final String CSRDir = "csr";
    private static final String KEYSTORE_PASSWORD = "password";
-   
+
+   private static final String CA_PATH = "ca_path";
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
    private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
-   private ControllerConfiguration configuration;
-   private String rootCADir = "";
+   private ControllerConfiguration xmlConfiguration;
+   private ConfigurationService databaseConfiguration;
    private String serial = "";
    private String pin;
    private String email;
@@ -229,6 +232,19 @@ public class ClientServiceImpl implements ClientService {
    public String getSerial() {
       return serial;
    }
+   
+   /**
+    * Initialize CA Path, only if the CA Path is empty 
+    * then get the CA Path from the XML configuration and save it in the database
+    */
+   @Override
+   public void initCaPath()
+   {
+      if(databaseConfiguration.getItem(CA_PATH).isEmpty())
+      {
+         databaseConfiguration.updateItem(CA_PATH, xmlConfiguration.getCaPath());
+      }
+   }
 
    /**
     * Get the X509 Certificate from the client key store file via username alias
@@ -237,12 +253,10 @@ public class ClientServiceImpl implements ClientService {
    @Override
    public X509Certificate getClientCertificate(String alias)
    {
-      if (rootCADir.isEmpty()) {
-         this.rootCADir = configuration.getCaPath();
-      }
       KeyStore clientKS;
       X509Certificate certificate = null;
-      String client_key_store = this.rootCADir + "/../client_certificates.jks";
+      String rootCADir = databaseConfiguration.getItem(CA_PATH);
+      String client_key_store = rootCADir + "/../client_certificates.jks";
       
       try
       {
@@ -300,17 +314,28 @@ public class ClientServiceImpl implements ClientService {
    public void setDatabase(DatabaseService database) {
       this.database = database;
    }
-
+   
    /**
-    * Sets the configuration.
+    * Sets the XML configuration.
     * 
-    * @param configuration
+    * @param xml configuration
     *           the new configuration
     */
-   public void setConfiguration(ControllerConfiguration configuration) {
-      this.configuration = configuration;
+   public void setXmlConfiguration(ControllerConfiguration xmlConfiguration) {
+      this.xmlConfiguration = xmlConfiguration;
    }
 
+   /**
+    * Sets the database configuration.
+    * 
+    * @param configuration
+    *           service
+    */
+
+   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
+      this.databaseConfiguration = databaseConfiguration;
+   }
+   
    private void parseCSRFile(String alias)
    {
       // init
@@ -369,10 +394,7 @@ public class ClientServiceImpl implements ClientService {
    }
 
    private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
-      if (rootCADir.isEmpty()) {
-         this.rootCADir = configuration.getCaPath();
-      }
-
+      String rootCADir = databaseConfiguration.getItem(CA_PATH);
       File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
       String data = "";
 

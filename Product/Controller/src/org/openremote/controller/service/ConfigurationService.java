@@ -59,5 +59,8 @@ public interface ConfigurationService
     */
    ResultSet getAllItems();
 
+   /**
+    * Free the result set
+    */
    public void free();
 }
