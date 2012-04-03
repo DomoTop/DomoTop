@@ -79,13 +79,16 @@ public class ConfigurationServiceImpl implements ConfigurationService
    @Override
    public String getItem(String name)
    {
+      String returnValue = "";
        try {
            ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_name = '" + name + "'");
            result.next();
-           return result.getString("configuration_value");
+           returnValue = result.getString("configuration_value");
+           database.free();
        } catch (SQLException e) {
            return e.getMessage();
-       }
+       }       
+       return returnValue;
    }
 
    /**

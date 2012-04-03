@@ -9,44 +9,27 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.util.ASN1Dump;
 import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
-import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
@@ -55,7 +38,6 @@ import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
 
 import sun.misc.BASE64Decoder;
-import sun.nio.cs.ext.PCK;
 
 /**
  * Get client information out the (request) certificates
@@ -69,10 +51,7 @@ public class ClientServiceImpl implements ClientService {
       Security.addProvider(new BouncyCastleProvider());
    }
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
-
-   private static final String openssl = "openssl";
-   private static final String CRTDir = "certs";
-   private static final String CSRDir = "csr";
+   private static final String CSRDir = "/ca/csr";
    private static final String KEYSTORE_PASSWORD = "password";
 
    private static final String CA_PATH = "ca_path";
@@ -256,7 +235,7 @@ public class ClientServiceImpl implements ClientService {
       KeyStore clientKS;
       X509Certificate certificate = null;
       String rootCADir = databaseConfiguration.getItem(CA_PATH);
-      String client_key_store = rootCADir + "/../client_certificates.jks";
+      String client_key_store = rootCADir + "/client_certificates.jks";
       
       try
       {
@@ -336,6 +315,7 @@ public class ClientServiceImpl implements ClientService {
       this.databaseConfiguration = databaseConfiguration;
    }
    
+   @SuppressWarnings("deprecation")
    private void parseCSRFile(String alias)
    {
       // init
@@ -395,7 +375,7 @@ public class ClientServiceImpl implements ClientService {
 
    private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
       String rootCADir = databaseConfiguration.getItem(CA_PATH);
-      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
+      File file = new File(rootCADir + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
