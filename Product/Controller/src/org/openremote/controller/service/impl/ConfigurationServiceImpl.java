@@ -22,7 +22,6 @@ package org.openremote.controller.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ConfigurationService;
 
@@ -62,7 +61,8 @@ public class ConfigurationServiceImpl implements ConfigurationService
     * @param value The value of the configuration item
     */
    @Override
-   public int updateItem(String name, boolean value) {
+   public int updateItem(String name, boolean value) 
+   {
       int resultValue = -1;
       String stringValue = "not_defiend";
             
@@ -153,7 +153,8 @@ public class ConfigurationServiceImpl implements ConfigurationService
     * @return The value of the configuration item
     */
    @Override
-   public boolean getBooleanItem(String name) {
+   public boolean getBooleanItem(String name) 
+   {
       boolean returnValue = false;
       
       try {
