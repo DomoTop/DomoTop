@@ -161,6 +161,10 @@ public class ConfigManageController extends MultiActionController {
       return null;
    }
 
+   /**
+    * Save the username in the configurationtable
+    * @param username The username you want to save
+    */
    private void saveUsername(String username) {
       configurationService.addItem("composer_username", username);
    }
