@@ -23,6 +23,14 @@
 	font-weight:bold;
 }
 
+div.top{text-align:right;margin:1em 0;padding:0}
+div.top div{display:inline;white-space:nowrap}
+div.top div.left{float:left}
+div.top{display:table;width:100%}
+div.top div{display:table-cell}
+div.top div.left{float:none;text-align:left}
+div.top div.right{text-align:right} 
+
 /* Tabs */
 
 #tabContainer

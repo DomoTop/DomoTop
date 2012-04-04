@@ -38,7 +38,10 @@
 					</TR>
 					<TR>
 						<TD align=left colSpan=5 height=180>
-							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
+							<div class="top">
+								<div class="left"><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></div>
+								<div class="right"><a id="logOut" href="javascript:void(0);"><img src="image/logout.gif" alt="Log-out" /> Log-out</a></div>
+							</div>		
 							<#if errorMessage?has_content>
 								<#assign info_messsage_line='<p id="errMsg" class="errMsg" /><p id="activeErrMsg" class="activeErrMsg">${errorMessage}</p><p id="msg" class="msg" />'>							
 						  <#else>
@@ -49,7 +52,6 @@
 						      <ul>
 						        <li id="tabHeader_1">User Management</li>
 						        <li id="tabHeader_2">Configuration</li>
-						        <li id="tabHeader_2"><a id="logOut" href="javascript:void(0);">Log-out</a></li>
 						      </ul>
 						    </div>
 						    <div class="tabscontent">
