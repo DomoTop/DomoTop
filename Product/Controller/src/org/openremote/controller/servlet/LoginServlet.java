@@ -126,7 +126,7 @@ public class LoginServlet extends HttpServlet
    * @param username The username you want to save
    */
   private void saveUsername(String username) {
-     configurationService.addItem("composer_username", username);
+     configurationService.updateItem("composer_username", username);
   }
   
   /**
