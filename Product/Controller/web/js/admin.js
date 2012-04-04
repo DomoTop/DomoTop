@@ -46,7 +46,8 @@ $(document).ready(function() {
   	clearMessage();
   	showUpdateIndicator();
   });
-  $('.statusForm').ajaxForm(function(result) {  	
+  $('.statusForm').ajaxForm(function(result) {  
+  	clearMessage();	
   	var resultArray = result.split("-");
   	var resultString = resultArray[0];
   	var resultID = resultArray[1];
@@ -77,6 +78,7 @@ $(document).ready(function() {
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
+  	clearMessage();
   	if (result == 'OK') {
 			message("Settings are successfully saved.");
 		} else {
@@ -85,13 +87,26 @@ $(document).ready(function() {
   }); 
     
   $('#caForm').ajaxForm(function(result) {
+  	clearMessage();
   	if (result == 'OK') {
 			message("CA successfully created.");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
   }); 
-	
+  
+	$('#logOut').click(function() {
+		clearMessage();
+		$.get("admin.htm?method=logOut",
+			function(msg){
+				if (msg == 'OK') {
+					window.location = "./login";
+				} else {
+					error("Log-out failed.");
+				}
+			}
+		 );
+	});	
 });
 
 // on click of one of tabs

@@ -49,6 +49,7 @@
 						      <ul>
 						        <li id="tabHeader_1">User Management</li>
 						        <li id="tabHeader_2">Configuration</li>
+						        <li id="tabHeader_2"><a id="logOut" href="javascript:void(0);">Log-out</a></li>
 						      </ul>
 						    </div>
 						    <div class="tabscontent">

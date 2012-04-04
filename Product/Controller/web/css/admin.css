@@ -72,6 +72,12 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbdb', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
 }
 
+.tabs > ul > li a
+{
+	color: #333;
+	text-decoration: none; 
+}
+
 .tabs > ul > li:hover
 {
 	background: #67a220; /* Old browsers */
@@ -84,6 +90,12 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#67a220', endColorstr='#266131',GradientType=0 ); /* IE6-9 */
 	cursor:pointer;	
 	color:#FFF;
+}
+
+.tabs > ul > li a:hover
+{
+	color: #ffffff;
+	text-decoration: none; 
 }
 
 .tabs > ul > li.tabActiveHeader

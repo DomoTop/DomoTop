@@ -125,7 +125,7 @@ public class DatabaseServiceImpl implements DatabaseService
                "(configuration_id, configuration_name, configuration_value, configuration_type, configuration_information) VALUES " +
                "(null, 'composer_username', '', 'string', 'The username of the administrator.'), " +
                "(null, 'ca_path', '', 'string', 'The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.'), " +
-               "(null, 'authentication_active', 'true', 'boolean', 'When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security isn't active.')")
+               "(null, 'authentication_active', 'true', 'boolean', 'When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.')")
                .execute();  
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times

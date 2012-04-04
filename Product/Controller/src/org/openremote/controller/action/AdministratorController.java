@@ -49,6 +49,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -162,6 +163,10 @@ public class AdministratorController extends MultiActionController
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {
+      if(!AuthenticationUtil.isAuth(request)){
+         return null;
+      }
+      
       Enumeration names = request.getParameterNames(); 
       boolean success = false;
       while(names.hasMoreElements())
@@ -295,6 +300,16 @@ public class AdministratorController extends MultiActionController
       } catch (InterruptedException e) {
          response.getWriter().print("interrupt: " + e.getMessage());
       }
+      return null;
+   }
+   
+   public ModelAndView logOut(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException 
+   {
+      HttpSession session = request.getSession(true);
+      session.removeAttribute(AuthenticationUtil.AUTH_SESSION);
+      
+      response.getWriter().print(Constants.OK);
       return null;
    }
    
