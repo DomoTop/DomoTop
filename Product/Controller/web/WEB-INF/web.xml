@@ -649,12 +649,23 @@
     </security-constraint>
   -->
 
-  <!--
    <security-constraint>
      <web-resource-collection>
        <web-resource-name>Status command RESTful service of Openremote Controller</web-resource-name>
        <description>Status command RESTful service of Openremote Controller</description>
        <url-pattern>/rest/status/*</url-pattern>
+       <http-method>GET</http-method>
+       <http-method>POST</http-method>
+     </web-resource-collection>
+     <auth-constraint>
+       <role-name>openremote</role-name>
+     </auth-constraint>
+   </security-constraint>
+   <security-constraint>
+     <web-resource-collection>
+       <web-resource-name>Status command RESTful service of Openremote Controller</web-resource-name>
+       <description>Status command RESTful service of Openremote Controller</description>
+       <url-pattern>/rest/control/*</url-pattern>
        <http-method>GET</http-method>
        <http-method>POST</http-method>
      </web-resource-collection>
@@ -674,8 +685,37 @@
        <role-name>openremote</role-name>
      </auth-constraint>
    </security-constraint>
-   -->
    
+  <!--
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>OPENREMOTE_Controller</realm-name>
+    </login-config>
+    <security-role>
+      <role-name>openremote</role-name>
+    </security-role>
+   -->
+
+  <!--
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Client Cert</web-resource-name>
+            <url-pattern>/rest/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>openremote</role-name>
+        </auth-constraint>
+    </security-constraint>
+  -->
+
+    <login-config>
+        <auth-method>CLIENT-CERT</auth-method>
+        <realm-name>OPENREMOTE_Controllert</realm-name>
+    </login-config>
+    <security-role>
+        <role-name>openremote</role-name>
+    </security-role>
+
   <!--
   Prevent the visiting of MVC Views from outside the servlet container.
   RequestDispatcher.forward/include should and will still work.
@@ -690,15 +730,5 @@
 	    <!-- Nobody is allowed to visit these -->
 	  </auth-constraint>
 	</security-constraint>  
-
-
-  <!--
-    <login-config>
-      <auth-method>BASIC</auth-method>
-      <realm-name>OPENREMOTE_Controller</realm-name>
-    </login-config>
-    <security-role>
-      <role-name>openremote</role-name>
-    </security-role>
-  -->
+   
 </web-app>

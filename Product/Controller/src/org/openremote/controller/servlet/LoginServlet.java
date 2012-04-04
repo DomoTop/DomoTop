@@ -40,6 +40,8 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.service.ControllerXMLChangeService;
+import org.openremote.controller.service.FileService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.FreemarkerUtil;
@@ -67,6 +69,13 @@ public class LoginServlet extends HttpServlet
   
   private ControllerConfiguration configuration = ControllerConfiguration.readXML();
   
+  private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
+        .getInstance().getBean("controllerXMLChangeService");
+
+  private FileService fileService =  (FileService) SpringContext
+        .getInstance().getBean("fileService");
+
+  
 
   /**
    * Check username and password against the online interface
@@ -79,7 +88,14 @@ public class LoginServlet extends HttpServlet
      String databaseuser = configurationService.getItem("composer_username");
      logger.error(databaseuser);
      if(databaseuser == null) {
-        return -1;
+        boolean success = fileService.syncConfigurationWithModeler(username, password);
+        if (success) {
+           controllerXMLChangeService.refreshController();
+           saveUsername(username);
+           return 0;
+        } else {
+           return -1;
+        }
      }
      
      if(!username.equals(databaseuser)) {
@@ -103,6 +119,14 @@ public class LoginServlet extends HttpServlet
         return -2;
      }
      return -2;
+  }
+  
+  /**
+   * Save the username in the configurationtable
+   * @param username The username you want to save
+   */
+  private void saveUsername(String username) {
+     configurationService.addItem("composer_username", username);
   }
   
   /**
