@@ -39,7 +39,7 @@
 						<TD align=left colSpan=5 height=140>
 						<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 						
-						<p class="welcome">Welcome to OpenRemote Controller</p>					
+						<p class="welcome">Login</p>					
 						<p>
 							Here you can login to the administrator panel using the credentials you used to sync the configuration from 
 							the OpenRemote Composer.
@@ -51,10 +51,10 @@
 							<p>This requires your <b>Modeler</b> account.</p>
 							<form action="login" method="post">
 								<p>
-									<label for="username">username : </label> <input id="username" name="username" type="text" />
+									<label for="username">username : </label><br/> <input id="username" name="username" type="text" />
 								</p>
 								<p> 
-									<label for="password">password : </label> <input id="password" name="password" type="password" />
+									<label for="password">password : </label><br/> <input id="password" name="password" type="password" />
 								</p>
 								<p>
 									<input type="submit" value="Login" />
