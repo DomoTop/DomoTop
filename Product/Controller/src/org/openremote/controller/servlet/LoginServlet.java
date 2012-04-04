@@ -87,7 +87,7 @@ public class LoginServlet extends HttpServlet
   {
      String databaseuser = configurationService.getItem("composer_username");
      logger.error(databaseuser);
-     if(databaseuser == null) {
+     if(databaseuser == null || databaseuser.equals("")) {
         boolean success = fileService.syncConfigurationWithModeler(username, password);
         if (success) {
            controllerXMLChangeService.refreshController();
