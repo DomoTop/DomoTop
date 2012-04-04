@@ -169,7 +169,16 @@ public class AdministratorController extends MultiActionController
          String name = (String) names.nextElement();
          if(!name.equals("method"))
          {
-            success = (configurationService.updateItem(name, request.getParameter(name)) == 1) ? true : false;
+            String value = request.getParameter(name);
+            // if type boolean
+            if(value.equals("true") || value.equals("false"))
+            {
+               success = (configurationService.updateItem(name, Boolean.parseBoolean(value)) == 1) ? true : false;
+            }
+            else // type is String
+            {
+               success = (configurationService.updateItem(name, value) == 1) ? true : false;
+            }
          }  
          
          if(!success)

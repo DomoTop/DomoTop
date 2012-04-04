@@ -38,12 +38,36 @@ public interface ConfigurationService
    public int updateItem(String name, String value);
 
    /**
+    * Add or update a configuration item
+    *
+    * @param name The key of the configuration item
+    * @param value The value of the configuration item
+    */
+   public int updateItem(String name, boolean value);
+   
+   /**
+    * Ask if the value of the item is a boolean or not
+    *
+    * @param name The key of the configuration item
+    * @return true if the value is a boolean and otherwise false
+    */
+   public boolean isItemValueBoolean(String name);
+   
+   /**
     * Retrieve a configuration item
     *
     * @param name The key of the configuration item
     * @return The value of the configuration item
     */
    public String getItem(String name);
+   
+   /**
+    * Retrieve a configuration item
+    *
+    * @param name The key of the configuration item
+    * @return The value of the configuration item
+    */
+   public boolean getBooleanItem(String name);
    
    /**
     * Empty a configuration value of the configuration name specified

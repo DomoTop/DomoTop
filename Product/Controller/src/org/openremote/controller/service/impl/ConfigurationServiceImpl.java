@@ -22,6 +22,7 @@ package org.openremote.controller.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ConfigurationService;
 
@@ -55,6 +56,33 @@ public class ConfigurationServiceImpl implements ConfigurationService
    }
    
    /**
+    * Add or update a configuration item
+    *
+    * @param name The key of the configuration item
+    * @param value The value of the configuration item
+    */
+   @Override
+   public int updateItem(String name, boolean value) {
+      int resultValue = -1;
+      String stringValue = "not_defiend";
+            
+      if(value)
+      {
+         stringValue = "true";
+      }
+      else
+      {
+         stringValue = "false";
+      }
+      
+      if (database != null) {
+         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + stringValue + "' WHERE " +
+               "configuration_name = '" + name + "'");
+      }
+      return resultValue;
+   }
+   
+   /**
     * Get all items (configurations values and names) from the database
     * @return resultSet with the result
     */
@@ -81,7 +109,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
    {
       String returnValue = "";
        try {
-           ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_name = '" + name + "'");
+           ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'string' AND  configuration_name = '" + name + "'");
            result.next();
            returnValue = result.getString("configuration_value");
            database.free();
@@ -90,6 +118,54 @@ public class ConfigurationServiceImpl implements ConfigurationService
        }       
        return returnValue;
    }
+
+   /**
+    * Ask if the value of the item is a boolean or not
+    *
+    * @param name The key of the configuration item
+    * @return true if the value is a boolean and otherwise false
+    */
+   @Override
+   public boolean isItemValueBoolean(String name) {
+      String configurationType = "";
+      boolean returnValue = false;
+      try {
+          ResultSet result = database.doSQL("SELECT configuration_type FROM configuration WHERE configuration_name = '" + name + "'");
+          result.next();
+          configurationType = result.getString("configuration_type");
+          database.free();
+      } catch (SQLException e) {
+         // TODO: logger
+      }      
+      
+      if(configurationType.equals("boolean"))
+      {
+         returnValue = true; 
+      }
+      
+      return returnValue;
+   }
+
+   /**
+    * Retrieve a configuration item
+    *
+    * @param name The key of the configuration item
+    * @return The value of the configuration item
+    */
+   @Override
+   public boolean getBooleanItem(String name) {
+      boolean returnValue = false;
+      
+      try {
+          ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'boolean' AND configuration_name = '" + name + "'");
+          result.next();
+          returnValue = result.getString("configuration_value").equals("true") ? true : false;
+          database.free();
+      } catch (SQLException e) {
+         // TODO: logger
+      }       
+      return returnValue;
+   } 
 
    /**
     * Empty a configuration value of the configuration name specified
@@ -124,5 +200,5 @@ public class ConfigurationServiceImpl implements ConfigurationService
    @Override
    public void free() {
       this.database.free();      
-   } 
+   }
 }

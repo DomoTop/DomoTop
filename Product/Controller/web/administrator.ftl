@@ -99,14 +99,24 @@
 						      <div class="tabpage" id="tabpage_2">
 						        <p class="welcome">Configuration</p>
 						        <form id="saveSettings" action="admin.htm?method=saveSettings" method="post">
-						        	<table border="0">
+						        	<table cellpadding="4" border="0">
 												<#list configurations as configuration>
 						           		<tr>
 							        			<td align="left">
 							        				<b>${configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${configuration.configuration_information}</span></span></#if>
 							        			</td>
 							        			<td>
+							        			<#if configuration.configuration_type == 'boolean'>
+							        				<#if configuration.configuration_value == 'true'>
+							        					<#assign checked=' checked'>
+							        				<#else>
+							        					<#assign checked=''>
+							        				</#if>					        				
+							        				<input type="checkbox" name="${configuration.configuration_name}" value="true"${checked} />
+							        				<input type="hidden" name="${configuration.configuration_name}" value="false" />		
+														<#else>
 															<input type="text" size="35" name="${configuration.configuration_name}" value="${configuration.configuration_value}" />
+														</#if>
 														</td>
 													</tr>												
 						      			</#list>
