@@ -41,7 +41,7 @@ window.onload=function() {
 
 $(document).ready(function() {
 	showErrorMessage();
- 	
+ 	 	
   $('.statusSubmit').click(function(){
   	clearMessage();
   	showUpdateIndicator();
@@ -76,14 +76,22 @@ $(document).ready(function() {
 		}
   });   
 
-	  
+  $('#saveSettings').ajaxForm(function(result) {
+  	if (result == 'OK') {
+			message("Settings are successfully saved.");
+		} else {
+			error("There was a problem with saving the settings: " + result);
+		}
+  }); 
+    
   $('#caForm').ajaxForm(function(result) {
   	if (result == 'OK') {
 			message("CA successfully created.");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
-  });
+  }); 
+	
 });
 
 // on click of one of tabs

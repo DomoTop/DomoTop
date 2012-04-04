@@ -166,7 +166,7 @@ public class ConfigManageController extends MultiActionController {
     * @param username The username you want to save
     */
    private void saveUsername(String username) {
-      configurationService.addItem("composer_username", username);
+      configurationService.updateItem("composer_username", username);
    }
 
    public ModelAndView refreshController(HttpServletRequest request, HttpServletResponse response) throws IOException,

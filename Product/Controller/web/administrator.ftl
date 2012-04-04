@@ -31,9 +31,9 @@
 					</TR>
 					<TR>
 						<TD align=left background="image/rbox_4.gif" rowSpan=2></TD>
-						<TD style="border-bottom: 1px solid #ccc;" colSpan=5 height=50>
+						<TD style="border-bottom: 1px solid #ccc; vertical-align: middle;" colSpan=5 height=50>
 						<a href="http://www.openremote.org/"><img alt=""
-							src="image/global.logo.gif" align="middle"></a><span class="heading">OpenRemote Administrator Panel</span></TD>
+							src="image/global.logo.gif" align="middle"></a><span class="heading">Administrator Panel</span></TD>
 						<TD align=left background="image/rbox_6.gif" rowSpan=2></TD>
 					</TR>
 					<TR>
@@ -55,7 +55,7 @@
 						    	${info_messsage_line}
 						      <div class="tabpage" id="tabpage_1">        
 						    		<p class="welcome">User Management</p>	
-										<p><i>User Management:</i><br /></p>
+										<p><i>User table:</i><br /></p>
 										<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
 										<TBODY>								
 											<#if clients?exists>
@@ -98,8 +98,30 @@
 						      </div>
 						      <div class="tabpage" id="tabpage_2">
 						        <p class="welcome">Configuration</p>
+						        <form id="saveSettings" action="admin.htm?method=saveSettings" method="post">
+						        	<table border="0">
+												<#list configurations as configuration>
+						           		<tr>
+							        			<td align="left">
+							        				<b>${configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${configuration.configuration_information}</span></span></#if>
+							        			</td>
+							        			<td>
+															<input type="text" size="35" name="${configuration.configuration_name}" value="${configuration.configuration_value}" />
+														</td>
+													</tr>												
+						      			</#list>
+												<tr>
+													<td colspan="2" align="right">
+														<input type="submit" value="Save settings"/>
+													</td>
+												</tr>
+											</table>
+										</form>
+										<br/><br/>
+										<hr noshade size="1">
+										<br/>
 										<form id="caForm" action="admin.htm?method=setupCA" method="post">
-											<b>Reset all devices:</b> <input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/>
+											<b>Reset all devices:</b> <br/><input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/>
 										</form>
 						      </div>
 						    </div>

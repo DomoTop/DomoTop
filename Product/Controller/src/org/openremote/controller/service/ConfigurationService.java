@@ -19,37 +19,23 @@
 */
 package org.openremote.controller.service;
 
+import java.sql.ResultSet;
+
 /**
  * The service for dynamic configuration settings.
  * 
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a> 2012-03-29
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
-public interface ConfigurationService {
-   
-   /**
-    * Add a configuration item
-    *
-    * @param name The key of the configuration item
-    * @param value The value of the configuration item
-    * @return true if it did not exist and was added, false if it already exists and it will not be added
-    */
-   public boolean addItem(String name, String value);
-
+public interface ConfigurationService 
+{
    /**
     * Add or update a configuration item
     *
     * @param name The key of the configuration item
     * @param value The value of the configuration item
     */
-   public boolean updateItem(String name, String value);
-
-   /**
-    * Delete a configuration item
-    *
-    * @param name The key of the configuration item
-    * @return true if the deletion was succesful
-    */
-   public boolean deleteItem(String name);
+   public int updateItem(String name, String value);
 
    /**
     * Retrieve a configuration item
@@ -58,4 +44,23 @@ public interface ConfigurationService {
     * @return The value of the configuration item
     */
    public String getItem(String name);
+   
+   /**
+    * Empty a configuration value of the configuration name specified
+    *
+    * @param name The key of the configuration item
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   int emptyItem(String name);
+
+   /**
+    * Get all items (configurations values and names) from the database
+    * @return resultSet with the result
+    */
+   ResultSet getAllItems();
+
+   /**
+    * Free the result set
+    */
+   public void free();
 }

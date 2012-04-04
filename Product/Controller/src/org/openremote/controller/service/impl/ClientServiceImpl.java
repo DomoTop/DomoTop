@@ -9,52 +9,35 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.util.ASN1Dump;
 import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
-import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
 
 import sun.misc.BASE64Decoder;
-import sun.nio.cs.ext.PCK;
 
 /**
  * Get client information out the (request) certificates
@@ -63,24 +46,23 @@ import sun.nio.cs.ext.PCK;
  */
 
 public class ClientServiceImpl implements ClientService {
+
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
-
-   private static final String openssl = "openssl";
-   private static final String CRTDir = "certs";
-   private static final String CSRDir = "csr";
+   private static final String CSRDir = "/ca/csr";
    private static final String KEYSTORE_PASSWORD = "password";
-   
+
+   private static final String CA_PATH = "ca_path";
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
    private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
-   private ControllerConfiguration configuration;
-   private String rootCADir = "";
+   private ControllerConfiguration xmlConfiguration;
+   private ConfigurationService databaseConfiguration;
    private String serial = "";
    private String pin;
    private String email;
@@ -229,6 +211,19 @@ public class ClientServiceImpl implements ClientService {
    public String getSerial() {
       return serial;
    }
+   
+   /**
+    * Initialize CA Path, only if the CA Path is empty 
+    * then get the CA Path from the XML configuration and save it in the database
+    */
+   @Override
+   public void initCaPath()
+   {
+      if(databaseConfiguration.getItem(CA_PATH).isEmpty())
+      {
+         databaseConfiguration.updateItem(CA_PATH, xmlConfiguration.getCaPath());
+      }
+   }
 
    /**
     * Get the X509 Certificate from the client key store file via username alias
@@ -237,12 +232,10 @@ public class ClientServiceImpl implements ClientService {
    @Override
    public X509Certificate getClientCertificate(String alias)
    {
-      if (rootCADir.isEmpty()) {
-         this.rootCADir = configuration.getCaPath();
-      }
       KeyStore clientKS;
       X509Certificate certificate = null;
-      String client_key_store = this.rootCADir + "/../client_certificates.jks";
+      String rootCADir = databaseConfiguration.getItem(CA_PATH);
+      String client_key_store = rootCADir + "/client_certificates.jks";
       
       try
       {
@@ -300,17 +293,29 @@ public class ClientServiceImpl implements ClientService {
    public void setDatabase(DatabaseService database) {
       this.database = database;
    }
-
+   
    /**
-    * Sets the configuration.
+    * Sets the XML configuration.
     * 
-    * @param configuration
+    * @param xml configuration
     *           the new configuration
     */
-   public void setConfiguration(ControllerConfiguration configuration) {
-      this.configuration = configuration;
+   public void setXmlConfiguration(ControllerConfiguration xmlConfiguration) {
+      this.xmlConfiguration = xmlConfiguration;
    }
 
+   /**
+    * Sets the database configuration.
+    * 
+    * @param configuration
+    *           service
+    */
+
+   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
+      this.databaseConfiguration = databaseConfiguration;
+   }
+   
+   @SuppressWarnings("deprecation")
    private void parseCSRFile(String alias)
    {
       // init
@@ -369,11 +374,8 @@ public class ClientServiceImpl implements ClientService {
    }
 
    private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
-      if (rootCADir.isEmpty()) {
-         this.rootCADir = configuration.getCaPath();
-      }
-
-      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
+      String rootCADir = databaseConfiguration.getItem(CA_PATH);
+      File file = new File(rootCADir + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -469,20 +471,6 @@ public class ClientServiceImpl implements ClientService {
    }
    
    */
-
-   private String generateMD5Sum(String message) {
-      byte[] resultByte = null;
-
-      try {
-         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-         messageDigest.reset();
-         messageDigest.update(message.getBytes(Charset.forName("UTF8")));
-         resultByte = messageDigest.digest();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error(e.getMessage());
-      }
-      return new String(Hex.encodeHex(resultByte));
-   }
    
    private String generateMD5Sum(byte[] message) {
       byte[] resultByte = null;

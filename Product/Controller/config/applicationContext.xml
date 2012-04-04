@@ -143,7 +143,8 @@
     <!-- service for client for getting client information for administrator panel -->
     <bean id="clientService" class="org.openremote.controller.service.impl.ClientServiceImpl" >
     	<property name="database" ref="databaseService"></property>
-    	<property name="configuration" ref="configuration"></property>
+    	<property name="xmlConfiguration" ref="configuration"></property>    	
+    	<property name="databaseConfiguration" ref="configurationService"></property>
     </bean>
 
     <!-- service for saving and retrieving dynamic configurations --> 

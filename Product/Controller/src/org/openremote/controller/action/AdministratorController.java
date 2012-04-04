@@ -23,12 +23,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyPair;
@@ -41,15 +39,13 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,6 +72,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -83,7 +80,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * The controller for Administrator management.
@@ -93,21 +89,21 @@ import sun.misc.BASE64Encoder;
 public class AdministratorController extends MultiActionController 
 {
    private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String KEY_STORE = rootCADir + "/../server.jks";
-   private static final String CLIENT_KEY_STORE = rootCADir + "/../client_certificates.jks";
-   private static final String openssl = "openssl";
-   private static final String CRTDir = "certs";
-   private static final String CSRDir = "csr";
+   private static final String KEY_STORE = "/server.jks";
+   private static final String CLIENT_KEY_STORE = "/client_certificates.jks";
+   private static final String CRTDir = "/ca/certs";
+   private static final String CSRDir = "/ca/csr";
 
    private static final String KEYSTORE_PASSWORD = "password";
    private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
 
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
    
-   
-   
+      
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
-         "clientService");    
+         "clientService");  
+   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
+         "configurationService");   
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
@@ -129,7 +125,7 @@ public class AdministratorController extends MultiActionController
       
       KeyPair KPair = null;
       X509Certificate cert = null;
-            
+      String keyStorePath = rootCADir + KEY_STORE; 
       boolean success = false;
       
       KPair = this.createKeyPair();      
@@ -137,14 +133,14 @@ public class AdministratorController extends MultiActionController
             
       if(cert != null && KPair != null)
       {
-         if(!this.keyStoreExists(KEY_STORE))
+         if(!this.keyStoreExists(keyStorePath))
          {
-            if(!createKeyStore(KEY_STORE))
+            if(!createKeyStore(keyStorePath))
             {
                logger.error("Failed to create CA keystore.");
             }
          }
-         success = this.saveToKeyStore(KPair, cert, KEY_STORE, "ca.alias");
+         success = this.saveToKeyStore(KPair, cert, keyStorePath, "ca.alias");
       }
       else
       {
@@ -159,6 +155,37 @@ public class AdministratorController extends MultiActionController
       {
          response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
       }      
+      return null;
+   }
+   
+   @SuppressWarnings("rawtypes")
+   public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException 
+   {
+      Enumeration names = request.getParameterNames(); 
+      boolean success = false;
+      while(names.hasMoreElements())
+      {
+         String name = (String) names.nextElement();
+         if(!name.equals("method"))
+         {
+            success = (configurationService.updateItem(name, request.getParameter(name)) == 1) ? true : false;
+         }  
+         
+         if(!success)
+         {
+            break;
+         }
+      }
+      
+      if(success)
+      {      
+         response.getWriter().print(Constants.OK);
+      }
+      else
+      {
+         response.getWriter().print("Failed to save the configuration into the database");
+      }
       return null;
    }
    
@@ -194,12 +221,11 @@ public class AdministratorController extends MultiActionController
          logger.error(e.getMessage());
       }
 
+      String clientKeyStorePath = rootCADir + CLIENT_KEY_STORE;
       try {
          int result = -1;
          if (action.equals("accept")) // trust
          {
-            // result = executeOpenSSLCommand(clientUsername, true);
-
             if(privateKey == null)
             {
                privateKey = this.getPrivateKey();
@@ -212,15 +238,15 @@ public class AdministratorController extends MultiActionController
                               
                if (certificate != null)
                {
-                  if(!this.keyStoreExists(CLIENT_KEY_STORE))
+                  if(!this.keyStoreExists(clientKeyStorePath))
                   {
-                     if(!createKeyStore(CLIENT_KEY_STORE))
+                     if(!createKeyStore(clientKeyStorePath))
                      {
                         logger.error("Failed to create client keystore.");
                      }
                   }
                   
-                  if(this.saveToClientKeyStore(certificate, CLIENT_KEY_STORE, alias))
+                  if(this.saveToClientKeyStore(certificate, clientKeyStorePath, alias))
                   {
                      result = 0;
                   }
@@ -258,7 +284,8 @@ public class AdministratorController extends MultiActionController
          } 
          else if (action.equals("deny")) // revoke
          {
-            result = executeOpenSSLCommand(alias, false);
+            // TODO : revoke via alias
+            result = -1;
          }
          
          // OpenSSL Command successful
@@ -325,7 +352,6 @@ public class AdministratorController extends MultiActionController
     * @return
     * @throws IOException
     */
-   @Deprecated
    private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
       File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
       String data = "";
@@ -548,7 +574,7 @@ public class AdministratorController extends MultiActionController
       {
          privateKS = KeyStore.getInstance("JKS");
          
-         FileInputStream fis = new FileInputStream(KEY_STORE);  
+         FileInputStream fis = new FileInputStream(rootCADir + KEY_STORE);  
          privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
          Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
          if(key instanceof PrivateKey) 
@@ -612,12 +638,13 @@ public class AdministratorController extends MultiActionController
       return returnValue;
    }
    
-   /**
+      /**
     * Saves the certificate
     * @param certificate
     * @param fileName
     * @return
     */
+   /*
    @Deprecated
    private boolean saveCertificate(X509Certificate certificate, String fileName) {
       boolean returnValue = false;
@@ -644,6 +671,7 @@ public class AdministratorController extends MultiActionController
 
       return returnValue;
    }
+   */
 
    /**
     * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
@@ -694,6 +722,7 @@ public class AdministratorController extends MultiActionController
     * @throws IOException
     * @throws InterruptedException
     */
+   /*
    @Deprecated
    private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException,
          InterruptedException {
@@ -733,6 +762,7 @@ public class AdministratorController extends MultiActionController
       p.waitFor();
       return p.exitValue();
    }
+   */
 
    private boolean deleteCertificate(String alias) throws NullPointerException, IOException, InterruptedException {
       boolean retunvalue = true;
