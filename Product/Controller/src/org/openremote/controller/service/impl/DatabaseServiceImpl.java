@@ -25,6 +25,24 @@ public class DatabaseServiceImpl implements DatabaseService
 {  
    private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
+   private final static String CONFIGURATION_NAME_1 = "composer_username";
+   private final static String CONFIGURATION_NAME_2 = "ca_path";
+   private final static String CONFIGURATION_NAME_3 = "pin_check";
+   private final static String CONFIGURATION_NAME_4 = "authentication_active";
+   
+   private final static String CONFIGURATION_TYPE_1 = "string";
+   private final static String CONFIGURATION_TYPE_2 = "string";
+   private final static String CONFIGURATION_TYPE_3 = "boolean";
+   private final static String CONFIGURATION_TYPE_4 = "boolean";
+     
+   private final static String CONFIGURATION_VALUE_3 = "true";
+   private final static String CONFIGURATION_VALUE_4 = "true";
+   
+   private final static String CONFIGURATION_INFORMATION_1 = "The username of the administrator.";
+   private final static String CONFIGURATION_INFORMATION_2 = "The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.";
+   private final static String CONFIGURATION_INFORMATION_3 = "When checked you are forced to enter the pin in the user management given by the device.<br/>If not checked, it is optional to use the pin.";
+   private final static String CONFIGURATION_INFORMATION_4 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";
+   
    private ControllerConfiguration configuration;
    private String databasePath = "";
    private static Connection connection;
@@ -123,9 +141,10 @@ public class DatabaseServiceImpl implements DatabaseService
       try {
          connection.prepareStatement("INSERT INTO PUBLIC.configuration " +
                "(configuration_id, configuration_name, configuration_value, configuration_type, configuration_information) VALUES " +
-               "(null, 'composer_username', '', 'string', 'The username of the administrator.'), " +
-               "(null, 'ca_path', '', 'string', 'The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.'), " +
-               "(null, 'authentication_active', 'true', 'boolean', 'When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.')")
+               "(null, '" + CONFIGURATION_NAME_1 + "', '', '" + CONFIGURATION_TYPE_1 + "', '" + CONFIGURATION_INFORMATION_1 + "'), " +
+               "(null, '" + CONFIGURATION_NAME_2 + "', '', '" + CONFIGURATION_TYPE_2 + "', '" + CONFIGURATION_INFORMATION_2 + "'), " +
+               "(null, '" + CONFIGURATION_NAME_3 + "', '" + CONFIGURATION_VALUE_3 + "', '" + CONFIGURATION_TYPE_3 + "', '" + CONFIGURATION_INFORMATION_3 + "'), " +
+               "(null, '" + CONFIGURATION_NAME_4 + "', '" + CONFIGURATION_VALUE_4 + "', '" + CONFIGURATION_TYPE_4 + "', '" + CONFIGURATION_INFORMATION_4 + "')")
                .execute();  
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times

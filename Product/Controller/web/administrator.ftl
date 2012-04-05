@@ -13,6 +13,11 @@
 </HEAD>
 <BODY style="TABLE-LAYOUT: fixed; WORD-BREAK: break-all" topMargin=10
 	marginwidth="10" marginheight="10">
+<#list configurations as configuration>
+	<#if configuration.configuration_name == 'pin_check'>
+		<#assign isPinCheck=configuration.configuration_value>
+	</#if>
+</#list>
 <TABLE height="95%" cellSpacing=0 cellPadding=0 width="100%"
 	align=center border=0>
 	<TBODY>
@@ -55,7 +60,7 @@
 						      </ul>
 						    </div>
 						    <div class="tabscontent">
-						    	${info_messsage_line}
+						    	${info_messsage_line}					    	
 						      <div class="tabpage" id="tabpage_1">        
 						    		<p class="welcome">User Management</p>	
 										<p><i>User table:</i><br /></p>
@@ -63,11 +68,11 @@
 										<TBODY>								
 											<#if clients?exists>
 											<TR>
-												<th align="left">Device name</th><th align="left">E-mail</th><th align="left">Pin</th><th align="left">Status</th><th align="left">Group</th>
+												<th align="left">Device name</th><th align="left">E-mail</th><#if isPinCheck == 'false'><th align="left">Pin</th></#if><th align="left">Status</th><th align="left">Group</th>
 											</TR>
 											<#list clients as client>
 											<TR>
-												<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD>
+												<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><#if isPinCheck == 'false'><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD></#if>
 												<TD>
 													<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 													<input type="hidden" name="client_id" value="${client.client_id}" />
@@ -99,7 +104,7 @@
 										</TABLE>			
 										<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
 						      </div>
-						      <div class="tabpage" id="tabpage_2">
+									<div class="tabpage" id="tabpage_2">
 						        <p class="welcome">Configuration</p>
 						        <form id="saveSettings" action="admin.htm?method=saveSettings" method="post">
 						        	<table cellpadding="4" border="0">
@@ -136,7 +141,7 @@
 										<form id="caForm" action="admin.htm?method=setupCA" method="post">
 											<b>Reset all devices:</b> <br/><input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/>
 										</form>
-						      </div>
+						      </div>				      
 						    </div>
 						  </div>
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
