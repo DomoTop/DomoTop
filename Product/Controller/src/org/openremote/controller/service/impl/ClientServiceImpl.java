@@ -57,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
    private static final String CA_PATH = "ca_path";
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
-   private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp) VALUES ";
+   private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp, client_role, client_dn) VALUES ";
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
@@ -67,6 +67,7 @@ public class ClientServiceImpl implements ClientService {
    private String pin;
    private String email;
    private String deviceName;
+   private String cn;
 
    /**
     * Get all clients.
@@ -94,7 +95,7 @@ public class ClientServiceImpl implements ClientService {
    public int addClient(String alias) {
       this.parseCSRFile(alias);
 
-      return this.addClient(this.getPin(), this.getDeviceName(), this.getEmail(), alias);
+      return this.addClient(this.getPin(), this.getDeviceName(), this.getEmail(), alias, this.getCN());
    }
 
    /**
@@ -111,7 +112,7 @@ public class ClientServiceImpl implements ClientService {
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
    @Override
-   public int addClient(String pin, String deviceName, String email, String alias) {
+   public int addClient(String pin, String deviceName, String email, String alias, String cn) {
       int returnValue = 0;
       int resultValue = -1;
       int numRows = -1;
@@ -126,11 +127,14 @@ public class ClientServiceImpl implements ClientService {
       if (numRows == 0) {
          if (database != null) {
             resultValue = database.doUpdateSQL(insertClientQuery + "('', '" + pin + "', '" + deviceName + "', '"
-                  + email + "', '" + alias + "', FALSE, NOW, NOW);");
+                  + email + "', '" + alias + "', FALSE, NOW, NOW, 'openremote', '" + cn + "')");
+            
+            resultValue = database.doUpdateSQL("INSERT INTO client_role (client_role, client_dn) VALUES ('openremote', '" + cn + "');");
          } else {
             logger.error("Database is not yet set (null)");
          }
-
+            
+         
          if (resultValue >= 1) {
             returnValue = 1;
          }
@@ -322,6 +326,7 @@ public class ClientServiceImpl implements ClientService {
       pin = "";
       email = "";
       deviceName = "";
+      cn = "";
       PKCS10CertificationRequest certificationRequest = null;
       try {
          certificationRequest = this.getCertificationRequest(alias);
@@ -360,6 +365,9 @@ public class ClientServiceImpl implements ClientService {
               
                email = new String(ext.getValue().getOctets()).substring(4);               
             }
+            //get cn
+            cn = certificationRequest.getSubject().toString();
+            
             // Get device name
             deviceName = certificationRequest.getSubject().toString();
             deviceName = deviceName.substring(deviceName.indexOf("CN=") + 3);
@@ -419,6 +427,10 @@ public class ClientServiceImpl implements ClientService {
       return deviceName;
    }
 
+   private String getCN() {
+      return cn;
+   }
+   
    /*
    private String executeOpenSSLCommand(String path, String fileName, boolean isCert) {
       List<String> command = new ArrayList<String>();

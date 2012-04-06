@@ -89,6 +89,7 @@ public class LoginServlet extends HttpServlet
      logger.error(databaseuser);
      if(databaseuser == null || databaseuser.equals("")) {
         boolean success = fileService.syncConfigurationWithModeler(username, password);
+        logger.error("succes " + success);
         if (success) {
            controllerXMLChangeService.refreshController();
            saveUsername(username);

@@ -11,7 +11,7 @@ public interface ClientService
 {   
    ResultSet getClients();
    int getNumClients();
-   int addClient(String pinCode, String deviceName, String email, String fileName);
+   int addClient(String pinCode, String deviceName, String email, String fileName, String cn);
    ResultSet getClient(int clientID);
    int updateClientStatus(int clientID, boolean active);
    int updateClientSerial(int clientID, String serial);
