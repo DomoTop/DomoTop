@@ -73,7 +73,8 @@ $(document).ready(function()
   $('#saveSettings').ajaxForm(function(result) {
   	clearMessage();
   	if (result == 'OK') {
-			message("Settings are successfully saved.");
+			message("Settings are successfully saved. Reloading...");
+			delayedRefreshPage(800);
 		} else {
 			error("There was a problem with saving the settings: " + result);
 		}
@@ -208,6 +209,11 @@ function changeElementClass(id, value)
 function refreshPage()
 {
 	location.reload(true);
+}
+
+function delayedRefreshPage(delay)
+{
+	setInterval("location.reload()", delay);
 }
 
 function showErrorMessage()

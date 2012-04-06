@@ -64,6 +64,15 @@ BODY {
 	display: none;
 }
 
+#context
+{
+	TABLE-LAYOUT: fixed; 
+	WORD-BREAK: break-all;
+	margin-top: 10px;
+	margin-width: 10px;
+	margin-height: 10px;
+}
+
 #offline-cont {
 	display: none;
 }
