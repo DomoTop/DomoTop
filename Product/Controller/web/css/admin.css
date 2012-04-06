@@ -23,6 +23,14 @@
 	font-weight:bold;
 }
 
+div.top{text-align:right;margin:1em 0;padding:0}
+div.top div{display:inline;white-space:nowrap}
+div.top div.left{float:left}
+div.top{display:table;width:100%}
+div.top div{display:table-cell}
+div.top div.left{float:none;text-align:left}
+div.top div.right{text-align:right} 
+
 /* Tabs */
 
 #tabContainer
@@ -72,6 +80,12 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbdb', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
 }
 
+.tabs > ul > li a
+{
+	color: #333;
+	text-decoration: none; 
+}
+
 .tabs > ul > li:hover
 {
 	background: #67a220; /* Old browsers */
@@ -84,6 +98,12 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#67a220', endColorstr='#266131',GradientType=0 ); /* IE6-9 */
 	cursor:pointer;	
 	color:#FFF;
+}
+
+.tabs > ul > li a:hover
+{
+	color: #ffffff;
+	text-decoration: none; 
 }
 
 .tabs > ul > li.tabActiveHeader
@@ -149,4 +169,72 @@ span.info:hover span
 	border:1px solid #eee8dc;
 	padding:1px 5px;
 	z-index:10;			
+}
+
+/* Pop-up */
+#backgroundPopup
+{
+	display:none;
+	position:fixed;
+	_position:absolute; /* hack for internet explorer 6*/
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:1;
+}
+
+#popupContact
+{
+	display:none;
+	position:fixed;
+	_position:absolute; /* hack for internet explorer 6*/
+	height:194px;
+	width:208px;
+	background:#FFFFFF;
+	border:1px solid #639e20;
+	z-index:2;
+	padding: 10px;
+	font-size:13px;
+}
+
+#popupContact h1
+{
+	text-align:left;
+	color:#266131;
+	font-size:22px;
+	font-weight:700;
+	border-bottom:1px dotted #D3D3D3;
+	padding-bottom:2px;
+	margin-bottom:20px;
+}
+
+#popupContactClose
+{
+	font-size:14px;
+	line-height:14px;
+	right:6px;
+	top:4px;
+	position:absolute;
+	color:#639e20;
+	font-weight:700;
+	display:block;
+}
+
+a#popupContactClose
+{
+	cursor: pointer;
+	text-decoration:none;
+}
+
+.accept_button
+{
+	background: #fff url('../image/accept.gif') no-repeat center top;
+}
+
+.deny_button
+{
+	background: #fff url('../image/denied.gif') no-repeat center top;
 }
