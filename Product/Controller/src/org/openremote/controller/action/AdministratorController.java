@@ -221,7 +221,9 @@ public class AdministratorController extends MultiActionController
       String alias = "";
       String action = request.getParameter("action");
       int clientID = Integer.parseInt(request.getParameter("client_id"));
-
+      int result = -1;
+      String errorString = "";
+      
       try {
          ResultSet resultSet = clientService.getClient(clientID);
          while (resultSet.next()) 
@@ -234,15 +236,44 @@ public class AdministratorController extends MultiActionController
          logger.error(e.getMessage());
       }
 
+      // If action equals accept and the pin check is activated, checking for the pin
+      if(action.equals("accept") && configurationService.isPinCheckActive())
+      {
+         String requestPin = request.getParameter("pin");
+         if(requestPin.isEmpty())
+         {
+            result = -1;
+            errorString = "The pin you entered is empty. Please enter the pin shown on the device.";
+         }
+         else
+         {
+            if(requestPin.equals(pin))
+            {
+               result = 0; // passed
+            }
+            else
+            {
+               errorString = "The pin you entered doesn't match, please try again.";
+            }            
+         }
+      }
+      else
+      {
+         result = 0;
+      }
+      
       try {
-         int result = -1;
-         if (action.equals("accept")) // trust
+         
+         if(result == 0)
          {
-            result = this.acceptClient(clientKeyStorePath, alias, clientID);
-         } 
-         else if (action.equals("deny")) // deny
-         {
-            result = this.denyClient(alias, clientID);
+            if (action.equals("accept")) // trust
+            {
+               result = this.acceptClient(clientKeyStorePath, alias, clientID);
+            } 
+            else if (action.equals("deny")) // deny
+            {
+               result = this.denyClient(alias, clientID);
+            }
          }
          
          // if the user is successfully accepted or denied
@@ -292,7 +323,14 @@ public class AdministratorController extends MultiActionController
             } 
             else if (action.equals("accept"))
             {
-               response.getWriter().print("Certificate has not been created and/or added to the client key store.");
+               if(!errorString.isEmpty())
+               {
+                  response.getWriter().print(errorString);
+               }
+               else
+               {
+                  response.getWriter().print("Certificate has not been created and/or added to the client key store.");
+               }
             }
          }
       } catch (NullPointerException e) {

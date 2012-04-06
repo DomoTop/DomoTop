@@ -51,7 +51,7 @@
 								<#assign info_messsage_line='<p id="errMsg" class="errMsg" /><p id="activeErrMsg" class="activeErrMsg">${errorMessage}</p><p id="msg" class="msg" />'>							
 						  <#else>
 								<#assign info_messsage_line='<p id="errMsg" class="errMsg" /><p id="msg" class="msg" />'>
-							</#if>							
+							</#if>
 						  <div id="tabContainer">
 						    <div class="tabs">
 						      <ul>
@@ -72,16 +72,20 @@
 											</TR>
 											<#list clients as client>
 											<TR>
-												<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><#if isPinCheck == 'false'><TD><span id="pincode${client.client_id}">${client.client_pincode}</span></TD></#if>
+												<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><#if isPinCheck == 'false'><TD><span id="pincode-${client.client_id}">${client.client_pincode}</span></TD></#if>
 												<TD>
 													<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
 													<input type="hidden" name="client_id" value="${client.client_id}" />
 													<#if client.client_active>
-														<input type="hidden" id="action${client.client_id}" name="action" value="deny" />
-														<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/accept.gif') no-repeat center top;" />
-													<#else>
-														<input type="hidden" id="action${client.client_id}" name="action" value="accept" />
-														<input type="submit" id="submit${client.client_id}" class="statusSubmit" value="" style="background: #fff url('image/denied.gif') no-repeat center top;" />
+															<input type="hidden" id="action-${client.client_id}" name="action" value="deny" />
+															<input type="submit" id="submit-${client.client_id}" class="statusSubmit accept_button" value="" />													
+													<#else>														
+														<input type="hidden" id="action-${client.client_id}" name="action" value="accept" />
+														<#if isPinCheck == 'false'>														
+															<input type="submit" id="submit-${client.client_id}" class="statusSubmit deny_button" value="" />
+														<#else>														
+															<input type="button" id="submit-${client.client_id}" class="statusSubmit button deny_button" value="" />
+														</#if>
 													</#if>
 													</form>
 												</TD>
@@ -144,6 +148,23 @@
 						      </div>				      
 						    </div>
 						  </div>
+						  <#if isPinCheck == 'true'>
+					  	<div id="popupContact">
+								<a id="popupContactClose">x</a>
+								<h1>Enter the pin</h1>							
+								<p id="contactArea">
+									Please enter the pin shown on the device you want to accept.<br/><br/>									
+									<form class="statusFormPin" action="admin.htm?method=changeUserStatus" method="post">
+										<input type="hidden" name="client_id" value="" id="pin_client_id" />
+										<input type="hidden" name="action" value="accept" />
+										<center>
+											<b>Pin:</b> <input type="text" name="pin" value="" size="6" /><br/>	<br/>									
+											<input type="submit" name="submit" value="Check" />
+										</center>
+									</form>
+								</p>
+							</div>	
+							</#if>						
 							<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 						</TD>
 					</TR>
@@ -160,6 +181,8 @@
 		</TR>
 	</TBODY>
 </TABLE>
-
+<#if isPinCheck == 'true'>
+<div id="backgroundPopup"></div>
+</#if>
 </BODY>
 </HTML>

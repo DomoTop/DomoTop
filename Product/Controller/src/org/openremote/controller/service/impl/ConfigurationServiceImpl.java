@@ -145,6 +145,17 @@ public class ConfigurationServiceImpl implements ConfigurationService
       
       return returnValue;
    }
+   
+   /**
+    * Check if the pin check is enabled or disabled
+    * 
+    * @return true if the pin check is enabled otherwise false
+    */
+   @Override
+   public boolean isPinCheckActive()
+   {
+      return this.getBooleanItem("pin_check");
+   }
 
    /**
     * Retrieve a configuration item

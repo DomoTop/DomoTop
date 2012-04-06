@@ -12,9 +12,19 @@
  * You should have received a copy of the GNU General Public License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
  * http://www.fsf.org.
+ *
+ * @Author: Adrian "yEnS" Mato Gondelle
+ * @website: www.yensdesign.com
+ * @email: yensamg@gmail.com
+ * @license: Feel free to use it, but keep this credits please!					
  */
 
-window.onload=function() {
+//SETTING UP OUR POPUP
+//0 means disabled; 1 means enabled;
+var popupStatus = 0;
+
+window.onload=function() 
+{
   // get tab container
   var container = document.getElementById("tabContainer");
     
@@ -39,7 +49,9 @@ window.onload=function() {
 	}
 }
 
-$(document).ready(function() {
+$(document).ready(function() 
+{
+	// Ajax forms
 	showErrorMessage();
  	 	
   $('.statusSubmit').click(function(){
@@ -48,33 +60,14 @@ $(document).ready(function() {
   });
   $('.statusForm').ajaxForm(function(result) {  
   	clearMessage();	
-  	var resultArray = result.split("-");
-  	var resultString = resultArray[0];
-  	var resultID = resultArray[1];
-  	var resultAction = resultArray[2];
-  	var resultPinCode = 0;  
-  	if(resultArray.length >= 4)
-  	{
-  		resultPinCode = resultArray[3];
-  	}
-  	
-  	if (resultString == 'OK') {
-			message("User status changed successfully.");
-			
-			if(resultAction == 'accept')
-			{
-				changeValueById(resultID, "deny");
-				changeBackgroundByID(resultID, "image/accept.gif");
-			}
-			else if(resultAction == 'deny')
-			{
-				changeValueById(resultID, "accept");
-				changeBackgroundByID(resultID, "image/denied.gif");		
-				changePincodeById(resultID, resultPinCode);	
-			}
-		} else {
-			error("User status is unsuccessfully: " + result);
-		}
+		statusFormResult(result);
+  });   
+
+ $('.statusFormPin').ajaxForm(function(result) { 
+ 		disablePopup(); 
+  	clearMessage();	
+		statusFormResult(result);
+		changeButtonToStatusSubmit(result);		
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
@@ -95,6 +88,7 @@ $(document).ready(function() {
 		}
   }); 
   
+  // Logout button
 	$('#logOut').click(function() {
 		clearMessage();
 		$.get("admin.htm?method=logOut",
@@ -107,6 +101,44 @@ $(document).ready(function() {
 			}
 		 );
 	});	
+	
+	// Pop-up
+	//Click the button event!
+	$(".button").click(function() {		
+		// get the client ID from the HTML attribute of the button clicked
+		var element = arguments[0] || window.event;
+			
+		// Ensure that the element is a button otherwise ignore
+		if(element.target.type == 'button')
+		{
+			var valueArray = element.target.getAttribute("id").split("-");
+			var clientID = valueArray[1];		
+			changeValueOfClientIDPin(clientID);
+				
+			//centering with css
+			centerPopup();	
+							
+			//load popup
+			loadPopup();
+		}
+	});
+	
+	//Click the x event!
+	$("#popupContactClose").click(function(){
+		disablePopup();
+	});
+	
+	//Click out event!
+	$("#backgroundPopup").click(function(){
+		disablePopup();
+	});
+	
+	//Press Escape event!
+	$(document).keypress(function(e){
+		if(e.keyCode==27 && popupStatus==1){
+			disablePopup();
+		}
+	});
 });
 
 // on click of one of tabs
@@ -140,19 +172,37 @@ function displayPage()
 // Changes the background image of the submit element
 function changeBackgroundByID(id, image)
 {
-	document.getElementById("submit" + id).style.backgroundImage = "url(" + image + ")";
+	document.getElementById("submit-" + id).style.backgroundImage = "url(" + image + ")";
 }
 
 // Changes the value of the action input element
 function changeValueById(id, value)
 {
-	document.getElementById("action" + id).value = value;
+	document.getElementById("action-" + id).value = value;
 }
 
 // Changes the value of the pincode span element
 function changePincodeById(id, value)
 {
-	document.getElementById("pincode" + id).innerHTML = value;
+	document.getElementById("pincode-" + id).innerHTML = value;
+}
+
+// Changes the value of the 
+function changeValueOfClientIDPin(value)
+{
+	document.getElementById("pin_client_id").value = value;
+}
+
+// Change the type of the button/submit element
+function changeButtonToSubmitType(id, value)
+{	
+	document.getElementById("submit-" + id).type = value;
+}
+
+// Change the class of the button/submit element
+function changeElementClass(id, value)
+{	
+	document.getElementById("submit-" + id).className = value;
 }
 
 function refreshPage()
@@ -169,4 +219,99 @@ function hideErrorMessage()
 {	
 	$('#activeErrMsg').hide();
 }
+
+function statusFormResult(result)
+{
+	var resultArray = result.split("-");
+	var resultString = resultArray[0];
+	var resultID = resultArray[1];
+	var resultAction = resultArray[2];
+	var resultPinCode = 0;  
+	if(resultArray.length >= 4)
+	{
+		resultPinCode = resultArray[3];
+	}
+	
+	if (resultString == 'OK') {
+		message("User status changed successfully.");
 		
+		if(resultAction == 'accept')
+		{
+			changeValueById(resultID, "deny");
+			changeBackgroundByID(resultID, "image/accept.gif");
+		}
+		else if(resultAction == 'deny')
+		{
+			changeValueById(resultID, "accept");
+			changeBackgroundByID(resultID, "image/denied.gif");		
+			changePincodeById(resultID, resultPinCode);	
+		}
+	} else {
+		error("User status is unsuccessfully: " + result);
+	}
+}
+
+function changeButtonToStatusSubmit(result)
+{
+	var resultArray = result.split("-");
+	var resultID = resultArray[1];	
+	var resultAction = resultArray[2];
+	
+	if(resultAction == 'accept')
+	{
+		changeButtonToSubmitType(resultID, "submit");
+		changeElementClass(resultID, "statusSubmit accept_button");
+	}
+	else if(resultAction == 'deny')
+	{
+		changeButtonToSubmitType(resultID, "input");
+		changeElementClass(resultID, "statusSubmit button deny_button");
+	}	
+}
+
+//loading popup with jQuery magic!
+function loadPopup()
+{
+	//loads popup only if it is disabled
+	if(popupStatus==0){
+		$("#backgroundPopup").css({
+			"opacity": "0.7"
+		});
+		$("#backgroundPopup").fadeIn("slow");
+		$("#popupContact").fadeIn("slow");
+		popupStatus = 1;
+	}
+}
+
+//disabling popup with jQuery magic!
+function disablePopup()
+{
+	//disables popup only if it is enabled
+	if(popupStatus==1){
+		$("#backgroundPopup").fadeOut("slow");
+		$("#popupContact").fadeOut("slow");
+		popupStatus = 0;
+	}
+}
+
+//centering popup
+function centerPopup()
+{
+	//request data for centering
+	var windowWidth = document.documentElement.clientWidth;
+	var windowHeight = document.documentElement.clientHeight;
+	var popupHeight = $("#popupContact").height();
+	var popupWidth = $("#popupContact").width();
+	//centering
+	$("#popupContact").css({
+		"position": "absolute",
+		"top": windowHeight/2-popupHeight/2,
+		"left": windowWidth/2-popupWidth/2
+	});
+	//only need force for IE6
+	
+	$("#backgroundPopup").css({
+		"height": windowHeight
+	});	
+}
+

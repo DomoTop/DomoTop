@@ -54,6 +54,13 @@ public interface ConfigurationService
    public boolean isItemValueBoolean(String name);
    
    /**
+    * Check if the pin check is enabled or disabled
+    * 
+    * @return true if the pin check is enabled otherwise false
+    */
+   boolean isPinCheckActive();
+   
+   /**
     * Retrieve a configuration item
     *
     * @param name The key of the configuration item
