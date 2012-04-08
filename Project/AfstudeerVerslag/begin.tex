@@ -7,6 +7,7 @@
 \let\insertdate\@date
 \makeatother
 
+%add version command, use \version to insert current version
 \newcommand{\version}{1.03}
 
 \pagestyle{fancy}
@@ -19,6 +20,10 @@
 
 \fancyfoot[L]{\version}
 \fancyfoot[R]{\insertdate}
+
+% Add line above footer
+\renewcommand{\footrulewidth}{0.4pt}% default is 0pt
+
 
 \begin{document}
 
