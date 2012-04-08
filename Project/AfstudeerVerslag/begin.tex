@@ -7,21 +7,37 @@
 \let\insertdate\@date
 \makeatother
 
+\newcommand{\version}{1.03}
+
 \pagestyle{fancy}
 
 \fancyhead{}
 \fancyfoot{}
 
 \fancyhead[L]{Melroy van den Berg \& Vincent Kriek}
-\fancyhead[R]{\insertdate}
+\fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tass.eps}}
 
-\fancyfoot[L]{DRAFT}
-\fancyfoot[R]{\includegraphics[height=30pt,keepaspectratio]{tass.eps}}
+\fancyfoot[L]{\version}
+\fancyfoot[R]{\insertdate}
 
 \begin{document}
 
 \title{Afstudeerverslag}
 \author{Vincent Kriek \& Melroy van den Berg}
+
+\maketitle
+
+\vspace*{\fill}
+
+\begin{tabular}{|| l | l || l | l ||}\hline
+   Document ID: & AFVSL-MV-21          &Project naam:     &DomoTop             \\\hline
+   Datum:       &4 april 2012          &School begeleider:&Peter Kailuhu       \\\hline
+   Versie:      &\version              &People Manager:   &Gerben Blom         \\\hline
+   Status:      &concept               &Documentnaam:     &Afstudeerverslag.pdf\\\hline
+   Auteur:      &Melroy van den Berg \&&Reviewer:         &Gerben Blom         \\
+                &Vincent Kriek         &                  &                    \\\hline
+   Printdatum:  &\insertdate           &Classificatie     &Openbaar            \\\hline
+\end{tabular}
 
 \newpage
 
