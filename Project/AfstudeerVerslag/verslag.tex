@@ -17,6 +17,24 @@
 %add version command, use \version to insert current version
 \newcommand{\version}{1.05}
 
+% Alter some LaTeX defaults for better treatment of figures:
+% See p.105 of "TeX Unbound" for suggested values.
+% See pp. 199-200 of Lamport's "LaTeX" book for details.
+%   General parameters, for ALL pages:
+\renewcommand{\topfraction}{0.9}    % max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8} % max fraction of floats at bottom
+%   Parameters for TEXT pages (not float pages):
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}     % 2 may work better
+\setcounter{dbltopnumber}{2}    % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9} % fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}  % allow minimal text w. figs
+%   Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7}  % require fuller float pages
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7}   % require fuller float pages
+
 \pagestyle{fancy}
 
 \fancyhead{}
@@ -474,7 +492,7 @@ werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
 delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
 domotica hardware, plugtops en OpenRemote.
   
-\begin{table}[h!]
+\begin{table}[htpb]
   \caption{Eisen iteratie 1}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
@@ -504,11 +522,7 @@ gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
 goed geregeld.
 
-Tijdens de tweede iteratie is er gewerkt aan het opzetten van een
-testopstelling met OpenRemote, de DreamPlug en de X10 hardware. Ook is er
-onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
-
-\begin{table}[h!]
+\begin{table}[htpb]
   \caption{Eisen iteratie 2}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
@@ -518,6 +532,10 @@ onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
     \end{tabular}
   \end{center}
 \end{table}
+
+Tijdens de tweede iteratie is er gewerkt aan het opzetten van een
+testopstelling met OpenRemote, de DreamPlug en de X10 hardware. Ook is er
+onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
 
 Met de test opstelling kon aan het eind van de iteratie een lamp
 aangestuurd worden met de OpenRemote controller, welke moest draaien op de
@@ -533,7 +551,7 @@ De derde iteratie stond in het teken van de Proof-of-Concept die laat zien
 dat het mogelijk is om met Android te verbinden naar een TomCat server en
 te authenticeren door middel van SSL Client Certificaten.
 
-\begin{table}[h!]
+\begin{table}[htpb]
   \caption{Eisen iteratie 3}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
@@ -567,7 +585,13 @@ certificaat aanwezig is.
 In de daaropvolgende iteratie is er gewerkt aan het implementeren van de
 Proof-of-Concept in het OpenRemote project.
 
-\begin{table}[h!]
+Er waren een aantal onderdelen die verbeterd moesten worden wanneer ze
+geimplementeerd zouden worden in het OpenRemote project. De beheerders
+interface was een onderdeel hiervan. Deze interface is verbeterd, hij is
+ontworpen (zie figuur 7.4) en er zijn acties aangekoppeld waarmee de client
+goedgekeurd kan worden.
+
+\begin{table}[htpb]
   \caption{Eisen iteratie 4}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
@@ -584,12 +608,6 @@ Proof-of-Concept in het OpenRemote project.
     \end{tabular}
   \end{center}
 \end{table}
-
-Er waren een aantal onderdelen die verbeterd moesten worden wanneer ze
-geimplementeerd zouden worden in het OpenRemote project. De beheerders
-interface was een onderdeel hiervan. Deze interface is verbeterd, hij is
-ontworpen (zie figuur 7.4) en er zijn acties aangekoppeld waarmee de client
-goedgekeurd kan worden.
 
 Van deze clients kan informatie getoond worden, namelijk het email adres,
 de naam van de telefoon en een PIN. Deze PIN wordt gegenereerd door een
