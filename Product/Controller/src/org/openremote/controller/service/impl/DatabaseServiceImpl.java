@@ -358,6 +358,9 @@ public class DatabaseServiceImpl implements DatabaseService
          {
             connection.close();
          }
+         
+         //Stop hsqlserver
+         hsqlServer.stop();
       } catch (SQLException e) {
          logger.error("SQL Exception: " + e.getMessage());
       }
@@ -371,9 +374,7 @@ public class DatabaseServiceImpl implements DatabaseService
    {
       this.close();
       super.finalize();
-      
-      //Stop hsqlserver
-      hsqlServer.stop();
+
    }
    
    /**

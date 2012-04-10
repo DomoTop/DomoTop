@@ -173,7 +173,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 
 	   if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
 		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
-		   ViewHelper.showAlertViewWithTitle(this, "NO ACCESS", "WHAT!");
+		   ViewHelper.showAlertViewWithTitle(this, "No Access", "The administrator didn't approve you yet so you don't have access.");
 	   }
    }
    
