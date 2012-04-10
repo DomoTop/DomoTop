@@ -182,11 +182,27 @@ public class ClientServiceImpl implements ClientService {
          if(active) {
             sql += "openremote";
          }
-         sql += "' WHERE client_id = "  + clientID;
+         sql += "' WHERE client_id = "  + clientID + limitByOne;
          resultValue = database.doUpdateSQL(sql);
       }
       return resultValue;
    }
+   
+   /**
+    * Deletes a client from the database
+    * @param clientID The id of the client you want to remove
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   public int removeClient(int clientID) {
+      int resultvalue = -1;
+      
+      if(database != null) {
+         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID + limitByOne);
+      }
+      
+      return resultvalue;
+   }
+
 
    /**
     * Update client serial number.
