@@ -90,8 +90,8 @@ import sun.misc.BASE64Decoder;
 public class AdministratorController extends MultiActionController 
 {
    private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String KEY_STORE = "/server.jks";
-   private static final String CLIENT_KEY_STORE = "/client_certificates.jks";
+   private static final String KEYSTORE_PATH = rootCADir + "/server.jks";
+   private static final String CLIENT_KEYSTORE_PATH =  rootCADir + "/client_certificates.jks";
    private static final String CRTDir = "/ca/certs";
    private static final String CSRDir = "/ca/csr";
 
@@ -126,7 +126,6 @@ public class AdministratorController extends MultiActionController
       
       KeyPair KPair = null;
       X509Certificate cert = null;
-      String keyStorePath = rootCADir + KEY_STORE; 
       boolean success = false;
       
       KPair = this.createKeyPair();      
@@ -134,14 +133,14 @@ public class AdministratorController extends MultiActionController
             
       if(cert != null && KPair != null)
       {
-         if(!this.keyStoreExists(keyStorePath))
+         if(!this.keyStoreExists(KEYSTORE_PATH))
          {
-            if(!createKeyStore(keyStorePath))
+            if(!createKeyStore(KEYSTORE_PATH))
             {
                logger.error("Failed to create CA keystore.");
             }
          }
-         success = this.saveToKeyStore(KPair, cert, keyStorePath, "ca.alias");
+         success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
       }
       else
       {
@@ -216,12 +215,12 @@ public class AdministratorController extends MultiActionController
       if(!AuthenticationUtil.isAuth(request)){
          return null;
       }
-      String clientKeyStorePath = rootCADir + CLIENT_KEY_STORE;
       String pin = "";
       String alias = "";
       String action = request.getParameter("action");
+      // TODO: Check client ID in database (is it valid?)
       int clientID = Integer.parseInt(request.getParameter("client_id"));
-      int result = -1;
+      boolean result = false;
       String errorString = "";
       
       try {
@@ -242,14 +241,14 @@ public class AdministratorController extends MultiActionController
          String requestPin = request.getParameter("pin");
          if(requestPin.isEmpty())
          {
-            result = -1;
+            result = false;
             errorString = "The pin you entered is empty. Please enter the pin shown on the device.";
          }
          else
          {
             if(requestPin.equals(pin))
             {
-               result = 0; // passed
+               result = true; // passed
             }
             else
             {
@@ -259,67 +258,45 @@ public class AdministratorController extends MultiActionController
       }
       else
       {
-         result = 0;
+         result = true;
       }
       
       try {
          
-         if(result == 0)
+         if(result)
          {
-            if (action.equals("accept")) // trust
+            if (action.equals("accept")) // accept device
             {
-               result = this.acceptClient(clientKeyStorePath, alias, clientID);
+               result = this.acceptClient(CLIENT_KEYSTORE_PATH, alias, clientID);
             } 
-            else if (action.equals("deny")) // deny
+            else if (action.equals("deny")) // deny device
             {
-               result = this.denyClient(alias, clientID);
+               result = this.denyClient(clientID);
+            }
+            else if (action.equals("remove")) // remove device
+            {
+               result = this.removeClient(CLIENT_KEYSTORE_PATH, alias, clientID);
             }
          }
          
-         // if the user is successfully accepted or denied
-         if (result == 0) 
-         {            
-            // ...
-            if (action.equals("deny")) 
+         // if the user is successfully accepted, denied or removed
+         if (result) 
+         {
+            // If the action was deny, result the pin in the response
+            if (action.equals("deny"))
             {
-               if (deleteCertificate(alias)) {
-                  int statusReturn = clientService.updateClientStatus(clientID, false);
-                  int serialReturn = clientService.clearClientSerial(clientID);
-                  if (statusReturn == 1 && serialReturn == 1) {
-                     response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
-                  } else {
-                     response.getWriter().print("Client is not successfully updated in the database");
-                  }
-               } else {
-                  response.getWriter().print("Certificate is successfully revoked, but couldn't be removed.");
-               }
+               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
             }
-            else if (action.equals("accept"))
+            else
             {
-               int statusReturn = clientService.updateClientStatus(clientID, true);
-               // why update it if I cant revoke it? int serialReturn = clientService.updateClientSerial(clientID, Integer.toString(clientID));
-               
-               if (statusReturn == 1) {
-                  response.getWriter().print(
-                        Constants.OK + "-" + clientID + "-" + action);
-               } else {
-                  response.getWriter().print("Client is not successfully updated in the database");
-               }
+               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action);
             }
          } 
-         else // user was not successfully accepted or denied
+         else // user was not successfully accepted, denied or removed
          {
             if (action.equals("deny"))
             {
-               if (deleteCertificate(alias))
-               {
-                  response.getWriter().print(
-                        "OpenSSL command failed, exit with exit code: " + result + "" + "\n\rCertificate deleted.");
-               } else {
-                  response.getWriter().print(
-                        "OpenSSL command failed, exit with exit code: " + result + ". "
-                              + "\n\rPlus the certificate couldn't be removed.");
-               }
+               response.getWriter().print("Client certificate could not be denied, this device still has access.");
             } 
             else if (action.equals("accept"))
             {
@@ -332,15 +309,18 @@ public class AdministratorController extends MultiActionController
                   response.getWriter().print("Certificate has not been created and/or added to the client key store.");
                }
             }
+            else if (action.equals("remove"))
+            {
+               response.getWriter().print("Device is not successfully removed from the database and/or client key store.");
+            }
          }
       } catch (NullPointerException e) {
          response.getWriter().print("nullpointer: " + e.getMessage());
-      } catch (InterruptedException e) {
-         response.getWriter().print("interrupt: " + e.getMessage());
       }
       return null;
    }
    
+
    public ModelAndView logOut(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {
@@ -351,14 +331,9 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
-   private int denyClient(String alias, int clientID) 
+   private boolean acceptClient(String clientKeyStorePath, String alias, int clientID)
    {
-      return -1;
-   }
-
-   private int acceptClient(String clientKeyStorePath, String alias, int clientID)
-   {
-      int result = -1;
+      boolean result = false;
       if(privateKey == null)
       {
          privateKey = this.getPrivateKey();
@@ -381,7 +356,16 @@ public class AdministratorController extends MultiActionController
             
             if(this.saveToClientKeyStore(certificate, clientKeyStorePath, alias))
             {
-               result = 0;
+               // Update the client database
+               int statusReturn = clientService.updateClientStatus(clientID, true);
+               if(statusReturn == 1)
+               {
+                  result = true;
+               }
+               else
+               {
+                  logger.error("Accept client: Datebase couldn't be updated.");
+               }
             }
             else
             {
@@ -393,28 +377,79 @@ public class AdministratorController extends MultiActionController
             logger.error("Certificate is null.");
          }
       } catch (InvalidKeyException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - Invalid Key: " + e.getMessage());
       } catch (NoSuchAlgorithmException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - No Such Algorithem: " + e.getMessage());
       } catch (NoSuchProviderException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - No Such Provider: " + e.getMessage());
       } catch (SignatureException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - Signature: " + e.getMessage());
       } catch (OperatorCreationException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - Operator Creation: " + e.getMessage());
       } catch (CertificateException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - Certificate: " + e.getMessage());
       } catch (IOException e) {
-         result = -1;
+         result = false;
          logger.error("Signing error - IO Exception: " + e.getMessage());
       }      
       return result;
+   }
+   
+   /**
+    * Deny the client
+    * @param alias
+    * @param clientID
+    * @return
+    */
+   private boolean denyClient(int clientID) 
+   {
+      boolean returnValue = false;
+
+      int statusReturn = clientService.updateClientStatus(clientID, false);
+      if (statusReturn == 1)
+      {
+         returnValue = true;
+      }
+      else
+      {
+         logger.error("Deny client: Datebase couldn't be updated.");
+      }
+      return returnValue;
+   }
+   
+   /**
+    * Remove the client from the client key store
+    * @param clientKeystorePath
+    * @param alias
+    * @return
+    */
+   private boolean removeClient(String clientKeystorePath, String alias, int clientID)
+   {
+      boolean returnValue = false;
+      
+      if(this.deleteClientKeyStore(clientKeystorePath, alias))
+      {
+         // Update the client database
+         // TODO:
+         /*
+         int statusReturn = clientService.removeClient(clientID);
+         if(statusReturn == 1)
+         {
+            returnValue = true;
+         }
+         else
+         {
+            logger.error("Remove client: Datebase couldn't be updated.");
+         }
+         */
+      }
+      return returnValue;
    }
 
    /**
@@ -634,6 +669,45 @@ public class AdministratorController extends MultiActionController
    }
    
    /**
+    * Delete the client certificate from the servers keystore file
+    * 
+    * @param keyStoreFile the file path to the key store
+    * @param alias of the client certificate that will be removed
+    * @return true if successfully removed from the keystore else false
+    */
+   private boolean deleteClientKeyStore(String keyStoreFile, String alias) {
+      boolean success = false;
+      KeyStore clientKS;
+      try
+      {
+         clientKS = KeyStore.getInstance("JKS");
+
+         // Load the key store to memory.
+         FileInputStream fis = new FileInputStream(keyStoreFile);  
+         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+       
+         // Import the certificate to the key store
+         clientKS.deleteEntry(alias);
+         
+         // Write the key store back to disk                 
+         clientKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
+         success = true;
+      } catch (KeyStoreException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Key store: " + e.getMessage());
+      }
+      return success;
+   }
+   
+   /**
     * Get the private key from the CA, using the server key store file   
     * @return PrivateKey Object
     */
@@ -645,7 +719,7 @@ public class AdministratorController extends MultiActionController
       {
          privateKS = KeyStore.getInstance("JKS");
          
-         FileInputStream fis = new FileInputStream(rootCADir + KEY_STORE);  
+         FileInputStream fis = new FileInputStream(KEYSTORE_PATH);  
          privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
          Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
          if(key instanceof PrivateKey) 
@@ -709,41 +783,6 @@ public class AdministratorController extends MultiActionController
       return returnValue;
    }
    
-      /**
-    * Saves the certificate
-    * @param certificate
-    * @param fileName
-    * @return
-    */
-   /*
-   @Deprecated
-   private boolean saveCertificate(X509Certificate certificate, String fileName) {
-      boolean returnValue = false;
-      try {
-         // Get the encoded form which is suitable for exporting
-         byte[] buf = certificate.getEncoded();
-
-         FileOutputStream os = new FileOutputStream(new File(fileName));
-
-         // Write in text form
-         Writer wr = new OutputStreamWriter(os, Charset.forName("UTF-8"));
-         wr.write("-----BEGIN CERTIFICATE-----\n");
-         wr.write(new BASE64Encoder().encode(buf));
-         wr.write("\n-----END CERTIFICATE-----\n");
-         wr.flush();
-
-         os.close();
-         returnValue = true;
-      } catch (CertificateEncodingException e) {
-         returnValue = false;
-      } catch (IOException e) {
-         returnValue = false;
-      }
-
-      return returnValue;
-   }
-   */
-
    /**
     * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
     * 
@@ -780,82 +819,5 @@ public class AdministratorController extends MultiActionController
       X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
       X509Certificate cert = new JcaX509CertificateConverter().getCertificate(holder);
       return cert;
-   }
-
-   /**
-    * Execute the OpenSSL command on command-line
-    * 
-    * @param username
-    * @param accept
-    *           true is for signing, false is to revoke a certificate
-    * @return the exit code of the command executed
-    * @throws NullPointerException
-    * @throws IOException
-    * @throws InterruptedException
-    */
-   /*
-   @Deprecated
-   private int executeOpenSSLCommand(String username, boolean accept) throws NullPointerException, IOException,
-         InterruptedException {
-      List<String> command = new ArrayList<String>();
-      command.add(openssl); // command
-      if (accept) // Signing
-      {
-         command.add("ca");
-         command.add("-batch");
-         command.add("-passin");
-         command.add("pass:password");
-         command.add("-config");
-         command.add("openssl.my.cnf");
-         command.add("-policy");
-         command.add("policy_anything");
-         command.add("-out");
-         command.add(CRTDir + "/" + username + ".crt");
-         command.add("-in");
-         command.add(CSRDir + "/" + username + ".csr");
-      } else // revoke
-      {
-         command.add("ca");
-         command.add("-passin");
-         command.add("pass:password");
-         command.add("-config");
-         command.add("openssl.my.cnf");
-         command.add("-revoke");
-         command.add(CRTDir + "/" + username + ".crt");
-      }
-
-      ProcessBuilder pb = new ProcessBuilder(command);
-      pb.directory(new File(rootCADir));
-
-      Process p = null;
-
-      p = pb.start();
-      p.waitFor();
-      return p.exitValue();
-   }
-   */
-
-   private boolean deleteCertificate(String alias) throws NullPointerException, IOException, InterruptedException {
-      boolean retunvalue = true;
-      File file = new File(rootCADir + "/" + CRTDir + "/" + alias + ".crt");
-
-      if (!file.exists()) {
-         retunvalue = false;
-      }
-
-      if (!file.canWrite()) {
-         retunvalue = false;
-      }
-
-      if (file.isDirectory()) {
-         retunvalue = false;
-      }
-
-      // Attempt to delete it
-      if (retunvalue) {
-         retunvalue = file.delete();
-      }
-
-      return retunvalue;
    }
 }
