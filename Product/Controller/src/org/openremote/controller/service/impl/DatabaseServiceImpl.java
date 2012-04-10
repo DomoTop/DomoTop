@@ -359,8 +359,7 @@ public class DatabaseServiceImpl implements DatabaseService
             connection.close();
          }
          
-         //Stop hsqlserver
-         //this.doSQL("SHUTDOWN");
+         // Stop hsqldb server
          hsqlServer.shutdown();
       } catch (SQLException e) {
          logger.error("SQL Exception: " + e.getMessage());
