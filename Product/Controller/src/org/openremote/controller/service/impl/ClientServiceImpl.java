@@ -182,7 +182,7 @@ public class ClientServiceImpl implements ClientService {
          if(active) {
             sql += "openremote";
          }
-         sql += "' WHERE client_id = "  + clientID + limitByOne;
+         sql += "' WHERE client_id = "  + clientID;
          resultValue = database.doUpdateSQL(sql);
       }
       return resultValue;

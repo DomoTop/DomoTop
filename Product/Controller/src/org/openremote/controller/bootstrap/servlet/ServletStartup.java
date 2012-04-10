@@ -20,6 +20,9 @@
  */
 package org.openremote.controller.bootstrap.servlet;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContext;
@@ -27,8 +30,11 @@ import javax.servlet.ServletContext;
 import org.openremote.controller.net.IPAutoDiscoveryServer;
 import org.openremote.controller.net.RoundRobinTCPServer;
 import org.openremote.controller.net.RoundRobinUDPServer;
+import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ServiceContext;
 import org.openremote.controller.service.PollingMachinesService;
+import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.exception.ControllerException;
 import org.openremote.controller.exception.InitializationException;
 import org.openremote.controller.bootstrap.Startup;
@@ -77,7 +83,7 @@ public class ServletStartup implements ServletContextListener
    * @see org.openremote.controller.spring.SpringContext
    */
   public final static String SERVICE_CONTEXT_IMPL_INIT_PARAM_NAME = "ServiceContextImplementation";
-
+  
 
 
   // Implement ServletContextListener -------------------------------------------------------------
@@ -155,7 +161,24 @@ public class ServletStartup implements ServletContextListener
    */
   @Override public void contextDestroyed(ServletContextEvent event)
   {
-    // empty
+     DatabaseService databaseService = (DatabaseService) SpringContext.getInstance().getBean("databaseService");
+     databaseService.close();
+     
+     try {
+        java.sql.Driver mySqlDriver = DriverManager.getDriver("jdbc:hsql://localhost:9001");
+        DriverManager.deregisterDriver(mySqlDriver);
+     }
+     catch (Throwable t)
+     {
+        String msg =
+              "\n\n=============================================================================\n\n" +
+
+              " Application destroyed failed: \n" +
+              " " + t.getMessage()  +
+
+              "\n\n=============================================================================\n\n";
+        throw new Error(msg, t);
+     }
   }
 
 
