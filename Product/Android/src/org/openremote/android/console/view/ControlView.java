@@ -19,7 +19,10 @@
 */
 package org.openremote.android.console.view;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Timer;
 
 import org.apache.http.HttpResponse;
@@ -37,6 +40,7 @@ import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.net.ORUnBlockConnection;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * The super class of all control view, include ButtonView, SwitchView and SliderView.
@@ -124,6 +128,19 @@ public class ControlView extends ComponentView implements ORConnectionDelegate {
          if (responseCode == 401) {
             new LoginDialog(getContext());
          } else {
+        	 try {
+	        	 InputStream in = httpResponse.getEntity().getContent();
+	        	 BufferedReader read = new BufferedReader(new InputStreamReader(in));
+	        	 String line = "", message = null;
+	        	 while((line = read.readLine()) != null) {
+	        		 message += line;
+	        	 }
+	        	 
+	        	 Log.d("OpenRemote/View", message);
+	        	 
+        	 } catch (IOException e) {
+        		 Log.e("OpenRemote/View", e.getMessage());
+        	 }
             handleServerErrorWithStatusCode(responseCode);
          }
       }
