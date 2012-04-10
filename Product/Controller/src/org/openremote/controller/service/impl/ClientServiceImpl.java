@@ -17,6 +17,7 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
@@ -127,9 +128,9 @@ public class ClientServiceImpl implements ClientService {
       if (numRows == 0) {
          if (database != null) {
             resultValue = database.doUpdateSQL(insertClientQuery + "('', '" + pin + "', '" + deviceName + "', '"
-                  + email + "', '" + alias + "', FALSE, NOW, NOW, 'openremote', '" + cn + "')");
+                  + email + "', '" + alias + "', FALSE, NOW, NOW, '', '" + cn + "')");
             
-            resultValue = database.doUpdateSQL("INSERT INTO client_role (client_role, client_dn) VALUES ('openremote', '" + cn + "');");
+            //resultValue = database.doUpdateSQL("INSERT INTO client_role (client_role, client_dn) VALUES ('', '" + cn + "');");
          } else {
             logger.error("Database is not yet set (null)");
          }
@@ -177,8 +178,12 @@ public class ClientServiceImpl implements ClientService {
       int resultValue = -1;
 
       if (database != null) {
-         resultValue = database.doUpdateSQL("UPDATE client SET client_active = " + active + " WHERE client_id = "
-               + clientID);
+         String sql = "UPDATE client SET client_active = " + active + ", client_role = '";
+         if(active) {
+            sql += "openremote";
+         }
+         sql += "' WHERE client_id = "  + clientID;
+         resultValue = database.doUpdateSQL(sql);
       }
       return resultValue;
    }
