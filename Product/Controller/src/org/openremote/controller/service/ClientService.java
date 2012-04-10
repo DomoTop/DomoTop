@@ -16,6 +16,7 @@ public interface ClientService
    int updateClientStatus(int clientID, boolean active);
    int updateClientSerial(int clientID, String serial);
    String getSerial();
+   boolean isClientIDValid(int clientID);
    X509Certificate getClientCertificate(String alias);
    void free();
    int clearClientSerial(int clientID);

@@ -286,6 +286,27 @@ public class ClientServiceImpl implements ClientService {
       }
       return newNum;
    }
+   
+   /**
+    * Check if the client ID which is provided is valid
+    * @param clientID
+    * @return true if the client id is valid else false
+    */
+   @Override
+   public boolean isClientIDValid(int clientID)
+   {
+      boolean returnValue = false;
+      if (database != null) {
+         database.doSQL(selectClientQuery + clientID);
+         if(this.getNumClients() == 1)
+         {
+            returnValue = true;
+         }
+      } else {
+         logger.error("Database is not yet set (null)");
+      }
+      return returnValue;
+   }
 
    /**
     * Sets the database.
@@ -342,9 +363,6 @@ public class ClientServiceImpl implements ClientService {
             RSAPublicKeyStructure publicKey = new RSAPublicKeyStructure(seqkey);
             
             pin = generateMD5Sum(publicKey.getModulus().toByteArray());
-            logger.error("Public modulus: "  +publicKey.getModulus());
-
-            logger.error("MD5 key: " + pin);
             pin = pin.substring(pin.length() - 4);
          } catch (IOException e) {
             logger.error("Can't get public key.");
@@ -371,7 +389,6 @@ public class ClientServiceImpl implements ClientService {
             // Get device name
             deviceName = certificationRequest.getSubject().toString();
             deviceName = deviceName.substring(deviceName.indexOf("CN=") + 3);
-            //deviceName = deviceName.substring(0, deviceName.indexOf("\n"));
          }
          else
          {
@@ -430,59 +447,6 @@ public class ClientServiceImpl implements ClientService {
    private String getCN() {
       return cn;
    }
-   
-   /*
-   private String executeOpenSSLCommand(String path, String fileName, boolean isCert) {
-      List<String> command = new ArrayList<String>();
-      command.add(openssl); // command
-      if (isCert) // CRT
-      {
-         command.add("x509");
-         command.add("-subject");
-         command.add("-enddate");
-         command.add("-serial");
-         command.add("-noout");
-      } else // CSR
-      {
-         command.add("req");
-         command.add("-subject");
-         command.add("-noout");
-         command.add("-pubkey");
-         command.add("-text");
-      }
-      command.add("-in"); // input file
-      command.add(path + "/" + fileName); // file path
-
-      if (rootCADir.isEmpty()) {
-         this.rootCADir = configuration.getCaPath();
-      }
-
-      ProcessBuilder pb = new ProcessBuilder(command);
-      pb.directory(new File(rootCADir));
-
-      Process p = null;
-      StringBuffer buffer = new StringBuffer();
-      try {
-         p = pb.start();
-         p.waitFor();
-
-         BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-         String line = null;
-         while ((line = br.readLine()) != null) {
-            buffer.append(line).append("\n");
-         }
-
-      } catch (IOException e) {
-         logger.error(e.getMessage());
-      } catch (InterruptedException e) {
-         logger.error(e.getMessage());
-      }
-
-      return buffer.toString();
-   }
-   
-   */
    
    private String generateMD5Sum(byte[] message) {
       byte[] resultByte = null;

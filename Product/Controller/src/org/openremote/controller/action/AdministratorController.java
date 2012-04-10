@@ -159,6 +159,17 @@ public class AdministratorController extends MultiActionController
    }
    
    @SuppressWarnings("rawtypes")
+   /**
+    * Save settings from the administrator panel
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    * @return
+    * @throws IOException
+    * @throws ServletRequestBindingException
+    */
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {
@@ -214,13 +225,12 @@ public class AdministratorController extends MultiActionController
          ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request)){
          return null;
-      }
+      }      
+      boolean result = false;
       String pin = "";
       String alias = "";
       String action = request.getParameter("action");
-      // TODO: Check client ID in database (is it valid?)
-      int clientID = Integer.parseInt(request.getParameter("client_id"));
-      boolean result = false;
+      int clientID = Integer.parseInt(request.getParameter("client_id"));      
       String errorString = "";
       
       try {
@@ -236,6 +246,7 @@ public class AdministratorController extends MultiActionController
       }
 
       // If action equals accept and the pin check is activated, checking for the pin
+      // if there is not pin check set result true
       if(action.equals("accept") && configurationService.isPinCheckActive())
       {
          String requestPin = request.getParameter("pin");
@@ -259,6 +270,12 @@ public class AdministratorController extends MultiActionController
       else
       {
          result = true;
+      }
+      
+      // Check if the client ID is valid in the database before we continue
+      if(!clientService.isClientIDValid(clientID))
+      {
+         result = false;
       }
       
       try {
