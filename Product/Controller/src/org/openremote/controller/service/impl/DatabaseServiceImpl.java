@@ -373,7 +373,8 @@ public class DatabaseServiceImpl implements DatabaseService
       super.finalize();
       
       //Stop hsqlserver
-      hsqlServer.stop();
+      hsqlServer.shutdown();
+      logger.error("Shutdown the HsqlDB Server.");
    }
    
    /**
