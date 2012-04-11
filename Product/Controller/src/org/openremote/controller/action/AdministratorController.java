@@ -195,7 +195,9 @@ public class AdministratorController extends MultiActionController
       while(names.hasMoreElements())
       {
          String name = (String) names.nextElement();
-         if(!name.equals("method"))
+         
+         // Ignore the method and composer_password name
+         if(!name.equals("method") && !name.equals("composer_password"))
          {
             String value = request.getParameter(name);
             // if type boolean
