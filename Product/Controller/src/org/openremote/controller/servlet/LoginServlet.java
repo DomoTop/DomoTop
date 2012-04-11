@@ -47,6 +47,7 @@ import org.openremote.controller.service.FileService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.FreemarkerUtil;
+import org.openremote.controller.utils.MD5Util;
 import org.openremote.controller.utils.PathUtil;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 
@@ -88,6 +89,8 @@ public class LoginServlet extends HttpServlet
   public int checkOnline(String username, String password)
   {
      String databaseuser = configurationService.getItem("composer_username");
+     String databasepassword = configurationService.getItem("composer_password");
+
 
      if(!databaseuser.equals("") && !username.equals(databaseuser)) {
         return -3;
@@ -107,6 +110,8 @@ public class LoginServlet extends HttpServlet
            if(databaseuser == null || databaseuser.equals("")) {
               fileService.writeZipAndUnzip(resp.getEntity().getContent());
            }
+           saveCredentials(username, password);
+           return 0;
         } else if(401 == statuscode) {
            return -2;
         } else {
@@ -116,9 +121,16 @@ public class LoginServlet extends HttpServlet
      } catch (IOException e) {
         logger.error(e.getMessage());
      }
-     saveCredentials(username, password);
+          
+     if(databaseuser.equals("") && databasepassword.equals("")) {
+        saveCredentials(username, password);
+        return 0;
+     } else if(username.equals(username) && MD5Util.generateMD5Sum(password.getBytes()).equals(databasepassword)) {
+        return 0;
+     } else {
+        return -1;   
+     }
      
-     return 0;
   }
   
   /**
@@ -127,7 +139,8 @@ public class LoginServlet extends HttpServlet
    */
   private void saveCredentials(String username, String password) {
      configurationService.updateItem("composer_username", username);
-     configurationService.updateItem("composer_password", username);
+     
+     configurationService.updateItem("composer_password", MD5Util.generateMD5Sum(password.getBytes()));
   }
   
   
