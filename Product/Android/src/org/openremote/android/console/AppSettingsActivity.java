@@ -569,6 +569,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       custumeView.addView(customListView);
       custumeView.addView(buttonsView);
       requestPanelList();
+      requestAccess();
       return custumeView;
   }
 
@@ -592,6 +593,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
                writeCustomServerToFile();
                requestPanelList();
+               requestAccess();
             }
          }
       }
@@ -638,6 +640,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                progressLayout.setVisibility(View.INVISIBLE);
             }
             requestPanelList();
+            requestAccess();
          }
       }.execute((Void) null);
       
@@ -796,6 +799,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                public void onClick(View v) {
                   super.onClick(v);
                   requestPanelList();
+                  requestAccess();
                }
                
             });
