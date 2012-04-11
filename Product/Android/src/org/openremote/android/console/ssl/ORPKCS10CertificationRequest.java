@@ -201,6 +201,8 @@ public class ORPKCS10CertificationRequest {
 			Log.e(LOG_CATEGORY, e.getMessage());
 	    } catch (IOException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
+	    } catch (IllegalStateException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
 	    }
 	    return -1;
 	}
