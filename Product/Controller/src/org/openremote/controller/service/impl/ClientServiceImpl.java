@@ -274,6 +274,8 @@ public class ClientServiceImpl implements ClientService {
       String rootCADir = databaseConfiguration.getItem(CA_PATH);
       String client_key_store = rootCADir + "/client_certificates.jks";
       
+      logger.error("Client path: " + client_key_store);
+      
       try
       {
          clientKS = KeyStore.getInstance("JKS");
@@ -283,7 +285,6 @@ public class ClientServiceImpl implements ClientService {
          clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray()); 
          
          certificate = (X509Certificate) clientKS.getCertificate(alias);
-         logger.error("Client certificate test: " + certificate.getIssuerDN());
       } catch (NoSuchAlgorithmException e) {
          logger.error("Client certificate: " + e.getMessage());
       } catch (CertificateException e) {

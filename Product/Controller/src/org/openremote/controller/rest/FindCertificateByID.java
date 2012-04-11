@@ -1,5 +1,4 @@
 /*
- *String caloc = 
  * OpenRemote, the Home of the Digital Home.
  * Copyright 2008-2011, OpenRemote Inc.
  *
@@ -40,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
 
 /**
@@ -54,6 +54,7 @@ import org.openremote.controller.spring.SpringContext;
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a> * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
  */
+@SuppressWarnings("serial")
 public class FindCertificateByID extends RESTAPI
 {
 
@@ -75,11 +76,13 @@ public class FindCertificateByID extends RESTAPI
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
+  private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
 
 
-  protected String signCsr(String username) throws IOException, InterruptedException
+  protected String getChain(String username) throws IOException
   {
-    String keystore = "/usr/share/tomcat6/cert/server.jks";
+    String rootCAPath = configurationService.getItem("ca_path");
+    String keystore = rootCAPath + "/server.jks";
     
     StringBuffer sb = new StringBuffer();
     sb.append(Constants.STATUS_XML_HEADER);
@@ -101,13 +104,19 @@ public class FindCertificateByID extends RESTAPI
 
     sb.append("</server>\n<client>\n");
     
-      try {
-         Certificate certificate = clientService.getClientCertificate(username);
+   try {
+      Certificate certificate = clientService.getClientCertificate(username);
+      if(certificate != null)
+      {
          sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
-      } catch (CertificateEncodingException e) {
-         logger.error(e.getMessage());
       }
-
+      else
+      {
+         logger.error("Client certificate is not found/null.");
+      }
+   } catch (CertificateEncodingException e) {
+      logger.error(e.getMessage());
+   }
 
     sb.append("</client>\n</chain>");
     sb.append(Constants.STATUS_XML_TAIL);
@@ -125,7 +134,7 @@ public class FindCertificateByID extends RESTAPI
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(url);
         if(matcher.find()) 
-            sendResponse(response, signCsr(matcher.group(1)));
+            sendResponse(response, getChain(matcher.group(1)));
         else
             sendResponse(response, "NO MATCH FIND");
     }
@@ -142,9 +151,9 @@ public class FindCertificateByID extends RESTAPI
 
       //sendResponse(response, e.getErrorCode(), e.getMessage());
     }
-    catch (Exception e) 
+    catch (IOException e) 
     {
-        logger.error("Failed to create certificate: " + e.getMessage());
+        logger.error("Failed to get certificate: " + e.getMessage());
         response.setStatus(404);
         sendResponse(response, "No certificate by that name");
     }

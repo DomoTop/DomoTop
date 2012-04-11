@@ -160,7 +160,7 @@ public class SubmitCSR extends RESTAPI
     }
     catch (IOException e) 
     {
-        logger.error("Failed to create certificate: " + e.getMessage());
+        logger.error("Failed to create certificate request file: " + e.getMessage());
         //sendResponse(response, e.getMessage());
         sendResponse(response, 500, e.getMessage());
     }
