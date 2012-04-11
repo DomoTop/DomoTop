@@ -109,7 +109,7 @@ public class SubmitCSR extends RESTAPI
   {
     String certificate = URLDecoder.decode(cert);
     long timestamp = System.currentTimeMillis();
-    String filename = username + timestamp + ".csr";
+    String filename = URLDecoder.decode(username) + timestamp + ".csr";
     
     String rootCaPath = configurationService.getItem(CA_PATH);
     BufferedWriter out = new BufferedWriter(new FileWriter(rootCaPath + CSR_PATH + filename));

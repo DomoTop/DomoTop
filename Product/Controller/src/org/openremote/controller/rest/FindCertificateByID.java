@@ -1,4 +1,5 @@
 /*
+
  * OpenRemote, the Home of the Digital Home.
  * Copyright 2008-2011, OpenRemote Inc.
  *
@@ -22,6 +23,7 @@ package org.openremote.controller.rest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -81,6 +83,7 @@ public class FindCertificateByID extends RESTAPI
 
   protected String getChain(String username) throws IOException
   {
+     username = URLDecoder.decode(username);
     String rootCAPath = configurationService.getItem("ca_path");
     String keystore = rootCAPath + "/server.jks";
     
