@@ -121,7 +121,7 @@ function message(msg){
 	if (msg == '') {
 		$('#msg').hide().text(msg);
 	} else {
-		$('#msg').hide().show().text(msg);
+		$('#msg').show().html(msg);
 	}
 }
 
@@ -132,7 +132,7 @@ function error(msg){
 	if (msg == '') {
 		$('#errMsg').hide().text(msg);
 	} else {
-		$('#errMsg').hide().show().text(msg);
+		$('#errMsg').show().html(msg);
 	}
 }
 

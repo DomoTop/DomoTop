@@ -92,7 +92,6 @@ public class AdministratorController extends MultiActionController
    private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String KEYSTORE_PATH = rootCADir + "/server.jks";
    private static final String CLIENT_KEYSTORE_PATH =  rootCADir + "/client_certificates.jks";
-   private static final String CRTDir = "/ca/certs";
    private static final String CSRDir = "/ca/csr";
 
    private static final String KEYSTORE_PASSWORD = "password";
@@ -128,33 +127,47 @@ public class AdministratorController extends MultiActionController
       X509Certificate cert = null;
       boolean success = false;
       
-      KPair = this.createKeyPair();      
-      cert = this.buildCertificate(KPair, CA_NAME);
-            
-      if(cert != null && KPair != null)
-      {
-         if(!this.keyStoreExists(KEYSTORE_PATH))
+      if(clientService.dropClients() == 1)
+      { 
+         success = true;
+      }
+      
+      if(success)
+      {         
+         KPair = this.createKeyPair();      
+         cert = this.buildCertificate(KPair, CA_NAME);            
+     
+         if(cert != null && KPair != null)
          {
-            if(!createKeyStore(KEYSTORE_PATH))
+            if(!this.keyStoreExists(KEYSTORE_PATH))
             {
-               logger.error("Failed to create CA keystore.");
+               if(!createKeyStore(KEYSTORE_PATH))
+               {
+                  logger.error("Failed to create CA keystore.");
+               }
             }
+            success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
          }
-         success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
+         else
+         {
+            logger.error("No CA certificate generated or no key pair generated.");
+         }
+   
+         if(!success)
+         {
+            response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
+         }   
       }
       else
       {
-         logger.error("No CA certificate generated or no key pair generated.");
+         response.getWriter().print("Failed to empty the database table.");
       }
-
+      
       if(success)
-      {
+      {   
          response.getWriter().print(Constants.OK);
       }
-      else
-      {
-         response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
-      }      
+      
       return null;
    }
    
@@ -182,7 +195,9 @@ public class AdministratorController extends MultiActionController
       while(names.hasMoreElements())
       {
          String name = (String) names.nextElement();
-         if(!name.equals("method"))
+         
+         // Ignore the method and composer_password name
+         if(!name.equals("method") && !name.equals("composer_password"))
          {
             String value = request.getParameter(name);
             // if type boolean
@@ -209,6 +224,33 @@ public class AdministratorController extends MultiActionController
       else
       {
          response.getWriter().print("Failed to save the configuration into the database");
+      }
+      return null;
+   }
+   
+    
+   public ModelAndView deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException {
+      if(!AuthenticationUtil.isAuth(request)){
+         return null;
+      }  
+      int clientID = Integer.parseInt(request.getParameter("client_id"));      
+      
+      if(clientService.isClientIDValid(clientID))
+      {
+         int returnResult = clientService.removeClient(clientID);
+         if (returnResult == 1)
+         {
+            response.getWriter().print(Constants.OK);
+         }
+         else
+         {
+            response.getWriter().print("Device could not be removed from the database.");
+         }
+      }
+      else
+      {
+         response.getWriter().print("Device is invalid.");
       }
       return null;
    }
@@ -247,13 +289,15 @@ public class AdministratorController extends MultiActionController
 
       // If action equals accept and the pin check is activated, checking for the pin
       // if there is not pin check set result true
-      if(action.equals("accept") && configurationService.isPinCheckActive())
+      boolean pinCheck = configurationService.isPinCheckActive();
+      
+      if(action.equals("accept") && pinCheck)
       {
          String requestPin = request.getParameter("pin");
          if(requestPin.isEmpty())
          {
             result = false;
-            errorString = "The pin you entered is empty. Please enter the pin shown on the device.";
+            errorString = "The pin you entered is empty. <br/>Please enter the pin shown on the device.";
          }
          else
          {
@@ -302,7 +346,7 @@ public class AdministratorController extends MultiActionController
             // If the action was deny, result the pin in the response
             if (action.equals("deny"))
             {
-               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
+               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin + "-" + pinCheck);
             }
             else
             {
@@ -453,8 +497,6 @@ public class AdministratorController extends MultiActionController
       if(this.deleteClientKeyStore(clientKeystorePath, alias))
       {
          // Update the client database
-         // TODO:
-         /*
          int statusReturn = clientService.removeClient(clientID);
          if(statusReturn == 1)
          {
@@ -464,7 +506,6 @@ public class AdministratorController extends MultiActionController
          {
             logger.error("Remove client: Datebase couldn't be updated.");
          }
-         */
       }
       return returnValue;
    }

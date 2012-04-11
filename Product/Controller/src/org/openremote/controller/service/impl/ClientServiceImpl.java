@@ -197,7 +197,7 @@ public class ClientServiceImpl implements ClientService {
       int resultvalue = -1;
       
       if(database != null) {
-         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID + limitByOne);
+         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID);
       }
       
       return resultvalue;
@@ -231,6 +231,19 @@ public class ClientServiceImpl implements ClientService {
       }
       return resultValue;
    }
+   
+   
+   @Override
+   public int dropClients()
+   {
+      int resultValue = -1;
+
+      if (database != null) {
+         resultValue = database.doUpdateSQL("TRUNCATE TABLE client");
+      }
+      return resultValue;
+   }
+   
    
    @Override
    public String getSerial() {
@@ -307,6 +320,7 @@ public class ClientServiceImpl implements ClientService {
       }
       return newNum;
    }
+
    
    /**
     * Check if the client ID which is provided is valid

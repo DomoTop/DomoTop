@@ -92,7 +92,8 @@ public class ConfigurationServiceImpl implements ConfigurationService
       ResultSet result = null;
       if(database != null)
       {
-         result = database.doSQL("SELECT * FROM configuration");
+         // Get all configuration except the password
+         result = database.doSQL("SELECT * FROM configuration WHERE configuration_name != 'composer_password'");
       }      
       return result;
    }

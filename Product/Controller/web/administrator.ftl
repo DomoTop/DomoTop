@@ -68,7 +68,7 @@
 											<TBODY>								
 												<#if clients?exists>
 												<TR>
-													<th align="left">Device name</th><th align="left">E-mail</th><#if isPinCheck == 'false'><th align="left">Pin</th></#if><th align="left">Status</th><th align="left">Group</th>
+													<th align="left">Device name</th><th align="left">E-mail</th><#if isPinCheck == 'false'><th align="left">Pin</th></#if><th align="left">Status</th><th align="left">Group</th><th align="left">Delete</th>
 												</TR>
 												<#list clients as client>
 												<TR>
@@ -96,6 +96,12 @@
 															<option<#if client.client_group_id == 2> selected</#if> value="parent">Parent</option>
 															<option<#if client.client_group_id == 3> selected</#if> value="child">Childeren</option>
 														</select>
+													</TD>
+													<TD>
+														<form id="deleteForm" action="admin.htm?method=deleteUser" method="post">														
+														<input type="hidden" name="client_id" value="${client.client_id}" />
+															<input type="submit" value="" class="delete_button" onClick="return confirm('Are you sure you want to delete this device (${client.client_device_name})?');"/>
+														</form>
 													</TD>
 												</TR>
 												</#list>

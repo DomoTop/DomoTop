@@ -67,7 +67,7 @@ $(document).ready(function()
  		disablePopup(); 
   	clearMessage();	
 		statusFormResult(result);
-		changeButtonToStatusSubmit(result);		
+		changeButtonToStatusSubmit(result);
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
@@ -83,9 +83,19 @@ $(document).ready(function()
   $('#caForm').ajaxForm(function(result) {
   	clearMessage();
   	if (result == 'OK') {
-			message("CA successfully created.");
+			message("CA successfully created. <br/><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
+		}
+  }); 
+    
+  $('#deleteForm').ajaxForm(function(result) {
+  	clearMessage();
+  	if (result == 'OK') {
+			message("Device was successfully deleted.");
+			delayedRefreshPage(500);
+		} else {
+			error("Device deletion was unsuccessfully: " + result);
 		}
   }); 
   
@@ -233,9 +243,12 @@ function statusFormResult(result)
 	var resultID = resultArray[1];
 	var resultAction = resultArray[2];
 	var resultPinCode = 0;  
+	var resultPinCheck = "true";
+	
 	if(resultArray.length >= 4)
 	{
 		resultPinCode = resultArray[3];
+		resultPinCheck = resultArray[4];
 	}
 	
 	if (resultString == 'OK') {
@@ -244,13 +257,20 @@ function statusFormResult(result)
 		if(resultAction == 'accept')
 		{
 			changeValueById(resultID, "deny");
-			changeBackgroundByID(resultID, "image/accept.gif");
+			changeBackgroundByID(resultID, "image/accept.png");
 		}
 		else if(resultAction == 'deny')
 		{
 			changeValueById(resultID, "accept");
-			changeBackgroundByID(resultID, "image/denied.gif");		
-			changePincodeById(resultID, resultPinCode);	
+			changeBackgroundByID(resultID, "image/deny.png");
+			if(resultPinCheck == "false")
+			{		
+				changePincodeById(resultID, resultPinCode);
+			}
+			else
+			{
+				changeButtonToStatusSubmit(result);
+			}
 		}
 	} else {
 		error("User status is unsuccessfully: " + result);
@@ -270,9 +290,14 @@ function changeButtonToStatusSubmit(result)
 	}
 	else if(resultAction == 'deny')
 	{
-		changeButtonToSubmitType(resultID, "input");
+		changeButtonToSubmitType(resultID, "button");
 		changeElementClass(resultID, "statusSubmit button deny_button");
-	}	
+	}
+	else
+	{
+		error("Action is not recognized: " + result);
+	}
+		
 }
 
 //loading popup with jQuery magic!
