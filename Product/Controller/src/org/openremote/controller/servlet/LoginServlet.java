@@ -89,11 +89,10 @@ public class LoginServlet extends HttpServlet
   {
      String databaseuser = configurationService.getItem("composer_username");
 
-     if(!username.equals(databaseuser)) {
+     if(!databaseuser.equals("") && !username.equals(databaseuser)) {
         return -3;
      }
      
-     boolean success = false;
      HttpClient httpClient = new DefaultHttpClient();
      HttpGet httpGet = new HttpGet(PathUtil.addSlashSuffix(configuration.getBeehiveRESTRootUrl()) + "user/" + username
            + "/openremote.zip");

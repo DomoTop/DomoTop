@@ -63,8 +63,7 @@ public class DatabaseServiceImpl implements DatabaseService
       // to some Writer object that could store the logs.
       hsqlServer.setLogWriter(null);
       hsqlServer.setSilent(true); 
-
-      hsqlServer.setPort(9001);
+      hsqlServer.setPort(10001);
       
       // init database path
       configuration = ControllerConfiguration.readXML();
@@ -104,7 +103,7 @@ public class DatabaseServiceImpl implements DatabaseService
       boolean returnValue = true;
       try {
          Class.forName("org.hsqldb.jdbcDriver");
-         connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:9001/openremote", "SA", "");
+         connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:10001/openremote", "SA", "");
        } catch (SQLException e) {
          returnValue = false;
          logger.error("SQL Exception: " + e.getMessage());
@@ -209,7 +208,7 @@ public class DatabaseServiceImpl implements DatabaseService
    { 
       boolean returnValue = true;
       
-      //returnValue = this.initDatabase();
+      returnValue = this.initDatabase();
       returnValue = this.setupConnection();
       
       this.createTables();
