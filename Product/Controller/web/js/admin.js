@@ -88,6 +88,16 @@ $(document).ready(function()
 			error("CA creation was unsuccessfully: " + result);
 		}
   }); 
+    
+  $('#deleteForm').ajaxForm(function(result) {
+  	clearMessage();
+  	if (result == 'OK') {
+			message("Device was successfully deleted.");
+			delayedRefreshPage(500);
+		} else {
+			error("Device deletion was unsuccessfully: " + result);
+		}
+  }); 
   
   // Logout button
 	$('#logOut').click(function() {
@@ -247,12 +257,12 @@ function statusFormResult(result)
 		if(resultAction == 'accept')
 		{
 			changeValueById(resultID, "deny");
-			changeBackgroundByID(resultID, "image/accept.gif");
+			changeBackgroundByID(resultID, "image/accept.png");
 		}
 		else if(resultAction == 'deny')
 		{
 			changeValueById(resultID, "accept");
-			changeBackgroundByID(resultID, "image/denied.gif");
+			changeBackgroundByID(resultID, "image/deny.png");
 			if(resultPinCheck == "false")
 			{		
 				changePincodeById(resultID, resultPinCode);

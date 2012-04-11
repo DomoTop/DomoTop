@@ -197,7 +197,7 @@ public class ClientServiceImpl implements ClientService {
       int resultvalue = -1;
       
       if(database != null) {
-         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID + limitByOne);
+         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID);
       }
       
       return resultvalue;

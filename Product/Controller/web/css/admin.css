@@ -231,10 +231,15 @@ a#popupContactClose
 
 .accept_button
 {
-	background: #fff url('../image/accept.gif') no-repeat center top;
+	background: #fff url('../image/accept.png') no-repeat center top;
 }
 
 .deny_button
 {
-	background: #fff url('../image/denied.gif') no-repeat center top;
+	background: #fff url('../image/deny.png') no-repeat center top;
+}
+
+.delete_button
+{
+	background: #fff url('../image/delete.gif') no-repeat center top;
 }

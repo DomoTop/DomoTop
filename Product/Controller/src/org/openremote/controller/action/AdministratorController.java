@@ -92,7 +92,6 @@ public class AdministratorController extends MultiActionController
    private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
    private static final String KEYSTORE_PATH = rootCADir + "/server.jks";
    private static final String CLIENT_KEYSTORE_PATH =  rootCADir + "/client_certificates.jks";
-   private static final String CRTDir = "/ca/certs";
    private static final String CSRDir = "/ca/csr";
 
    private static final String KEYSTORE_PASSWORD = "password";
@@ -223,6 +222,33 @@ public class AdministratorController extends MultiActionController
       else
       {
          response.getWriter().print("Failed to save the configuration into the database");
+      }
+      return null;
+   }
+   
+    
+   public ModelAndView deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException {
+      if(!AuthenticationUtil.isAuth(request)){
+         return null;
+      }  
+      int clientID = Integer.parseInt(request.getParameter("client_id"));      
+      
+      if(clientService.isClientIDValid(clientID))
+      {
+         int returnResult = clientService.removeClient(clientID);
+         if (returnResult == 1)
+         {
+            response.getWriter().print(Constants.OK);
+         }
+         else
+         {
+            response.getWriter().print("Device could not be removed from the database.");
+         }
+      }
+      else
+      {
+         response.getWriter().print("Device is invalid.");
       }
       return null;
    }
@@ -469,8 +495,6 @@ public class AdministratorController extends MultiActionController
       if(this.deleteClientKeyStore(clientKeystorePath, alias))
       {
          // Update the client database
-         // TODO:
-         /*
          int statusReturn = clientService.removeClient(clientID);
          if(statusReturn == 1)
          {
@@ -480,7 +504,6 @@ public class AdministratorController extends MultiActionController
          {
             logger.error("Remove client: Datebase couldn't be updated.");
          }
-         */
       }
       return returnValue;
    }
