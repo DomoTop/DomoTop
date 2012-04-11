@@ -19,7 +19,8 @@ public interface ClientService
    boolean isClientIDValid(int clientID);
    X509Certificate getClientCertificate(String alias);
    void free();
-   int clearClientSerial(int clientID);
+   int clearClientSerial(int clientID);  
+   int dropClients();
    int addClient(String csrFileName);
    void initCaPath();
    int removeClient(int clientID);

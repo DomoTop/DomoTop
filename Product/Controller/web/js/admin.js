@@ -67,7 +67,7 @@ $(document).ready(function()
  		disablePopup(); 
   	clearMessage();	
 		statusFormResult(result);
-		changeButtonToStatusSubmit(result);		
+		changeButtonToStatusSubmit(result);
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
@@ -233,9 +233,12 @@ function statusFormResult(result)
 	var resultID = resultArray[1];
 	var resultAction = resultArray[2];
 	var resultPinCode = 0;  
+	var resultPinCheck = "true";
+	
 	if(resultArray.length >= 4)
 	{
 		resultPinCode = resultArray[3];
+		resultPinCheck = resultArray[4];
 	}
 	
 	if (resultString == 'OK') {
@@ -249,8 +252,15 @@ function statusFormResult(result)
 		else if(resultAction == 'deny')
 		{
 			changeValueById(resultID, "accept");
-			changeBackgroundByID(resultID, "image/denied.gif");		
-			changePincodeById(resultID, resultPinCode);	
+			changeBackgroundByID(resultID, "image/denied.gif");
+			if(resultPinCheck == "false")
+			{		
+				changePincodeById(resultID, resultPinCode);
+			}
+			else
+			{
+				changeButtonToStatusSubmit(result);
+			}
 		}
 	} else {
 		error("User status is unsuccessfully: " + result);
@@ -270,9 +280,14 @@ function changeButtonToStatusSubmit(result)
 	}
 	else if(resultAction == 'deny')
 	{
-		changeButtonToSubmitType(resultID, "input");
+		changeButtonToSubmitType(resultID, "button");
 		changeElementClass(resultID, "statusSubmit button deny_button");
-	}	
+	}
+	else
+	{
+		error("Action is not recognized: " + result);
+	}
+		
 }
 
 //loading popup with jQuery magic!

@@ -128,33 +128,51 @@ public class AdministratorController extends MultiActionController
       X509Certificate cert = null;
       boolean success = false;
       
-      KPair = this.createKeyPair();      
-      cert = this.buildCertificate(KPair, CA_NAME);
-            
-      if(cert != null && KPair != null)
-      {
-         if(!this.keyStoreExists(KEYSTORE_PATH))
+      if(clientService.dropClients() == 1)
+      { 
+         success = true;
+      }
+      
+      if(success)
+      {         
+         KPair = this.createKeyPair();      
+         cert = this.buildCertificate(KPair, CA_NAME);            
+     
+         if(cert != null && KPair != null)
          {
-            if(!createKeyStore(KEYSTORE_PATH))
+            if(!this.keyStoreExists(KEYSTORE_PATH))
             {
-               logger.error("Failed to create CA keystore.");
+               if(!createKeyStore(KEYSTORE_PATH))
+               {
+                  logger.error("Failed to create CA keystore.");
+               }
             }
+            success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
          }
-         success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
+         else
+         {
+            logger.error("No CA certificate generated or no key pair generated.");
+         }
+   
+         if(success)
+         {
+            response.getWriter().print(Constants.OK);
+         }
+         else
+         {
+            response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
+         }   
       }
       else
       {
-         logger.error("No CA certificate generated or no key pair generated.");
+         response.getWriter().print("Failed to empty the database table.");
       }
-
+      
       if(success)
       {
-         response.getWriter().print(Constants.OK);
+         Process child = Runtime.getRuntime().exec("service tomcat6 restart");
       }
-      else
-      {
-         response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
-      }      
+      
       return null;
    }
    
@@ -247,7 +265,9 @@ public class AdministratorController extends MultiActionController
 
       // If action equals accept and the pin check is activated, checking for the pin
       // if there is not pin check set result true
-      if(action.equals("accept") && configurationService.isPinCheckActive())
+      boolean pinCheck = configurationService.isPinCheckActive();
+      
+      if(action.equals("accept") && pinCheck)
       {
          String requestPin = request.getParameter("pin");
          if(requestPin.isEmpty())
@@ -302,7 +322,7 @@ public class AdministratorController extends MultiActionController
             // If the action was deny, result the pin in the response
             if (action.equals("deny"))
             {
-               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin);
+               response.getWriter().print(Constants.OK + "-" + clientID + "-" + action + "-" + pin + "-" + pinCheck);
             }
             else
             {
