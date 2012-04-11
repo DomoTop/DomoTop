@@ -206,7 +206,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		
 		String url = host;
 		url += "/rest/cert/get/";
-		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
+		url += PhoneInformation.getInstance().getDeviceName();
 
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -242,6 +242,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    servercert = servercert.replace("-----END CERTIFICATE-----","");
 	    X509Certificate cert = null;
 	   
+	    if(servercert.length() <= 1) {
+	    	return null;
+	    }
+	    
 	    try {
 			InputStream is = new ByteArrayInputStream(Base64.decode(servercert));
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");

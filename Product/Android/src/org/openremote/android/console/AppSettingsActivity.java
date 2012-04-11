@@ -364,7 +364,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             }
             if(AppSettingsModel.isSSLEnabled(getApplicationContext()) 
             		&& AppSettingsModel.getSSLPort(getApplicationContext()) == 8443) {
-            	//TODO submit certification request
             	retrieveCertificate();
             	return;
             }
@@ -709,11 +708,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    private void retrieveCertificate()
    {
 	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
-	   	   
+	   //final ProgressDialog dialog = ProgressDialog.show(getApplicationContext(), "Fetching certificate", "Busy fetching certificate");	 
+	   
 	   final Handler handler = new Handler()
 	   {
 		   @Override
 		   public void handleMessage(Message msg) {
+			   //dialog.cancel();
 			   if(msg.what == 0) {
 				   startMain();   
 			   } else {

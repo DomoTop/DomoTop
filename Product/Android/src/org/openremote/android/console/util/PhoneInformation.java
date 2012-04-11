@@ -16,7 +16,7 @@ public abstract class PhoneInformation {
 	 */
 	public String getDeviceName()
 	{
-		return android.os.Build.MODEL;
+		return android.os.Build.MODEL.replace(" ", "_");
 	}
 	
 	/**

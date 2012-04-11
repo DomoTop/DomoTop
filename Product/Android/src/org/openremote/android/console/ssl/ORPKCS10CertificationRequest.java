@@ -169,7 +169,7 @@ public class ORPKCS10CertificationRequest {
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
-	    String devicename = phoneInfo.getDeviceName().replace(' ', '_');
+	    String devicename = phoneInfo.getDeviceName();
 	    String email = phoneInfo.getEmailAddress(context);
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
