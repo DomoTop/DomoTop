@@ -104,8 +104,8 @@ public class DatabaseServiceImpl implements DatabaseService
       boolean returnValue = true;
       try {
          Class.forName("org.hsqldb.jdbcDriver");
-         connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/openremote", "SA", "");         
-      } catch (SQLException e) {
+         connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:9001/openremote", "SA", "");
+       } catch (SQLException e) {
          returnValue = false;
          logger.error("SQL Exception: " + e.getMessage());
       } catch (ClassNotFoundException e) {
