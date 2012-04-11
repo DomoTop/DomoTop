@@ -51,7 +51,8 @@ import org.openremote.controller.spring.SpringContext;
  * <a href = "http://openremote.org/display/docs/Controller+2.0+HTTP-REST-JSONP">Controller 2.0
  * REST JSONP API</a> for more details.
  *
- * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a> * 
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
  */
 public class FindCertificateByID extends RESTAPI
 {
@@ -141,18 +142,11 @@ public class FindCertificateByID extends RESTAPI
 
       //sendResponse(response, e.getErrorCode(), e.getMessage());
     }
-//    catch (InterruptedException e) 
-//    {
-//        logger.error("Failed to create certificate");
-//        //sendResponse(response, "Interupted");
-//    }
     catch (Exception e) 
     {
-        logger.error("Failed to create certificate");
+        logger.error("Failed to create certificate: " + e.getMessage());
         response.setStatus(404);
         sendResponse(response, "No certificate by that name");
-       // sendResponse(response, "IOException" + profileService.getAllPanels() + "/certificates/create.sh");
-        //sendResponse(response, e.getMessage());
     }
   }
 }

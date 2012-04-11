@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 
@@ -54,8 +53,11 @@ import org.apache.commons.codec.binary.Hex;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
+import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.spring.SpringContext;
 
 /**
@@ -68,6 +70,7 @@ import org.openremote.controller.spring.SpringContext;
  * REST JSONP API</a> for more details.
  *
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
  */
 @SuppressWarnings("serial")
 public class SubmitCSR extends RESTAPI
@@ -91,13 +94,14 @@ public class SubmitCSR extends RESTAPI
    */
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
-  // TODO grab the caPath from the configuration file 
-  private final static String CA_LOCATION = "/usr/share/tomcat6/cert/ca/";
+  private final static String CA_PATH = "ca_path";
+  private final static String CSR_PATH = "/ca/csr/";
   private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----";
   private final static String CSR_FOOTER = "\n-----END NEW CERTIFICATE REQUEST-----\n";
-
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
-
+  private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
+        "configurationService");
+  
   /**
    * Write CSR to file
    */
@@ -106,21 +110,9 @@ public class SubmitCSR extends RESTAPI
     String certificate = URLDecoder.decode(cert);
     long timestamp = System.currentTimeMillis();
     String filename = username + timestamp + ".csr";
-    BufferedWriter out = new BufferedWriter(new FileWriter(CA_LOCATION + "csr/" + filename));
-
-    /*
-    Makes it OpenSSL command compatible
-    out.write(CSR_HEADER);
-    int j = 0;
-    for(int i = 0; i < certificate.length(); ++i)
-    {
-        if((j++ % 65) == 0) {
-            out.write("\n");
-        } 
-        out.write(certificate.charAt(i));
-    }
-    out.write(CSR_FOOTER);
-    */
+    
+    String rootCaPath = configurationService.getItem(CA_PATH);
+    BufferedWriter out = new BufferedWriter(new FileWriter(rootCaPath + CSR_PATH + filename));
     
     out.write(certificate);
     out.close();
@@ -128,16 +120,21 @@ public class SubmitCSR extends RESTAPI
     int retvalue = clientService.addClient(alias);
     if(retvalue != 1)
     {
-        File file = new File(CA_LOCATION + "csr/" + filename);
+        File file = new File(rootCaPath + CSR_PATH + filename);
         file.delete();
         throw new IOException("CSR was already submitted");
     }
-
     return timestamp;
   }
 
   // Implement REST API ---------------------------------------------------------------------------
-  @Override protected void handleRequest(HttpServletRequest request, HttpServletResponse response)
+
+  /**
+   * Saves the content from the request of the CSR in the CA path as a file.
+   * The filename is given within the URL request
+   */
+  @Override 
+  protected void handleRequest(HttpServletRequest request, HttpServletResponse response)
   {
     try
     {

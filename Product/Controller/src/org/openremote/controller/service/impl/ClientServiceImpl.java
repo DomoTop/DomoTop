@@ -17,7 +17,6 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
@@ -51,7 +50,7 @@ public class ClientServiceImpl implements ClientService {
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
-   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
+   private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
    private static final String CSRDir = "/ca/csr";
    private static final String KEYSTORE_PASSWORD = "password";
 

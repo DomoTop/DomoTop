@@ -71,7 +71,6 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
-import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
@@ -89,21 +88,16 @@ import sun.misc.BASE64Decoder;
  */
 public class AdministratorController extends MultiActionController 
 {
-   private static final String rootCADir = ControllerConfiguration.readXML().getCaPath();
-   private static final String KEYSTORE_PATH = rootCADir + "/server.jks";
-   private static final String CLIENT_KEYSTORE_PATH =  rootCADir + "/client_certificates.jks";
-   private static final String CSRDir = "/ca/csr";
+   private static final String CA_PATH = "ca_path";
+   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
+         "configurationService");   
 
    private static final String KEYSTORE_PASSWORD = "password";
    private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
 
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
-   
-      
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
          "clientService");  
-   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
-         "configurationService");   
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
@@ -112,6 +106,7 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Create a new CA, imports the certificate into the server's key store and saves the private key
+    * 
     * @param request
     *           HTTP servlet request
     * @param response
@@ -136,17 +131,20 @@ public class AdministratorController extends MultiActionController
       {         
          KPair = this.createKeyPair();      
          cert = this.buildCertificate(KPair, CA_NAME);            
-     
+              
+         String rootCaPath = configurationService.getItem(CA_PATH);
+         String keyStorePath = rootCaPath + "/server.jks";
+         
          if(cert != null && KPair != null)
          {
-            if(!this.keyStoreExists(KEYSTORE_PATH))
+            if(!this.keyStoreExists(keyStorePath))
             {
-               if(!createKeyStore(KEYSTORE_PATH))
+               if(!createKeyStore(keyStorePath))
                {
                   logger.error("Failed to create CA keystore.");
                }
             }
-            success = this.saveToKeyStore(KPair, cert, KEYSTORE_PATH, "ca.alias");
+            success = this.saveToKeyStore(KPair, cert, keyStorePath, "ca.alias");
          }
          else
          {
@@ -171,7 +169,6 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
-   @SuppressWarnings("rawtypes")
    /**
     * Save settings from the administrator panel
     * 
@@ -183,6 +180,7 @@ public class AdministratorController extends MultiActionController
     * @throws IOException
     * @throws ServletRequestBindingException
     */
+   @SuppressWarnings("rawtypes")
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {
@@ -228,7 +226,14 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
-    
+   /**
+    * Request handler of deleting an user from the client key store and database
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
    public ModelAndView deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request)){
@@ -325,10 +330,13 @@ public class AdministratorController extends MultiActionController
       try {
          
          if(result)
-         {
+         {            
+            String rootCaPath = configurationService.getItem(CA_PATH);
+            String clientKeyStorePath =  rootCaPath + "/client_certificates.jks";
+            
             if (action.equals("accept")) // accept device
             {
-               result = this.acceptClient(CLIENT_KEYSTORE_PATH, alias, clientID);
+               result = this.acceptClient(clientKeyStorePath, alias, clientID);
             } 
             else if (action.equals("deny")) // deny device
             {
@@ -336,7 +344,7 @@ public class AdministratorController extends MultiActionController
             }
             else if (action.equals("remove")) // remove device
             {
-               result = this.removeClient(CLIENT_KEYSTORE_PATH, alias, clientID);
+               result = this.removeClient(clientKeyStorePath, alias, clientID);
             }
          }
          
@@ -382,6 +390,14 @@ public class AdministratorController extends MultiActionController
    }
    
 
+   /**
+    * Request handler logging out the administrator user
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
    public ModelAndView logOut(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {
@@ -392,6 +408,14 @@ public class AdministratorController extends MultiActionController
       return null;
    }
    
+   /**
+    * Accept the client, adding it to the client key store
+    * 
+    * @param clientKeyStorePath Client key store path
+    * @param alias client alias, which should be unique
+    * @param clientID client ID
+    * @return true if succeed otherwise false
+    */
    private boolean acceptClient(String clientKeyStorePath, String alias, int clientID)
    {
       boolean result = false;
@@ -464,8 +488,9 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Deny the client
-    * @param alias
-    * @param clientID
+    * 
+    * @param alias client alias, which should be unique
+    * @param clientID client ID
     * @return
     */
    private boolean denyClient(int clientID) 
@@ -486,8 +511,10 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Remove the client from the client key store
-    * @param clientKeystorePath
-    * @param alias
+    * 
+    * @param clientKeyStorePath Client key store path
+    * @param alias client alias, which should be unique
+    * @param clientID client ID
     * @return
     */
    private boolean removeClient(String clientKeystorePath, String alias, int clientID)
@@ -511,13 +538,18 @@ public class AdministratorController extends MultiActionController
    }
 
    /**
-    * Get the certificate file from the csr directory and create and returns a certificationRequest
-    * @param username
-    * @return
+    * Get the certificate file from the csr directory and create and returns a PKCS10CertificationRequest object
+    * 
+    * @param alias client alias
+    * @return PKCS10CertificationRequest object
     * @throws IOException
     */
-   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException {
-      File file = new File(rootCADir + "/" + CSRDir + "/" + alias + ".csr");
+   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException
+   {
+      String rootCaPath = configurationService.getItem(CA_PATH);
+      String csrPath = rootCaPath + "/ca/csr/";
+      
+      File file = new File(csrPath + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -531,8 +563,9 @@ public class AdministratorController extends MultiActionController
 
    /**
     * Convert a input stream to a String
-    * @param is
-    * @return
+    * 
+    * @param is InputStream
+    * @return String
     * @throws IOException
     */
    private String convertStreamToString(InputStream is) throws IOException {
@@ -557,6 +590,7 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Create a key pair (public & private key) using the RSA algorithm 
+    * 
     * @return Generated KeyPair
     */
    private KeyPair createKeyPair() 
@@ -575,6 +609,7 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Build a new X509 certificate, using the key pair earlier created and X500Name
+    * 
     * @param KPair is the KeyPair object
     * @param name X500Name with information about the issuer
     * @return a new X509Certificate, returns null if something went wrong
@@ -646,6 +681,7 @@ public class AdministratorController extends MultiActionController
 
    /**
     * And the certificate to the server's key store file
+    * 
     * @param KPair the KeyPair object
     * @param cert X509Certificate
     * @param keyStoreFile the path of the file where the key store is located
@@ -688,6 +724,7 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Saves the client certificate into a client key store file
+    * 
     * @param cert the X509 certificate
     * @param keyStoreFile the file path to the key store
     * @param alias the alias of the certificate
@@ -727,11 +764,11 @@ public class AdministratorController extends MultiActionController
    }
    
    /**
-    * Delete the client certificate from the servers keystore file
+    * Delete the client certificate from the servers key store file
     * 
     * @param keyStoreFile the file path to the key store
     * @param alias of the client certificate that will be removed
-    * @return true if successfully removed from the keystore else false
+    * @return true if successfully removed from the key store else false
     */
    private boolean deleteClientKeyStore(String keyStoreFile, String alias) {
       boolean success = false;
@@ -767,6 +804,7 @@ public class AdministratorController extends MultiActionController
    
    /**
     * Get the private key from the CA, using the server key store file   
+    * 
     * @return PrivateKey Object
     */
    private PrivateKey getPrivateKey()
@@ -777,7 +815,10 @@ public class AdministratorController extends MultiActionController
       {
          privateKS = KeyStore.getInstance("JKS");
          
-         FileInputStream fis = new FileInputStream(KEYSTORE_PATH);  
+         String rootCaPath = configurationService.getItem(CA_PATH);
+         String keyStorePath = rootCaPath + "/server.jks";
+         
+         FileInputStream fis = new FileInputStream(keyStorePath);  
          privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
          Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
          if(key instanceof PrivateKey) 
@@ -798,12 +839,24 @@ public class AdministratorController extends MultiActionController
       return privateKey;
    }
 
+   /**
+    * Check if the file exists
+    * 
+    * @param keyStoreFile path to the key store
+    * @return true if exists else false
+    */
    private boolean keyStoreExists(String keyStoreFile)
    {
       File f = new File(keyStoreFile);
       return (f.exists() ? true : false);
    }
    
+   /**
+    * Create a key store from scratch
+    * 
+    * @param keyStoreFile path to the key store
+    * @return true if keystore was successfully created
+    */
    private boolean createKeyStore(String keyStoreFile)
    {
       boolean returnValue = false;

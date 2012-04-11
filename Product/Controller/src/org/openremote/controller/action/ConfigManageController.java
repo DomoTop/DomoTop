@@ -110,6 +110,14 @@ public class ConfigManageController extends MultiActionController {
       return null;
    }
    
+   /**
+    * Sync online request
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
    public ModelAndView syncOnline(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
       String username = request.getParameter("username");
@@ -197,6 +205,12 @@ public class ConfigManageController extends MultiActionController {
       this.configuration = configuration;
    }
 
+   /**
+    * Base64 encode username and password to one single String
+    * @param username
+    * @param password
+    * @return Base64 encoded string
+    */
    private String encode(String username, String password) {
       Md5PasswordEncoder encoder = new Md5PasswordEncoder();
       String encodedPwd = encoder.encodePassword(password, username);

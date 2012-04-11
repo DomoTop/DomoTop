@@ -21,7 +21,7 @@ import org.openremote.controller.service.DatabaseService;
 
 public class DatabaseServiceImpl implements DatabaseService 
 {  
-   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
+   private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
 
    private final static String CONFIGURATION_NAME_1 = "composer_username";
    private final static String CONFIGURATION_NAME_2 = "ca_path";
@@ -43,7 +43,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_INFORMATION_2 = "The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.";
    private final static String CONFIGURATION_INFORMATION_3 = "When checked you are forced to enter the pin in the user management given by the device.<br/>If not checked, it is optional to use the pin.";
    private final static String CONFIGURATION_INFORMATION_4 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";
-   private final static String CONFIGURATION_INFORMATION_5 = "The username of the administrator.";
+   private final static String CONFIGURATION_INFORMATION_5 = "The password of the administrator.";
 
    private ControllerConfiguration configuration;
    private static Connection connection;
@@ -53,6 +53,7 @@ public class DatabaseServiceImpl implements DatabaseService
    
    /**
     * Initialize database path from XML configuration file 
+    * 
     * @return true is success else false
     */
    private boolean initDatabase()
@@ -119,7 +120,7 @@ public class DatabaseServiceImpl implements DatabaseService
    }
    
    /**
-    * Create the tables
+    * Create the tables in the database
     */
    private void createTables()
    {
@@ -246,7 +247,7 @@ public class DatabaseServiceImpl implements DatabaseService
    /**
     * Execute SQL query into the database
     * 
-    * @return resultset with the result
+    * @return ResultSet with the result of the query
     */
    @Override
    public ResultSet doSQL(String sql)
@@ -288,6 +289,7 @@ public class DatabaseServiceImpl implements DatabaseService
    
    /**
     * Get the number of rows of the result set (after a doSQL)
+    * 
     * @see doSQL(String sql)
     * @return the number of the rows
     */
@@ -313,6 +315,7 @@ public class DatabaseServiceImpl implements DatabaseService
 
    /**
     * Get the last inserted ID (IDENTITY) of the last database query
+    * 
     * @return the last inserted id
     */
    @Override
@@ -348,7 +351,7 @@ public class DatabaseServiceImpl implements DatabaseService
    }
 
    /**
-    * Close the database, only necessary at stopping the application
+    * Close the database and shutdown the HSQLDB server, only necessary at stopping the application
     */
    public void close() 
    {

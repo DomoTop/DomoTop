@@ -84,6 +84,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
    
    /**
     * Get all items (configurations values and names) from the database
+    * 
     * @return resultSet with the result
     */
    @Override

@@ -60,19 +60,16 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AdministratorServlet extends HttpServlet
 {
-  /**
-   * Common log category for HTTP
-   */
-  // @TODO Fix own logger
-  private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
+  private final static Logger logger = Logger.getLogger(Constants.SERVLET_LOG_CATEGORY);
 
   private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
  
   /**
    * Set the result set into a collection
-   * @param resultSet
-   * @return
+   * 
+   * @param resultSet ResultSet
+   * @return Collection
    */
   private Collection resultSetToCollection(ResultSet resultSet)
   {    
@@ -90,7 +87,7 @@ public class AdministratorServlet extends HttpServlet
   }
 
   /**
-   * Set the result sets in a hash map and give it to freemarker
+   * Set the result sets in a hash map and give it to Freemarker
    * 
    * @return String a HTML template with the data
    */
@@ -140,7 +137,8 @@ public class AdministratorServlet extends HttpServlet
    }
   
   /**
-   *  Process a template using FreeMarker and print the results
+   * Process a template using FreeMarker and print the results
+   *  
    * @param root HashMap with data
    * @param template the name of the template file
    * @return HTML template with the specified data

@@ -39,10 +39,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
-import org.openremote.controller.exception.BeehiveNotAvailableException;
-import org.openremote.controller.exception.ResourceNotFoundException;
 import org.openremote.controller.service.ConfigurationService;
-import org.openremote.controller.service.ControllerXMLChangeService;
 import org.openremote.controller.service.FileService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
@@ -59,10 +56,11 @@ import freemarker.template.TemplateException;
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
  * 
  */
+@SuppressWarnings("serial")
 public class LoginServlet extends HttpServlet
 {
 
-/**
+   /**
    * Common log category for HTTP
    */
   private final static Logger logger = Logger.getLogger(Constants.LOGIN_SERVLET_LOG_CATEGORY);
@@ -71,14 +69,9 @@ public class LoginServlet extends HttpServlet
         .getInstance().getBean("configurationService");
   
   private ControllerConfiguration configuration = ControllerConfiguration.readXML();
-  
-  private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
-        .getInstance().getBean("controllerXMLChangeService");
-
   private FileService fileService =  (FileService) SpringContext
         .getInstance().getBean("fileService");
 
-  
 
   /**
    * Check username and password against the online interface
@@ -179,7 +172,6 @@ public class LoginServlet extends HttpServlet
      }
      
      int ret = checkOnline(username, password);
-     logger.error(ret);
      if(ret == 0) {
         session.setAttribute(AuthenticationUtil.AUTH_SESSION, true);
         
