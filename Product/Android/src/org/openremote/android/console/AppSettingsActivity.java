@@ -250,7 +250,8 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
     final EditText sslPortEditField = (EditText)findViewById(R.id.ssl_port);
     
-    final Button showPIN = (Button)findViewById(R.id.ssl_clientcert_pin);
+    
+    final TextView pin = (TextView)findViewById(R.id.ssl_clientcert_pin);
 
     // Configure UI to current settings state...
 
@@ -297,21 +298,8 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    showPIN.setOnClickListener(
-        	new OnClickListener() {
-        		
-    			@Override
-    			public void onClick(View arg0) {
-    				ViewHelper.showAlertViewWithTitle(
-    						AppSettingsActivity.this, 
-    						"PIN", 
-    						ORKeyPair.getInstance().getPIN(getApplicationContext())
-    					);
-    			}
-    		});
-    // ...
-
-
+    pin.setText(ORKeyPair.getInstance().getPIN(getApplicationContext()).toUpperCase());
+    
     sslPortEditField.setOnKeyListener(new OnKeyListener()
     {
       public boolean onKey(View v, int keyCode, KeyEvent event)
@@ -581,6 +569,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       custumeView.addView(customListView);
       custumeView.addView(buttonsView);
       requestPanelList();
+      requestAccess();
       return custumeView;
   }
 
@@ -604,6 +593,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
                writeCustomServerToFile();
                requestPanelList();
+               requestAccess();
             }
          }
       }
@@ -650,6 +640,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                progressLayout.setVisibility(View.INVISIBLE);
             }
             requestPanelList();
+            requestAccess();
          }
       }.execute((Void) null);
       
@@ -808,6 +799,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                public void onClick(View v) {
                   super.onClick(v);
                   requestPanelList();
+                  requestAccess();
                }
                
             });

@@ -121,7 +121,7 @@ public class LoginServlet extends HttpServlet
      } else if(username.equals(username) && MD5Util.generateMD5Sum(password.getBytes()).equals(databasepassword)) {
         return 0;
      } else {
-        return -1;   
+        return -2;   
      }
      
   }
