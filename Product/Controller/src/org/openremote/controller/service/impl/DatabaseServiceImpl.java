@@ -359,25 +359,11 @@ public class DatabaseServiceImpl implements DatabaseService
             connection.close();
          }
          
-         //Stop hsqlserver
-         hsqlServer.stop();
-         
-         
-         
+         // Stop hsqldb server
+         hsqlServer.shutdown();
       } catch (SQLException e) {
          logger.error("SQL Exception: " + e.getMessage());
       }
-   }
-   
-   /**
-    * When the garbage collector kicks in, close the database statement and connection
-    */
-   @Override
-   protected void finalize() throws Throwable 
-   {
-      this.close();
-      super.finalize();
-
    }
    
    /**
