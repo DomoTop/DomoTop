@@ -154,11 +154,7 @@ public class AdministratorController extends MultiActionController
             logger.error("No CA certificate generated or no key pair generated.");
          }
    
-         if(success)
-         {
-            response.getWriter().print(Constants.OK);
-         }
-         else
+         if(!success)
          {
             response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
          }   
@@ -169,8 +165,8 @@ public class AdministratorController extends MultiActionController
       }
       
       if(success)
-      {
-         Process child = Runtime.getRuntime().exec("service tomcat6 restart");
+      {   
+         response.getWriter().print(Constants.OK);
       }
       
       return null;
@@ -273,7 +269,7 @@ public class AdministratorController extends MultiActionController
          if(requestPin.isEmpty())
          {
             result = false;
-            errorString = "The pin you entered is empty. Please enter the pin shown on the device.";
+            errorString = "The pin you entered is empty. <br/>Please enter the pin shown on the device.";
          }
          else
          {

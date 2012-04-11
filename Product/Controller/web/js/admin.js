@@ -83,7 +83,7 @@ $(document).ready(function()
   $('#caForm').ajaxForm(function(result) {
   	clearMessage();
   	if (result == 'OK') {
-			message("CA successfully created.");
+			message("CA successfully created. <br/><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
