@@ -39,6 +39,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
+import org.openremote.controller.exception.BeehiveNotAvailableException;
+import org.openremote.controller.exception.ResourceNotFoundException;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.ControllerXMLChangeService;
 import org.openremote.controller.service.FileService;
@@ -86,23 +88,12 @@ public class LoginServlet extends HttpServlet
   public int checkOnline(String username, String password)
   {
      String databaseuser = configurationService.getItem("composer_username");
-     logger.error(databaseuser);
-     if(databaseuser == null || databaseuser.equals("")) {
-        boolean success = fileService.syncConfigurationWithModeler(username, password);
-        logger.error("succes " + success);
-        if (success) {
-           controllerXMLChangeService.refreshController();
-           saveUsername(username);
-           return 0;
-        } else {
-           return -1;
-        }
-     }
-     
+
      if(!username.equals(databaseuser)) {
         return -3;
      }
-
+     
+     boolean success = false;
      HttpClient httpClient = new DefaultHttpClient();
      HttpGet httpGet = new HttpGet(PathUtil.addSlashSuffix(configuration.getBeehiveRESTRootUrl()) + "user/" + username
            + "/openremote.zip");
@@ -112,23 +103,34 @@ public class LoginServlet extends HttpServlet
 
      try {
         HttpResponse resp= httpClient.execute(httpGet);
-        if (200 == resp.getStatusLine().getStatusCode()) {
-           return 0;
-        } 
+        int statuscode = resp.getStatusLine().getStatusCode();
+        if (200 == statuscode) {
+           if(databaseuser == null || databaseuser.equals("")) {
+              fileService.writeZipAndUnzip(resp.getEntity().getContent());
+           }
+        } else if(401 == statuscode) {
+           return -2;
+        } else {
+           logger.error("Login checking failed with HTTP Code " + statuscode);
+        }
         
      } catch (IOException e) {
-        return -2;
+        logger.error(e.getMessage());
      }
-     return -2;
+     saveCredentials(username, password);
+     
+     return 0;
   }
   
   /**
    * Save the username in the configurationtable
    * @param username The username you want to save
    */
-  private void saveUsername(String username) {
+  private void saveCredentials(String username, String password) {
      configurationService.updateItem("composer_username", username);
+     configurationService.updateItem("composer_password", username);
   }
+  
   
   /**
    * Encode username and password for sending to the Beehive rest controller

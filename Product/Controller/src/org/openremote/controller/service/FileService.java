@@ -63,4 +63,12 @@ public interface FileService {
     */
    boolean syncConfigurationWithModeler(String username, String password);
 
+   /**
+    * Writes a InputStream containing to a zip to the filesystem and unpacks that zip
+    * 
+    * @param inputStream The zip file
+    * @return true if success.
+    */
+   boolean writeZipAndUnzip(InputStream inputStream);
+
 }

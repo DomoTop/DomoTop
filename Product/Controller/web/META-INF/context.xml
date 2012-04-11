@@ -1,8 +1,19 @@
 <Context>
     <Realm  className="org.apache.catalina.realm.JDBCRealm" 
            debug="99" driverName="org.hsqldb.jdbc.JDBCDriver" 
-           connectionURL="jdbc:hsqldb:hsql://localhost/openremote"
+           connectionURL="jdbc:hsqldb:hsql://localhost:9001/openremote"
            connectionName="SA" connectionPassword="" 
            userTable="client" userNameCol="client_dn"
            userRoleTable="client" roleNameCol="client_role" />
+
+     <bean id="dataBase" class="org.springmodules.db.hsqldb.ServerBean" singleton="true" lazy-init="false">
+         <property name="dataSource"><ref local="dataSource"/></property>
+         <property name="serverProperties">
+             <props>
+                 <prop key="server.port">9101</prop>
+                 <prop key="server.database.0">webapps/myapp/db/test</prop>
+                 <prop key="server.dbname.0">test</prop>
+             </props>
+         </property>
+     </bean>
 </Context>

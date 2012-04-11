@@ -63,6 +63,8 @@ public class DatabaseServiceImpl implements DatabaseService
       // to some Writer object that could store the logs.
       hsqlServer.setLogWriter(null);
       hsqlServer.setSilent(true); 
+
+      hsqlServer.setPort(9001);
       
       // init database path
       configuration = ControllerConfiguration.readXML();
@@ -74,7 +76,7 @@ public class DatabaseServiceImpl implements DatabaseService
          // testdb.properties and testdb.script
          hsqlServer.setDatabaseName(0, "openremote");
          hsqlServer.setDatabasePath(0, "file:" + configuration.getResourcePath() + "/database/openremote");
-         
+                  
          // Start the database!
          hsqlServer.start();
       }
@@ -207,15 +209,14 @@ public class DatabaseServiceImpl implements DatabaseService
    { 
       boolean returnValue = true;
       
-      returnValue = this.initDatabase();
-      if(returnValue) {
-         returnValue = this.setupConnection();
-         
-         this.createTables();
-         this.fillDatabase();
-         
-         returnValue = this.createStatement();
-      }
+      //returnValue = this.initDatabase();
+      returnValue = this.setupConnection();
+      
+      this.createTables();
+      this.fillDatabase();
+      
+      returnValue = this.createStatement();
+      
       return returnValue;
    }
    
@@ -345,7 +346,6 @@ public class DatabaseServiceImpl implements DatabaseService
    /**
     * Close the database, only necessary at stopping the application
     */
-   @Override
    public void close() 
    {
       try {         
@@ -361,6 +361,9 @@ public class DatabaseServiceImpl implements DatabaseService
          
          //Stop hsqlserver
          hsqlServer.stop();
+         
+         
+         
       } catch (SQLException e) {
          logger.error("SQL Exception: " + e.getMessage());
       }
