@@ -93,7 +93,7 @@ public class FileServiceImpl implements FileService {
       }
    }
 
-   private boolean writeZipAndUnzip(InputStream inputStream) {
+   public boolean writeZipAndUnzip(InputStream inputStream) {
       String resourcePath = configuration.getResourcePath();
       File zip = new File(resourcePath, "openremote.zip");
       FileOutputStream fos = null;

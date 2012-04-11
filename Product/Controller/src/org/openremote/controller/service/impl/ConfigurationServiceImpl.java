@@ -109,10 +109,14 @@ public class ConfigurationServiceImpl implements ConfigurationService
    {
       String returnValue = "";
        try {
-           ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'string' AND  configuration_name = '" + name + "'");
-           result.next();
-           returnValue = result.getString("configuration_value");
-           database.free();
+          if(database != null) {
+              ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'string' AND  configuration_name = '" + name + "'");
+              if(result != null) {
+                 result.next();
+                 returnValue = result.getString("configuration_value");
+              }
+              database.free();
+          }
        } catch (SQLException e) {
            return e.getMessage();
        }       
@@ -130,10 +134,14 @@ public class ConfigurationServiceImpl implements ConfigurationService
       String configurationType = "";
       boolean returnValue = false;
       try {
-          ResultSet result = database.doSQL("SELECT configuration_type FROM configuration WHERE configuration_name = '" + name + "'");
-          result.next();
-          configurationType = result.getString("configuration_type");
-          database.free();
+         if(database != null) {
+             ResultSet result = database.doSQL("SELECT configuration_type FROM configuration WHERE configuration_name = '" + name + "'");
+             if(result != null) {
+                result.next();
+                configurationType = result.getString("configuration_type");
+             }
+             database.free();
+         }
       } catch (SQLException e) {
          // TODO: logger
       }      
@@ -169,10 +177,14 @@ public class ConfigurationServiceImpl implements ConfigurationService
       boolean returnValue = false;
       
       try {
-          ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'boolean' AND configuration_name = '" + name + "'");
-          result.next();
-          returnValue = result.getString("configuration_value").equals("true") ? true : false;
-          database.free();
+         if(database != null) {
+             ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'boolean' AND configuration_name = '" + name + "'");
+             if(result != null) {
+                result.next();
+                returnValue = result.getString("configuration_value").equals("true") ? true : false;
+             }
+             database.free();
+         }
       } catch (SQLException e) {
          // TODO: logger
       }       

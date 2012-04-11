@@ -1,8 +1,9 @@
 <Context>
     <Realm  className="org.apache.catalina.realm.JDBCRealm" 
            debug="99" driverName="org.hsqldb.jdbc.JDBCDriver" 
-           connectionURL="jdbc:hsqldb:hsql://localhost/openremote"
+           connectionURL="jdbc:hsqldb:hsql://localhost:10001/openremote"
            connectionName="SA" connectionPassword="" 
            userTable="client" userNameCol="client_dn"
            userRoleTable="client" roleNameCol="client_role" />
+
 </Context>
