@@ -104,7 +104,6 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
     	if(e.getMessage().contains("SSL")) {
     		//Handle error
     		//Probably no access/
-    		ORKeyStore ks =  ORKeyStore.getInstance(activity);
     		result.setAction(TO_SETTING);
     		return result;
     	} else {
@@ -157,8 +156,19 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          }
       } else { // Download failed.
          if (checkResponse != null && checkResponse.getStatusLine().getStatusCode() == ControllerException.UNAUTHORIZED) {
-            result.setAction(TO_LOGIN);
-            result.setStatusCode(ControllerException.UNAUTHORIZED);
+        	if(AppSettingsModel.isSSLEnabled(activity)) 
+        	{
+        		result.setAction(TO_SETTING);
+        		
+        	} else {
+        		result.setAction(TO_LOGIN);
+            	result.setStatusCode(ControllerException.UNAUTHORIZED);
+        	}
+            return result;
+         }
+         
+         if(checkResponse != null && checkResponse.getStatusLine().getStatusCode() == 403) {
+     		result.setAction(TO_SETTING);
             return result;
          }
          
