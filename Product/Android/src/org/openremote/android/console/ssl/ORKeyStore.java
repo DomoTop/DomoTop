@@ -354,7 +354,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));   
 	    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
 	    
-	    int what = addCertificate(host, chain) ? 0 : 1;
+	    int what = 1;
+	    if(chain[0] != null && chain[1] != null) {
+		    what = addCertificate(host, chain) ? 0 : 1;
+	    }
 	    
 	    if(fetchHandler != null) {
 	    	fetchHandler.sendEmptyMessage(what);
