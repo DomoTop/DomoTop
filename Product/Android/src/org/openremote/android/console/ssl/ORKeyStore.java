@@ -96,14 +96,6 @@ public class ORKeyStore implements ORConnectionDelegate {
 				keystore.load(context.openFileInput(KEYSTORE_FILE), "password".toCharArray());
 			} else {
 				keystore.load(null, null);
-				
-				FileInputStream in = new FileInputStream(file);
-				FileOutputStream out = new FileOutputStream(file);
-
-				keystore.store(out, 
-						null);
-				keystore.load(in, 
-						null);
 			}
 
 		} catch(KeyStoreException e) {
@@ -115,7 +107,8 @@ public class ORKeyStore implements ORConnectionDelegate {
 		} catch (FileNotFoundException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "Loading keystore" + e.getMessage());
+			file.delete();
 		} 
 	}
 	
@@ -137,7 +130,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		} catch (CertificateException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "Saving keystore " + e.getMessage());
 		}
 	}
 	
@@ -206,7 +199,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		
 		String url = host;
 		url += "/rest/cert/get/";
-		url += URLEncoder.encode(PhoneInformation.getInstance().getDeviceName());
+		url += PhoneInformation.getInstance().getUrlEncodedDeviceName();
 
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -242,6 +235,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    servercert = servercert.replace("-----END CERTIFICATE-----","");
 	    X509Certificate cert = null;
 	   
+	    if(servercert.length() <= 1) {
+	    	return null;
+	    }
+	    
 	    try {
 			InputStream is = new ByteArrayInputStream(Base64.decode(servercert));
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -357,13 +354,21 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    chain[0] = certificateFromDocument(doc.getElementsByTagName("client").item(0));   
 	    chain[1] = certificateFromDocument(doc.getElementsByTagName("server").item(0));
 	    
-	    int what = addCertificate(host, chain) ? 0 : 1;
+	    int what = 1;
+	    if(chain[0] != null && chain[1] != null) {
+		    what = addCertificate(host, chain) ? 0 : 1;
+	    }
 	    
 	    if(fetchHandler != null) {
 	    	fetchHandler.sendEmptyMessage(what);
 	    }
 	}
 	
+	/**
+	 * Return a string with information about an alias found in the keystore
+	 * @param alias The alias to check
+	 * @return string with information about an alias found in the keystore
+	 */
 	public String aliasInformation(String alias)
 	{
 		StringBuilder info = new StringBuilder("Certificate information:\n");

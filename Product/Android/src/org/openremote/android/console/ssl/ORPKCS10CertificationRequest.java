@@ -169,16 +169,15 @@ public class ORPKCS10CertificationRequest {
 	    HttpClient httpclient = new DefaultHttpClient();
 	    PhoneInformation phoneInfo = PhoneInformation.getInstance();
 	    
-	    String devicename = phoneInfo.getDeviceName().replace(' ', '_');
 	    String email = phoneInfo.getEmailAddress(context);
 	    
-	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + devicename);
+	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + phoneInfo.getUrlEncodedDeviceName());
 		
 	    try {
-	    	String csr = getCertificationRequestAsBase64(context, devicename, email);
+	    	String csr = getCertificationRequestAsBase64(context, phoneInfo.getDeviceName(), email);
 	    	
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-	        nameValuePairs.add(new BasicNameValuePair("csr", URLEncoder.encode(csr)));
+	        nameValuePairs.add(new BasicNameValuePair("csr", URLEncoder.encode(csr, "UTF-8")));
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
@@ -230,11 +229,5 @@ public class ORPKCS10CertificationRequest {
 		} catch (IOException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} 
-	}
-
-	public boolean isPending() {
-		File dir = context.getFilesDir();
-		File file = new File(dir, TIMESTAMP_FILE);	
-		return file.exists();
 	}
 }

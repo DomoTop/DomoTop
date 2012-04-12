@@ -298,7 +298,29 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    pin.setText(ORKeyPair.getInstance().getPIN(getApplicationContext()).toUpperCase());
+    pin.setText("...");
+    
+    final Handler pinHandler = new Handler() {
+    	@Override
+    	public void handleMessage(Message msg) {
+    	    pin.setText(msg.getData().getString("pin"));
+    		super.handleMessage(msg);
+    	}
+    };
+    
+    new Thread() {
+    	public void run() {
+    		String pin = ORKeyPair.getInstance().getPIN(getApplicationContext());
+
+    		Bundle bundle = new Bundle();
+    		bundle.putString("pin", pin);
+    		
+    		Message msg = pinHandler.obtainMessage();
+    		msg.setData(bundle);	
+    		
+    		msg.sendToTarget();
+    	}
+    }.start();
     
     sslPortEditField.setOnKeyListener(new OnKeyListener()
     {
@@ -364,7 +386,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             }
             if(AppSettingsModel.isSSLEnabled(getApplicationContext()) 
             		&& AppSettingsModel.getSSLPort(getApplicationContext()) == 8443) {
-            	//TODO submit certification request
             	retrieveCertificate();
             	return;
             }
@@ -690,6 +711,11 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 	   final Handler handler = new Handler()
 	   {
 		   public void handleMessage(Message msg) {
+			   if(msg.what == 200 || msg.what == 501) {
+				   AppSettingsModel.enableSSL(AppSettingsActivity.this, true);
+				   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
+				   sslToggleButton.setChecked(true);
+			   }
 			   progress.dismiss();
 		   }
 	   };
@@ -709,11 +735,13 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    private void retrieveCertificate()
    {
 	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
-	   	   
+	   //final ProgressDialog dialog = ProgressDialog.show(getApplicationContext(), "Fetching certificate", "Busy fetching certificate");	 
+	   
 	   final Handler handler = new Handler()
 	   {
 		   @Override
 		   public void handleMessage(Message msg) {
+			   //dialog.cancel();
 			   if(msg.what == 0) {
 				   startMain();   
 			   } else {

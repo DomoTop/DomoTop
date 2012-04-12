@@ -1,5 +1,4 @@
 /*
-
  * OpenRemote, the Home of the Digital Home.
  * Copyright 2008-2011, OpenRemote Inc.
  *
@@ -53,7 +52,7 @@ import org.openremote.controller.spring.SpringContext;
  * <a href = "http://openremote.org/display/docs/Controller+2.0+HTTP-REST-JSONP">Controller 2.0
  * REST JSONP API</a> for more details.
  *
- * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a> * 
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>  
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a>
  */
 @SuppressWarnings("serial")
@@ -83,7 +82,7 @@ public class FindCertificateByID extends RESTAPI
 
   protected String getChain(String username) throws IOException
   {
-     username = URLDecoder.decode(username);
+     username = URLDecoder.decode(username, "UTF-8");
     String rootCAPath = configurationService.getItem("ca_path");
     String keystore = rootCAPath + "/server.jks";
     
