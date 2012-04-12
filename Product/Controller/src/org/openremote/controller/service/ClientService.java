@@ -9,18 +9,104 @@ import java.sql.ResultSet;
 
 public interface ClientService 
 {   
+   /**
+    * Get all clients.
+    * 
+    * @return The result set from the database with all the information from every client
+    */
    ResultSet getClients();
-   int getNumClients();
-   int addClient(String pinCode, String deviceName, String email, String fileName, String cn);
-   ResultSet getClient(int clientID);
-   int updateClientStatus(int clientID, boolean active);
-   int updateClientSerial(int clientID, String serial);
-   String getSerial();
-   boolean isClientIDValid(int clientID);
-   X509Certificate getClientCertificate(String alias);
-   void free();
-   int clearClientSerial(int clientID);  
-   int dropClients();
+   /**
+    * Add new client to the database.
+    * 
+    * @param alias clients alias
+    * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
+    */
    int addClient(String csrFileName);
-   int removeClient(int clientID);
+   /**
+    * Add new client to the database.
+    * 
+    * @param pinCode
+    *           the client pin
+    * @param deviceName
+    *           the client device name
+    * @param email
+    *           the client e-mail address
+    * @param alias
+    *           the client alias
+    * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
+    */
+   int addClient(String pinCode, String deviceName, String email, String fileName, String cn);
+   /**
+    * Get one client result set from the database.
+    * 
+    * @param clientID
+    *           id from the client
+    * @return ResultSet the result from the database with client information
+    */
+   ResultSet getClient(int clientID);
+   /**
+    * Updates the client active boolean flag in the database.
+    * 
+    * @param clientID
+    *           is the client id
+    * @param active
+    *           boolean true is active false is non-active
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   int updateClientStatus(int clientID, boolean active);
+   /**
+    * Update client serial number.
+    * 
+    * @param clientID
+    *           id client
+    * @return value -1 or 0 is , 1 is correct
+    */
+   int updateClientSerial(int clientID, String serial);
+   /**
+    * Write a empty string to the client serial in the database
+    * 
+    * @param clientID client ID
+    * @return value -1 or 0 is , 1 is correct
+    */
+   int clearClientSerial(int clientID); 
+   /**
+    * Drop/remove all clients from the database
+    * 
+    * @return value -1 or 0 is incorrect, 1 is correct
+    */
+   int dropClients();
+   /**
+    * Deletes a client from the database
+    * @param clientID The id of the client you want to remove
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   int removeClient(int clientID);      
+   /**
+    * Get Client serial
+    * @return String serial
+    */
+   String getSerial();
+   /**
+    * Get the X509 Certificate from the client key store file via username alias
+    * @param alias is the certificate alias name
+    */
+   X509Certificate getClientCertificate(String alias);
+   /**
+    * Returns the number of clients. Note: You should use getClients() first and directly a getNumClients()
+    * 
+    * @see #getClients()
+    * 
+    * @return int of the number of clients
+    */
+   int getNumClients();
+   /**
+    * Check if the client ID which is provided is valid
+    * @param clientID
+    * @return true if the client id is valid else false
+    */
+   boolean isClientIDValid(int clientID);
+   /**
+    * Close the result set.
+    */
+   void free();
 }

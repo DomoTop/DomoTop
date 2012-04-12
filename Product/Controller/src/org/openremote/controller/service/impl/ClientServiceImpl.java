@@ -32,7 +32,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
-import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
@@ -202,7 +201,6 @@ public class ClientServiceImpl implements ClientService {
       return resultvalue;
    }
 
-
    /**
     * Update client serial number.
     * 
@@ -221,6 +219,12 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }  
    
+   /**
+    * Write a empty string to the client serial in the database
+    * 
+    * @param clientID client ID
+    * @return value -1 or 0 is , 1 is correct
+    */
    @Override
    public int clearClientSerial(int clientID) {
       int resultValue = -1;
@@ -231,7 +235,11 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }
    
-   
+   /**
+    * Drop/remove all clients from the database
+    * 
+    * @return value -1 or 0 is incorrect, 1 is correct
+    */
    @Override
    public int dropClients()
    {
@@ -243,7 +251,10 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }
    
-   
+   /**
+    * Get Client serial
+    * @return String serial
+    */
    @Override
    public String getSerial() {
       return serial;
@@ -283,14 +294,6 @@ public class ClientServiceImpl implements ClientService {
    }   
    
    /**
-    * Close the result set.
-    */
-   @Override
-   public void free() {
-      database.free();
-   }
-
-   /**
     * Returns the number of clients. Note: You should use getClients() first and directly a getNumClients()
     * 
     * @see #getClients()
@@ -305,7 +308,6 @@ public class ClientServiceImpl implements ClientService {
       }
       return newNum;
    }
-
    
    /**
     * Check if the client ID which is provided is valid
@@ -326,6 +328,14 @@ public class ClientServiceImpl implements ClientService {
          logger.error("Database is not yet set (null)");
       }
       return returnValue;
+   }
+   
+   /**
+    * Close the result set.
+    */
+   @Override
+   public void free() {
+      database.free();
    }
 
    @SuppressWarnings("deprecation")
