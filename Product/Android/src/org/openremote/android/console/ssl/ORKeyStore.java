@@ -364,6 +364,11 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    }
 	}
 	
+	/**
+	 * Return a string with information about an alias found in the keystore
+	 * @param alias The alias to check
+	 * @return string with information about an alias found in the keystore
+	 */
 	public String aliasInformation(String alias)
 	{
 		StringBuilder info = new StringBuilder("Certificate information:\n");

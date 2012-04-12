@@ -298,7 +298,29 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
         }
     );
     
-    pin.setText(ORKeyPair.getInstance().getPIN(getApplicationContext()).toUpperCase());
+    pin.setText("...");
+    
+    final Handler pinHandler = new Handler() {
+    	@Override
+    	public void handleMessage(Message msg) {
+    	    pin.setText(msg.getData().getString("pin"));
+    		super.handleMessage(msg);
+    	}
+    };
+    
+    new Thread() {
+    	public void run() {
+    		String pin = ORKeyPair.getInstance().getPIN(getApplicationContext());
+
+    		Bundle bundle = new Bundle();
+    		bundle.putString("pin", pin);
+    		
+    		Message msg = pinHandler.obtainMessage();
+    		msg.setData(bundle);	
+    		
+    		msg.sendToTarget();
+    	}
+    }.start();
     
     sslPortEditField.setOnKeyListener(new OnKeyListener()
     {
