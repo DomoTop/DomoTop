@@ -105,7 +105,7 @@ public class SubmitCSR extends RESTAPI
   /**
    * Write CSR to file
    */
-  protected long putCsr(String username, String cert) throws IOException
+  protected long saveCsr(String username, String cert) throws IOException
   {
     String certificate = URLDecoder.decode(cert, "UTF-8");
     long timestamp = System.currentTimeMillis();
@@ -143,7 +143,7 @@ public class SubmitCSR extends RESTAPI
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(url);
         if(matcher.find()) 
-            sendResponse(response, "" + putCsr(matcher.group(1), request.getParameter("csr")));
+            sendResponse(response, "" + saveCsr(matcher.group(1), request.getParameter("csr")));
     }
 
     catch (ControlCommandException e)
