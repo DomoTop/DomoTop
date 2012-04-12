@@ -125,7 +125,7 @@ public class ORPKCS10CertificationRequest {
 		
 		long timestamp = System.currentTimeMillis();
 		
-		X500Principal              dnName = new X500Principal("CN=" + devicename);// + ",OU="+ timestamp);
+		X500Principal              dnName = new X500Principal("CN=" + devicename + ",O="+ timestamp);
 		PKCS10CertificationRequest kpGen = null;
 		
 		// create the extension value

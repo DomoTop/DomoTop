@@ -18,6 +18,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Encodable;
@@ -25,6 +27,7 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.ASN1Set;
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
@@ -381,12 +384,23 @@ public class ClientServiceImpl implements ClientService {
               
                email = new String(ext.getValue().getOctets()).substring(4);               
             }
-            //get cn
-            cn = certificationRequest.getSubject().toString();
             
+            //get cn
+            X500Name cna = certificationRequest.getSubject();
+            cn = cna.toString();
+            X500Principal prin = null;
+            try {
+               prin = new X500Principal(cna.getEncoded());
+               cn = prin.getName(X500Principal.RFC1779);
+            } catch (IOException e) {
+               logger.error(e.getMessage());
+               logger.debug(e.getStackTrace());
+            }
+                        
             // Get device name
             deviceName = certificationRequest.getSubject().toString();
             deviceName = deviceName.substring(deviceName.indexOf("CN=") + 3);
+          
          }
          else
          {
