@@ -118,6 +118,11 @@ public class ORPKCS10CertificationRequest {
 	private PKCS10CertificationRequest getCertificationRequest(String devicename, String email)
 	{
 		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
+		
+		if(keypair == null) {
+			return null;
+		}
+		
 		long timestamp = System.currentTimeMillis();
 		
 		X500Principal              dnName = new X500Principal("CN=" + devicename);// + ",OU="+ timestamp);

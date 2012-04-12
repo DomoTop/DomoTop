@@ -164,7 +164,11 @@ public class ORKeyStore implements ORConnectionDelegate {
 		if(chain != null)
 		{
 		    KeyPair kp = ORKeyPair.getInstance().getKeyPair(context);
-		    	    
+		    if(kp == null) 	  
+		    {
+		    	return false;
+		    }
+		    
 		    try {
 				keystore.setKeyEntry(host, 
 						kp.getPrivate(),

@@ -309,7 +309,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     };
     
     new Thread() {
-    	public void run() {
+    	public void run() {  		
     		String pin = ORKeyPair.getInstance().getPIN(getApplicationContext());
 
     		Bundle bundle = new Bundle();

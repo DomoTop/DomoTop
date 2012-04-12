@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
@@ -25,7 +28,8 @@ import android.util.Log;
  * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
  */
 public class ORKeyPair {
-
+	public static Lock lock = new ReentrantLock();
+	
 	// Constants ------------------------------------------------------------------------------------
 	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
 	
@@ -58,27 +62,36 @@ public class ORKeyPair {
 	 */
 	public KeyPair getKeyPair(Context context)
 	{
-		if(keypair == null)
-		{
-			keypair = deserializeKeypair(context);
-		}
+		try {
+			lock.tryLock(1000, TimeUnit.SECONDS);
 
-		if(keypair == null)
-		{		
-			KeyPairGenerator keyGen = null;
-			try {
-				keyGen = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
-			} catch (NoSuchAlgorithmException e) {
-				Log.e(LOG_CATEGORY, "KeyPairGenerator could not be initialized with algorithm: " + KEYPAIR_ALGORITHM);
+			if(keypair == null)
+			{
+				keypair = deserializeKeypair(context);
+			}
+	
+			if(keypair == null)
+			{		
+				KeyPairGenerator keyGen = null;
+				try {
+					keyGen = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
+				} catch (NoSuchAlgorithmException e) {
+					Log.e(LOG_CATEGORY, "KeyPairGenerator could not be initialized with algorithm: " + KEYPAIR_ALGORITHM);
+				}
+				
+				keyGen.initialize(KEYPAIR_SIZE);
+				
+				keypair = keyGen.generateKeyPair(); 
+				serializeKeypair(context, keypair);
 			}
 			
-			keyGen.initialize(KEYPAIR_SIZE);
+			lock.unlock();
 			
-			keypair = keyGen.generateKeyPair(); 
-			serializeKeypair(context, keypair);
+			return keypair;
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+			return null;
 		}
-		
-		return keypair;
 	}
 	
 	/**
@@ -96,12 +109,18 @@ public class ORKeyPair {
 			e.printStackTrace();
 		}
 		
-		RSAPublicKey publicKey = (RSAPublicKey) getKeyPair(context).getPublic();
-		m.update(publicKey.getModulus().toByteArray()); 
-
-		byte[] s = Hex.encode(m.digest());
+		KeyPair keyPair =  getKeyPair(context);
+		
+		if(keyPair != null) {
+			RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
+			m.update(publicKey.getModulus().toByteArray()); 
 	
-		return new String(s).substring(s.length - 4);
+			byte[] s = Hex.encode(m.digest());
+		
+			return new String(s).substring(s.length - 4);
+		} else {
+			return "";
+		}
 	}
 	
 	/**
