@@ -20,7 +20,7 @@ public abstract class PhoneInformation {
 	 */
 	public String getDeviceName()
 	{
-		return "htc desirÈ";
+		return android.os.Build.MODEL;
 	}
 	
 	/**
