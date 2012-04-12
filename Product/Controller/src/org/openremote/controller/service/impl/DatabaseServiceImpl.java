@@ -210,6 +210,7 @@ public class DatabaseServiceImpl implements DatabaseService
     * 
     * @return true is success else false
     */
+   @Override
    public boolean databaseInit()
    { 
       boolean returnValue = true;
@@ -224,25 +225,6 @@ public class DatabaseServiceImpl implements DatabaseService
       
       return returnValue;
    }
-   
-   /**
-    * First time check, if yes initialize database
-    */
-   private void checkFirstTime()
-   {
-      if(statement == null) // first time?
-      {
-         // Initialize the database by creating the tables
-         if(this.databaseInit())
-         {
-            logger.info("Database tables successfully created.");
-         }
-         else
-         {
-            logger.error("Database connection was unsuccessfully.");
-         }
-      }
-   }   
 
    /**
     * Execute SQL query into the database
@@ -251,9 +233,7 @@ public class DatabaseServiceImpl implements DatabaseService
     */
    @Override
    public ResultSet doSQL(String sql)
-   {      
-      this.checkFirstTime();
-      
+   {
       try 
       {
          if(statement != null)
@@ -299,9 +279,12 @@ public class DatabaseServiceImpl implements DatabaseService
       int numRows = 0;
       try 
       {
-         resultSet.last();
-         numRows = resultSet.getRow();
-         resultSet.beforeFirst();
+         if(resultSet != null)
+         {
+            resultSet.last();
+            numRows = resultSet.getRow();
+            resultSet.beforeFirst();
+         }
       } 
       catch (NullPointerException e) 
       {

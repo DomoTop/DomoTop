@@ -32,7 +32,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.x509.X509V2AttributeCertificate;
 import org.openremote.controller.Constants;
-import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
@@ -61,7 +60,6 @@ public class ClientServiceImpl implements ClientService {
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
-   private ControllerConfiguration xmlConfiguration;
    private ConfigurationService databaseConfiguration;
    private String serial = "";
    private String pin;
@@ -112,7 +110,8 @@ public class ClientServiceImpl implements ClientService {
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
    @Override
-   public int addClient(String pin, String deviceName, String email, String alias, String cn) {
+   public int addClient(String pin, String deviceName, String email, String alias, String cn) 
+   {
       int returnValue = 0;
       int resultValue = -1;
       int numRows = -1;
@@ -202,7 +201,6 @@ public class ClientServiceImpl implements ClientService {
       return resultvalue;
    }
 
-
    /**
     * Update client serial number.
     * 
@@ -221,6 +219,12 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }  
    
+   /**
+    * Write a empty string to the client serial in the database
+    * 
+    * @param clientID client ID
+    * @return value -1 or 0 is , 1 is correct
+    */
    @Override
    public int clearClientSerial(int clientID) {
       int resultValue = -1;
@@ -231,7 +235,11 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }
    
-   
+   /**
+    * Drop/remove all clients from the database
+    * 
+    * @return value -1 or 0 is incorrect, 1 is correct
+    */
    @Override
    public int dropClients()
    {
@@ -243,25 +251,15 @@ public class ClientServiceImpl implements ClientService {
       return resultValue;
    }
    
-   
+   /**
+    * Get Client serial
+    * @return String serial
+    */
    @Override
    public String getSerial() {
       return serial;
    }
    
-   /**
-    * Initialize CA Path, only if the CA Path is empty 
-    * then get the CA Path from the XML configuration and save it in the database
-    */
-   @Override
-   public void initCaPath()
-   {
-      if(databaseConfiguration.getItem(CA_PATH).isEmpty())
-      {
-         databaseConfiguration.updateItem(CA_PATH, xmlConfiguration.getCaPath());
-      }
-   }
-
    /**
     * Get the X509 Certificate from the client key store file via username alias
     * @param alias is the certificate alias name
@@ -273,8 +271,6 @@ public class ClientServiceImpl implements ClientService {
       X509Certificate certificate = null;
       String rootCADir = databaseConfiguration.getItem(CA_PATH);
       String client_key_store = rootCADir + "/client_certificates.jks";
-      
-      logger.error("Client path: " + client_key_store);
       
       try
       {
@@ -298,14 +294,6 @@ public class ClientServiceImpl implements ClientService {
    }   
    
    /**
-    * Close the result set.
-    */
-   @Override
-   public void free() {
-      database.free();
-   }
-
-   /**
     * Returns the number of clients. Note: You should use getClients() first and directly a getNumClients()
     * 
     * @see #getClients()
@@ -320,7 +308,6 @@ public class ClientServiceImpl implements ClientService {
       }
       return newNum;
    }
-
    
    /**
     * Check if the client ID which is provided is valid
@@ -342,39 +329,15 @@ public class ClientServiceImpl implements ClientService {
       }
       return returnValue;
    }
-
-   /**
-    * Sets the database.
-    * 
-    * @param database
-    *           service
-    */
-
-   public void setDatabase(DatabaseService database) {
-      this.database = database;
-   }
    
    /**
-    * Sets the XML configuration.
-    * 
-    * @param xml configuration
-    *           the new configuration
+    * Close the result set.
     */
-   public void setXmlConfiguration(ControllerConfiguration xmlConfiguration) {
-      this.xmlConfiguration = xmlConfiguration;
+   @Override
+   public void free() {
+      database.free();
    }
 
-   /**
-    * Sets the database configuration.
-    * 
-    * @param configuration
-    *           service
-    */
-
-   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
-      this.databaseConfiguration = databaseConfiguration;
-   }
-   
    @SuppressWarnings("deprecation")
    private void parseCSRFile(String alias)
    {
@@ -495,5 +458,27 @@ public class ClientServiceImpl implements ClientService {
          logger.error(e.getMessage());
       }
       return new String(Hex.encodeHex(resultByte));
+   }   
+   
+   /**
+    * Sets the database.
+    * 
+    * @param database
+    *           service
+    */
+
+   public void setDatabase(DatabaseService database) {
+      this.database = database;
+   }
+
+   /**
+    * Sets the database configuration.
+    * 
+    * @param configuration
+    *           service
+    */
+
+   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
+      this.databaseConfiguration = databaseConfiguration;
    }
 }

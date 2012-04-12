@@ -122,7 +122,7 @@ public class SubmitCSR extends RESTAPI
     {
         File file = new File(rootCaPath + CSR_PATH + filename);
         file.delete();
-        throw new IOException("CSR was already submitted");
+        throw new IOException("CSR was already submitted (this error can be ignored)");
     }
     return timestamp;
   }

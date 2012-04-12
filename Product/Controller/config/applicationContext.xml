@@ -140,10 +140,16 @@
     	<property name="configuration" ref="configuration"></property>
     </bean>        
     
+    <!-- service for the certificate service -->
+    <bean id="certificateService" class="org.openremote.controller.service.impl.CertificateServiceImpl" >
+    	<property name="controllerConfiguration" ref="configuration"></property>  
+    	<property name="clientService" ref="clientService"></property>    	
+    	<property name="configurationService" ref="configurationService"></property>
+    </bean>
+    
     <!-- service for client for getting client information for administrator panel -->
     <bean id="clientService" class="org.openremote.controller.service.impl.ClientServiceImpl" >
-    	<property name="database" ref="databaseService"></property>
-    	<property name="xmlConfiguration" ref="configuration"></property>    	
+    	<property name="database" ref="databaseService"></property>  	
     	<property name="databaseConfiguration" ref="configurationService"></property>
     </bean>
 
