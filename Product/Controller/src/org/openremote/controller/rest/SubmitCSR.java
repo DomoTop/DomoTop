@@ -162,7 +162,7 @@ public class SubmitCSR extends RESTAPI
     {
         logger.error("Failed to create certificate request file: " + e.getMessage());
         //sendResponse(response, e.getMessage());
-        sendResponse(response, 500, e.getMessage());
+        sendResponse(response, 501, e.getMessage());
     }
   }
 }

@@ -230,10 +230,4 @@ public class ORPKCS10CertificationRequest {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} 
 	}
-
-	public boolean isPending() {
-		File dir = context.getFilesDir();
-		File file = new File(dir, TIMESTAMP_FILE);	
-		return file.exists();
-	}
 }

@@ -183,6 +183,8 @@ public class ORConnection
                handler.sendEmptyMessage(ERROR);
             } catch (IOException e) {
                handler.sendEmptyMessage(ERROR);
+            } catch (IllegalStateException e) {
+                handler.sendEmptyMessage(ERROR);
             }
          }
       }).start(); 

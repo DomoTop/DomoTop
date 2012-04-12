@@ -24,8 +24,8 @@ public abstract class PhoneInformation {
 	}
 	
 	/**
-	 * Returns the name of the current device name as an urlencoded string
-	 * @return The device name as a String
+	 * Returns the name of the current device name as an url encoded string
+	 * @return The device name as an url encoded String
 	 */
 	public String getUrlEncodedDeviceName()
 	{

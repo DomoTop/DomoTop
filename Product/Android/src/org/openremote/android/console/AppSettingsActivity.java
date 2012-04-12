@@ -689,6 +689,11 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 	   final Handler handler = new Handler()
 	   {
 		   public void handleMessage(Message msg) {
+			   if(msg.what == 200 || msg.what == 501) {
+				   AppSettingsModel.enableSSL(AppSettingsActivity.this, true);
+				   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
+				   sslToggleButton.setChecked(true);
+			   }
 			   progress.dismiss();
 		   }
 	   };

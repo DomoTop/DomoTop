@@ -20,7 +20,6 @@
 
 package org.openremote.android.console.util;
 
-import java.security.KeyStore;
 import java.util.Iterator;
 import java.io.IOException;
 

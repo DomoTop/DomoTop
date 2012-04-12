@@ -96,14 +96,6 @@ public class ORKeyStore implements ORConnectionDelegate {
 				keystore.load(context.openFileInput(KEYSTORE_FILE), "password".toCharArray());
 			} else {
 				keystore.load(null, null);
-				
-				FileInputStream in = new FileInputStream(file);
-				FileOutputStream out = new FileOutputStream(file);
-
-				keystore.store(out, 
-						null);
-				keystore.load(in, 
-						null);
 			}
 
 		} catch(KeyStoreException e) {
@@ -115,7 +107,8 @@ public class ORKeyStore implements ORConnectionDelegate {
 		} catch (FileNotFoundException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "Loading keystore" + e.getMessage());
+			file.delete();
 		} 
 	}
 	
@@ -137,7 +130,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		} catch (CertificateException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "Saving keystore " + e.getMessage());
 		}
 	}
 	
