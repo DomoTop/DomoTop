@@ -416,7 +416,7 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
          startActivity(intent);
          break;
       case Constants.MENU_ITEM_SSL:
-    	  ViewHelper.showAlertViewWithTitle(GroupActivity.this, "Using cached content", 
+    	  ViewHelper.showAlertViewWithTitle(GroupActivity.this, "Certificate information", 
 		        	ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
 						AppSettingsModel.getCurrentServer(getApplicationContext())
 					));

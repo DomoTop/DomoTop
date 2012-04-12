@@ -378,9 +378,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 		try {
 			Certificate[] certs = keystore.getCertificateChain(alias);
 			X509Certificate cert = (X509Certificate) certs[0];
-			info.append("\tSubject: \t" + cert.getSubjectDN() + "\n");
-			info.append("\tIssuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t\t\t") + "\n");
-			info.append("\tValid till: \t" + cert.getNotAfter());
+			info.append("Subject: " + cert.getSubjectDN().getName().replace(",", "\n\t\t\t") + "\n");
+			info.append("Issuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t") + "\n");
+			info.append("Valid from: " + cert.getNotBefore() + "\n");
+			info.append("Valid till: " + cert.getNotAfter());
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		}
