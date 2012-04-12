@@ -138,24 +138,6 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
 
       initOrientationListener();
       
-      //Temporarily assume port 8443 == client authentication
-      //TODO come up with a better way
-      if(AppSettingsModel.isSSLEnabled(this) && AppSettingsModel.getSSLPort(this) == 8443) {
-    	  ImageView iv = new ImageView(this);
-    	  iv.setImageResource(R.drawable.lock);
-    	  contentLayout.addView(iv);
-    	  
-    	  iv.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-		        ViewHelper.showAlertViewWithTitle(GroupActivity.this, "Using cached content", 
-		        	ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
-						AppSettingsModel.getCurrentServer(getApplicationContext())
-					));
-			}
-		});
-      }
    }
 
    /**
@@ -433,6 +415,12 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
          intent.setClass(GroupActivity.this, AppSettingsActivity.class);
          startActivity(intent);
          break;
+      case Constants.MENU_ITEM_SSL:
+    	  ViewHelper.showAlertViewWithTitle(GroupActivity.this, "Using cached content", 
+		        	ORKeyStore.getInstance(getApplicationContext()).aliasInformation(
+						AppSettingsModel.getCurrentServer(getApplicationContext())
+					));
+    	  break;
       case Constants.MENU_ITEM_LOGOUT:
          doLogout();
          break;
@@ -450,6 +438,12 @@ public class GroupActivity extends GenericActivity implements OnGestureListener,
       menu.setQwertyMode(true);
       MenuItem setting = menu.add(-1, Constants.MENU_ITEM_SETTING, 0, R.string.setting);
       setting.setIcon(R.drawable.ic_menu_manage);
+      
+      if(AppSettingsModel.isSSLEnabled(getApplicationContext())) {
+    	  MenuItem ssl = menu.add(-1, Constants.MENU_ITEM_SSL, 0, R.string.ssl_clientcert);
+    	  ssl.setIcon(R.drawable.ic_menu_lock);
+      }
+      
       MenuItem logout = menu.add(-1, Constants.MENU_ITEM_LOGOUT, 1, R.string.logout);
       logout.setIcon(R.drawable.ic_menu_revert);
       return true;

@@ -118,8 +118,9 @@ public class ORPKCS10CertificationRequest {
 	private PKCS10CertificationRequest getCertificationRequest(String devicename, String email)
 	{
 		KeyPair keypair = ORKeyPair.getInstance().getKeyPair(context);
+		long timestamp = System.currentTimeMillis();
 		
-		X500Principal              dnName = new X500Principal("CN=" + devicename);
+		X500Principal              dnName = new X500Principal("CN=" + devicename);// + ",OU="+ timestamp);
 		PKCS10CertificationRequest kpGen = null;
 		
 		// create the extension value

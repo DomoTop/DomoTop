@@ -303,8 +303,8 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     final Handler pinHandler = new Handler() {
     	@Override
     	public void handleMessage(Message msg) {
-    	    pin.setText(msg.getData().getString("pin"));
     		super.handleMessage(msg);
+    	    pin.setText(msg.getData().getString("pin"));
     	}
     };
     

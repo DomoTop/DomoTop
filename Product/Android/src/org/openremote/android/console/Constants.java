@@ -40,8 +40,9 @@ public class Constants
   public static final long MODEL_VERSION = 2L;
   public static final long CACHE_VERSION = 3L;
   public static final int MENU_ITEM_SETTING = Menu.FIRST + 1;
-  public static final int MENU_ITEM_LOGOUT = Menu.FIRST + 2;
-  public static final int MENU_ITEM_QUIT = Menu.FIRST + 3;
+  public static final int MENU_ITEM_SSL = Menu.FIRST + 2;
+  public static final int MENU_ITEM_LOGOUT = Menu.FIRST + 3;
+  public static final int MENU_ITEM_QUIT = Menu.FIRST + 4;
   public static final String ERROR = "error";
   public static final int DIALOG_ERROR_ID = 0;
 
