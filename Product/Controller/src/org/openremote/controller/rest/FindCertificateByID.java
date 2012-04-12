@@ -79,7 +79,7 @@ public class FindCertificateByID extends RESTAPI
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
-
+  private static final String CA_ALIAS = "ca.alias";
 
   protected String getChain(String username) throws IOException
   {
@@ -95,7 +95,7 @@ public class FindCertificateByID extends RESTAPI
     try { 
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new FileInputStream(keystore), "password".toCharArray());
-        Certificate certificate = ks.getCertificate("ca.alias");
+        Certificate certificate = ks.getCertificate(CA_ALIAS);
         sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
     } catch (KeyStoreException e) {
         logger.error(e.getMessage());
@@ -107,7 +107,8 @@ public class FindCertificateByID extends RESTAPI
 
     sb.append("</server>\n<client>\n");
     
-   try {
+   try
+   {
       Certificate certificate = clientService.getClientCertificate(username);
       if(certificate != null)
       {

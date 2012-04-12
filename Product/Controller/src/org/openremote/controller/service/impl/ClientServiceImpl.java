@@ -111,7 +111,8 @@ public class ClientServiceImpl implements ClientService {
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
    @Override
-   public int addClient(String pin, String deviceName, String email, String alias, String cn) {
+   public int addClient(String pin, String deviceName, String email, String alias, String cn) 
+   {
       int returnValue = 0;
       int resultValue = -1;
       int numRows = -1;
@@ -260,8 +261,6 @@ public class ClientServiceImpl implements ClientService {
       String rootCADir = databaseConfiguration.getItem(CA_PATH);
       String client_key_store = rootCADir + "/client_certificates.jks";
       
-      logger.error("Client path: " + client_key_store);
-      
       try
       {
          clientKS = KeyStore.getInstance("JKS");
@@ -271,6 +270,7 @@ public class ClientServiceImpl implements ClientService {
          clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray()); 
          
          certificate = (X509Certificate) clientKS.getCertificate(alias);
+         logger.error("Check DN: " + certificate.getSubjectDN());
       } catch (NoSuchAlgorithmException e) {
          logger.error("Client certificate: " + e.getMessage());
       } catch (CertificateException e) {
@@ -329,28 +329,6 @@ public class ClientServiceImpl implements ClientService {
       return returnValue;
    }
 
-   /**
-    * Sets the database.
-    * 
-    * @param database
-    *           service
-    */
-
-   public void setDatabase(DatabaseService database) {
-      this.database = database;
-   }
-
-   /**
-    * Sets the database configuration.
-    * 
-    * @param configuration
-    *           service
-    */
-
-   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
-      this.databaseConfiguration = databaseConfiguration;
-   }
-   
    @SuppressWarnings("deprecation")
    private void parseCSRFile(String alias)
    {
@@ -471,5 +449,27 @@ public class ClientServiceImpl implements ClientService {
          logger.error(e.getMessage());
       }
       return new String(Hex.encodeHex(resultByte));
+   }   
+   
+   /**
+    * Sets the database.
+    * 
+    * @param database
+    *           service
+    */
+
+   public void setDatabase(DatabaseService database) {
+      this.database = database;
+   }
+
+   /**
+    * Sets the database configuration.
+    * 
+    * @param configuration
+    *           service
+    */
+
+   public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
+      this.databaseConfiguration = databaseConfiguration;
    }
 }
