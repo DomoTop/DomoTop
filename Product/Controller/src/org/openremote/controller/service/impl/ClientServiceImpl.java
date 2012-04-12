@@ -270,7 +270,6 @@ public class ClientServiceImpl implements ClientService {
          clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray()); 
          
          certificate = (X509Certificate) clientKS.getCertificate(alias);
-         logger.error("Check DN: " + certificate.getSubjectDN());
       } catch (NoSuchAlgorithmException e) {
          logger.error("Client certificate: " + e.getMessage());
       } catch (CertificateException e) {

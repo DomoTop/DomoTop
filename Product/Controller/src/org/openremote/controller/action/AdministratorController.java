@@ -181,10 +181,26 @@ public class AdministratorController extends MultiActionController
       
       if(clientService.isClientIDValid(clientID))
       {
+         
+         String alias = "";         
+         try {
+            ResultSet resultSet = clientService.getClient(clientID);
+            while (resultSet.next()) 
+            {
+               alias = resultSet.getString("client_alias");
+            }
+            clientService.free();
+         } catch (SQLException e) {
+            logger.error(e.getMessage());
+         }
+         
          int returnResult = clientService.removeClient(clientID);
          if (returnResult == 1)
          {
-            response.getWriter().print(Constants.OK);
+            if(certificateService.deleteClientFromClientKeyStore(alias))
+            {
+               response.getWriter().print(Constants.OK);
+            }
          }
          else
          {
@@ -213,7 +229,6 @@ public class AdministratorController extends MultiActionController
       }      
       boolean result = false;
       String pin = "";
-      String alias = "";
       String action = request.getParameter("action");
       int clientID = Integer.parseInt(request.getParameter("client_id"));      
       String errorString = "";
@@ -222,7 +237,6 @@ public class AdministratorController extends MultiActionController
          ResultSet resultSet = clientService.getClient(clientID);
          while (resultSet.next()) 
          {
-            alias = resultSet.getString("client_alias");
             pin = resultSet.getString("client_pincode");
          }
          clientService.free();
@@ -271,7 +285,7 @@ public class AdministratorController extends MultiActionController
          {
             if (action.equals("accept")) // accept device
             {
-               result = this.acceptClient(alias, clientID);
+               result = this.acceptClient(clientID);
             } 
             else if (action.equals("deny")) // deny device
             {
@@ -279,7 +293,7 @@ public class AdministratorController extends MultiActionController
             }
             else if (action.equals("remove")) // remove device
             {
-               result = this.removeClient(alias, clientID);
+               result = this.removeClient(clientID);
             }
          }
          
@@ -346,16 +360,26 @@ public class AdministratorController extends MultiActionController
    /**
     * Accept the client, adding it to the client key store
     * 
-    * @param alias client alias, which should be unique
     * @param clientID client ID
     * @return true if succeed otherwise false
     */
-   private boolean acceptClient(String alias, int clientID)
+   private boolean acceptClient(int clientID)
    {
       boolean result = false;
       if(privateKey == null)
       {
          privateKey = certificateService.getCaPrivateKey();
+      }
+      String alias = "";      
+      try {
+         ResultSet resultSet = clientService.getClient(clientID);
+         while (resultSet.next()) 
+         {
+            alias = resultSet.getString("client_alias");
+         }
+         clientService.free();
+      } catch (SQLException e) {
+         logger.error(e.getMessage());
       }
       
       try {
@@ -445,15 +469,26 @@ public class AdministratorController extends MultiActionController
     * Remove the client from the client key store
     * 
     * @param clientKeyStorePath Client key store path
-    * @param alias client alias, which should be unique
     * @param clientID client ID
     * @return
     */
-   private boolean removeClient(String alias, int clientID)
+   private boolean removeClient(int clientID)
    {
       boolean returnValue = false;
       
-      if(certificateService.deleteClientFromKeyStore(alias))
+      String alias = "";      
+      try {
+         ResultSet resultSet = clientService.getClient(clientID);
+         while (resultSet.next()) 
+         {
+            alias = resultSet.getString("client_alias");
+         }
+         clientService.free();
+      } catch (SQLException e) {
+         logger.error(e.getMessage());
+      }
+      
+      if(certificateService.deleteClientFromClientKeyStore(alias))
       {
          // Update the client database
          int statusReturn = clientService.removeClient(clientID);
