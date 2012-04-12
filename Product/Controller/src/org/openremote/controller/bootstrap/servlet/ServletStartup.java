@@ -135,8 +135,12 @@ public class ServletStartup implements ServletContextListener
       DatabaseService databaseService = (DatabaseService) SpringContext.getInstance().getBean("databaseService");
       databaseService.databaseInit();
       
-      // Init CA if necessary
+      // Init CA
       CertificateService caService = (CertificateService) SpringContext.getInstance().getBean("certificateService");
+      // init CA Path
+      caService.initCaPath();
+      
+      // Create new CA if necessary
       if(!caService.ifCaExists())
       {
          caService.createCa();

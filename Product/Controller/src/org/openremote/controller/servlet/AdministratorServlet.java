@@ -171,7 +171,6 @@ public class AdministratorServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
-     clientService.initCaPath();
      if(!AuthenticationUtil.isAuth(request)){
         response.sendRedirect("/controller/login");
         return;

@@ -61,7 +61,6 @@ public class ClientServiceImpl implements ClientService {
    private static String limitByOne = " LIMIT 1";
 
    private DatabaseService database;
-   private ControllerConfiguration xmlConfiguration;
    private ConfigurationService databaseConfiguration;
    private String serial = "";
    private String pin;
@@ -250,19 +249,6 @@ public class ClientServiceImpl implements ClientService {
    }
    
    /**
-    * Initialize CA Path, only if the CA Path is empty 
-    * then get the CA Path from the XML configuration and save it in the database
-    */
-   @Override
-   public void initCaPath()
-   {
-      if(databaseConfiguration.getItem(CA_PATH).isEmpty())
-      {
-         databaseConfiguration.updateItem(CA_PATH, xmlConfiguration.getCaPath());
-      }
-   }
-
-   /**
     * Get the X509 Certificate from the client key store file via username alias
     * @param alias is the certificate alias name
     */
@@ -352,16 +338,6 @@ public class ClientServiceImpl implements ClientService {
 
    public void setDatabase(DatabaseService database) {
       this.database = database;
-   }
-   
-   /**
-    * Sets the XML configuration.
-    * 
-    * @param xml configuration
-    *           the new configuration
-    */
-   public void setXmlConfiguration(ControllerConfiguration xmlConfiguration) {
-      this.xmlConfiguration = xmlConfiguration;
    }
 
    /**
