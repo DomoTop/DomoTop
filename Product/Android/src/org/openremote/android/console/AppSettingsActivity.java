@@ -735,13 +735,17 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    private void retrieveCertificate()
    {
 	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
-	   //final ProgressDialog dialog = ProgressDialog.show(getApplicationContext(), "Fetching certificate", "Busy fetching certificate");	 
+	   final Button doneButton = (Button)findViewById(R.id.setting_done);
+	   doneButton.setEnabled(false);
+	   final ProgressDialog dialog = ProgressDialog.show(this, "Fetching certificate", "Busy fetching certificate");	 
+
 	   
 	   final Handler handler = new Handler()
 	   {
 		   @Override
 		   public void handleMessage(Message msg) {
-			   //dialog.cancel();
+			   doneButton.setEnabled(true);
+			   dialog.cancel();
 			   if(msg.what == 0) {
 				   startMain();   
 			   } else {
