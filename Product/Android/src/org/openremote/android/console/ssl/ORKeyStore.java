@@ -206,7 +206,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		
 		String url = host;
 		url += "/rest/cert/get/";
-		url += PhoneInformation.getInstance().getDeviceName();
+		url += PhoneInformation.getInstance().getUrlEncodedDeviceName();
 
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(

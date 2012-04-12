@@ -107,9 +107,9 @@ public class SubmitCSR extends RESTAPI
    */
   protected long putCsr(String username, String cert) throws IOException
   {
-    String certificate = URLDecoder.decode(cert);
+    String certificate = URLDecoder.decode(cert, "UTF-8");
     long timestamp = System.currentTimeMillis();
-    String filename = URLDecoder.decode(username) + timestamp + ".csr";
+    String filename = URLDecoder.decode(username, "UTF-8") + timestamp + ".csr";
     
     String rootCaPath = configurationService.getItem(CA_PATH);
     BufferedWriter out = new BufferedWriter(new FileWriter(rootCaPath + CSR_PATH + filename));

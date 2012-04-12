@@ -1,7 +1,11 @@
 package org.openremote.android.console.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 /**
  * Retrieve information stored on the Android device
@@ -16,7 +20,21 @@ public abstract class PhoneInformation {
 	 */
 	public String getDeviceName()
 	{
-		return android.os.Build.MODEL.replace(" ", "_");
+		return "htc desirÈ";
+	}
+	
+	/**
+	 * Returns the name of the current device name as an urlencoded string
+	 * @return The device name as a String
+	 */
+	public String getUrlEncodedDeviceName()
+	{
+		try {
+			return URLEncoder.encode(getDeviceName(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			Log.e("OpenRemote/PhoneInformation", e.getMessage());
+			return "";
+		}
 	}
 	
 	/**
