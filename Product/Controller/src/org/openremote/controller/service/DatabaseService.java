@@ -2,15 +2,14 @@ package org.openremote.controller.service;
 
 import java.sql.ResultSet;
 
-import javax.annotation.PreDestroy;
-
 /**
  * The interface DatabaseService
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
  */
 
-public interface DatabaseService {
-   
+public interface DatabaseService 
+{
+   boolean databaseInit();
    ResultSet doSQL(String sql);
    int getNumRows();   
    int getInsertID();

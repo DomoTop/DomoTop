@@ -29,7 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
@@ -71,6 +70,7 @@ public class AdministratorServlet extends HttpServlet
    * @param resultSet ResultSet
    * @return Collection
    */
+  @SuppressWarnings("rawtypes")
   private Collection resultSetToCollection(ResultSet resultSet)
   {    
      Collection collection = null;
@@ -91,6 +91,7 @@ public class AdministratorServlet extends HttpServlet
    * 
    * @return String a HTML template with the data
    */
+   @SuppressWarnings("rawtypes")
    private String setDataInTemplate() 
    {
       Map<String, Object> root = new HashMap<String, Object>();
@@ -144,6 +145,7 @@ public class AdministratorServlet extends HttpServlet
    * @return HTML template with the specified data
    * @throws Exception FreeMarker exception
    */
+  @SuppressWarnings("rawtypes")
   static String freemarkerDo(Map root, String template) throws Exception
   {
      Configuration cfg = new Configuration();

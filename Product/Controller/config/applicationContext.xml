@@ -152,6 +152,12 @@
     	<property name="database" ref="databaseService"></property>
     </bean>
 
+    <!-- service for the certificate service -->
+    <bean id="certificateService" class="org.openremote.controller.service.impl.CertificateServiceImpl" >
+    	<property name="clientService" ref="clientService"></property>    	
+    	<property name="configurationService" ref="configurationService"></property>
+    </bean>
+
     <!-- service for listening the status of device -->
     <bean id="statusPollingService" class="org.openremote.controller.service.impl.StatusPollingServiceImpl" />
     

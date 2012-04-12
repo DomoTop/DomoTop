@@ -16,7 +16,6 @@
  */
 package org.openremote.controller.action;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,6 +38,7 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
@@ -71,6 +71,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.openremote.controller.Constants;
+import org.openremote.controller.service.CertificateService;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
@@ -88,16 +89,12 @@ import sun.misc.BASE64Decoder;
  */
 public class AdministratorController extends MultiActionController 
 {
-   private static final String CA_PATH = "ca_path";
    private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
-         "configurationService");   
-
-   private static final String KEYSTORE_PASSWORD = "password";
-   private static final int NUM_ALLOWED_INTERMEDIATE_CAS = 0;
-
-   private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
+         "configurationService"); 
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
          "clientService");  
+   private static final CertificateService certificateService = (CertificateService) SpringContext.getInstance().getBean(
+         "certificateService");  
    static {
       Security.addProvider(new BouncyCastleProvider());
    }
@@ -117,9 +114,6 @@ public class AdministratorController extends MultiActionController
       if(!AuthenticationUtil.isAuth(request)){
          return null;
       }
-      
-      KeyPair KPair = null;
-      X509Certificate cert = null;
       boolean success = false;
       
       if(clientService.dropClients() == 1)
@@ -128,28 +122,8 @@ public class AdministratorController extends MultiActionController
       }
       
       if(success)
-      {         
-         KPair = this.createKeyPair();      
-         cert = this.buildCertificate(KPair, CA_NAME);            
-              
-         String rootCaPath = configurationService.getItem(CA_PATH);
-         String keyStorePath = rootCaPath + "/server.jks";
-         
-         if(cert != null && KPair != null)
-         {
-            if(!this.keyStoreExists(keyStorePath))
-            {
-               if(!createKeyStore(keyStorePath))
-               {
-                  logger.error("Failed to create CA keystore.");
-               }
-            }
-            success = this.saveToKeyStore(KPair, cert, keyStorePath, "ca.alias");
-         }
-         else
-         {
-            logger.error("No CA certificate generated or no key pair generated.");
-         }
+      {
+         success = certificateService.createCa();
    
          if(!success)
          {
@@ -330,13 +304,10 @@ public class AdministratorController extends MultiActionController
       try {
          
          if(result)
-         {            
-            String rootCaPath = configurationService.getItem(CA_PATH);
-            String clientKeyStorePath =  rootCaPath + "/client_certificates.jks";
-            
+         {
             if (action.equals("accept")) // accept device
             {
-               result = this.acceptClient(clientKeyStorePath, alias, clientID);
+               result = this.acceptClient(alias, clientID);
             } 
             else if (action.equals("deny")) // deny device
             {
@@ -344,7 +315,7 @@ public class AdministratorController extends MultiActionController
             }
             else if (action.equals("remove")) // remove device
             {
-               result = this.removeClient(clientKeyStorePath, alias, clientID);
+               result = this.removeClient(alias, clientID);
             }
          }
          
@@ -411,35 +382,32 @@ public class AdministratorController extends MultiActionController
    /**
     * Accept the client, adding it to the client key store
     * 
-    * @param clientKeyStorePath Client key store path
     * @param alias client alias, which should be unique
     * @param clientID client ID
     * @return true if succeed otherwise false
     */
-   private boolean acceptClient(String clientKeyStorePath, String alias, int clientID)
+   private boolean acceptClient(String alias, int clientID)
    {
       boolean result = false;
       if(privateKey == null)
       {
-         privateKey = this.getPrivateKey();
+         privateKey = certificateService.getCaPrivateKey();
       }
       
       try {
-         PKCS10CertificationRequest certificateRequest = this.getCertificationRequest(alias);
+         PKCS10CertificationRequest certificateRequest = certificateService.getCertificationRequest(alias);
          
-         X509Certificate certificate = this.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
+         X509Certificate certificate = certificateService.signCertificate(certificateRequest, privateKey, Integer.toString(clientID + 1));
                         
          if (certificate != null)
          {
-            if(!this.keyStoreExists(clientKeyStorePath))
+            // Create client key store if necessary
+            if(!certificateService.createClientKeyStore())
             {
-               if(!createKeyStore(clientKeyStorePath))
-               {
-                  logger.error("Failed to create client keystore.");
-               }
+               logger.error("Failed to create client keystore.");
             }
             
-            if(this.saveToClientKeyStore(certificate, clientKeyStorePath, alias))
+            if(certificateService.saveCertificateToClientKeyStore(certificate, alias))
             {
                // Update the client database
                int statusReturn = clientService.updateClientStatus(clientID, true);
@@ -517,11 +485,11 @@ public class AdministratorController extends MultiActionController
     * @param clientID client ID
     * @return
     */
-   private boolean removeClient(String clientKeystorePath, String alias, int clientID)
+   private boolean removeClient(String alias, int clientID)
    {
       boolean returnValue = false;
       
-      if(this.deleteClientKeyStore(clientKeystorePath, alias))
+      if(certificateService.deleteClientFromKeyStore(alias))
       {
          // Update the client database
          int statusReturn = clientService.removeClient(clientID);
@@ -535,400 +503,5 @@ public class AdministratorController extends MultiActionController
          }
       }
       return returnValue;
-   }
-
-   /**
-    * Get the certificate file from the csr directory and create and returns a PKCS10CertificationRequest object
-    * 
-    * @param alias client alias
-    * @return PKCS10CertificationRequest object
-    * @throws IOException
-    */
-   private PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException
-   {
-      String rootCaPath = configurationService.getItem(CA_PATH);
-      String csrPath = rootCaPath + "/ca/csr/";
-      
-      File file = new File(csrPath + alias + ".csr");
-      String data = "";
-
-      FileInputStream fis = new FileInputStream(file);
-      data = convertStreamToString(fis);
-
-      BASE64Decoder decoder = new BASE64Decoder();
-      byte[] decodedBytes = decoder.decodeBuffer(data);
-
-      return new PKCS10CertificationRequest(decodedBytes);
-   }
-
-   /**
-    * Convert a input stream to a String
-    * 
-    * @param is InputStream
-    * @return String
-    * @throws IOException
-    */
-   private String convertStreamToString(InputStream is) throws IOException {
-      if (is != null) {
-         Writer writer = new StringWriter();
-
-         char[] buffer = new char[1024];
-         try {
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            int n;
-            while ((n = reader.read(buffer)) != -1) {
-               writer.write(buffer, 0, n);
-            }
-         } finally {
-            is.close();
-         }
-         return writer.toString();
-      } else {
-         return "";
-      }
-   }
-   
-   /**
-    * Create a key pair (public & private key) using the RSA algorithm 
-    * 
-    * @return Generated KeyPair
-    */
-   private KeyPair createKeyPair() 
-   {
-      KeyPair KPair = null;
-      
-      try {
-         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-         keyPairGenerator.initialize(2048);
-         KPair = keyPairGenerator.generateKeyPair();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error("Ca: " + e.getMessage());
-      }
-      return KPair;
-   }   
-   
-   /**
-    * Build a new X509 certificate, using the key pair earlier created and X500Name
-    * 
-    * @param KPair is the KeyPair object
-    * @param name X500Name with information about the issuer
-    * @return a new X509Certificate, returns null if something went wrong
-    */
-   private X509Certificate buildCertificate(KeyPair KPair, X500Name name)
-   {
-      @SuppressWarnings("unused")
-      boolean success = false;
-      ContentSigner sigGen;
-      X509Certificate cert = null;
-      JcaX509ExtensionUtils extUtils = null;
-      
-      try {
-         extUtils = new JcaX509ExtensionUtils();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error("Generate CA certificate: " + e.getMessage());
-      }
-      SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfo.getInstance(KPair.getPublic().getEncoded());
-      
-      Calendar cal = Calendar.getInstance();
-      cal.set(cal.get(Calendar.YEAR) + 100, 04, 18, 13, 30);
-      
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(name,
-            new BigInteger("41"), 
-            new Date(System.currentTimeMillis()), 
-            cal.getTime(), 
-            name,
-            keyInfo);
-      try
-      {
-         myCertificateGenerator.addExtension(X509Extension.subjectKeyIdentifier, false,
-               extUtils.createSubjectKeyIdentifier(KPair.getPublic()));
-   
-         myCertificateGenerator.addExtension(X509Extension.authorityKeyIdentifier, false,
-               extUtils.createAuthorityKeyIdentifier(KPair.getPublic()));
-         
-         myCertificateGenerator.addExtension(X509Extension.basicConstraints, false,
-               new BasicConstraints(NUM_ALLOWED_INTERMEDIATE_CAS ));
-         
-         // prepare the signer with the private Key
-         AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
-         AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-   
-         // hopefully format is PKCS#8
-         AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(KPair.getPrivate().getEncoded());
-
-
-         sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
-
-         // Build
-         X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
-         cert = new JcaX509CertificateConverter().getCertificate(holder);
-         success = true;
-      } catch (OperatorCreationException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (CertIOException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      } catch (IOException e) {
-         success = false;
-         logger.error("Generate CA certificate: " + e.getMessage());
-      }
-      return cert;
-   }
-
-   /**
-    * And the certificate to the server's key store file
-    * 
-    * @param KPair the KeyPair object
-    * @param cert X509Certificate
-    * @param keyStoreFile the path of the file where the key store is located
-    * @param the alias of the certificate
-    * @return true if success or false if unsuccessfully
-    */
-   private boolean saveToKeyStore(KeyPair KPair, X509Certificate cert, String keyStoreFile, String alias) 
-   {
-      boolean success = false;
-      KeyStore privateKS;
-      try
-      {
-         privateKS = KeyStore.getInstance("JKS");
-
-         // Load the key store to memory.
-         FileInputStream fis = new FileInputStream(keyStoreFile);  
-         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
-       
-         // Import the private key to the key store
-         privateKS.setKeyEntry(alias, KPair.getPrivate(),  
-               KEYSTORE_PASSWORD.toCharArray(),  
-               new java.security.cert.Certificate[]{cert});                  
-         // Write the key store back to disk                 
-         privateKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
-         success = true;
-      } catch (KeyStoreException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (NoSuchAlgorithmException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (IOException e) {
-         logger.error("Key store: " + e.getMessage());
-      }
-      return success;
-   }
-   
-   /**
-    * Saves the client certificate into a client key store file
-    * 
-    * @param cert the X509 certificate
-    * @param keyStoreFile the file path to the key store
-    * @param alias the alias of the certificate
-    * @return true if success, false if unsuccessfully
-    */
-   private boolean saveToClientKeyStore(X509Certificate cert, String keyStoreFile, String alias) 
-   {
-      boolean success = false;
-      KeyStore clientKS;
-      try
-      {
-         clientKS = KeyStore.getInstance("JKS");
-
-         // Load the key store to memory.
-         FileInputStream fis = new FileInputStream(keyStoreFile);  
-         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
-       
-         // Import the certificate to the key store
-         clientKS.setCertificateEntry(alias, cert);
-         
-         // Write the key store back to disk                 
-         clientKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
-         success = true;
-      } catch (KeyStoreException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (NoSuchAlgorithmException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (IOException e) {
-         logger.error("Key store: " + e.getMessage());
-      }
-      return success;
-   }
-   
-   /**
-    * Delete the client certificate from the servers key store file
-    * 
-    * @param keyStoreFile the file path to the key store
-    * @param alias of the client certificate that will be removed
-    * @return true if successfully removed from the key store else false
-    */
-   private boolean deleteClientKeyStore(String keyStoreFile, String alias) {
-      boolean success = false;
-      KeyStore clientKS;
-      try
-      {
-         clientKS = KeyStore.getInstance("JKS");
-
-         // Load the key store to memory.
-         FileInputStream fis = new FileInputStream(keyStoreFile);  
-         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
-       
-         // Import the certificate to the key store
-         clientKS.deleteEntry(alias);
-         
-         // Write the key store back to disk                 
-         clientKS.store(new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray());      
-         success = true;
-      } catch (KeyStoreException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (NoSuchAlgorithmException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (CertificateException e) {
-         success = false;
-         logger.error("Key store: " + e.getMessage());
-      } catch (IOException e) {
-         logger.error("Key store: " + e.getMessage());
-      }
-      return success;
-   }
-   
-   /**
-    * Get the private key from the CA, using the server key store file   
-    * 
-    * @return PrivateKey Object
-    */
-   private PrivateKey getPrivateKey()
-   {
-      PrivateKey privateKey = null;
-      KeyStore privateKS;
-      try
-      {
-         privateKS = KeyStore.getInstance("JKS");
-         
-         String rootCaPath = configurationService.getItem(CA_PATH);
-         String keyStorePath = rootCaPath + "/server.jks";
-         
-         FileInputStream fis = new FileInputStream(keyStorePath);  
-         privateKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
-         Key key = privateKS.getKey("ca.alias", KEYSTORE_PASSWORD.toCharArray());
-         if(key instanceof PrivateKey) 
-         {
-            privateKey = (PrivateKey)key;            
-         }
-      } catch (UnrecoverableKeyException e) {
-         logger.error("Get private key: " + e.getMessage());
-      } catch (KeyStoreException e) {
-         logger.error("Get private key: " + e.getMessage());
-      } catch (NoSuchAlgorithmException e) {
-         logger.error("Get private key: " + e.getMessage());
-      } catch (CertificateException e) {
-         logger.error("Get private key: " + e.getMessage());
-      } catch (IOException e) {
-         logger.error("Get private key: " + e.getMessage());
-      }
-      return privateKey;
-   }
-
-   /**
-    * Check if the file exists
-    * 
-    * @param keyStoreFile path to the key store
-    * @return true if exists else false
-    */
-   private boolean keyStoreExists(String keyStoreFile)
-   {
-      File f = new File(keyStoreFile);
-      return (f.exists() ? true : false);
-   }
-   
-   /**
-    * Create a key store from scratch
-    * 
-    * @param keyStoreFile path to the key store
-    * @return true if keystore was successfully created
-    */
-   private boolean createKeyStore(String keyStoreFile)
-   {
-      boolean returnValue = false;
-      // CREATE A KEYSTORE OF TYPE "Java Key Store"  
-      try
-      {
-         KeyStore ks = KeyStore.getInstance("JKS");  
-         /* 
-          * LOAD THE STORE 
-          * The first time you're doing this (i.e. the keystore does not 
-          * yet exist - you're creating it), you HAVE to load the keystore 
-          * from a null source with null password. Before any methods can 
-          * be called on your keystore you HAVE to load it first. Loading 
-          * it from a null source and null password simply creates an empty 
-          * keystore.
-          */  
-         ks.load( null, null ); 
-         //SAVE THE KEYSTORE TO A FILE  
-         ks.store( new FileOutputStream(keyStoreFile), KEYSTORE_PASSWORD.toCharArray() );  
-         returnValue = true;
-      } catch (NoSuchAlgorithmException e) {
-         returnValue = false;
-         logger.error("KeyStore: " + e.getMessage());
-      } catch (CertificateException e) {
-         returnValue = false;
-         logger.error("KeyStore: " + e.getMessage());
-      } catch (IOException e) {
-         returnValue = false;
-         logger.error("KeyStore: " + e.getMessage());
-      } catch (KeyStoreException e) {
-         returnValue = false;
-         logger.error("KeyStore: " + e.getMessage());
-      } 
-      
-      return returnValue;
-   }
-   
-   /**
-    * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
-    * 
-    * @param inputCSR PCKS10 Certification Request file
-    * @param caPrivate PrivateKey from CA
-    * @return a new signed certificate
-    * @throws InvalidKeyException
-    * @throws NoSuchAlgorithmException
-    * @throws NoSuchProviderException
-    * @throws SignatureException
-    * @throws IOException
-    * @throws OperatorCreationException
-    * @throws CertificateException
-    */
-   private X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate, String serial)
-         throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
-         IOException, OperatorCreationException, CertificateException
-   {
-      AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
-      AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-      AsymmetricKeyParameter asymKey = PrivateKeyFactory.createKey(caPrivate.getEncoded());
-
-      Calendar cal = Calendar.getInstance();
-      cal.set(cal.get(Calendar.YEAR) + 100, 04, 18, 13, 30);
-      
-      X509v3CertificateBuilder myCertificateGenerator = new X509v3CertificateBuilder(CA_NAME,
-            new BigInteger(serial), 
-            new Date(System.currentTimeMillis()),
-            cal.getTime(), 
-            inputCSR.getSubject(), 
-            inputCSR.getSubjectPublicKeyInfo());
-      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(asymKey);
-
-      X509CertificateHolder holder = myCertificateGenerator.build(sigGen);
-      X509Certificate cert = new JcaX509CertificateConverter().getCertificate(holder);
-      return cert;
    }
 }

@@ -30,6 +30,7 @@ import javax.servlet.ServletContext;
 import org.openremote.controller.net.IPAutoDiscoveryServer;
 import org.openremote.controller.net.RoundRobinTCPServer;
 import org.openremote.controller.net.RoundRobinUDPServer;
+import org.openremote.controller.service.CertificateService;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ServiceContext;
@@ -129,6 +130,17 @@ public class ServletStartup implements ServletContextListener
       new Thread(new RoundRobinTCPServer()).start();
 
       Thread.sleep(10);
+      
+      // Init Database
+      DatabaseService databaseService = (DatabaseService) SpringContext.getInstance().getBean("databaseService");
+      databaseService.databaseInit();
+      
+      // Init CA if necessary
+      CertificateService caService = (CertificateService) SpringContext.getInstance().getBean("certificateService");
+      if(!caService.ifCaExists())
+      {
+         caService.createCa();
+      }
     }
 
     catch (Throwable t)
@@ -154,7 +166,7 @@ public class ServletStartup implements ServletContextListener
 
 
   /**
-   * Empty implementation.
+   * Close the database and remove the driver
    *
    * @param event     servlet context event provided by the container with access to the web
    *                  application's environment
@@ -165,8 +177,8 @@ public class ServletStartup implements ServletContextListener
      databaseService.close();
      
      try {
-        java.sql.Driver mySqlDriver = DriverManager.getDriver("jdbc:hsql://localhost:9001");
-        DriverManager.deregisterDriver(mySqlDriver);
+        java.sql.Driver hqsqldbDriver = DriverManager.getDriver("jdbc:hsql://localhost:9001");
+        DriverManager.deregisterDriver(hqsqldbDriver);
      }
      catch (Throwable t)
      {
