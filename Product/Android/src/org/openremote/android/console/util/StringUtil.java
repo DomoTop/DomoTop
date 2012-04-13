@@ -20,13 +20,24 @@
 
 package org.openremote.android.console.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.openremote.android.console.Constants;
+import org.openremote.android.console.ssl.ORKeyPair;
+
+import android.util.Log;
+
 /**
  * 
  * @author handy 2010-04-29
  *
  */
 public class StringUtil {
-	
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + StringUtil.class.getName();
+
 	/** Marks the specified controllerServerURL selected. */
 	public static String markControllerServerURLSelected(String controllerServerURL) {
 		return "+" + controllerServerURL;
@@ -35,6 +46,21 @@ public class StringUtil {
 	/** Removes the specified url selected. */
 	public static String removeControllerServerURLSelected(String url) {
 		return url.replaceAll("+", "");
+	}
+	
+	public static String stringFromInputStream(InputStream is) {
+		BufferedReader r = new BufferedReader(new InputStreamReader(is));
+		StringBuilder total = new StringBuilder();
+		try {
+			String line;
+			while ((line = r.readLine()) != null) {
+			    total.append(line);
+			}
+		} catch (IOException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		}
+		
+		return total.toString();
 	}
 	
 }

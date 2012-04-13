@@ -63,7 +63,7 @@ public class ORKeyPair {
 	public KeyPair getKeyPair(Context context)
 	{
 		try {
-			lock.tryLock(1000, TimeUnit.SECONDS);
+			lock.tryLock(60, TimeUnit.SECONDS);
 
 			if(keypair == null)
 			{
@@ -109,7 +109,7 @@ public class ORKeyPair {
 			e.printStackTrace();
 		}
 		
-		KeyPair keyPair =  getKeyPair(context);
+		KeyPair keyPair = getKeyPair(context);
 		
 		if(keyPair != null) {
 			RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
