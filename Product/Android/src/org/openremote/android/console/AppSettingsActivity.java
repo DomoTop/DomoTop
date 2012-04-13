@@ -716,11 +716,16 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
 				   sslToggleButton.setChecked(true);
 			   }
-			   progress.dismiss();
+			   if(progress.isShowing()) {
+				   progress.dismiss();
+			   }
 		   }
 	   };
 	   
-	   progress.show();
+	   if(isActivityResumed()) {
+		   progress.show();
+	   }
+	   
 	   new Thread()
 	   {
 		   public void run() {
@@ -781,7 +786,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     */
    private void requestPanelList() {
       setEmptySpinnerContent();
-      if (!TextUtils.isEmpty(AppSettingsActivity.currentServer)) {
+      if (!TextUtils.isEmpty(AppSettingsActivity.currentServer) && isActivityResumed()) {
          loadingPanelProgress.show();
          new ORConnection(this.getApplicationContext() ,ORHttpMethod.GET, true, AppSettingsActivity.currentServer + "/rest/panels", this);
       }
