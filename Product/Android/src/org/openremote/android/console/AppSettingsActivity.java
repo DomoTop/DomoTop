@@ -326,6 +326,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     {
       public boolean onKey(View v, int keyCode, KeyEvent event)
       {
+    	//TODO not very user friendly
         if (keyCode == KeyEvent.KEYCODE_ENTER)
         {
            String sslPortStr = ((EditText)v).getText().toString();
