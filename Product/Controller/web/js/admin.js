@@ -58,12 +58,23 @@ $(document).ready(function()
   	clearMessage();
   	showUpdateIndicator();
   });
+  
   $('.statusForm').ajaxForm(function(result) {  
   	clearMessage();	
 		statusFormResult(result);
-  });   
+  }); 
+  
+  $('.deleteForm').ajaxForm(function(result) {
+  	clearMessage();
+  	if (result == 'OK') {
+			message("Device was successfully deleted.");
+			delayedRefreshPage(500);
+		} else {
+			error("Device deletion was unsuccessfully: " + result);
+		}
+  }); 
 
- $('.statusFormPin').ajaxForm(function(result) { 
+ $('#statusFormPin').ajaxForm(function(result) { 
  		disablePopup(); 
   	clearMessage();	
 		statusFormResult(result);
@@ -86,16 +97,6 @@ $(document).ready(function()
 			message("CA successfully created. <br/><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
-		}
-  }); 
-    
-  $('#deleteForm').ajaxForm(function(result) {
-  	clearMessage();
-  	if (result == 'OK') {
-			message("Device was successfully deleted.");
-			delayedRefreshPage(500);
-		} else {
-			error("Device deletion was unsuccessfully: " + result);
 		}
   }); 
   

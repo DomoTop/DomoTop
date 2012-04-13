@@ -98,7 +98,7 @@
 														</select>
 													</TD>
 													<TD>
-														<form id="deleteForm" action="admin.htm?method=deleteUser" method="post">														
+														<form class="deleteForm" action="admin.htm?method=deleteUser" method="post">														
 														<input type="hidden" name="client_id" value="${client.client_id}" />
 															<input type="submit" value="" class="delete_button" onClick="return confirm('Are you sure you want to delete this device (${client.client_device_name})?');"/>
 														</form>
@@ -160,7 +160,7 @@
 									<h1>Enter the pin</h1>							
 									<p id="contactArea">
 										Please enter the pin shown on the device you want to accept.<br/><br/>									
-										<form class="statusFormPin" action="admin.htm?method=changeUserStatus" method="post">
+										<form id="statusFormPin" action="admin.htm?method=changeUserStatus" method="post">
 											<input type="hidden" name="client_id" value="" id="pin_client_id" />
 											<input type="hidden" name="action" value="accept" />
 											<center>
