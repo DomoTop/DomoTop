@@ -133,6 +133,10 @@ public class ORKeyStore implements ORConnectionDelegate {
 		}
 	}
 	
+	/**
+	 * Check if the keystore is empty
+	 * @return true if empty
+	 */
 	public boolean isEmpty() {
 		try {
 			return keystore.size() <= 0;

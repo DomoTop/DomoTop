@@ -60,6 +60,9 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
    private static final int TO_GROUP = 0xF00C;
    private static final int SWITCH_TO_OTHER_CONTROLER = 0xF00D;
    
+   public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + AsyncResourceLoader.class.getName();
+
+   
    private Activity activity;
    
    public AsyncResourceLoader(Activity activity) {
@@ -155,10 +158,19 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          }
       } else { // Download failed.
          if (checkResponse != null && checkResponse.getStatusLine().getStatusCode() == ControllerException.UNAUTHORIZED) {
-        	if(AppSettingsModel.isSSLEnabled(activity)) 
+        	String html = "";
+        	
+			try {
+				html = StringUtil.stringFromInputStream(checkResponse.getEntity().getContent());
+			} catch (IllegalStateException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			} catch (IOException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			}
+			
+        	if(AppSettingsModel.isSSLEnabled(activity) || html.contains("client certificate chain")) 
         	{
-        		result.setAction(TO_SETTING);
-        		
+        		result.setAction(TO_SETTING);		
         	} else {
         		result.setAction(TO_LOGIN);
             	result.setStatusCode(ControllerException.UNAUTHORIZED);
