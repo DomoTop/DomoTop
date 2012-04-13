@@ -165,7 +165,7 @@ public class ORKeyPair {
 			
 			keypair = (KeyPair) in.readObject();
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.d(LOG_CATEGORY, e.getMessage());
 		} catch (ClassNotFoundException e) {
 			Log.e(LOG_CATEGORY, e.getMessage());
 		}
