@@ -131,7 +131,8 @@ public class AdministratorController extends MultiActionController
       }
       
       Enumeration names = request.getParameterNames(); 
-      int success = -1;
+      boolean success = false;
+      boolean reboot = false;
       while(names.hasMoreElements())
       {
          String name = (String) names.nextElement();
@@ -143,40 +144,44 @@ public class AdministratorController extends MultiActionController
             // if type boolean
             if(value.equals("true") || value.equals("false"))
             {
-               boolean bool_value = Boolean.parseBoolean(value);
-               success = configurationService.updateItem(name, bool_value);
+               boolean newvalue = Boolean.parseBoolean(value);
+               boolean oldvalue = configurationService.getBooleanItem(name);
                
-               //Check for "authentication_active" to set that in the web.xml
-               try {
-                  configurationService.setAuthentication(bool_value);
-                  success = 2;
-               } catch (IOException e) {
-                  success = -1;
-                  logger.error(e.getMessage());
-               }   
+               success = configurationService.updateItem(name, newvalue) == 1;
+               
+               if(name.equals("authentication_active")) {
+                  //Check for "authentication_active" to set that in the web.xml
+                  logger.error("oldvalue " + oldvalue + " newvalue " + newvalue);
+                  if(newvalue != oldvalue) {
+                     try {
+                        configurationService.setAuthentication(newvalue);
+                        reboot = true;
+                     } catch (IOException e) {
+                        success = false;
+                        logger.error(e.getMessage());
+                     }   
+                  }
+               }
             }
             else // type is String
             {
-               success = configurationService.updateItem(name, value);
+               success = configurationService.updateItem(name, value) == 1;
             }
          }  
-         
-         if(!name.equals("authentication_active") && success > 0) {
-        }
-         
-         if(success <= 0)
+
+         if(!success)
          {
             break;
          }
       }
       
-      if(success == 1)
-      {      
-         response.getWriter().print(Constants.OK);
-      }
-      else if(success == 2)
-      {
-         response.getWriter().print(Constants.OK_REBOOT);
+      if(success)
+      {    
+         if(reboot) {
+            response.getWriter().print(Constants.OK_REBOOT);
+         } else {
+            response.getWriter().print(Constants.OK);
+         }
       }
       else
       {
