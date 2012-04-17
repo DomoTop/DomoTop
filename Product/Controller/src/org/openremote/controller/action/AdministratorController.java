@@ -121,7 +121,7 @@ public class AdministratorController extends MultiActionController
    @SuppressWarnings("rawtypes")
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
-   {
+   {      
       if(!AuthenticationUtil.isAuth(request)){
          return null;
       }

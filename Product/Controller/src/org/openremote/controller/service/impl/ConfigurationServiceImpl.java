@@ -75,7 +75,16 @@ public class ConfigurationServiceImpl implements ConfigurationService
    {
       int resultValue = -1;
       String stringValue = "not_defiend";
-            
+      
+      
+      if(name.equals("authentication_active")) {
+         try {
+            setAuthentication(value);
+         } catch (IOException e) {
+            logger.error(e.getMessage());
+         }
+      }
+      
       if(value)
       {
          stringValue = "true";
@@ -237,5 +246,47 @@ public class ConfigurationServiceImpl implements ConfigurationService
    @Override
    public void free() {
       this.database.free();      
+   }
+   
+   /**
+    * Enable the authentication in web.xml. Requires OpenRemote to be restarted
+    * @param enable True if you want to enable
+    * @throws IOException
+    */
+   private void setAuthentication(boolean enable) throws IOException
+   {
+      String curDir = System.getProperty("user.dir");
+
+      File security = new File(curDir + "/webapps/controller/WEB-INF/security.xml");
+      BufferedReader in = new BufferedReader(new FileReader(security));
+      StringBuilder security_contents = new StringBuilder();
+      String line = "";
+      
+      while((line = in.readLine()) != null) {
+         security_contents.append(line + "\n");
+      }
+      
+      in.close();
+
+      File file = new File(curDir + "/webapps/controller/WEB-INF/web.xml");
+      in = new BufferedReader(new FileReader(file));
+      StringBuilder contents = new StringBuilder();
+      line = "";
+      
+      while((line = in.readLine()) != null) {
+         contents.append(line + "\n");
+      }
+      in.close();
+
+      BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
+
+      if(enable) {
+         out.write(contents.toString().replace("</web-app>", security_contents.toString()));
+      } else {
+         out.write(contents.toString().replace(security_contents.toString(), "</web-app>"));
+      }
+      
+      out.close();
+
    }
 }
