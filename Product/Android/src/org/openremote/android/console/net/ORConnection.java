@@ -185,6 +185,8 @@ public class ORConnection
                handler.sendEmptyMessage(ERROR);
             } catch (IllegalStateException e) {
                 handler.sendEmptyMessage(ERROR);
+            } catch (IllegalArgumentException e) {
+                handler.sendEmptyMessage(ERROR);
             }
          }
       }).start(); 
@@ -326,7 +328,15 @@ public class ORConnection
       client.getConnectionManager().getSchemeRegistry().register(sch);
     }
 
-    response = client.execute(request);
+    try
+    {
+    	response = client.execute(request);
+    }
+    catch (IllegalArgumentException e) {
+        throw new MalformedURLException(
+                "Illegal argument: " + e.getMessage()
+            );
+	}
 
     return response;
   }

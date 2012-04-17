@@ -170,7 +170,16 @@
 										</form>
 									</p>
 								</div>	
-								</#if>						
+								</#if>			
+								<div id="popupLoading">
+									<h1>OpenRemote is restarting</h1>							
+									<p id="loadingArea">
+										 <center>
+										 	Please wait...<br/>
+											<img src="image/spinner.gif" alt"Loading..." border=0 />
+										 </center>
+									</p>
+								</div>				
 								<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 							</TD>
 						</TR>

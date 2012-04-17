@@ -86,6 +86,12 @@ $(document).ready(function()
   	if (result == 'OK') {
 			message("Settings are successfully saved. Reloading...");
 			delayedRefreshPage(800);
+		} else if(result == 'OK_REBOOT') {
+			//centering with css
+			centerPopup();	
+							
+			//load loading popup
+			showLoading();
 		} else {
 			error("There was a problem with saving the settings: " + result);
 		}
@@ -301,7 +307,7 @@ function changeButtonToStatusSubmit(result)
 		
 }
 
-//loading popup with jQuery magic!
+//loading popup with jQuery
 function loadPopup()
 {
 	//loads popup only if it is disabled
@@ -315,7 +321,7 @@ function loadPopup()
 	}
 }
 
-//disabling popup with jQuery magic!
+//disabling popup with jQuery
 function disablePopup()
 {
 	//disables popup only if it is enabled
@@ -326,6 +332,50 @@ function disablePopup()
 	}
 }
 
+// show loading spinner
+function showLoading()
+{
+	//loads popup only if it is disabled
+	if(popupStatus==0){
+		$("#backgroundPopup").css({
+			"opacity": "0.7"
+		});
+		$("#backgroundPopup").fadeIn("slow");
+		$("#popupLoading").fadeIn("slow");
+		popupStatus = 1;
+		
+		// wait until restart is complete
+		setTimeout("waitLoading()", 6000);
+	}
+}
+
+// hide loading spinner
+function hideLoading()
+{
+	//disables popup only if it is enabled
+	if(popupStatus==1){
+		$("#backgroundPopup").fadeOut("slow");
+		$("#popupLoading").fadeOut("slow");
+		popupStatus = 0;
+	}
+}
+
+// Wait until page can be access again
+function waitLoading()
+{
+		var response = $.ajax({
+		  type: "GET",
+		  url: "administrator",
+		  success: function(data){		  		
+   			hideLoading();
+		  },
+		  error: function(result){	  
+		  	//result.status			  	
+				setTimeout(waitLoading(), 2000);
+		  }
+		});
+}
+
 //centering popup
 function centerPopup()
 {
@@ -334,14 +384,24 @@ function centerPopup()
 	var windowHeight = document.documentElement.clientHeight;
 	var popupHeight = $("#popupContact").height();
 	var popupWidth = $("#popupContact").width();
+	
+	var loadingHeight = $("#popupLoading").height();
+	var loadingWidth = $("#popupLoading").width();
+	
 	//centering
 	$("#popupContact").css({
 		"position": "absolute",
 		"top": windowHeight/2-popupHeight/2,
 		"left": windowWidth/2-popupWidth/2
 	});
-	//only need force for IE6
+
+	$("#popupLoading").css({
+		"position": "absolute",
+		"top": windowHeight/2-popupHeight/2,
+		"left": windowWidth/2-popupWidth/2
+	});	
 	
+	//only need force for IE6	
 	$("#backgroundPopup").css({
 		"height": windowHeight
 	});	

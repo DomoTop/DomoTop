@@ -186,13 +186,13 @@ span.info:hover span
 	z-index:1;
 }
 
-#popupContact
+#popupContact, #popupLoading
 {
 	display:none;
 	position:fixed;
 	_position:absolute; /* hack for internet explorer 6*/
 	height:194px;
-	width:208px;
+	width:218px;
 	background:#FFFFFF;
 	border:1px solid #639e20;
 	z-index:2;
@@ -200,7 +200,7 @@ span.info:hover span
 	font-size:13px;
 }
 
-#popupContact h1
+#popupContact h1, #popupLoading h1
 {
 	text-align:left;
 	color:#266131;
