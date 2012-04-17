@@ -96,6 +96,7 @@ public class AdministratorServlet extends HttpServlet
    {
       Map<String, Object> root = new HashMap<String, Object>();
       String result = "";
+      String errorString = "";
       int numClients = 0;
       Collection clientCollection = null, settingCollection = null;
       
@@ -118,14 +119,25 @@ public class AdministratorServlet extends HttpServlet
             }
             else
             {
-               root.put( "errorMessage", "No clients in the database." );
+               errorString = "No clients in the database.";
             }
             root.put( "configurations", settingCollection );
          }
          else
          {
-            root.put( "errorMessage", "Database problem!" );
+            errorString = "Database problem!";
          }
+         
+         if(configurationService.shouldReboot())
+         {
+            errorString += "<br /><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>";
+         }
+         
+         if(!errorString.isEmpty())
+         {
+            root.put( "errorMessage", errorString);
+         }
+         
          result = freemarkerDo(root, "administrator.ftl");
       }
       catch(Exception e) 

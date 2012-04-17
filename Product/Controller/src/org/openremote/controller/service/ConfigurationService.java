@@ -89,6 +89,18 @@ public interface ConfigurationService
     * @return resultSet with the result
     */
    ResultSet getAllItems();
+   /**
+    * Save the boolean of the reboot flag
+    * 
+    * @param reboot boolean
+    */
+   void setReboot();
+   /**
+    * Get the reboot flag
+    * 
+    * @return reboot boolean
+    */
+   boolean shouldReboot();
 
    /**
     * Free the result set

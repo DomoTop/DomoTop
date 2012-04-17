@@ -101,6 +101,9 @@ public class AdministratorController extends MultiActionController
       
       if(success)
       {   
+         // Set the reboot flag
+         configurationService.setReboot();
+         
          response.getWriter().print(Constants.OK);
       }
       

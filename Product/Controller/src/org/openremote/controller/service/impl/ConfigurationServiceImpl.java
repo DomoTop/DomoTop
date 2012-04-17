@@ -42,6 +42,7 @@ import org.openremote.controller.service.ConfigurationService;
 public class ConfigurationServiceImpl implements ConfigurationService 
 {
    private DatabaseService database;
+   private boolean reboot = false;
    
    private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
    
@@ -228,6 +229,28 @@ public class ConfigurationServiceImpl implements ConfigurationService
          resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '' WHERE configuration_name = '" + name + "' LIMIT 1");
       }
       return resultValue;
+   }
+   
+   /**
+    * Save the boolean of the reboot flag
+    * 
+    * @param reboot boolean
+    */
+   @Override
+   public void setReboot()
+   {
+      this.reboot = true;
+   }
+
+   /**
+    * Get the reboot flag
+    * 
+    * @return reboot boolean
+    */
+   @Override
+   public boolean shouldReboot()
+   {
+      return reboot;
    }
    
    /**
