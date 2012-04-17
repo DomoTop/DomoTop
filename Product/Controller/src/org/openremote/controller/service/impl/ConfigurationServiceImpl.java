@@ -19,9 +19,17 @@
 */
 package org.openremote.controller.service.impl;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+import org.openremote.controller.Constants;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ConfigurationService;
 
@@ -34,6 +42,8 @@ import org.openremote.controller.service.ConfigurationService;
 public class ConfigurationServiceImpl implements ConfigurationService 
 {
    private DatabaseService database;
+   
+   private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
    
    /**
     * Update a configuration item
@@ -74,6 +84,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
       {
          stringValue = "false";
       }
+
       
       if (database != null) {
          resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + stringValue + "' WHERE " +
