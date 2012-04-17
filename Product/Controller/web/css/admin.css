@@ -186,13 +186,12 @@ span.info:hover span
 	z-index:1;
 }
 
-#popupContact, #popupLoading
+#popupPin, #popupLoading
 {
 	display:none;
 	position:fixed;
 	_position:absolute; /* hack for internet explorer 6*/
 	height:194px;
-	width:218px;
 	background:#FFFFFF;
 	border:1px solid #639e20;
 	z-index:2;
@@ -200,7 +199,17 @@ span.info:hover span
 	font-size:13px;
 }
 
-#popupContact h1, #popupLoading h1
+#popupPin
+{
+	width:208px;
+}
+
+#popupLoading
+{
+	width: 350px;
+}
+
+#popupPin h1, #popupLoading h1
 {
 	text-align:left;
 	color:#266131;
@@ -211,7 +220,7 @@ span.info:hover span
 	margin-bottom:20px;
 }
 
-#popupContactClose
+#popupPinClose
 {
 	font-size:14px;
 	line-height:14px;
@@ -223,7 +232,7 @@ span.info:hover span
 	display:block;
 }
 
-a#popupContactClose
+a#popupPinClose
 {
 	cursor: pointer;
 	text-decoration:none;

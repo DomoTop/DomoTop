@@ -52,8 +52,8 @@ window.onload=function()
 $(document).ready(function() 
 {
 	// Ajax forms
-	showErrorMessage();
- 	 	
+	showErrorMessage(); 	
+	
   $('.statusSubmit').click(function(){
   	clearMessage();
   	showUpdateIndicator();
@@ -142,7 +142,7 @@ $(document).ready(function()
 	});
 	
 	//Click the x event!
-	$("#popupContactClose").click(function(){
+	$("#popupPinClose").click(function(){
 		disablePopup();
 	});
 	
@@ -183,7 +183,7 @@ function displayPage()
   //add class of activetabheader to new active tab and show contents
   this.setAttribute("class","tabActiveHeader");
   document.getElementById("tabpage_" + ident).style.display="block";
-  this.parentNode.setAttribute("data-current",ident);
+  this.parentNode.setAttribute("data-current",ident);	
 }
 
 
@@ -316,7 +316,7 @@ function loadPopup()
 			"opacity": "0.7"
 		});
 		$("#backgroundPopup").fadeIn("slow");
-		$("#popupContact").fadeIn("slow");
+		$("#popupPin").fadeIn("slow");
 		popupStatus = 1;
 	}
 }
@@ -327,7 +327,7 @@ function disablePopup()
 	//disables popup only if it is enabled
 	if(popupStatus==1){
 		$("#backgroundPopup").fadeOut("slow");
-		$("#popupContact").fadeOut("slow");
+		$("#popupPin").fadeOut("slow");
 		popupStatus = 0;
 	}
 }
@@ -357,6 +357,7 @@ function hideLoading()
 		$("#backgroundPopup").fadeOut("slow");
 		$("#popupLoading").fadeOut("slow");
 		popupStatus = 0;
+		delayedRefreshPage(500);
 	}
 }
 
@@ -383,14 +384,14 @@ function centerPopup()
 	//request data for centering
 	var windowWidth = document.documentElement.clientWidth;
 	var windowHeight = document.documentElement.clientHeight;
-	var popupHeight = $("#popupContact").height();
-	var popupWidth = $("#popupContact").width();
+	var popupHeight = $("#popupPin").height();
+	var popupWidth = $("#popupPin").width();
 	
 	var loadingHeight = $("#popupLoading").height();
 	var loadingWidth = $("#popupLoading").width();
 	
 	//centering
-	$("#popupContact").css({
+	$("#popupPin").css({
 		"position": "absolute",
 		"top": windowHeight/2-popupHeight/2,
 		"left": windowWidth/2-popupWidth/2
@@ -398,8 +399,8 @@ function centerPopup()
 
 	$("#popupLoading").css({
 		"position": "absolute",
-		"top": windowHeight/2-popupHeight/2,
-		"left": windowWidth/2-popupWidth/2
+		"top": windowHeight/2-loadingHeight/2,
+		"left": windowWidth/2-loadingWidth/2
 	});	
 	
 	//only need force for IE6	

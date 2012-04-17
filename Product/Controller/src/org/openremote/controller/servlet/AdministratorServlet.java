@@ -98,6 +98,7 @@ public class AdministratorServlet extends HttpServlet
       String result = "";
       String errorString = "";
       int numClients = 0;
+      boolean isAuthenticationEnabled = false;
       Collection clientCollection = null, settingCollection = null;
       
       ResultSet clients = clientService.getClients();     
@@ -111,6 +112,8 @@ public class AdministratorServlet extends HttpServlet
       
       try 
       {     
+         isAuthenticationEnabled = configurationService.getBooleanItem("authentication_active");
+         
          if(clientCollection != null && settingCollection != null)
          {
             if(numClients > 0)
@@ -119,7 +122,10 @@ public class AdministratorServlet extends HttpServlet
             }
             else
             {
-               errorString = "No clients in the database.";
+               if(isAuthenticationEnabled)
+               {
+                  errorString = "No clients in the database.";
+               }
             }
             root.put( "configurations", settingCollection );
          }
@@ -137,6 +143,7 @@ public class AdministratorServlet extends HttpServlet
          {
             root.put( "errorMessage", errorString);
          }
+         root.put( "authEnabled", isAuthenticationEnabled);
          
          result = freemarkerDo(root, "administrator.ftl");
       }
