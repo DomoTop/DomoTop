@@ -1,0 +1,329 @@
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.16)  17 APR 2012 13:35
+entering extended mode
+ %&-line parsing enabled.
+**\nonstopmode \input{"/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.te
+x"}
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.tex
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip43
+\f@ncyO@elh=\skip44
+\f@ncyO@erh=\skip45
+\f@ncyO@olh=\skip46
+\f@ncyO@orh=\skip47
+\f@ncyO@elf=\skip48
+\f@ncyO@erf=\skip49
+\f@ncyO@olf=\skip50
+\f@ncyO@orf=\skip51
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+Package: babel 2008/07/06 v3.8l The Babel package
+
+(/usr/share/texmf-texlive/tex/generic/babel/dutch.ldf
+Language: dutch 2005/03/30 v3.8i Dutch support from the babel system
+
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2008/07/06 v3.8l Babel common definitions
+\babel@savecnt=\count88
+\U@D=\dimen105
+)
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `Dutch'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@dutch = a dialect from \language0
+Package babel Info: Making " an active character on input line 132.
+)) (/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+\captionmargin=\dimen106
+\captionmargin@=\dimen107
+\captionwidth=\dimen108
+\caption@indent=\dimen109
+\caption@parindent=\dimen110
+\caption@hangindent=\dimen111
+)
+\c@ContinuedFloat=\count89
+)
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.aux)
+\openout1 = `verslag.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count90
+\scratchdimen=\dimen112
+\scratchbox=\box26
+\nofMPsegments=\count91
+\nofMParguments=\count92
+\everyMPshowfont=\toks15
+\MPscratchCnt=\count93
+\MPscratchDim=\dimen113
+\MPnumerator=\count94
+\everyMPtoPDFconversion=\toks16
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 59.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 59.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 59.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 63.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 63.
+
+Overfull \hbox (56.61183pt too wide) in paragraph at lines 63--72
+[][] 
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Missing character: There is no ¬ in font cmr10!
+Missing character: There is no © in font cmr10!
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--84
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--92
+
+ []
+
+
+Overfull \hbox (13.52531pt too wide) in paragraph at lines 97--116
+[] 
+ []
+
+<tass.png, id=8, 111.41624pt x 40.15pt>
+File: tass.png Graphic file (type png)
+ <use tass.png>
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 33.60004pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2 </home/melroy/DomoTop/Project/AfstudeerVerslag/tass.png>]
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.toc)
+\tf@toc=\write3
+\openout3 = `verslag.toc'.
+
+
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.lot)
+\tf@lot=\write4
+\openout4 = `verslag.lot'.
+
+
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.lof)
+\tf@lof=\write5
+\openout5 = `verslag.lof'.
+
+File: tass.png Graphic file (type png)
+ <use tass.png>
+[3]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ô in font cmr10!
+
+Overfull \hbox (15.50049pt too wide) in paragraph at lines 159--164
+[]\OT1/cmr/m/n/10 Twee weke-li-jks zal er een re-view punt komen waar de peo-pl
+e man-ager samenkomt
+ []
+
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+
+Overfull \hbox (3.61162pt too wide) in paragraph at lines 165--175
+[]\OT1/cmr/m/n/10 Buiten de Peo-ple Man-ager kri-j-gen de af-s-tudeerders ook e
+en tech-nis-che begelei-
+ []
+
+File: tass.png Graphic file (type png)
+<use tass.png> [4]
+File: tass.png Graphic file (type png)
+ <use tass.png> [5]
+Missing character: There is no √ in font cmr10!
+Missing character: There is no ´ in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+File: tass.png Graphic file (type png)
+ <use tass.png> [6]
+File: tass.png Graphic file (type png)
+ <use tass.png>
+[7]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+
+Overfull \hbox (24.75069pt too wide) in paragraph at lines 337--340
+[]\OT1/cmr/m/n/10 Voor de An-droid ap-pli-catie wordt ge-bruik gemaakt van de E
+clipse on-twikkelomgev-
+ []
+
+File: tass.png Graphic file (type png)
+<use tass.png> [8]
+Overfull \hbox (12.80498pt too wide) in paragraph at lines 350--360
+[]\OT1/cmr/m/n/10 Er is gekozen voor HSQLDB van-wege het feit dat deze database
+ 100is geschreven
+ []
+
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+File: tass.png Graphic file (type png)
+<use tass.png> [9]
+File: tass.png Graphic file (type png)
+ <use tass.png> [10]
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+File: tass.png Graphic file (type png)
+ <use tass.png> [11]
+File: tass.png Graphic file (type png)
+ <use tass.png>
+[12]
+Overfull \hbox (35.13956pt too wide) in paragraph at lines 529--534
+ [] 
+ []
+
+File: tass.png Graphic file (type png)
+<use tass.png> [13]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+
+Overfull \hbox (52.50067pt too wide) in paragraph at lines 598--610
+ [] 
+ []
+
+File: tass.png Graphic file (type png)
+<use tass.png> [14]
+
+! LaTeX Error: Unknown graphics extension: .eps.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.625 ...ht=150pt,keepaspectratio]{controller.eps}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: tass.png Graphic file (type png)
+<use tass.png> [15]
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+
+Overfull \hbox (5.38953pt too wide) in paragraph at lines 632--670
+[] 
+ []
+
+File: tass.png Graphic file (type png)
+<use tass.png> [16]
+File: tass.png Graphic file (type png)
+ <use tass.png> [17]
+File: tass.png Graphic file (type png)
+ <use tass.png> [18]
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.aux) ) 
+Here is how much of TeX's memory you used:
+ 2331 strings out of 495061
+ 34096 string characters out of 1182621
+ 107096 words of memory out of 3000000
+ 5523 multiletter control sequences out of 15000+50000
+ 7895 words of font info for 28 fonts, out of 3000000 for 9000
+ 28 hyphenation exceptions out of 8191
+ 37i,15n,43p,258b,312s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr17.p
+fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb>
+Output written on verslag.pdf (18 pages, 133997 bytes).
+PDF statistics:
+ 87 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+
