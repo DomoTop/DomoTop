@@ -19,6 +19,7 @@
 */
 package org.openremote.controller.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 
 /**
@@ -106,4 +107,11 @@ public interface ConfigurationService
     * Free the result set
     */
    public void free();
+   
+   /**
+    * Enable the authentication in web.xml. Requires OpenRemote to be restarted
+    * @param enable True if you want to enable
+    * @throws IOException
+    */
+   public void setAuthentication(boolean enable) throws IOException;
 }

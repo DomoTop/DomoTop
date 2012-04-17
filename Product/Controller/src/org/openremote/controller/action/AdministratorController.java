@@ -50,6 +50,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  * The controller for Administrator management.
  * 
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
  */
 public class AdministratorController extends MultiActionController 
 {
@@ -130,7 +131,7 @@ public class AdministratorController extends MultiActionController
       }
       
       Enumeration names = request.getParameterNames(); 
-      boolean success = false;
+      int success = -1;
       while(names.hasMoreElements())
       {
          String name = (String) names.nextElement();
@@ -142,23 +143,40 @@ public class AdministratorController extends MultiActionController
             // if type boolean
             if(value.equals("true") || value.equals("false"))
             {
-               success = (configurationService.updateItem(name, Boolean.parseBoolean(value)) == 1) ? true : false;
+               boolean bool_value = Boolean.parseBoolean(value);
+               success = configurationService.updateItem(name, bool_value);
+               
+               //Check for "authentication_active" to set that in the web.xml
+               try {
+                  configurationService.setAuthentication(bool_value);
+                  success = 2;
+               } catch (IOException e) {
+                  success = -1;
+                  logger.error(e.getMessage());
+               }   
             }
             else // type is String
             {
-               success = (configurationService.updateItem(name, value) == 1) ? true : false;
+               success = configurationService.updateItem(name, value);
             }
          }  
          
-         if(!success)
+         if(!name.equals("authentication_active") && success > 0) {
+        }
+         
+         if(success <= 0)
          {
             break;
          }
       }
       
-      if(success)
+      if(success == 1)
       {      
          response.getWriter().print(Constants.OK);
+      }
+      else if(success == 2)
+      {
+         response.getWriter().print(Constants.OK_REBOOT);
       }
       else
       {

@@ -77,15 +77,6 @@ public class ConfigurationServiceImpl implements ConfigurationService
       int resultValue = -1;
       String stringValue = "not_defiend";
       
-      
-      if(name.equals("authentication_active")) {
-         try {
-            setAuthentication(value);
-         } catch (IOException e) {
-            logger.error(e.getMessage());
-         }
-      }
-      
       if(value)
       {
          stringValue = "true";
@@ -276,7 +267,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
     * @param enable True if you want to enable
     * @throws IOException
     */
-   private void setAuthentication(boolean enable) throws IOException
+   public void setAuthentication(boolean enable) throws IOException
    {
       String curDir = System.getProperty("user.dir");
 
