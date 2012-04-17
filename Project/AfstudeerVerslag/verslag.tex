@@ -6,6 +6,11 @@
 %Used to include images into the document
 \usepackage{graphicx}
 
+%Used to make some pages landscape
+\usepackage{lscape}
+
+\usepackage{wrapfig}
+
 %Translate LaTeX terms to dutch
 \usepackage[dutch]{babel}
 
@@ -41,7 +46,7 @@
 \fancyfoot{}
 
 \fancyhead[L]{Melroy van den Berg \& Vincent Kriek}
-\fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tass.eps}}
+\fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tass.pdf}}
 
 \fancyfoot[L]{\version}
 \fancyfoot[C]{\thepage}
@@ -618,12 +623,6 @@ De app stuurt sinds deze iteratie een CSR naar de server die de server
 gebruikt om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
-
-\begin{figure}[h!]
-  \centering
-    \includegraphics[height=150pt,keepaspectratio]{controller.eps} 
-  \caption{Ontwerp beheerderspanel}
-\end{figure}
 
 \newpage
 \section{Verklarende woordenlijst}
