@@ -363,17 +363,18 @@ function hideLoading()
 // Wait until page can be access again
 function waitLoading()
 {
-		var response = $.ajax({
-		  type: "GET",
-		  url: "administrator",
-		  success: function(data){		  		
-   			hideLoading();
-		  },
-		  error: function(result){	  
-		  	//result.status			  	
-				setTimeout(waitLoading(), 2000);
+	$.ajax({
+	      type: "GET",
+	      url: "administrator",
+	      complete: function(response) {
+		      if(response.status == 200) {
+		          hideLoading();
+		      } else if(response.status == 404) {
+		          waitLoading();
+		      }
 		  }
-		});
+	});
+		
 }
 
 //centering popup
