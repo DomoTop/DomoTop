@@ -1,8 +1,5 @@
 \documentclass[]{article}
 
-\usepackage[T1]{fontenc}
-\usepackage{winfonts}
-
 %Used to improve the headers
 \usepackage{fancyhdr}
 
@@ -469,29 +466,26 @@ oplossing: TLS te implementeren in OpenRemote om OpenRemote veiliger te
 maken. Dit gebeurd door een apparaat een aanvraag laat doen bij de
 OpenRemote Controller, de OpenRemote Controller kan deze aanvraag
 goedkeuren en het apparaat ontvangt vervolgens het client certificaat. Dit
-client certificaat wordt vervolgens gebruikt onder het apparaat (zoals
-Android), waarna je toestemming hebt om gebruik te maken van de OpenRemote
-Controller.
+client certificaat wordt vervolgens gebruikt in combinatie met een apparaat (zoals
+Android), waarna er toestemming wordt verleend om de OpenRemote Controller te gebruiken.
 
-Om dit alles te kunnen verwezenlijken is het noodzakelijk om zowel de
-OpenRemote Controller alsmede de OpenRemote applicatie onder Android aan te
-passen. De aanpak was  om allereerst alles op de server, waar ook de
-OpenRemote Controller draait, te maken en generen. Het CSR bestand werd
-aangemaakt op de server, het werd ondertekend op de server en ook het
-client certificaat werd gegeneerd op de server. Omdat het belangrijk was
-dat alles werkt, werd er gebruik gemaakt van de openssl commando in de
-terminal onder Linux. De certificaten die gegeneerd werden, werden
-toegevoegd aan de truststore die TomCat gebruikte. Toen alles eenmaal
+Het is noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote applicatie 
+van Android te modificeren. De aanpak was om allereerst alles op de server, waar ook de 
+OpenRemote Controller draait, te maken en genereren. Het CSR bestand wordt
+aangemaakt & ondertekend op de server en ook het
+client certificaat wordt gegenereerd op de server. Omdat het belangrijk is
+dat alles werkt, wordt er gebruik gemaakt van het openssl commando in de
+terminal onder Linux. De certificaten die gegenereerd worden, worden
+toegevoegd aan de truststore die TomCat gebruikt. Toen alles eenmaal
 werkte bleek al snel dat TomCat telkens moest worden herstart om de
-truststore opnieuw uit te kunnen lezen.
-
-Om het probleem op te lossen, zodat TomCat server niet telkens opnieuw
-herstart hoefde te worden, werd er gekozen om een eigen 'self-signed' CA te
-gebruiken. Hierdoor moest enkel dit CA certificaat toegevoegd worden aan de
+truststore opnieuw uit te kunnen lezen.\\
+Om dat probleem op te lossen, zodat TomCat server niet telkens opnieuw
+herstart hoefde te worden, is er gekozen om een eigen 'self-signed' CA te
+gebruiken. Hiervoor moet enkel het CA certificaat toegevoegd worden aan de
 truststore van TomCat en zolang de client certificaten ondertekend worden
 door hetzelfde CA certificaat is het mogelijk om de oorsprong van het
 client certificaat te achterhalen. Indien het client certificaat inderdaad
-getekend is ook de CA die aanwezig is in de truststore van TomCat vertrouwd
+getekend is ook de CA, die aanwezig is in de truststore van TomCat, vertrouwd
 TomCat deze client en krijgt het apparaat toegang tot de OpenRemote
 Controller.
 
@@ -502,18 +496,18 @@ Controller.
   \caption{Het TomCat logo}
 \end{wrapfigure}
 
-Om het bovengenoemde tot een goed einde te brengen is er onder Android
-onderzocht hoe er een client CSR file gemaakt kon worden en hoe het client
-certificaat kan worden geïmporteerd in de keystore onder Android. Op de
+Omwille van het bovenstaande idee tot een goed einde te brengen is het noodzakelijk dat er onder Android
+onderzochtwordt hoe er een client CSR file gemaakt kan worden en hoe het client
+certificaat vervolgens geïmporteerd kan worden in de keystore van Android. Op de
 server waar ook de OpenRemote Controller draait werd er gekeken hoe je een
 CA aanmaakt voor de TomCat server, hoe je client certification request
 files kan omzetten in normale client certificaten die ondertekend zijn door
 het CA certificaat. En hoe je de client certificaten vervolgens kan opslaan
 in één keystore op de server, zodat er op een later termijn nog steeds
 informatie opgevraagd kan worden over een client certificaat. Op de server
-en de OpenRemote controller werkte dit alles eerst via het openssl
+en de OpenRemote controller werkte dit eerst via het openssl
 commando, later is deze code in zijn geheel omgeschreven in native Java
-code en maakt gebruikt van de Bouncy Castle bibliotheek.
+code en wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of
 af te keuren vanuit de 'administrator panel'. Er bestaat een pin die
@@ -522,10 +516,10 @@ indien de pins van Android en de administrator panel overeenkomen, is er
 met zekerheid te zeggen dat het hetzelfde apparaat betreft. Naast 'User
 management' heeft de administrator panel ook een tab genaamd
 'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
-veranderen zoals of de authenticiteit aan- of uitgezetten. De administrator
-panel is beveiligd door een gebruikersnaam en wachtwoord die overeen moet
-kImen met een bestaand OpenRemote Designer account. Op deze manier is het
-administratie paneel ontoegankelijk voor onbevoegde.
+veranderen zoals of de authenticiteit of pin check aan- of uitgezetten. 
+De administrator panel is beveiligd door een gebruikersnaam en wachtwoord 
+die overeen moet komen met een bestaand OpenRemote Designer account.
+Op deze manier is het administratie paneel enkel toegankelijk voor de administrator.
 
 \begin{figure}[htpb]
    \begin{center}
@@ -548,7 +542,7 @@ De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
 werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
 delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
 domotica hardware, plugtops en OpenRemote.
-  
+
 \begin{table}[htpb]
   \caption{Eisen iteratie 1}
   \begin{center}
@@ -800,13 +794,29 @@ internetverbinding is, lokaal met de cache die te vinden is in de database.
     TomCat Web       & TomCat heeft een Web Application Manager waarbij je  \\\hline
     Application      & eenvoudig via een web interface je applicaties (WAR  \\\hline
     Manager          & bestanden) te beheren, updaten, uploaden.            \\\hline
-    Java Servlet     &                                                      \\\hline
-    Model View       &                                                      \\
-    Controller       &                                                      \\
-    architectuur     &                                                      \\\hline
-    Keystore         &                                                      \\\hline
-    Truststore       &                                                      \\\hline
-    Self-signed      &                                                      \\\hline
+    Java Servlet     & Een servlet is een in Java geschreven programma dat  \\
+                     & op een server draait. De servlet maakt hierbij       \\
+                     & gebruik van een aantal diensten die de               \\
+                     & webcontainer biedt, zoals het afhandelen van de      \\
+                     & communicatie met de client.                          \\\hline
+    Model View       & Model-view-controller (of MVC) is een ontwerppatroon \\
+    Controller       & dat het ontwerp van complexe toepassingen opdeelt in \\
+    software         & drie eenheden met verschillende                      \\
+    Architectuur     & verantwoordelijkheden: datamodel, datapresentatie en \\
+                     & applicatielogica. Het scheiden van deze              \\
+                     & verantwoordelijkheden bevordert de leesbaarheid en   \\
+                     & herbruikbaarheid van code.                           \\\hline
+    KeyStore         & Een Java keystore (JKS) is een bestand waar          \\
+                     & beveiligingscertificaten, aanvraag certificaten of   \\
+                     & publieke sleutels worden opgeslagen                  \\
+                     & - wat gebruikt wordt met SSL encryptie.              \\\hline
+    TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
+                     & die zijn geaccepteerd om verbinding mee op te zetten.\\
+                     & Of een CA ceritificaat waarbij de ondertekende       \\
+                     & certificaten vertrouwd  zijn.                        \\\hline
+    Self-signed      & Een certificaat kan self-signed zijn,                \\
+                     & wat erop duidt dat het certificaat door zichtzelf    \\
+                     & ondertekend is.                                      \\\hline
     Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
                      & techniek gebruikt kan worden. Deze applicatie laat   \\
                      & alleen zien dat de techniek werkt.                   \\\hline

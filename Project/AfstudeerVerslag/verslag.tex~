@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[]{article}
 
 %Used to improve the headers
 \usepackage{fancyhdr}
@@ -6,9 +6,20 @@
 %Used to include images into the document
 \usepackage{graphicx}
 
+%Used to make some pages landscape
+\usepackage{lscape}
+
+%Used to wrap figures in text
+\usepackage{wrapfig}
+
 %Translate LaTeX terms to dutch
 \usepackage[dutch]{babel}
-\usepackage{caption}
+
+%Used to display url's
+\usepackage{hyperref}
+
+%Used to display "normal" paragraph's without indentation and with blank line
+\usepackage[parfill]{parskip}
 
 %Use \insertdate to insert current formatted date
 \makeatletter
@@ -42,7 +53,7 @@
 \fancyfoot{}
 
 \fancyhead[L]{Melroy van den Berg \& Vincent Kriek}
-\fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tass.png}}
+\fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tassbw.pdf}}
 
 \fancyfoot[L]{\version}
 \fancyfoot[C]{\thepage}
@@ -72,7 +83,7 @@
 
 \newpage
 
-© TASS B.V. 2011
+\noindent\copyright  TASS B.V. 2011
 Alle rechten voorbehouden. Verveelvuldiging, geheel of gedeeltelijk, is
 niet toegestaan dan met schriftelijke toestemming van de
 auteursrechthebbende.
@@ -126,6 +137,13 @@ TASS is 30 jaar geleden begonnen als onderdeel van Philips. Het is tot 2007
 onderdeel gebleven van Philips waarna het zelfstandig is verder gegaan,
 onder de vleugels van moederbedrijf Total Specific Solutions (TSS).
 
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.40\textwidth]{tass_eindhoven.pdf}
+  \end{center}
+  \caption{TASS Eindhoven}
+\end{wrapfigure}
+
 TASS is een detacheerder wat inhoudt dat al hun personeel werkzaam is bij
 andere bedrijven. Zeker gezien hun geschiedenis heeft TASS nog een goede
 relatie met vorige moederbedrijf Philips en werkt ook veel met Philips
@@ -173,6 +191,13 @@ Deze technische begeleider zal zich dan ook niet bezig houden met de
 project management zaken maar vooral met de technische problemen of bragen
 waar we tegenaan lopen.
 
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{openremote.pdf}
+  \end{center}
+  \caption{OpenRemote logo}
+\end{wrapfigure}
+
 Het product wat ontwikkeld zal gaan worden is een uitbreiding op een
 bestaand open source project, namelijk OpenRemote. OpenRemote zal dan ook
 in zekere zin de klant rol vertegenwoordigen. Wij zouden graag zien dat
@@ -182,7 +207,7 @@ verantwoording over onze keuzes moeten afleggen aan de mensen van
 OpenRemote. Tevens kunnen de mensen van OpenRemote ons helpen en begeleiden
 in het proces en dienen als begeleider in het project.
 
-De klant zal in dit project vertegenwoordigd worden door de People Manage
+De klant zal in dit project vertegenwoordigd worden door de People Manager
 Gerben Blom. Dit zal in dit project niet de enige klant zijn, ook de
 ontwikkelaars en gebruikers van het OpenRemote project de rol van klant
 fungeren. Dit betekent dat de documentatie van het project hierop aangepast
@@ -285,6 +310,7 @@ Binnen het project zullen er een aantal methoden, technieken en tools
 gebruikt worden om het project tot een goed eind te brengen. Hier zullen de
 verschillende keuzes voor methoden, technieken en tools toegelicht worden.
 
+\subsection{Ontwikkelmethodiek}
 De eerste keuze was voor een ontwikkelmethodiek. De ontwikkelmethodiek
 moest een duidelijke voortgang kunnen laten zien door het project heen. De
 begeleider vanuit school moet goed op de hoogte gehouden kunnen worden van
@@ -307,6 +333,7 @@ zien en bij te kunnen houden. Deze burndown charts houden verschillende
 elementen van de backlogs bij om op deze manier alles inzichtelijk te
 houden.
 
+\subsection{Versiebeheer}
 De techniek de we gebruiken om code en document versies bij te houden is
 git. Git is een “version control system” net als bijvoorbeeld subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
@@ -323,21 +350,26 @@ is een online platform voor git-repositories, met een erg goede
 webinterface. In deze webinterface kan de code ingezien worden, issues
 worden aangemaakt en er is een wiki aanwezig.
 
+\subsection{Documenten}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
 meerdere mensen in een document te werken zonder conflicten te krijgen. Ook
 de SCRUM spreadsheets staan Google Documenten.
 
+Voor het afstudeerverslag hebben we voor \LaTeX gekozen. Dit omdat het
+makkelijker is om de opmaak en uiterlijk te wijzigen en dit meer mogelijkheden
+biedt dan het meer beperkt Google Documenten. Ook bestond de wens bij studenten
+om meer ervaring op te doen met \LaTeX en dit leek hen de de uitgelezen kans om
+dit te doen
+
+\subsection{Programmeertalen}
 De talen die gebruikt gaan worden liggen al vast aangezien we verder gaan
 werken op een bestaand project. Voor de controller wordt gebruik gemaak van
 Java, evenals voor de composer. De verschillende applicaties maken gebruik
 van Java op Android en Objective-C op iOS.
 
-Voor de Android applicatie wordt gebruik gemaakt van de Eclipse
-ontwikkelomgeving met de ADT plugin. Hiermee is het makkelijk om wijziging
-live te draaien op een tablet of een emulator.
-
+\subsection{Database}
 Er is gebruik gemaakt van RazorSQL[3], met dit programma is het mogelijk om
 SQL queries te maken, typen en de testen via een grafische interface en dit
 alles werkt ook met de database die gebruikt wordt bij het DomoTop project,
@@ -357,6 +389,11 @@ toevoegen, updaten, verwijderen en veel meer. Alternatieven van HSQLDB zijn
 niet in native Java code geschreven,  vraagt ook meer van het systeem qua
 bronnen en zijn groter als HSQLDB. Sommige alternatieven zijn zelfs niet
 eens geschikt om te gebruiken in combinatie met een TomCat server.
+
+\subsection{Ontwikkelomgeving}
+Voor de Android applicatie wordt gebruik gemaakt van de Eclipse
+ontwikkelomgeving met de ADT plugin. Hiermee is het makkelijk om wijziging
+live te draaien op een tablet of een emulator.
 
 Bij het programmeren van de OpenRemote Controller wordt er gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
@@ -378,21 +415,16 @@ gekozen, omdat Eclipse standaard geen highlighting heeft voor bovengenoemde
 type bestanden. Desalniettemin is het optioneel om de Eclipse Colorer
 plugin te gebruiken, het is enkel gekozen voor gemaks doeleinden.
 
+\subsection{Libraries}
 Om in Java met encryptie en TLS te kunnen werken in native Java code wordt
 er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
 Bouncy Castle is een bibliotheek die binnen het project onder andere
 gebruikt wordt om nieuwe certificaten te kunnen generen vanuit Java code
 alsmede een CSR bestand uit te lezen en deze gegevens gebruiken om een
 nieuw certificaat te onderteken door middel van een CA. Ook het gebruikte
-CA certificaat wordt aangemaakt door middel van Bouncy Castle.
-
-Ook onder Android wordt er gebruik gemaakt van de Bouncy Castle
-bibliotheek, echter heet dat onder Android Spongy Castle, maar is exact
-dezelfde code als Bouncy Castle. Android levert standaard ook de Bouncy
-Castle bibliotheek mee maar deze bevat niet alle features. Om
-naamgevingsproblemen te voorkomen en toch een volledige Bouncy Castle te
-kunnen gebruiken is het 'opnieuw ingepakt' voor Android met de naam Sponge
-Castle. Onder Android wordt Spongy Castle gebruikt om een CSR aan te maken.
+CA certificaat wordt aangemaakt door middel van Bouncy Castle. Ook onder 
+Android wordt er gebruik gemaakt van de Bouncy Castle bibliotheek, echter 
+heet dat onder Android Spongy Castle, maar is exact dezelfde code.
 
 In de OpenRemote Controller is er gebruikt gemaakt van een template engine
 genaamd Freemarker[6]. Deze template engine maakt het mogelijk om statische
@@ -406,6 +438,13 @@ exact wat de OpenRemote Controller is.
 
 \newpage
 \section{Uitvoering}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.50\textwidth]{dreamplug.pdf}
+  \end{center}
+  \caption{Een PlugTop computer}
+\end{wrapfigure}
 
 Het begin van de stage stond in het teken van onderzoek. Er was bij ons
 weinig kennis van het domotica veld, OpenRemote, PlugTop computers en
@@ -427,44 +466,48 @@ oplossing: TLS te implementeren in OpenRemote om OpenRemote veiliger te
 maken. Dit gebeurd door een apparaat een aanvraag laat doen bij de
 OpenRemote Controller, de OpenRemote Controller kan deze aanvraag
 goedkeuren en het apparaat ontvangt vervolgens het client certificaat. Dit
-client certificaat wordt vervolgens gebruikt onder het apparaat (zoals
-Android), waarna je toestemming hebt om gebruik te maken van de OpenRemote
-Controller.
+client certificaat wordt vervolgens gebruikt in combinatie met een apparaat (zoals
+Android), waarna er toestemming wordt verleend om de OpenRemote Controller te gebruiken.
 
-Om dit alles te kunnen verwezenlijken is het noodzakelijk om zowel de
-OpenRemote Controller alsmede de OpenRemote applicatie onder Android aan te
-passen. De aanpak was  om allereerst alles op de server, waar ook de
-OpenRemote Controller draait, te maken en generen. Het CSR bestand werd
-aangemaakt op de server, het werd ondertekend op de server en ook het
-client certificaat werd gegeneerd op de server. Omdat het belangrijk was
-dat alles werkt, werd er gebruik gemaakt van de openssl commando in de
-terminal onder Linux. De certificaten die gegeneerd werden, werden
-toegevoegd aan de truststore die TomCat gebruikte. Toen alles eenmaal
+Het is noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote applicatie 
+van Android te modificeren. De aanpak was om allereerst alles op de server, waar ook de 
+OpenRemote Controller draait, te maken en genereren. Het CSR bestand wordt
+aangemaakt & ondertekend op de server en ook het
+client certificaat wordt gegenereerd op de server. Omdat het belangrijk is
+dat alles werkt, wordt er gebruik gemaakt van het openssl commando in de
+terminal onder Linux. De certificaten die gegenereerd worden, worden
+toegevoegd aan de truststore die TomCat gebruikt. Toen alles eenmaal
 werkte bleek al snel dat TomCat telkens moest worden herstart om de
-truststore opnieuw uit te kunnen lezen.
-
-Om het probleem op te lossen, zodat TomCat server niet telkens opnieuw
-herstart hoefde te worden, werd er gekozen om een eigen 'self-signed' CA te
-gebruiken. Hierdoor moest enkel dit CA certificaat toegevoegd worden aan de
+truststore opnieuw uit te kunnen lezen.\\
+Om dat probleem op te lossen, zodat TomCat server niet telkens opnieuw
+herstart hoefde te worden, is er gekozen om een eigen 'self-signed' CA te
+gebruiken. Hiervoor moet enkel het CA certificaat toegevoegd worden aan de
 truststore van TomCat en zolang de client certificaten ondertekend worden
 door hetzelfde CA certificaat is het mogelijk om de oorsprong van het
 client certificaat te achterhalen. Indien het client certificaat inderdaad
-getekend is ook de CA die aanwezig is in de truststore van TomCat vertrouwd
+getekend is ook de CA, die aanwezig is in de truststore van TomCat, vertrouwd
 TomCat deze client en krijgt het apparaat toegang tot de OpenRemote
 Controller.
 
-Om het bovengenoemde tot een goed einde te brengen is er onder Android
-onderzocht hoe er een client CSR file gemaakt kon worden en hoe het client
-certificaat kan worden geïmporteerd in de keystore onder Android. Op de
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.30\textwidth]{tomcat.pdf}
+  \end{center}
+  \caption{Het TomCat logo}
+\end{wrapfigure}
+
+Omwille van het bovenstaande idee tot een goed einde te brengen is het noodzakelijk dat er onder Android
+onderzochtwordt hoe er een client CSR file gemaakt kan worden en hoe het client
+certificaat vervolgens geïmporteerd kan worden in de keystore van Android. Op de
 server waar ook de OpenRemote Controller draait werd er gekeken hoe je een
 CA aanmaakt voor de TomCat server, hoe je client certification request
 files kan omzetten in normale client certificaten die ondertekend zijn door
 het CA certificaat. En hoe je de client certificaten vervolgens kan opslaan
 in één keystore op de server, zodat er op een later termijn nog steeds
 informatie opgevraagd kan worden over een client certificaat. Op de server
-en de OpenRemote controller werkte dit alles eerst via het openssl
+en de OpenRemote controller werkte dit eerst via het openssl
 commando, later is deze code in zijn geheel omgeschreven in native Java
-code en maakt gebruikt van de Bouncy Castle bibliotheek.
+code en wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of
 af te keuren vanuit de 'administrator panel'. Er bestaat een pin die
@@ -473,10 +516,17 @@ indien de pins van Android en de administrator panel overeenkomen, is er
 met zekerheid te zeggen dat het hetzelfde apparaat betreft. Naast 'User
 management' heeft de administrator panel ook een tab genaamd
 'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
-veranderen zoals of de authenticiteit aan- of uitgezetten. De administrator
-panel is beveiligd door een gebruikersnaam en wachtwoord die overeen moet
-komen met een bestaand OpenRemote Designer account. Op deze manier is het
-administratie paneel ontoegankelijk voor onbevoegde.
+veranderen zoals of de authenticiteit of pin check aan- of uitgezetten. 
+De administrator panel is beveiligd door een gebruikersnaam en wachtwoord 
+die overeen moet komen met een bestaand OpenRemote Designer account.
+Op deze manier is het administratie paneel enkel toegankelijk voor de administrator.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=0.6\textwidth]{userlist.pdf}
+   \end{center}
+   \caption{Gebruikers management lijst}
+\end{figure}
 
 \newpage
 \section{Resultaten}
@@ -492,7 +542,7 @@ De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
 werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
 delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
 domotica hardware, plugtops en OpenRemote.
-  
+
 \begin{table}[htpb]
   \caption{Eisen iteratie 1}
   \begin{center}
@@ -527,9 +577,11 @@ goed geregeld.
   \caption{Eisen iteratie 2}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
-        Eis                                                                               \\\hline\hline
-        Als gebruiker wil ik een Android applicatie om een lamp aan en uit zetten         \\\hline
-        Als klant wil ik weten wat voor authorisatie en authenticatie methoden er bestaan.\\\hline
+        Eis                                                              \\\hline\hline
+        Als gebruiker wil ik een Android applicatie om een lamp aan en   \\ 
+        uit zetten                                                       \\\hline
+        Als klant wil ik weten wat voor authorisatie en authenticatie    \\
+        methoden er bestaan.                                             \\\hline
     \end{tabular}
   \end{center}
 \end{table}
@@ -556,13 +608,14 @@ te authenticeren door middel van SSL Client Certificaten.
   \caption{Eisen iteratie 3}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
-        Eis                                                                   \\\hline\hline
-        Als beheerder wil ik zien welke apparaten er zijn aangemeld           \\\hline
-        Als systeem wil ik onderscheid zien tussen verschillende devices      \\\hline
-        Als gebruiker wil ik zien dat mijn telefoon uniek identificeerbaar is \\\hline
-    \end{tabular}
-  \end{center}
-\end{table}
+        Eis                                                              \\\hline\hline
+        Als beheerder wil ik zien welke apparaten er zijn aangemeld      \\\hline
+        Als systeem wil ik onderscheid zien tussen verschillende devices \\\hline
+        Als gebruiker wil ik zien dat mijn telefoon uniek                \\ 
+        identificeerbaar is                                              \\\hline
+    \end{tabular}                                                         
+  \end{center}                                                            
+\end{table}                                                               
 
 Voor de Proof-of-Concept waren een aantal eisen. Als eerste moet de client
 een aanvraag kunnen doen bij de server voor een certificaat. Deze aanvraag
@@ -579,7 +632,7 @@ hebben gedaan zal dus dezelfde zijn als de clients met een certificaat.
 De telefoon van de gebruiker moest uniek identificeerbaar zijn. De server
 en client moest kunnen zien dat de client uniek identificeerbaar is. Er
 moest dus een manier gevonden worden waar de server aan kon zien welke
-client er verbonden is. Hiervoor is het “serial” attribuut van het client
+client er verbonden is. Hiervoor is het ``serial'' attribuut van het client
 certificaat gebruikt. Dit attribuut is een oplopend nummer welke in elk
 certificaat aanwezig is.
 
@@ -589,23 +642,24 @@ Proof-of-Concept in het OpenRemote project.
 Er waren een aantal onderdelen die verbeterd moesten worden wanneer ze
 geimplementeerd zouden worden in het OpenRemote project. De beheerders
 interface was een onderdeel hiervan. Deze interface is verbeterd, hij is
-ontworpen (zie figuur 7.4) en er zijn acties aangekoppeld waarmee de client
+ontworpen (zie figuur ~\ref{fig:adminv1}) en er zijn acties aangekoppeld waarmee de client
 goedgekeurd kan worden.
 
 \begin{table}[htpb]
   \caption{Eisen iteratie 4}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
-        Eis                                                                                   \\\hline\hline
-        Als beheerder wil ik sommige gebruikers toestemming geven in een webinterface         \\\hline
-        Als gebruiker wil ik met de android app van OpenRemote client certificaten gebruiken  \\ 
-        om te verbinden met de server                                                         \\\hline
-        Als gebruiker wil ik met de android app van OpenRemote een client certificaat op      \\ 
-        kunnen halen van de server                                                            \\\hline
-        Als beheerder wil ik een lijst zien in met gebruikers in een webpagina op de          \\
-        openremote  controller                                                                \\\hline
-        Als beheerder wil ik clients toestemming kunnen geven door middel van een PIN uit te  \\ 
-        wisselen en te controleren in de web interface                                        \\\hline
+        Eis                                                              \\\hline\hline
+        Als beheerder wil ik sommige gebruikers toestemming geven in een \\ 
+        webinterface                                                     \\\hline
+        Als gebruiker wil ik met de android app van OpenRemote client    \\ 
+        certificaten gebruiken om te verbinden met de server             \\\hline
+        Als gebruiker wil ik met de android app van OpenRemote een client\\
+        certificaat op kunnen halen van de server                        \\\hline
+        Als beheerder wil ik een lijst zien in met gebruikers in een     \\ 
+        webpagina op de openremote controller                            \\\hline
+        Als beheerder wil ik clients toestemming kunnen geven door middel\\ 
+        van een PIN uit te wisselen en te controleren in de web interface\\\hline
     \end{tabular}
   \end{center}
 \end{table}
@@ -615,16 +669,102 @@ de naam van de telefoon en een PIN. Deze PIN wordt gegenereerd door een
 hash van de publieke sleutel te maken en daarvan de laatste 4 karakters te
 laten zien.
 
+\begin{figure}[h!]
+  \centering
+    \includegraphics[height=150pt,keepaspectratio]{adminv1.pdf}
+  \caption{Ontwerp beheerderspanel}
+  \label{fig:adminv1}
+\end{figure}
+
 De app stuurt sinds deze iteratie een CSR naar de server die de server
 gebruikt om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
 
+\begin{table}[htpb]
+  \caption{Eisen iteratie 5}
+  \begin{center}
+    \begin{tabular}{|| l ||}\hline
+        Eis                                                              \\\hline\hline
+        Als beheerder wil ik in kunnen loggen met de gegevens van        \\
+        http://composer.openremote.org                                   \\\hline
+        Als beheerder wil ik de toegang van clients kunnen intrekken van \\ 
+        het systeem om de toegang te ontzeggen                           \\\hline
+        Als beheerder wil ik de OpenRemote Controller op alle            \\ 
+        verschillende platformen kunnen installeren                      \\\hline
+        Als gebruiker wil ik de interface zo simpel mogelijk maken       \\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+De vijfde iteratie kwam het probleem van platform ondersteuning om de hoek.
+OpenRemote is een cross platform applicatie. De Controller draait op TomCat
+welke in Java geschreven is. Dit betekent dat het draait op elk platform waar
+java draait. Echter hebben de wijzigingen die in de vorige iteratie zijn
+doorgevoergd er voor gezorgd dat het nu noodzakelijk is toegang te hebben tot
+het 'openssl' commando. In deze iteratie is er voor gezorgd dat dit niet meer
+nodig is. Voor alle cryptografische acties wordt nu gebruik gemaakt van Bouncy
+Castle library. 
+
+In figuur ~\ref{fig:tls} is te zien wat er nu precies gebeurd als er een
+aanvraag binnenkomt bij de Controller. De client doet in het begin een aanvraag
+voor toegang. Hiermee stuurt hij een CSR bestand op waar al zijn gegevens in staan,
+welke de Controller gebruikt om een certificaat te maken. 
+
+Als er een aanvraag binnen komt voegt de Controller de nieuwe client toe aan de
+database. De gegevens in de database worden uit de CSR gehaald. Als dit allemaal
+gedaan is, is de client te zien in de beheerdersinterface. Hij is nog niet
+goedgekeurd en heeft dus ook geen toegang tot het systeem.
+
+Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de pin ingevoerd
+heeft, wordt het proces gestart om een certificaat te genereren. Als eerste
+wordt de private sleutel van de CA opgehaald. Elk certificaat dat gemaakt wordt,
+wordt ondertekend door de CA. Deze CA wordt ook geimporteerd in de OpenRemote
+Controller en op die manier weet OpenRemote dat hij de clients kan vertrouwen.
+
+Daarna wordt de private sleutel samen met de CSR gebruikt om een certificaat te
+cree"eren. Tevens moet er een serienummer meegegeven. Dit serienummer is een
+uniek oplopend nummer waarmee de certificaten makkelijk te identificeren is. Het
+certificaat wat dan gemaakt is wordt het certificaat een in een keystore
+opgeslagen, klaar om opgehaald te worden door de mobiele applicatie en wordt de
+status van de client in de database aangepast.
+
+Nu kan de client met de applicatie een certificaat ophalen en met dit
+certificaat een veilige verbinding opzetten. Tevens kan TomCat het certificaat
+gebruiken om de gebruiker te identificeren. In de database staat de ``dname''
+welke ook in het certificaat staat. Op het moment dat een client een verbinding
+maakt met TomCat, controleert TomCat de dname en kijkt in de database of deze
+gebruiker toegang heeft tot het systeem. Mocht dat niet het geval zijn, zal hij
+de gebruiker geen toegang tot het systeem geven.
+
+
+\begin{landscape}
 \begin{figure}[h!]
   \centering
-    \includegraphics[height=150pt,keepaspectratio]{controller.eps} 
-  \caption{Ontwerp beheerderspanel}
+    \includegraphics[height=1\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
+  \label{fig:tls}
+  \caption{DomoTop Sequence Diagram - Afhandelen van een request via een TLS
+  capable OpenRemote Controller}
 \end{figure}
+\end{landscape}
+
+Om een aantal dingen te kunnen aanpassen als beheerder is er ook een
+configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
+ingesteld zoals onder andere het pad waar de CA opgeslagen wordt en of de PIN
+verplicht gecontroleerd moet worden.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=1\textwidth,keepaspectratio]{adminv2config.pdf}
+  \label{fig:adminv2config}
+  \caption{Het configuratiescherm}
+\end{figure}
+
+Dit configuratiescherm en het user management scherm zijn beide beveiligd met
+een gebruikersnaam en wachtwoordcombinatie. Deze combinatie is dezelfde als
+waarmee ingelogd wordt op \url{http://composer.openremote.org/}. Deze worden,
+wanneer er ingelogd wordt gecontrolleerd online of, als er geen
+internetverbinding is, lokaal met de cache die te vinden is in de database.
 
 \newpage
 \section{Verklarende woordenlijst}
@@ -654,13 +794,29 @@ worden door kwaadwillenden.
     TomCat Web       & TomCat heeft een Web Application Manager waarbij je  \\\hline
     Application      & eenvoudig via een web interface je applicaties (WAR  \\\hline
     Manager          & bestanden) te beheren, updaten, uploaden.            \\\hline
-    Java Servlet     &                                                      \\\hline
-    Model View       &                                                      \\
-    Controller       &                                                      \\
-    architectuur     &                                                      \\\hline
-    Keystore         &                                                      \\\hline
-    Truststore       &                                                      \\\hline
-    Self-signed      &                                                      \\\hline
+    Java Servlet     & Een servlet is een in Java geschreven programma dat  \\
+                     & op een server draait. De servlet maakt hierbij       \\
+                     & gebruik van een aantal diensten die de               \\
+                     & webcontainer biedt, zoals het afhandelen van de      \\
+                     & communicatie met de client.                          \\\hline
+    Model View       & Model-view-controller (of MVC) is een ontwerppatroon \\
+    Controller       & dat het ontwerp van complexe toepassingen opdeelt in \\
+    software         & drie eenheden met verschillende                      \\
+    Architectuur     & verantwoordelijkheden: datamodel, datapresentatie en \\
+                     & applicatielogica. Het scheiden van deze              \\
+                     & verantwoordelijkheden bevordert de leesbaarheid en   \\
+                     & herbruikbaarheid van code.                           \\\hline
+    KeyStore         & Een Java keystore (JKS) is een bestand waar          \\
+                     & beveiligingscertificaten, aanvraag certificaten of   \\
+                     & publieke sleutels worden opgeslagen                  \\
+                     & - wat gebruikt wordt met SSL encryptie.              \\\hline
+    TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
+                     & die zijn geaccepteerd om verbinding mee op te zetten.\\
+                     & Of een CA ceritificaat waarbij de ondertekende       \\
+                     & certificaten vertrouwd  zijn.                        \\\hline
+    Self-signed      & Een certificaat kan self-signed zijn,                \\
+                     & wat erop duidt dat het certificaat door zichtzelf    \\
+                     & ondertekend is.                                      \\\hline
     Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
                      & techniek gebruikt kan worden. Deze applicatie laat   \\
                      & alleen zien dat de techniek werkt.                   \\\hline

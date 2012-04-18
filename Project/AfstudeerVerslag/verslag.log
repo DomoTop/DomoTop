@@ -1,11 +1,9 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.2.17)  18 APR 2012 13:48
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.16)  18 APR 2012 15:05
 entering extended mode
  %&-line parsing enabled.
-**verslag.tex
-(./verslag.tex
-LaTeX2e <2009/09/24>
-Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
+**\nonstopmode \input{"/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.te
+x"}
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.tex
 (/usr/share/texmf-texlive/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size10.clo
@@ -23,83 +21,6 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texmf-texlive/tex/latex/base/fontenc.sty
-Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
-
-(/usr/share/texmf-texlive/tex/latex/base/t1enc.def
-File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
-LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
-))
-(/home/vincent/texmf/tex/latex/winfonts/winfonts.sty
-Package: winfonts 2006/01/13 v1.0 winfonts (Math Design Project)
-
-(/usr/share/texmf-texlive/tex/latex/base/textcomp.sty
-Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
-Package textcomp Info: Sub-encoding information:
-(textcomp)               5 = only ISO-Adobe without \textcurrency
-(textcomp)               4 = 5 + \texteuro
-(textcomp)               3 = 4 + \textohm
-(textcomp)               2 = 3 + \textestimated + \textcurrency
-(textcomp)               1 = TS1 - \textcircled - \t
-(textcomp)               0 = TS1 (full)
-(textcomp)             Font families with sub-encoding setting implement
-(textcomp)             only a restricted character set as indicated.
-(textcomp)             Family '?' is the default used for unknown fonts.
-(textcomp)             See the documentation for details.
-Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 71.
-
-(/usr/share/texmf-texlive/tex/latex/base/ts1enc.def
-File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
-)
-LaTeX Info: Redefining \oldstylenums on input line 266.
-Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 281.
-Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 282.
-Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 283.
-Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 284.
-Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 285.
-Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 286.
-Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 287.
-Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 288.
-Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 289.
-Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 290.
-Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 291.
-Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 292.
-Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 293.
-Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 294.
-Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 295.
-Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 296.
-Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 297.
-Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 298.
-Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 299.
-Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 300.
-Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 301.
-Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 302.
-Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 303.
-Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 304.
-
-Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 305.
-Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 306.
-Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 307.
-Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 308.
-Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 309.
-Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 310.
-Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 311.
-Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 312.
-Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 313.
-Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 314.
-Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 315.
-Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 316.
-Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 317.
-Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 318.
-Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 319.
-Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 320.
-Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 321.
-Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 322.
-Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 323.
-Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 324.
-Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 325.
-Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 326.
-))
 (/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
 \fancy@headwidth=\skip43
 \f@ncyO@elh=\skip44
@@ -279,30 +200,24 @@ File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
 )
 (/usr/share/texmf-texlive/tex/latex/ltxmisc/parskip.sty
 Package: parskip 2001/04/09 non-zero parskip adjustments
-) (./verslag.aux)
+)
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.aux)
 \openout1 = `verslag.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 67.
-
-(/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
-File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 65.
+LaTeX Font Info:    ... okay on input line 65.
 
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -317,7 +232,7 @@ LaTeX Font Info:    ... okay on input line 67.
 \MPnumerator=\count101
 \everyMPtoPDFconversion=\toks18
 )
-Package hyperref Info: Link coloring OFF on input line 67.
+Package hyperref Info: Link coloring OFF on input line 65.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
@@ -326,43 +241,52 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count102
 )
-LaTeX Info: Redefining \ref on input line 67.
-LaTeX Info: Redefining \pageref on input line 67.
- (./verslag.out)
-(./verslag.out)
+LaTeX Info: Redefining \ref on input line 65.
+LaTeX Info: Redefining \pageref on input line 65.
+
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.out)
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.out)
 \@outlinefile=\write3
 \openout3 = `verslag.out'.
 
 \AtBeginShipoutBox=\box28
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 73.
+(Font)              <12> on input line 71.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 73.
+(Font)              <8> on input line 71.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 73.
+(Font)              <6> on input line 71.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 76.
+(Font)              <7> on input line 74.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 76.
+(Font)              <5> on input line 74.
 
-Overfull \hbox (71.52997pt too wide) in paragraph at lines 76--85
+Overfull \hbox (71.61183pt too wide) in paragraph at lines 74--83
 [][] 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 88--97
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 86.
+
+(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 86.
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--95
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 98--105
+Underfull \hbox (badness 10000) in paragraph at lines 96--103
 
  []
 
 
-Overfull \hbox (43.44994pt too wide) in paragraph at lines 110--129
+Overfull \hbox (43.52531pt too wide) in paragraph at lines 108--127
 [] 
  []
 
@@ -375,86 +299,112 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2 <./tassbw.pdf>] (./verslag.toc)
+[2 </home/melroy/DomoTop/Project/AfstudeerVerslag/tassbw.pdf>]
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.toc)
 \tf@toc=\write4
 \openout4 = `verslag.toc'.
 
- (./verslag.lot)
+
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.lot)
 \tf@lot=\write5
 \openout5 = `verslag.lot'.
 
- (./verslag.lof
-File: tassbw.pdf Graphic file (type pdf)
 
-<use tassbw.pdf> [3])
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.lof
+File: tassbw.pdf Graphic file (type pdf)
+ <use tassbw.pdf>
+[3])
 \tf@lof=\write6
 \openout6 = `verslag.lof'.
 
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf> [4]
-<tass_eindhoven.pdf, id=158, 1606.0pt x 1204.5pt>
+ <use tassbw.pdf> [4] <tass_eindhoven.pdf, id=158, 1606.0pt x 1204.5pt>
 File: tass_eindhoven.pdf Graphic file (type pdf)
- <use tass_eindhoven.pdf>
-Underfull \hbox (badness 3849) in paragraph at lines 149--154
-\T1/cmr/m/n/10 is bij an-dere bedri-jven. Zeker
+
+<use tass_eindhoven.pdf>
+Underfull \hbox (badness 3838) in paragraph at lines 147--152
+\OT1/cmr/m/n/10 is bij an-dere bedri-jven. Zeker
  []
 
 
-Underfull \hbox (badness 1616) in paragraph at lines 149--154
-\T1/cmr/m/n/10 nog een goede re-latie met vorige
+Underfull \hbox (badness 1609) in paragraph at lines 147--152
+\OT1/cmr/m/n/10 nog een goede re-latie met vorige
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 149--154
-\T1/cmr/m/n/10 veel met Philips samen. An-
+Underfull \hbox (badness 5519) in paragraph at lines 147--152
+\OT1/cmr/m/n/10 veel met Philips samen. An-
+ []
+
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ô in font cmr10!
+
+Underfull \hbox (badness 5592) in paragraph at lines 153--158
+\OT1/cmr/m/n/10 ook een aan-tal pro-jecten in-tern
  []
 
 
-Underfull \hbox (badness 5607) in paragraph at lines 155--160
-\T1/cmr/m/n/10 ook een aan-tal pro-jecten in-tern
+Overfull \hbox (3.36177pt too wide) in paragraph at lines 165--170
+\OT1/cmr/m/n/10 man-agers van TASS. Een ac-count man-ager heeft een aan-tal bed
+ri-jven in zijn/haar
  []
 
 
-Overfull \hbox (3.27606pt too wide) in paragraph at lines 167--172
-\T1/cmr/m/n/10 man-agers van TASS. Een ac-count man-ager heeft een aan-tal bedr
-i-jven in zijn/haar
+Overfull \hbox (0.50049pt too wide) in paragraph at lines 177--182
+[]\OT1/cmr/m/n/10 Twee weke-li-jks zal er een re-view punt komen waar de peo-pl
+e man-ager samenkomt
  []
 
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
 File: tassbw.pdf Graphic file (type pdf)
-<use tassbw.pdf> [5 <./tass_eindhoven.pdf>]
-<openremote.pdf, id=167, 246.70268pt x 246.70268pt>
+<use tassbw.pdf> [5 </home/melroy/DomoTop/Project/AfstudeerVerslag/tass_eindhov
+en.pdf>] <openremote.pdf, id=167, 246.70268pt x 246.70268pt>
 File: openremote.pdf Graphic file (type pdf)
- <use openremote.pdf>
-Underfull \hbox (badness 4765) in paragraph at lines 203--211
-[][]\T1/cmr/m/n/10 Het prod-uct wat on-twikkeld zal
+
+<use openremote.pdf>
+Underfull \hbox (badness 4739) in paragraph at lines 201--209
+[][]\OT1/cmr/m/n/10 Het prod-uct wat on-twikkeld zal
  []
 
 
-Underfull \hbox (badness 2285) in paragraph at lines 203--211
-\T1/cmr/m/n/10 namelijk Open-Re-mote. Open-Re-
+Underfull \hbox (badness 2269) in paragraph at lines 201--209
+\OT1/cmr/m/n/10 namelijk Open-Re-mote. Open-Re-
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 203--211
-\T1/cmr/m/n/10 zouden graag zien dat onze uit-
+Underfull \hbox (badness 2600) in paragraph at lines 201--209
+\OT1/cmr/m/n/10 zouden graag zien dat onze uit-
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 203--211
-\T1/cmr/m/n/10 brei-d-ing opgenomen zullen wor-den
+Underfull \hbox (badness 1077) in paragraph at lines 201--209
+\OT1/cmr/m/n/10 brei-d-ing opgenomen zullen wor-den
  []
 
 File: tassbw.pdf Graphic file (type pdf)
-<use tassbw.pdf> [6 <./openremote.pdf>]
-Overfull \hbox (10.14282pt too wide) in paragraph at lines 236--239
-\T1/cmr/m/n/10 we-bap-pli-catie te down-loaden die kan werken met de Open-Re-mo
-te con-troller. 
+<use tassbw.pdf> [6 </home/melroy/DomoTop/Project/AfstudeerVerslag/openremote.p
+df>]
+Overfull \hbox (10.22275pt too wide) in paragraph at lines 234--237
+\OT1/cmr/m/n/10 we-bap-pli-catie te down-loaden die kan werken met de Open-Re-m
+ote con-troller. 
  []
 
+Missing character: There is no √ in font cmr10!
+Missing character: There is no ´ in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
 
-Overfull \hbox (6.27423pt too wide) in paragraph at lines 273--276
-[]\T1/cmr/m/n/10 Voor dit project zal SCRUM ge-bruikt als on-twikkel-method-iek
-, om-dat het daarmee
+Overfull \hbox (6.36067pt too wide) in paragraph at lines 271--274
+[]\OT1/cmr/m/n/10 Voor dit project zal SCRUM ge-bruikt als on-twikkel-method-ie
+k, om-dat het daarmee
  []
 
 File: tassbw.pdf Graphic file (type pdf)
@@ -463,48 +413,77 @@ File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [8]
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [9]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
 File: tassbw.pdf Graphic file (type pdf)
 
 <use tassbw.pdf> [10]
-Overfull \hbox (9.66339pt too wide) in paragraph at lines 396--399
-\T1/cmr/m/n/10 Voor de An-droid ap-pli-catie wordt ge-bruik gemaakt van de Ecli
-pse on-twikkelomgev-
+Overfull \hbox (9.75069pt too wide) in paragraph at lines 394--397
+\OT1/cmr/m/n/10 Voor de An-droid ap-pli-catie wordt ge-bruik gemaakt van de Ecl
+ipse on-twikkelomgev-
  []
 
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [11]
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [12]
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [13]
-<dreamplug.pdf, id=209, 304.09811pt x 232.84088pt>
+<dreamplug.pdf, id=208, 304.09811pt x 232.84088pt>
 File: dreamplug.pdf Graphic file (type pdf)
  <use dreamplug.pdf>
-File: tassbw.pdf Graphic file (type pdf)
+! Misplaced alignment tab character &.
+l.475 aangemaakt &
+                   ondertekend op de server en ook het
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
 
-<use tassbw.pdf> [14 <./dreamplug.pdf>]
-<tomcat.pdf, id=220, 130.4875pt x 92.345pt>
+File: tassbw.pdf Graphic file (type pdf)
+<use tassbw.pdf> [14 </home/melroy/DomoTop/Project/AfstudeerVerslag/dreamplug.p
+df>] <tomcat.pdf, id=219, 130.4875pt x 92.345pt>
 File: tomcat.pdf Graphic file (type pdf)
  <use tomcat.pdf>
-Underfull \hbox (badness 1189) in paragraph at lines 504--516
-\T1/cmr/m/n/10 CSR file gemaakt kon wor-den en
+Missing character: There is no √ in font cmr10!
+Missing character: There is no Ø in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+
+Underfull \hbox (badness 1117) in paragraph at lines 499--511
+\OT1/cmr/m/n/10 on-der-zocht-wordt hoe er een client
  []
 
-<userlist.pdf, id=221, 798.88564pt x 448.62004pt>
+<userlist.pdf, id=220, 798.88564pt x 448.62004pt>
 File: userlist.pdf Graphic file (type pdf)
  <use userlist.pdf>
 File: tassbw.pdf Graphic file (type pdf)
 
-<use tassbw.pdf> [15 <./tomcat.pdf>]
+<use tassbw.pdf> [15 </home/melroy/DomoTop/Project/AfstudeerVerslag/tomcat.pdf>
+]
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf> [16 <./userlist.pdf>]
+ <use tassbw.pdf> [16 </home/melroy/DomoTop/Project/AfstudeerVerslag/userlist.p
+df>]
 File: tassbw.pdf Graphic file (type pdf)
-
-<use tassbw.pdf> [17] <adminv1.pdf, id=245, 814.04124pt x 347.2975pt>
+ <use tassbw.pdf> [17] <adminv1.pdf, id=244, 814.04124pt x 347.2975pt>
 File: adminv1.pdf Graphic file (type pdf)
 
 <use adminv1.pdf>
-Overfull \hbox (6.59598pt too wide) in paragraph at lines 679--680
+Overfull \hbox (6.59598pt too wide) in paragraph at lines 674--675
  [][] 
  []
 
@@ -514,69 +493,76 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [18]
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf> [19 <./adminv1.pdf>]
+ <use tassbw.pdf> [19 </home/melroy/DomoTop/Project/AfstudeerVerslag/adminv1.pd
+f>]
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf>
-[20]
+ <use tassbw.pdf> [20]
 
-pdfTeX warning: pdflatex (file ./DomoTopSequenceDiagram_without_title.pdf): PDF
- inclusion: found PDF version <1.7>, but at most version <1.4> allowed
-<DomoTopSequenceDiagram_without_title.pdf, id=264, 958.93254pt x 718.63483pt>
+pdfTeX warning: pdflatex (file /home/melroy/DomoTop/Project/AfstudeerVerslag/Do
+moTopSequenceDiagram_without_title.pdf): PDF inclusion: found PDF version <1.7>
+, but at most version <1.4> allowed
+<DomoTopSequenceDiagram_without_title.pdf, id=263, 958.93254pt x 718.63483pt>
 File: DomoTopSequenceDiagram_without_title.pdf Graphic file (type pdf)
 
 <use DomoTopSequenceDiagram_without_title.pdf>
 
-LaTeX Warning: Float too large for page by 23.94397pt on input line 753.
+LaTeX Warning: Float too large for page by 23.94444pt on input line 748.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 File: tassbw.pdf Graphic file (type pdf)
-<use tassbw.pdf> [21 <./DomoTopSequenceDiagram_without_title.pdf>]
-<adminv2config.pdf, id=426, 804.90715pt x 589.12798pt>
+<use tassbw.pdf> [21 </home/melroy/DomoTop/Project/AfstudeerVerslag/DomoTopSequ
+enceDiagram_without_title.pdf>]
+<adminv2config.pdf, id=425, 804.90715pt x 589.12798pt>
 File: adminv2config.pdf Graphic file (type pdf)
  <use adminv2config.pdf>
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 770.
-
-
-(/usr/share/texmf-texlive/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf> [22
+
+<use tassbw.pdf> [22
 
 
- <./adminv2config.pdf>]
-Overfull \hbox (35.31021pt too wide) in paragraph at lines 777--815
+ </home/melroy/DomoTop/Project/AfstudeerVerslag/adminv2config.pdf>]
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no √ in font cmr10!
+Missing character: There is no © in font cmr10!
+
+Overfull \hbox (35.38953pt too wide) in paragraph at lines 772--826
 [] 
  []
 
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [23]
+Overfull \vbox (109.10262pt too high) has occurred while \output is active []
+
 File: tassbw.pdf Graphic file (type pdf)
- <use tassbw.pdf> [24]
+
+<use tassbw.pdf> [24]
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [25]
-(./verslag.aux) ) 
+File: tassbw.pdf Graphic file (type pdf)
+ <use tassbw.pdf> [26]
+(/home/melroy/DomoTop/Project/AfstudeerVerslag/verslag.aux) ) 
 Here is how much of TeX's memory you used:
- 5439 strings out of 495061
- 77287 string characters out of 1182621
- 151140 words of memory out of 3000000
- 8458 multiletter control sequences out of 15000+50000
- 13182 words of font info for 33 fonts, out of 3000000 for 9000
+ 4817 strings out of 495061
+ 69423 string characters out of 1182621
+ 156902 words of memory out of 3000000
+ 7858 multiletter control sequences out of 15000+50000
+ 8063 words of font info for 29 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,15n,43p,252b,402s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/u
-sr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texmf/font
-s/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-su
-per/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></u
-sr/share/texmf/fonts/type1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts
-/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-sup
-er/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb></us
-r/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on verslag.pdf (25 pages, 878058 bytes).
+ 39i,15n,43p,321b,402s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr17.p
+fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/shar
+e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-tex
+live/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on verslag.pdf (26 pages, 846172 bytes).
 PDF statistics:
  495 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
+ 63 named destinations out of 1000 (max. 500000)
  198 words of extra memory for PDF output out of 10000 (max. 10000000)
 
