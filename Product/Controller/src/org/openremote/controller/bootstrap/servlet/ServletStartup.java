@@ -20,8 +20,10 @@
  */
 package org.openremote.controller.bootstrap.servlet;
 
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -60,7 +62,7 @@ import org.openremote.controller.bootstrap.Startup;
  * @author <a href="mailto:juha@openremote.org">Juha Lindfors</a>
  */
 public class ServletStartup implements ServletContextListener
-{
+{  
 
   /**
    * Defines the context parameter name that must be set in the web applications web.xml file
@@ -175,14 +177,20 @@ public class ServletStartup implements ServletContextListener
    * @param event     servlet context event provided by the container with access to the web
    *                  application's environment
    */
+  @SuppressWarnings("rawtypes")
   @Override public void contextDestroyed(ServletContextEvent event)
   {
+     Enumeration en;
      DatabaseService databaseService = (DatabaseService) SpringContext.getInstance().getBean("databaseService");
      databaseService.close();
      
-     try {
-        java.sql.Driver hqsqldbDriver = DriverManager.getDriver("jdbc:hsql://localhost:9001");
-        DriverManager.deregisterDriver(hqsqldbDriver);
+     // De-register all drivers
+     try {        
+        en = DriverManager.getDrivers();
+        while (en.hasMoreElements()){
+          Driver d = (Driver)en.nextElement();
+          DriverManager.deregisterDriver(d);
+        }
      }
      catch (Throwable t)
      {

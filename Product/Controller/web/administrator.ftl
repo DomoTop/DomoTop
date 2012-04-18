@@ -60,59 +60,63 @@
 							      </ul>
 							    </div>
 							    <div class="tabscontent">
-							    	${info_messsage_line}					    	
-							      <div class="tabpage" id="tabpage_1">        
-							    		<p class="welcome">User Management</p>	
-											<p><i>User table:</i><br /></p>
-											<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
-											<TBODY>								
-												<#if clients?exists>
-												<TR>
-													<th align="left">Device name</th><th align="left">E-mail</th><#if isPinCheck == 'false'><th align="left">Pin</th></#if><th align="left">Status</th><th align="left">Group</th><th align="left">Delete</th>
-												</TR>
-												<#list clients as client>
-												<TR>
-													<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><#if isPinCheck == 'false'><TD><span id="pincode-${client.client_id}">${client.client_pincode}</span></TD></#if>
-													<TD>
-														<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
-														<input type="hidden" name="client_id" value="${client.client_id}" />
-														<#if client.client_active>
-																<input type="hidden" id="action-${client.client_id}" name="action" value="deny" />
-																<input type="submit" id="submit-${client.client_id}" class="statusSubmit accept_button" value="" />													
-														<#else>														
-															<input type="hidden" id="action-${client.client_id}" name="action" value="accept" />
-															<#if isPinCheck == 'false'>														
-																<input type="submit" id="submit-${client.client_id}" class="statusSubmit deny_button" value="" />
+							    	${info_messsage_line}					  	
+							      <div class="tabpage" id="tabpage_1"> 							      
+							      	<#if authEnabled>							             
+								    		<p class="welcome">User Management</p>	
+												<p><i>User table:</i><br /></p>
+												<TABLE cellSpacing=1 cellPadding=2 width=700 align="center" bgColor=#ffffff border=0>
+												<TBODY>								
+													<#if clients?exists>
+													<TR>
+														<th align="left">Device name</th><th align="left">E-mail</th><#if isPinCheck == 'false'><th align="left">Pin</th></#if><th align="left">Status</th><th align="left">Group</th><th align="left">Delete</th>
+													</TR>
+													<#list clients as client>
+													<TR>
+														<TD>${client.client_device_name}</TD><TD><#if client.client_email?has_content>${client.client_email}<#else><i>No e-mail</i></#if></TD><#if isPinCheck == 'false'><TD><span id="pincode-${client.client_id}">${client.client_pincode}</span></TD></#if>
+														<TD>
+															<form class="statusForm" action="admin.htm?method=changeUserStatus" method="post">
+															<input type="hidden" name="client_id" value="${client.client_id}" />
+															<#if client.client_active>
+																	<input type="hidden" id="action-${client.client_id}" name="action" value="deny" />
+																	<input type="submit" id="submit-${client.client_id}" class="statusSubmit accept_button" value="" />													
 															<#else>														
-																<input type="button" id="submit-${client.client_id}" class="statusSubmit button deny_button" value="" />
+																<input type="hidden" id="action-${client.client_id}" name="action" value="accept" />
+																<#if isPinCheck == 'false'>														
+																	<input type="submit" id="submit-${client.client_id}" class="statusSubmit deny_button" value="" />
+																<#else>														
+																	<input type="button" id="submit-${client.client_id}" class="statusSubmit button deny_button" value="" />
+																</#if>
 															</#if>
-														</#if>
-														</form>
-													</TD>
-													<TD>							
-														<select name="group">
-															<option value="">No Group</option>											
-															<option<#if client.client_group_id == 1> selected</#if> value="admin">Administrator</option>
-															<option<#if client.client_group_id == 2> selected</#if> value="parent">Parent</option>
-															<option<#if client.client_group_id == 3> selected</#if> value="child">Childeren</option>
-														</select>
-													</TD>
-													<TD>
-														<form class="deleteForm" action="admin.htm?method=deleteUser" method="post">														
-														<input type="hidden" name="client_id" value="${client.client_id}" />
-															<input type="submit" value="" class="delete_button" onClick="return confirm('Are you sure you want to delete this device (${client.client_device_name})?');"/>
-														</form>
-													</TD>
-												</TR>
-												</#list>
-												<#else>
-												<TR>
-													<TD><b>No users</b></TD>
-												</TR>
-												</#if>
-											</TBODY>
-											</TABLE>			
-											<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
+															</form>
+														</TD>
+														<TD>							
+															<select name="group">
+																<option value="">No Group</option>											
+																<option<#if client.client_group_id == 1> selected</#if> value="admin">Administrator</option>
+																<option<#if client.client_group_id == 2> selected</#if> value="parent">Parent</option>
+																<option<#if client.client_group_id == 3> selected</#if> value="child">Childeren</option>
+															</select>
+														</TD>
+														<TD>
+															<form class="deleteForm" action="admin.htm?method=deleteUser" method="post">														
+															<input type="hidden" name="client_id" value="${client.client_id}" />
+																<input type="submit" value="" class="delete_button" onClick="return confirm('Are you sure you want to delete this device (${client.client_device_name})?');"/>
+															</form>
+														</TD>
+													</TR>
+													</#list>
+													<#else>
+													<TR>
+														<TD><b>No users</b></TD>
+													</TR>
+													</#if>
+												</TBODY>
+												</TABLE>			
+												<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
+											<#else>
+												<b><i><font color="#ee2222">To use this feature, please enable 'Authentication' in the configuration tab.</font></i></b>
+											</#if>
 							      </div>
 										<div class="tabpage" id="tabpage_2">
 							        <p class="welcome">Configuration</p>
@@ -155,10 +159,10 @@
 							    </div>
 							  </div>
 							  <#if isPinCheck == 'true'>
-						  	<div id="popupContact">
-									<a id="popupContactClose">x</a>
+						  	<div id="popupPin">
+									<a id="popupPinClose">x</a>
 									<h1>Enter the pin</h1>							
-									<p id="contactArea">
+									<p id="pinArea">
 										Please enter the pin shown on the device you want to accept.<br/><br/>									
 										<form id="statusFormPin" action="admin.htm?method=changeUserStatus" method="post">
 											<input type="hidden" name="client_id" value="" id="pin_client_id" />
@@ -175,7 +179,7 @@
 									<h1>OpenRemote is restarting</h1>							
 									<p id="loadingArea">
 										 <center>
-										 	Please wait...<br/>
+										 	Please wait...<br/><br/><br/>
 											<img src="image/spinner.gif" alt"Loading..." border=0 />
 										 </center>
 									</p>
