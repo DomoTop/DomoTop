@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.2.17)  18 APR 2012 13:48
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.2.17)  18 APR 2012 14:38
 entering extended mode
  %&-line parsing enabled.
 **verslag.tex
@@ -282,27 +282,27 @@ Package: parskip 2001/04/09 non-zero parskip adjustments
 ) (./verslag.aux)
 \openout1 = `verslag.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 67.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 68.
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
 
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -317,7 +317,7 @@ LaTeX Font Info:    ... okay on input line 67.
 \MPnumerator=\count101
 \everyMPtoPDFconversion=\toks18
 )
-Package hyperref Info: Link coloring OFF on input line 67.
+Package hyperref Info: Link coloring OFF on input line 68.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
@@ -326,8 +326,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count102
 )
-LaTeX Info: Redefining \ref on input line 67.
-LaTeX Info: Redefining \pageref on input line 67.
+LaTeX Info: Redefining \ref on input line 68.
+LaTeX Info: Redefining \pageref on input line 68.
  (./verslag.out)
 (./verslag.out)
 \@outlinefile=\write3
@@ -335,38 +335,38 @@ LaTeX Info: Redefining \pageref on input line 67.
 
 \AtBeginShipoutBox=\box28
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 73.
+(Font)              <12> on input line 74.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 73.
+(Font)              <8> on input line 74.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 73.
+(Font)              <6> on input line 74.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 76.
+(Font)              <7> on input line 77.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 76.
+(Font)              <5> on input line 77.
 
-Overfull \hbox (71.52997pt too wide) in paragraph at lines 76--85
+Overfull \hbox (71.52997pt too wide) in paragraph at lines 77--86
 [][] 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 88--97
+Underfull \hbox (badness 10000) in paragraph at lines 89--98
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 98--105
+Underfull \hbox (badness 10000) in paragraph at lines 99--106
 
  []
 
 
-Overfull \hbox (43.44994pt too wide) in paragraph at lines 110--129
+Overfull \hbox (43.44994pt too wide) in paragraph at lines 111--130
 [] 
  []
 
-<tassbw.pdf, id=87, 845.1575pt x 349.305pt>
+<tassbw.pdf, id=91, 845.1575pt x 349.305pt>
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf>
 
@@ -392,67 +392,67 @@ File: tassbw.pdf Graphic file (type pdf)
 
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [4]
-<tass_eindhoven.pdf, id=158, 1606.0pt x 1204.5pt>
+<tass_eindhoven.pdf, id=163, 1606.0pt x 1204.5pt>
 File: tass_eindhoven.pdf Graphic file (type pdf)
  <use tass_eindhoven.pdf>
-Underfull \hbox (badness 3849) in paragraph at lines 149--154
+Underfull \hbox (badness 3849) in paragraph at lines 150--155
 \T1/cmr/m/n/10 is bij an-dere bedri-jven. Zeker
  []
 
 
-Underfull \hbox (badness 1616) in paragraph at lines 149--154
+Underfull \hbox (badness 1616) in paragraph at lines 150--155
 \T1/cmr/m/n/10 nog een goede re-latie met vorige
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 149--154
+Underfull \hbox (badness 5533) in paragraph at lines 150--155
 \T1/cmr/m/n/10 veel met Philips samen. An-
  []
 
 
-Underfull \hbox (badness 5607) in paragraph at lines 155--160
+Underfull \hbox (badness 5607) in paragraph at lines 156--161
 \T1/cmr/m/n/10 ook een aan-tal pro-jecten in-tern
  []
 
 
-Overfull \hbox (3.27606pt too wide) in paragraph at lines 167--172
+Overfull \hbox (3.27606pt too wide) in paragraph at lines 168--173
 \T1/cmr/m/n/10 man-agers van TASS. Een ac-count man-ager heeft een aan-tal bedr
 i-jven in zijn/haar
  []
 
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [5 <./tass_eindhoven.pdf>]
-<openremote.pdf, id=167, 246.70268pt x 246.70268pt>
+<openremote.pdf, id=172, 246.70268pt x 246.70268pt>
 File: openremote.pdf Graphic file (type pdf)
  <use openremote.pdf>
-Underfull \hbox (badness 4765) in paragraph at lines 203--211
+Underfull \hbox (badness 4765) in paragraph at lines 204--212
 [][]\T1/cmr/m/n/10 Het prod-uct wat on-twikkeld zal
  []
 
 
-Underfull \hbox (badness 2285) in paragraph at lines 203--211
+Underfull \hbox (badness 2285) in paragraph at lines 204--212
 \T1/cmr/m/n/10 namelijk Open-Re-mote. Open-Re-
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 203--211
+Underfull \hbox (badness 2608) in paragraph at lines 204--212
 \T1/cmr/m/n/10 zouden graag zien dat onze uit-
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 203--211
+Underfull \hbox (badness 1092) in paragraph at lines 204--212
 \T1/cmr/m/n/10 brei-d-ing opgenomen zullen wor-den
  []
 
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [6 <./openremote.pdf>]
-Overfull \hbox (10.14282pt too wide) in paragraph at lines 236--239
+Overfull \hbox (10.14282pt too wide) in paragraph at lines 237--240
 \T1/cmr/m/n/10 we-bap-pli-catie te down-loaden die kan werken met de Open-Re-mo
 te con-troller. 
  []
 
 
-Overfull \hbox (6.27423pt too wide) in paragraph at lines 273--276
+Overfull \hbox (6.27423pt too wide) in paragraph at lines 274--277
 []\T1/cmr/m/n/10 Voor dit project zal SCRUM ge-bruikt als on-twikkel-method-iek
 , om-dat het daarmee
  []
@@ -466,7 +466,7 @@ File: tassbw.pdf Graphic file (type pdf)
 File: tassbw.pdf Graphic file (type pdf)
 
 <use tassbw.pdf> [10]
-Overfull \hbox (9.66339pt too wide) in paragraph at lines 396--399
+Overfull \hbox (9.66339pt too wide) in paragraph at lines 397--400
 \T1/cmr/m/n/10 Voor de An-droid ap-pli-catie wordt ge-bruik gemaakt van de Ecli
 pse on-twikkelomgev-
  []
@@ -477,20 +477,20 @@ File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [12]
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [13]
-<dreamplug.pdf, id=209, 304.09811pt x 232.84088pt>
+<dreamplug.pdf, id=214, 304.09811pt x 232.84088pt>
 File: dreamplug.pdf Graphic file (type pdf)
  <use dreamplug.pdf>
 File: tassbw.pdf Graphic file (type pdf)
 
 <use tassbw.pdf> [14 <./dreamplug.pdf>]
-<tomcat.pdf, id=220, 130.4875pt x 92.345pt>
+<tomcat.pdf, id=225, 130.4875pt x 92.345pt>
 File: tomcat.pdf Graphic file (type pdf)
  <use tomcat.pdf>
-Underfull \hbox (badness 1189) in paragraph at lines 504--516
+Underfull \hbox (badness 1189) in paragraph at lines 505--517
 \T1/cmr/m/n/10 CSR file gemaakt kon wor-den en
  []
 
-<userlist.pdf, id=221, 798.88564pt x 448.62004pt>
+<userlist.pdf, id=226, 798.88564pt x 448.62004pt>
 File: userlist.pdf Graphic file (type pdf)
  <use userlist.pdf>
 File: tassbw.pdf Graphic file (type pdf)
@@ -500,11 +500,11 @@ File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [16 <./userlist.pdf>]
 File: tassbw.pdf Graphic file (type pdf)
 
-<use tassbw.pdf> [17] <adminv1.pdf, id=245, 814.04124pt x 347.2975pt>
+<use tassbw.pdf> [17] <adminv1.pdf, id=250, 814.04124pt x 347.2975pt>
 File: adminv1.pdf Graphic file (type pdf)
 
 <use adminv1.pdf>
-Overfull \hbox (6.59598pt too wide) in paragraph at lines 679--680
+Overfull \hbox (6.59598pt too wide) in paragraph at lines 680--681
  [][] 
  []
 
@@ -521,22 +521,22 @@ File: tassbw.pdf Graphic file (type pdf)
 
 pdfTeX warning: pdflatex (file ./DomoTopSequenceDiagram_without_title.pdf): PDF
  inclusion: found PDF version <1.7>, but at most version <1.4> allowed
-<DomoTopSequenceDiagram_without_title.pdf, id=264, 958.93254pt x 718.63483pt>
+<DomoTopSequenceDiagram_without_title.pdf, id=269, 958.93254pt x 718.63483pt>
 File: DomoTopSequenceDiagram_without_title.pdf Graphic file (type pdf)
 
 <use DomoTopSequenceDiagram_without_title.pdf>
 
-LaTeX Warning: Float too large for page by 23.94397pt on input line 753.
+LaTeX Warning: Float too large for page by 23.94397pt on input line 754.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 File: tassbw.pdf Graphic file (type pdf)
 <use tassbw.pdf> [21 <./DomoTopSequenceDiagram_without_title.pdf>]
-<adminv2config.pdf, id=426, 804.90715pt x 589.12798pt>
+<adminv2config.pdf, id=431, 804.90715pt x 589.12798pt>
 File: adminv2config.pdf Graphic file (type pdf)
  <use adminv2config.pdf>
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 770.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 771.
 
 
 (/usr/share/texmf-texlive/tex/latex/base/t1cmtt.fd
@@ -547,7 +547,7 @@ File: tassbw.pdf Graphic file (type pdf)
 
 
  <./adminv2config.pdf>]
-Overfull \hbox (35.31021pt too wide) in paragraph at lines 777--815
+Overfull \hbox (35.31021pt too wide) in paragraph at lines 778--816
 [] 
  []
 
@@ -557,26 +557,28 @@ File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [24]
 File: tassbw.pdf Graphic file (type pdf)
  <use tassbw.pdf> [25]
-(./verslag.aux) ) 
+File: tassbw.pdf Graphic file (type pdf)
+
+<use tassbw.pdf> [26] (./verslag.aux) ) 
 Here is how much of TeX's memory you used:
- 5439 strings out of 495061
- 77287 string characters out of 1182621
+ 5442 strings out of 495061
+ 77316 string characters out of 1182621
  151140 words of memory out of 3000000
- 8458 multiletter control sequences out of 15000+50000
+ 8459 multiletter control sequences out of 15000+50000
  13182 words of font info for 33 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,15n,43p,252b,402s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/u
-sr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texmf/font
-s/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-su
-per/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></u
-sr/share/texmf/fonts/type1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts
-/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-sup
-er/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb></us
-r/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on verslag.pdf (25 pages, 878058 bytes).
+{/usr/share/texmf/fonts/enc/dvips/cm-sup
+er/cm-super-t1.enc}{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}
+</usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fo
+nts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-
+super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0700.pfb><
+/usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fon
+ts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-s
+uper/sfrm1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on verslag.pdf (26 pages, 882027 bytes).
 PDF statistics:
- 495 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
- 198 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 504 PDF objects out of 1000 (max. 8388607)
+ 64 named destinations out of 1000 (max. 500000)
+ 206 words of extra memory for PDF output out of 10000 (max. 10000000)
 
