@@ -18,6 +18,12 @@
 %Translate LaTeX terms to dutch
 \usepackage[dutch]{babel}
 
+%Used to display url's
+\usepackage{hyperref}
+
+%Used to display "normal" paragraph's without indentation and with blank line
+\usepackage[parfill]{parskip}
+
 %Use \insertdate to insert current formatted date
 \makeatletter
 \let\insertdate\@date
@@ -712,18 +718,59 @@ voor toegang. Hiermee stuurt hij een CSR bestand op waar al zijn gegevens in sta
 welke de Controller gebruikt om een certificaat te maken. 
 
 Als er een aanvraag binnen komt voegt de Controller de nieuwe client toe aan de
-database. De gegevens in de database worden uit de CSR gehaald. 
+database. De gegevens in de database worden uit de CSR gehaald. Als dit allemaal
+gedaan is, is de client te zien in de beheerdersinterface. Hij is nog niet
+goedgekeurd en heeft dus ook geen toegang tot het systeem.
+
+Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de pin ingevoerd
+heeft, wordt het proces gestart om een certificaat te genereren. Als eerste
+wordt de private sleutel van de CA opgehaald. Elk certificaat dat gemaakt wordt,
+wordt ondertekend door de CA. Deze CA wordt ook geimporteerd in de OpenRemote
+Controller en op die manier weet OpenRemote dat hij de clients kan vertrouwen.
+
+Daarna wordt de private sleutel samen met de CSR gebruikt om een certificaat te
+cree"eren. Tevens moet er een serienummer meegegeven. Dit serienummer is een
+uniek oplopend nummer waarmee de certificaten makkelijk te identificeren is. Het
+certificaat wat dan gemaakt is wordt het certificaat een in een keystore
+opgeslagen, klaar om opgehaald te worden door de mobiele applicatie en wordt de
+status van de client in de database aangepast.
+
+Nu kan de client met de applicatie een certificaat ophalen en met dit
+certificaat een veilige verbinding opzetten. Tevens kan TomCat het certificaat
+gebruiken om de gebruiker te identificeren. In de database staat de ``dname''
+welke ook in het certificaat staat. Op het moment dat een client een verbinding
+maakt met TomCat, controleert TomCat de dname en kijkt in de database of deze
+gebruiker toegang heeft tot het systeem. Mocht dat niet het geval zijn, zal hij
+de gebruiker geen toegang tot het systeem geven.
+
 
 \begin{landscape}
 \begin{figure}[h!]
   \centering
-    \includegraphics[height=1\textheight,keepaspectratio]{sdtls.pdf}
+    \includegraphics[height=1\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
   \label{fig:tls}
   \caption{DomoTop Sequence Diagram - Afhandelen van een request via een TLS
   capable OpenRemote Controller}
 \end{figure}
 \end{landscape}
 
+Om een aantal dingen te kunnen aanpassen als beheerder is er ook een
+configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
+ingesteld zoals onder andere het pad waar de CA opgeslagen wordt en of de PIN
+verplicht gecontroleerd moet worden.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=1\textwidth,keepaspectratio]{adminv2config.pdf}
+  \label{fig:adminv2config}
+  \caption{Het configuratiescherm}
+\end{figure}
+
+Dit configuratiescherm en het user management scherm zijn beide beveiligd met
+een gebruikersnaam en wachtwoordcombinatie. Deze combinatie is dezelfde als
+waarmee ingelogd wordt op \url{http://composer.openremote.org/}. Deze worden,
+wanneer er ingelogd wordt gecontrolleerd online of, als er geen
+internetverbinding is, lokaal met de cache die te vinden is in de database.
 
 \newpage
 \section{Verklarende woordenlijst}
