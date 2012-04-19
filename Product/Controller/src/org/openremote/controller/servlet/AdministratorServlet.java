@@ -190,7 +190,7 @@ public class AdministratorServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
                                                               throws ServletException, IOException
   {
-     if(!AuthenticationUtil.isAuth(request)){
+     if(!AuthenticationUtil.isAuth(request, configurationService)){
         response.sendRedirect("/controller/login");
         return;
      }

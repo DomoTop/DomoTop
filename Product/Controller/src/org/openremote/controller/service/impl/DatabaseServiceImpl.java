@@ -29,13 +29,14 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_NAME_3 = "pin_check";
    private final static String CONFIGURATION_NAME_4 = "authentication_active";
    private final static String CONFIGURATION_NAME_5 = "composer_password";
+   private final static String CONFIGURATION_NAME_6 = "session_timestamp";
    
    private final static String CONFIGURATION_TYPE_1 = "string";
    private final static String CONFIGURATION_TYPE_2 = "string";
    private final static String CONFIGURATION_TYPE_3 = "boolean";
    private final static String CONFIGURATION_TYPE_4 = "boolean";
    private final static String CONFIGURATION_TYPE_5 = "string";
-
+   private final static String CONFIGURATION_TYPE_6 = "string";
      
    private final static String CONFIGURATION_VALUE_3 = "true";
    private final static String CONFIGURATION_VALUE_4 = "true";
@@ -45,7 +46,8 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_INFORMATION_3 = "When checked you are forced to enter the pin in the user management given by the device.<br/>If not checked, it is optional to use the pin.";
    private final static String CONFIGURATION_INFORMATION_4 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";
    private final static String CONFIGURATION_INFORMATION_5 = "The password of the administrator.";
-
+   private final static String CONFIGURATION_INFORMATION_6 = "The session timestamp";
+   
    private ControllerConfiguration configuration;
    private static Connection connection;
    private Server hsqlServer;
@@ -180,7 +182,8 @@ public class DatabaseServiceImpl implements DatabaseService
                "(null, '" + CONFIGURATION_NAME_2 + "', '', '" + CONFIGURATION_TYPE_2 + "', '" + CONFIGURATION_INFORMATION_2 + "'), " +
                "(null, '" + CONFIGURATION_NAME_3 + "', '" + CONFIGURATION_VALUE_3 + "', '" + CONFIGURATION_TYPE_3 + "', '" + CONFIGURATION_INFORMATION_3 + "'), " +
                "(null, '" + CONFIGURATION_NAME_4 + "', '" + CONFIGURATION_VALUE_4 + "', '" + CONFIGURATION_TYPE_4 + "', '" + CONFIGURATION_INFORMATION_4 + "')," +
-               "(null, '" + CONFIGURATION_NAME_5 + "', '', '" + CONFIGURATION_TYPE_5 + "', '" + CONFIGURATION_INFORMATION_5 + "')")
+               "(null, '" + CONFIGURATION_NAME_5 + "', '', '" + CONFIGURATION_TYPE_5 + "', '" + CONFIGURATION_INFORMATION_5 + "')," + 
+               "(null, '" + CONFIGURATION_NAME_6 + "', '', '" + CONFIGURATION_TYPE_6 + "', '" + CONFIGURATION_INFORMATION_6 + "')")
                .execute();  
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times

@@ -19,4 +19,17 @@ public class MD5Util {
       return new String(Hex.encodeHex(resultByte));
    }
    
+   public static String generateMD5Sum(String message) {
+      byte[] resultByte = null;
+
+      try {
+         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+         messageDigest.reset();
+         messageDigest.update(message.getBytes());
+         resultByte = messageDigest.digest();
+      } catch (NoSuchAlgorithmException e) {
+      }
+      return new String(Hex.encodeHex(resultByte));
+   }
+   
 }

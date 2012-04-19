@@ -57,9 +57,9 @@
 \fancyhead[L]{Melroy van den Berg \& Vincent Kriek}
 \fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tassbw.pdf}}
 
-\fancyfoot[L]{\version}
+\fancyfoot[L]{Afstudeerverslag}
 \fancyfoot[C]{\thepage}
-\fancyfoot[R]{\insertdate}
+\fancyfoot[R]{v\version}
 
 % Add line above footer
 \renewcommand{\footrulewidth}{0.4pt}% default is 0pt
@@ -475,7 +475,7 @@ Android), waarna er toestemming wordt verleend om de OpenRemote Controller te ge
 Het is noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote applicatie 
 van Android te modificeren. De aanpak was om allereerst alles op de server, waar ook de 
 OpenRemote Controller draait, te maken en genereren. Het CSR bestand wordt
-aangemaakt & ondertekend op de server en ook het
+aangemaakt \& ondertekend op de server en ook het
 client certificaat wordt gegenereerd op de server. Omdat het belangrijk is
 dat alles werkt, wordt er gebruik gemaakt van het openssl commando in de
 terminal onder Linux. De certificaten die gegenereerd worden, worden
@@ -541,6 +541,7 @@ kunnen er veranderingen aangebracht worden in de lijst met eisen. Hier zal
 per iteratie besproken worden wat de eisen waren van van de desbetreffende
 iteratie en welke resultaten deze heeft opgeleverd.
 
+\subsection{Iteratie 1}
 De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
 werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
 delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
@@ -576,6 +577,7 @@ gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
 goed geregeld.
 
+\subsection{Iteratie 2}
 \begin{table}[htpb]
   \caption{Eisen iteratie 2}
   \begin{center}
@@ -603,6 +605,7 @@ OpenRemote te beveiligen het gebruiken van SSL certificaten is. Deze
 certificaten kunnen door zowel de server als de client gebruikt worden om
 zich te authenticeren.
 
+\subsection{Iteratie 3}
 De derde iteratie stond in het teken van de Proof-of-Concept die laat zien
 dat het mogelijk is om met Android te verbinden naar een TomCat server en
 te authenticeren door middel van SSL Client Certificaten.
@@ -639,6 +642,7 @@ client er verbonden is. Hiervoor is het ``serial'' attribuut van het client
 certificaat gebruikt. Dit attribuut is een oplopend nummer welke in elk
 certificaat aanwezig is.
 
+\subsection{Iteratie 4}
 In de daaropvolgende iteratie is er gewerkt aan het implementeren van de
 Proof-of-Concept in het OpenRemote project.
 
@@ -684,6 +688,7 @@ gebruikt om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
 
+\subsection{Iteratie 5}
 \begin{table}[htpb]
   \caption{Eisen iteratie 5}
   \begin{center}
