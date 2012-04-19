@@ -204,7 +204,14 @@ public class AdministratorController extends MultiActionController
       if(!AuthenticationUtil.isAuth(request)){
          return null;
       }  
-      int clientID = Integer.parseInt(request.getParameter("client_id"));      
+      int clientID = -1;
+      
+      try
+      {
+         clientID = Integer.parseInt(request.getParameter("client_id"));
+      } catch ( NumberFormatException e) {
+         logger.error("Client ID is not a number");
+      }
       
       if(clientService.isClientIDValid(clientID))
       {
@@ -257,7 +264,14 @@ public class AdministratorController extends MultiActionController
       boolean result = false;
       String pin = "";
       String action = request.getParameter("action");
-      int clientID = Integer.parseInt(request.getParameter("client_id"));      
+      int clientID = -1;
+      
+      try
+      {
+         clientID = Integer.parseInt(request.getParameter("client_id"));
+      } catch ( NumberFormatException e) {
+         logger.error("Client ID is not a number");
+      }   
       String errorString = "";
       
       try {

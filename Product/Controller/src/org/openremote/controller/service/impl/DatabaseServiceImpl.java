@@ -2,6 +2,7 @@ package org.openremote.controller.service.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -245,7 +246,46 @@ public class DatabaseServiceImpl implements DatabaseService
       }
       return resultSet;
    }
+   
+   /**
+    * Execute SQL query via prepare statement to prevent SQL Injection
+    * 
+    * @param prepareStatement Prepare statement
+    * @return ResultSet with the result of the query
+    */
+   @Override
+   public ResultSet doSQL(PreparedStatement preparedStatement)
+   {
+      try {
+         if(preparedStatement != null)
+         {
+            resultSet = preparedStatement.executeQuery();
+         }
+      } catch (SQLException e) {
+         logger.error("SQL Exception: " + e.getMessage());
+      }
+      return resultSet;
+   }
 
+   /**
+    * Create a PreparedStatement from a query
+    * @return PreparedStatement
+    */
+   @Override
+   public PreparedStatement createPrepareStatement(String query)
+   {
+      PreparedStatement preparedStatement = null;
+      try
+      {     
+         preparedStatement = connection.prepareStatement(query, 
+               ResultSet.TYPE_SCROLL_INSENSITIVE, 
+               ResultSet.CONCUR_UPDATABLE);
+      } catch (SQLException e) {
+         logger.error("SQL Exception: " + e.getMessage());
+      }
+      return preparedStatement;
+   }
+   
    /**
     * Do a insert, update or delete SQL query into the database
     * 
@@ -265,7 +305,28 @@ public class DatabaseServiceImpl implements DatabaseService
          logger.error("SQL Exception: " + e.getMessage());
       }
       return result;
-   }   
+   }     
+   
+   /**
+    * Do a insert, update or delete SQL query via prepare statement to prevent SQL Injection
+    * 
+    * @return 0 or -1 is unsuccessfully, 1 (or higher) is successfully 
+    */
+   @Override
+   public int doUpdateSQL(PreparedStatement preparedStatement)
+   {
+      int result = -1;
+      try 
+      {
+         if(preparedStatement != null)
+         {
+            result = preparedStatement.executeUpdate();
+         }
+      } catch (SQLException e) {
+         logger.error("SQL Exception: " + e.getMessage());
+      }
+      return result;
+   }      
    
    /**
     * Get the number of rows of the result set (after a doSQL)

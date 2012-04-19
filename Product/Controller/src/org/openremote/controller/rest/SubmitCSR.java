@@ -20,44 +20,23 @@
  */
 package org.openremote.controller.rest;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import java.lang.ProcessBuilder;
-import java.lang.InterruptedException;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-
-import java.nio.charset.Charset;
-
 import java.net.URLDecoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
-import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
-import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.spring.SpringContext;
 
 /**
@@ -96,8 +75,6 @@ public class SubmitCSR extends RESTAPI
 
   private final static String CA_PATH = "ca_path";
   private final static String CSR_PATH = "/ca/csr/";
-  private final static String CSR_HEADER = "-----BEGIN NEW CERTIFICATE REQUEST-----";
-  private final static String CSR_FOOTER = "\n-----END NEW CERTIFICATE REQUEST-----\n";
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
         "configurationService");

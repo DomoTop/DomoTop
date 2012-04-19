@@ -16,7 +16,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -57,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
    private static final String KEYSTORE_PASSWORD = "password";
 
    private static final String CA_PATH = "ca_path";
-   private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ";
+   private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ? ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
    private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp, client_role, client_dn) VALUES ";
    private static String limitByOne = " LIMIT 1";
@@ -119,30 +121,46 @@ public class ClientServiceImpl implements ClientService {
       int resultValue = -1;
       int numRows = -1;
 
-      if (database != null) {
-         database.doSQL("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = '" + pin
-               + "' AND client_device_name = '" + deviceName + "' LIMIT 1");
-         numRows = database.getNumRows();
-      }
+      if (database != null) 
+      {
+         PreparedStatement preparedStatement = null;
 
-      // Check if client doesn't exist in the database
-      if (numRows == 0) {
-         if (database != null) {
-            resultValue = database.doUpdateSQL(insertClientQuery + "('', '" + pin + "', '" + deviceName + "', '"
-                  + email + "', '" + alias + "', FALSE, NOW, NOW, '', '" + cn + "')");
-            
-            //resultValue = database.doUpdateSQL("INSERT INTO client_role (client_role, client_dn) VALUES ('', '" + cn + "');");
-         } else {
-            logger.error("Database is not yet set (null)");
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("SELECT client_pincode, client_device_name FROM PUBLIC.client WHERE client_pincode = ? AND client_device_name = ? LIMIT 1");
+            preparedStatement.setString(1, pin);
+            preparedStatement.setString(2, deviceName);
+            database.doSQL(preparedStatement);
+            numRows = database.getNumRows();
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
          }
+
+         // Check if client doesn't exist in the database
+         if (numRows == 0) 
+         {
+            try
+            {  
+               preparedStatement = database.createPrepareStatement(insertClientQuery + "('', ?, ?, ?, ?, FALSE, NOW, NOW, '', ?)");
+               preparedStatement.setString(1, pin);
+               preparedStatement.setString(2, deviceName);
+               preparedStatement.setString(3, email);
+               preparedStatement.setString(4, alias);
+               preparedStatement.setString(5, cn);
+               resultValue = database.doUpdateSQL(preparedStatement);
+            } catch (SQLException e) {
+               logger.error("SQL Exception: " + e.getMessage());
+            }
             
-         
-         if (resultValue >= 1) {
-            returnValue = 1;
+            if (resultValue >= 1) {
+               returnValue = 1;
+            }
+         } else {
+            // ignore a second user with the same device name and pin
+            returnValue = 2;
          }
       } else {
-         // ignore a second user with the same device name and pin
-         returnValue = 2;
+         logger.error("Database is not yet set (null)");
       }
       return returnValue;
    }
@@ -155,10 +173,20 @@ public class ClientServiceImpl implements ClientService {
     * @return ResultSet the result from the database with client information
     */
    @Override
-   public ResultSet getClient(int clientID) {
+   public ResultSet getClient(int clientID) 
+   {
       ResultSet returnValue = null;
-      if (database != null) {
-         returnValue = database.doSQL(selectClientQuery + clientID + limitByOne);
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null) 
+      {
+         try {
+            preparedStatement = database.createPrepareStatement(selectClientQuery + limitByOne);
+            preparedStatement.setInt(1, clientID);
+            returnValue = database.doSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       } else {
          logger.error("Database is not yet set (null)");
       }
@@ -177,14 +205,24 @@ public class ClientServiceImpl implements ClientService {
    @Override
    public int updateClientStatus(int clientID, boolean active) {
       int resultValue = -1;
-
-      if (database != null) {
-         String sql = "UPDATE client SET client_active = " + active + ", client_role = '";
-         if(active) {
-            sql += "openremote";
+      PreparedStatement preparedStatement = null;
+      String role = "";
+      if (database != null) 
+      {         
+         try
+         {
+            if(active) {
+               role = "openremote";
+            }
+            
+            preparedStatement = database.createPrepareStatement("UPDATE client SET client_active = ?, client_role = ? WHERE client_id = ?");
+            preparedStatement.setBoolean(1, active);
+            preparedStatement.setString(2, role);
+            preparedStatement.setInt(3, clientID);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
          }
-         sql += "' WHERE client_id = "  + clientID;
-         resultValue = database.doUpdateSQL(sql);
       }
       return resultValue;
    }
@@ -195,13 +233,21 @@ public class ClientServiceImpl implements ClientService {
     * @return int value -1 or 0 is incorrect, 1 is action succeed
     */
    public int removeClient(int clientID) {
-      int resultvalue = -1;
-      
-      if(database != null) {
-         resultvalue = database.doUpdateSQL("DELETE FROM client WHERE client_id = " + clientID);
+      int resultValue = -1;
+      PreparedStatement preparedStatement = null;
+      if(database != null) 
+      {
+         try
+         {
+            preparedStatement = database.createPrepareStatement("DELETE FROM client WHERE client_id = ?");
+            preparedStatement.setInt(1, clientID);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       
-      return resultvalue;
+      return resultValue;
    }
 
    /**
@@ -212,12 +258,22 @@ public class ClientServiceImpl implements ClientService {
     * @return value -1 or 0 is , 1 is correct
     */
    @Override
-   public int updateClientSerial(int clientID, String serial) {
+   public int updateClientSerial(int clientID, String serial)
+   {
       int resultValue = -1;
-
-      if (database != null && !serial.isEmpty()) {
-         resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '" + serial + "' WHERE client_id = "
-               + clientID);
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null && !serial.isEmpty()) 
+      {
+         try
+         {
+            preparedStatement = database.createPrepareStatement("UPDATE client SET client_serial = ? WHERE client_id = ?");
+            preparedStatement.setString(1,  serial);
+            preparedStatement.setInt(2, clientID);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       return resultValue;
    }  
@@ -229,11 +285,21 @@ public class ClientServiceImpl implements ClientService {
     * @return value -1 or 0 is , 1 is correct
     */
    @Override
-   public int clearClientSerial(int clientID) {
+   public int clearClientSerial(int clientID)
+   {
       int resultValue = -1;
-
-      if (database != null) {
-         resultValue = database.doUpdateSQL("UPDATE client SET client_serial = '' WHERE client_id = " + clientID);
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null) 
+      {
+         try
+         {
+            preparedStatement = database.createPrepareStatement("UPDATE client SET client_serial = '' WHERE client_id =  ?");
+            preparedStatement.setInt(1, clientID);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       return resultValue;
    }
@@ -321,8 +387,17 @@ public class ClientServiceImpl implements ClientService {
    public boolean isClientIDValid(int clientID)
    {
       boolean returnValue = false;
-      if (database != null) {
-         database.doSQL(selectClientQuery + clientID);
+      PreparedStatement preparedStatement = null;
+      if (database != null) 
+      {
+         try {
+            preparedStatement = database.createPrepareStatement(selectClientQuery);
+            preparedStatement.setInt(1, clientID);
+            database.doSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
+         
          if(this.getNumClients() == 1)
          {
             returnValue = true;

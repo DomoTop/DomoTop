@@ -1,6 +1,9 @@
 package org.openremote.controller.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  * The interface DatabaseService
@@ -21,13 +24,30 @@ public interface DatabaseService
     * @return ResultSet with the result of the query
     */
    ResultSet doSQL(String sql);
-
+   /**
+    * Execute SQL query via prepare statement to prevent SQL Injection
+    * 
+    * @param prepareStatement Prepare statement
+    * @return ResultSet with the result of the query
+    */
+   ResultSet doSQL(PreparedStatement preparedStatement);
+   /**
+    * Create a PreparedStatement from a query
+    * @return PreparedStatement
+    */
+   PreparedStatement createPrepareStatement(String query);
    /**
     * Do a insert, update or delete SQL query into the database
     * 
     * @return 0 or -1 is unsuccessfully, 1 (or higher) is successfully 
     */
    int doUpdateSQL(String sql);
+   /**
+    * Do a insert, update or delete SQL query via prepare statement to prevent SQL Injection
+    * 
+    * @return 0 or -1 is unsuccessfully, 1 (or higher) is successfully 
+    */
+   int doUpdateSQL(PreparedStatement preparedStatement);   
    /**
     * Get the number of rows of the result set (after a doSQL)
     * 
