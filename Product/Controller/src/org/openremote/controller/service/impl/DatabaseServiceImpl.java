@@ -27,7 +27,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_NAME_1 = "composer_username";
    private final static String CONFIGURATION_NAME_2 = "ca_path";
    private final static String CONFIGURATION_NAME_3 = "pin_check";
-   private final static String CONFIGURATION_NAME_4 = "authentication_active";
+   private final static String CONFIGURATION_NAME_4 = "authentication";
    private final static String CONFIGURATION_NAME_5 = "composer_password";
    private final static String CONFIGURATION_NAME_6 = "session_timestamp";
    

@@ -112,7 +112,7 @@ public class AdministratorServlet extends HttpServlet
       
       try 
       {     
-         isAuthenticationEnabled = configurationService.getBooleanItem("authentication_active");
+         isAuthenticationEnabled = configurationService.getBooleanItem("authentication");
          
          if(clientCollection != null && settingCollection != null)
          {

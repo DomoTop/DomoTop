@@ -149,9 +149,9 @@ public class AdministratorController extends MultiActionController
                
                success = configurationService.updateItem(name, newvalue) == 1;
                
-               if(name.equals("authentication_active")) 
+               if(name.equals("authentication")) 
                {
-                  //Check for "authentication_active" to set that in the web.xml
+                  //Check for "authentication" to set that in the web.xml
                   if(newvalue != oldvalue) {
                      try {
                         configurationService.setAuthentication(newvalue);
