@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -57,10 +58,19 @@ public class ConfigurationServiceImpl implements ConfigurationService
    public int updateItem(String name, String value)
    {
       int resultValue = -1;
-
-      if (database != null) {
-         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + value + "' WHERE " +
-         		"configuration_name = '" + name + "'");
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null) 
+      {        
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_value = ? WHERE configuration_name = ?");
+            preparedStatement.setString(1, value);
+            preparedStatement.setString(2, name);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       return resultValue;
    }
@@ -76,6 +86,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
    {
       int resultValue = -1;
       String stringValue = "not_defiend";
+      PreparedStatement preparedStatement = null;
       
       if(value)
       {
@@ -85,11 +96,18 @@ public class ConfigurationServiceImpl implements ConfigurationService
       {
          stringValue = "false";
       }
-
       
-      if (database != null) {
-         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '" + stringValue + "' WHERE " +
-               "configuration_name = '" + name + "'");
+      if (database != null) 
+      {
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_value = ? WHERE configuration_name = ?");
+            preparedStatement.setString(1, stringValue);
+            preparedStatement.setString(2, name);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       return resultValue;
    }
@@ -122,14 +140,27 @@ public class ConfigurationServiceImpl implements ConfigurationService
    public String getItem(String name)
    {
       String returnValue = "";
+      PreparedStatement preparedStatement = null;
+      ResultSet resultSet = null;
+      
        try {
-          if(database != null) {
-              ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'string' AND  configuration_name = '" + name + "'");
-              if(result != null) {
-                 result.next();
-                 returnValue = result.getString("configuration_value");
-              }
-              database.free();
+          if(database != null)
+          {
+             try
+             {            
+                preparedStatement = database.createPrepareStatement("SELECT configuration_value FROM configuration WHERE configuration_type = 'string' AND  configuration_name = ?");
+                preparedStatement.setString(1, name);
+                resultSet = database.doSQL(preparedStatement);
+             } catch (SQLException e) {
+                logger.error("SQL Exception: " + e.getMessage());
+             }
+             
+             if(resultSet != null) 
+             {
+                resultSet.next();
+                returnValue = resultSet.getString("configuration_value");
+             }
+             database.free();
           }
        } catch (SQLException e) {
            return e.getMessage();
@@ -146,19 +177,28 @@ public class ConfigurationServiceImpl implements ConfigurationService
    @Override
    public boolean isItemValueBoolean(String name) {
       String configurationType = "";
+      PreparedStatement preparedStatement = null;
+      ResultSet resultSet = null;
+      
       boolean returnValue = false;
-      try {
-         if(database != null) {
-             ResultSet result = database.doSQL("SELECT configuration_type FROM configuration WHERE configuration_name = '" + name + "'");
-             if(result != null) {
-                result.next();
-                configurationType = result.getString("configuration_type");
-             }
-             database.free();
+
+      if(database != null) 
+      {
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("SELECT configuration_type FROM configuration WHERE configuration_name = ?");
+            preparedStatement.setString(1, name);
+            resultSet = database.doSQL(preparedStatement);
+            
+            if(resultSet != null) {
+               resultSet.next();
+               configurationType = resultSet.getString("configuration_type");
+            }
+            database.free();
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
          }
-      } catch (SQLException e) {
-         // TODO: logger
-      }      
+      }
       
       if(configurationType.equals("boolean"))
       {
@@ -189,19 +229,28 @@ public class ConfigurationServiceImpl implements ConfigurationService
    public boolean getBooleanItem(String name) 
    {
       boolean returnValue = false;
+      PreparedStatement preparedStatement = null;
+      ResultSet resultSet = null;
       
-      try {
-         if(database != null) {
-             ResultSet result = database.doSQL("SELECT configuration_value FROM configuration WHERE configuration_type = 'boolean' AND configuration_name = '" + name + "'");
-             if(result != null) {
-                result.next();
-                returnValue = result.getString("configuration_value").equals("true") ? true : false;
-             }
-             database.free();
+      if(database != null)
+      {         
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("SELECT configuration_value FROM configuration WHERE configuration_type = 'boolean' AND configuration_name = ?");
+            preparedStatement.setString(1, name);
+            resultSet = database.doSQL(preparedStatement);
+            
+            if(resultSet != null) 
+            {
+               resultSet.next();
+               returnValue = resultSet.getString("configuration_value").equals("true") ? true : false;
+            }
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
          }
-      } catch (SQLException e) {
-         // TODO: logger
-      }       
+         database.free();
+      }
+  
       return returnValue;
    } 
 
@@ -215,9 +264,18 @@ public class ConfigurationServiceImpl implements ConfigurationService
    public int emptyItem(String name)
    {
       int resultValue = -1;
-
-      if (database != null) {
-         resultValue = database.doUpdateSQL("UPDATE configuration SET configuration_value = '' WHERE configuration_name = '" + name + "' LIMIT 1");
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null) 
+      {
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_value = '' WHERE configuration_name = ? LIMIT 1");
+            preparedStatement.setString(1, name);
+            resultValue = database.doUpdateSQL(preparedStatement); 
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
       }
       return resultValue;
    }
