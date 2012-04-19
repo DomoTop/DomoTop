@@ -326,6 +326,7 @@ function loadPopup()
 		});
 		$("#backgroundPopup").fadeIn("slow");
 		$("#popupPin").fadeIn("slow");
+		$("#pin").focus();
 		popupStatus = 1;
 	}
 }
