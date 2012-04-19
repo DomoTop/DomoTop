@@ -168,7 +168,7 @@
 											<input type="hidden" name="client_id" value="" id="pin_client_id" />
 											<input type="hidden" name="action" value="accept" />
 											<center>
-												<b>Pin:</b> <input type="text" name="pin" value="" size="6" /><br/>	<br/>									
+												<b>Pin:</b> <input type="text" name="pin" id="pin" value="" size="6" /><br/>	<br/>									
 												<input type="submit" name="submit" value="Check" />
 											</center>
 										</form>

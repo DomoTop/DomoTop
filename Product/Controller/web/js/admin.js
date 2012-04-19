@@ -186,7 +186,6 @@ function displayPage()
   this.parentNode.setAttribute("data-current",ident);	
 }
 
-
 // Changes the background image of the submit element
 function changeBackgroundByID(id, image)
 {
@@ -221,6 +220,12 @@ function changeButtonToSubmitType(id, value)
 function changeElementClass(id, value)
 {	
 	document.getElementById("submit-" + id).className = value;
+}
+
+// Changes the value of the 
+function cleanPin()
+{
+	document.getElementById("pin").value = "";
 }
 
 function refreshPage()
@@ -311,7 +316,11 @@ function changeButtonToStatusSubmit(result)
 function loadPopup()
 {
 	//loads popup only if it is disabled
-	if(popupStatus==0){
+	if(popupStatus==0)
+	{
+		// Reset the pin of the input field
+		cleanPin();
+			
 		$("#backgroundPopup").css({
 			"opacity": "0.7"
 		});
