@@ -136,6 +136,21 @@ public class LoginServlet extends HttpServlet
      configurationService.updateItem("composer_password", MD5Util.generateMD5Sum(password.getBytes()));
   }
   
+  /**
+   * Generate a hash used in the session variable
+   * @param username The admin username
+   * @param password The admin password
+   * @return The hash
+   */
+  private String getSessionHash(String username, String password) {
+     String timestamp = Long.toString(System.currentTimeMillis());
+     
+     configurationService.updateItem("session_timestamp", timestamp);
+     
+     String md5 = MD5Util.generateMD5Sum((username + timestamp + MD5Util.generateMD5Sum(password.getBytes())).getBytes());
+     
+     return md5;
+  }
   
   /**
    * Encode username and password for sending to the Beehive rest controller
@@ -173,7 +188,7 @@ public class LoginServlet extends HttpServlet
      
      int ret = checkOnline(username, password);
      if(ret == 0) {
-        session.setAttribute(AuthenticationUtil.AUTH_SESSION, true);
+        session.setAttribute(AuthenticationUtil.AUTH_SESSION, getSessionHash(username, password));
         
         response.sendRedirect("/controller/administrator");
      } else if(ret == -1) {

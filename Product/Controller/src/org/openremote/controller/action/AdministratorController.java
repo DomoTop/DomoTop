@@ -76,7 +76,7 @@ public class AdministratorController extends MultiActionController
     */
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {    
-      if(!AuthenticationUtil.isAuth(request)){
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
          return null;
       }
       boolean success = false;
@@ -126,7 +126,7 @@ public class AdministratorController extends MultiActionController
    public ModelAndView saveSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException 
    {      
-      if(!AuthenticationUtil.isAuth(request)){
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
          return null;
       }
       
@@ -201,7 +201,7 @@ public class AdministratorController extends MultiActionController
     */
    public ModelAndView deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException {
-      if(!AuthenticationUtil.isAuth(request)){
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
          return null;
       }  
       int clientID = Integer.parseInt(request.getParameter("client_id"));      
@@ -251,7 +251,7 @@ public class AdministratorController extends MultiActionController
     */
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
-      if(!AuthenticationUtil.isAuth(request)){
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
          return null;
       }      
       boolean result = false;
