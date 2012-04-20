@@ -40,6 +40,7 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.DatabaseService;
+import org.openremote.controller.utils.AlgorithmUtil;
 
 import sun.misc.BASE64Decoder;
 
@@ -439,7 +440,7 @@ public class ClientServiceImpl implements ClientService {
             ASN1Sequence seqkey = ASN1Sequence.getInstance(certificationRequest.getSubjectPublicKeyInfo().getPublicKey());
             RSAPublicKeyStructure publicKey = new RSAPublicKeyStructure(seqkey);
             
-            pin = generateMD5Sum(publicKey.getModulus().toByteArray());
+            pin = AlgorithmUtil.generateMD5Sum(publicKey.getModulus().toByteArray());
             pin = pin.substring(pin.length() - 4);
          } catch (IOException e) {
             logger.error("Can't get public key.");
@@ -535,20 +536,6 @@ public class ClientServiceImpl implements ClientService {
    private String getCN() {
       return cn;
    }
-   
-   private String generateMD5Sum(byte[] message) {
-      byte[] resultByte = null;
-
-      try {
-         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-         messageDigest.reset();
-         messageDigest.update(message);
-         resultByte = messageDigest.digest();
-      } catch (NoSuchAlgorithmException e) {
-         logger.error(e.getMessage());
-      }
-      return new String(Hex.encodeHex(resultByte));
-   }   
    
    /**
     * Sets the database.

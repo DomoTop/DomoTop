@@ -27,6 +27,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -386,6 +387,57 @@ public class CertificateServiceImpl implements CertificateService
          logger.error("Key store: " + e.getMessage());
       }
       return success;
+   }
+   
+   /**
+    * Delete client key store file
+    * 
+    * @return true if success otherwise false
+    */
+   @SuppressWarnings("rawtypes")
+   @Override
+   public boolean deleteClientKeyStore()
+   {
+      boolean success = false;
+      KeyStore clientKS;
+      
+      String rootCaPath = configurationService.getItem(CA_PATH);
+      String clientKeyStorePath =  rootCaPath + "/client_certificates.jks";
+      
+      try
+      {
+         clientKS = KeyStore.getInstance("JKS");
+
+         // Load the key store to memory.
+         FileInputStream fis = new FileInputStream(clientKeyStorePath);  
+         clientKS.load(fis, KEYSTORE_PASSWORD.toCharArray());  
+       
+         // Delete all aliases
+         Enumeration enumer = clientKS.aliases();
+         while (enumer.hasMoreElements())
+         {
+            String alias = (String) enumer.nextElement();
+            if(clientKS.isCertificateEntry(alias))
+            {
+               clientKS.deleteEntry(alias);
+            }
+         }
+         // Write the key store back to disk                 
+         clientKS.store(new FileOutputStream(clientKeyStorePath), KEYSTORE_PASSWORD.toCharArray());
+         success = true;
+      } catch (KeyStoreException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (NoSuchAlgorithmException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (CertificateException e) {
+         success = false;
+         logger.error("Key store: " + e.getMessage());
+      } catch (IOException e) {
+         logger.error("Key store: " + e.getMessage());
+      }
+      return success;      
    }
 
    /**
