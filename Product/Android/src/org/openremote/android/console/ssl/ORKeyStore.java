@@ -24,6 +24,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
@@ -392,4 +395,38 @@ public class ORKeyStore implements ORConnectionDelegate {
 		return info.toString();
 	}
 	
+	public void checkCertificateChain(String currentServer, Handler handler) {
+		boolean valid = false;
+		X509Certificate[] chain = null;
+		String dname = null;
+		
+		try {
+			chain =  (X509Certificate[]) keystore.getCertificateChain(currentServer);
+
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, e.getMessage());
+		}
+		
+		if(chain != null) {
+			dname = chain[0].getSubjectDN().getName().replace(",", ", ");
+			Log.d(LOG_CATEGORY, dname);
+			
+			try {
+				
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet(currentServer + "/rest/cert/check/" + URLEncoder.encode(dname, "UTF-8"));
+				HttpResponse response = client.execute(request);
+				
+				valid = response.getStatusLine().getStatusCode() == 200;
+			} catch (IOException e) {
+				Log.e(LOG_CATEGORY, e.getMessage());
+			}
+		}
+
+		if(!valid) {
+			getSignedChain(currentServer, handler);
+		} else {
+			handler.sendEmptyMessage(0);
+		}
+	}
 }
