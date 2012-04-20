@@ -361,6 +361,20 @@
     <servlet-name>SubmitCSR</servlet-name>
     <servlet-class>org.openremote.controller.rest.SubmitCSR</servlet-class>
   </servlet>
+
+  <!--
+   | Servlet for 'rest/cert/check/*' implementation
+   +-->
+  <servlet>
+    <description>
+		Checks if a certificate is valid
+    </description>
+
+    <display-name>Checks if a certificate is valid -- /rest/cert/check/*</display-name>
+    <servlet-name>CheckCertificate</servlet-name>
+    <servlet-class>org.openremote.controller.rest.CheckCertificate</servlet-class>
+  </servlet>
+
   <!--
    | Servlet for 'rest/panel/{id} implementation.
    +-->
@@ -464,6 +478,19 @@
   <servlet-mapping>
     <servlet-name>SubmitCSR</servlet-name>
     <url-pattern>/rest/cert/put/*/</url-pattern>
+  </servlet-mapping>
+
+  <!--
+   | Map Controller REST API servlet which returns the certificate
+   +-->
+  <servlet-mapping>
+    <servlet-name>CheckCertificate</servlet-name>
+    <url-pattern>/rest/cert/check/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>CheckCertificate</servlet-name>
+    <url-pattern>/rest/cert/check/*/</url-pattern>
   </servlet-mapping>
   
   <!--
