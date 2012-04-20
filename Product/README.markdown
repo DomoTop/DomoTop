@@ -22,11 +22,13 @@ Installing
 
 ###Android
 1. Scan the QR-code below to install the application:
+
 ![Android APK](http://qrcode.kaywa.com/img.php?s=6&d=http%3A%2F%2Fopenlaptop.nl%2Fopenremote%2FOpenRemoteConsole.apk)
 
 Usage
 ------
 Go to the OpenRemote Controller - Administrator Panel
+
 1. http://localhost:8080/controller/login
 2. Login with your OpenRemote Composer Account
 3. Select the Controller on your (Android) device
