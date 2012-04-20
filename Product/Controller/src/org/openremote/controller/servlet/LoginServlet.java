@@ -44,7 +44,7 @@ import org.openremote.controller.service.FileService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.FreemarkerUtil;
-import org.openremote.controller.utils.MD5Util;
+import org.openremote.controller.utils.AlgorithmUtil;
 import org.openremote.controller.utils.PathUtil;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 
@@ -118,7 +118,7 @@ public class LoginServlet extends HttpServlet
      if(databaseuser.equals("") && databasepassword.equals("")) {
         saveCredentials(username, password);
         return 0;
-     } else if(username.equals(username) && MD5Util.generateMD5Sum(password.getBytes()).equals(databasepassword)) {
+     } else if(username.equals(username) && AlgorithmUtil.generateSHA512(password.getBytes()).equals(databasepassword)) {
         return 0;
      } else {
         return -2;   
@@ -133,7 +133,7 @@ public class LoginServlet extends HttpServlet
   private void saveCredentials(String username, String password) {
      configurationService.updateItem("composer_username", username);
      
-     configurationService.updateItem("composer_password", MD5Util.generateMD5Sum(password.getBytes()));
+     configurationService.updateItem("composer_password", AlgorithmUtil.generateSHA512(password.getBytes()));
   }
   
   /**
@@ -147,9 +147,9 @@ public class LoginServlet extends HttpServlet
      
      configurationService.updateItem("session_timestamp", timestamp);
      
-     String md5 = MD5Util.generateMD5Sum((username + timestamp + MD5Util.generateMD5Sum(password.getBytes())).getBytes());
+     String sha512 = AlgorithmUtil.generateSHA512((username + timestamp + AlgorithmUtil.generateSHA512(password.getBytes())).getBytes());
      
-     return md5;
+     return sha512;
   }
   
   /**
