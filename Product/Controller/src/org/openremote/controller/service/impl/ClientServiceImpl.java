@@ -59,6 +59,7 @@ public class ClientServiceImpl implements ClientService {
    private static final String KEYSTORE_PASSWORD = "password";
 
    private static final String CA_PATH = "ca_path";
+   private static String checkClientQuery = "SELECT client_id FROM client WHERE client_dn = ? ";
    private static String selectClientQuery = "SELECT * FROM client WHERE client_id = ? ";
    private static String selectAllClientsQuery = "SELECT * FROM client ORDER BY client_creation_timestamp ASC";
    private static String insertClientQuery = "INSERT INTO client (client_serial, client_pincode, client_device_name, client_email, client_alias, client_active, client_creation_timestamp, client_modification_timestamp, client_role, client_dn) VALUES ";
@@ -569,5 +570,30 @@ public class ClientServiceImpl implements ClientService {
 
    public void setDatabaseConfiguration(ConfigurationService databaseConfiguration) {
       this.databaseConfiguration = databaseConfiguration;
+   }
+
+   /**
+    * Check if the client is valid based on a dname
+    * @param dname the dynamic name
+    * @return true if the client is valid
+    */
+   public boolean isClientValid(String dname) {
+         boolean returnValue = false;
+         PreparedStatement preparedStatement = null;
+         
+         if (database != null) 
+         {
+            try {
+               preparedStatement = database.createPrepareStatement(checkClientQuery + limitByOne);
+               preparedStatement.setString(1, dname);
+               database.doSQL(preparedStatement);
+               returnValue = database.getNumRows() == 1;
+            } catch (SQLException e) {
+               logger.error("SQL Exception: " + e.getMessage());
+            }
+         } else {
+            logger.error("Database is not yet set (null)");
+         }
+         return returnValue;
    }
 }

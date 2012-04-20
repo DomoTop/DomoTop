@@ -106,6 +106,12 @@ public interface ClientService
     */
    boolean isClientIDValid(int clientID);
    /**
+    * Check if the client is valid based on a dname
+    * @param dname the dynamic name
+    * @return true if the client is valid
+    */
+   boolean isClientValid(String dname);
+   /**
     * Close the result set.
     */
    void free();
