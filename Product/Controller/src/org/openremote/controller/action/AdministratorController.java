@@ -80,20 +80,31 @@ public class AdministratorController extends MultiActionController
          return null;
       }
       boolean success = false;
-      
-      if(clientService.dropClients() == 1)
-      { 
-         success = true;
+      success = certificateService.deleteClientKeyStore();
+      if(success)
+      {
+         if(clientService.dropClients() == 1)
+         { 
+            success = true;
+         }
+         else
+         {
+            success = false;
+         }
+      }
+      else
+      {
+         response.getWriter().print("Couldn't delete client keystore.");
       }
       
       if(success)
-      {
+      {         
          success = certificateService.createCa();
    
          if(!success)
          {
             response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
-         }   
+         }
       }
       else
       {

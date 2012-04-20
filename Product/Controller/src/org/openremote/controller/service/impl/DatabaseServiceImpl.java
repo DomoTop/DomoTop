@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.hsqldb.Server;
 import org.openremote.controller.Constants;
@@ -68,13 +69,20 @@ public class DatabaseServiceImpl implements DatabaseService
       // HSQLDB prints out a lot of informations when
       // starting and closing, which we don't need now.
       // Normally you should point the setLogWriter
-      // to some Writer object that could store the logs.
+      // to some Writer object that could store the logs.      
       hsqlServer.setLogWriter(null);
-      hsqlServer.setSilent(true); 
+      hsqlServer.setErrWriter(null);
+      hsqlServer.setSilent(true);
+      hsqlServer.setTrace(false);
+      
       hsqlServer.setPort(10001);
       
       // init database path
       configuration = ControllerConfiguration.readXML();
+      
+      // Set logger to error level
+      Logger databaseLogger = Logger.getLogger("hsqldb.db");
+      databaseLogger.setLevel(Level.ERROR);
       
       if(configuration != null)
       {

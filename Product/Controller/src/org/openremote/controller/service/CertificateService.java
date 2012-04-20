@@ -58,6 +58,12 @@ public interface CertificateService
     */
    boolean deleteClientFromClientKeyStore(String alias);
    /**
+    * Delete client key store file
+    * 
+    * @return true if success otherwise false
+    */
+   boolean deleteClientKeyStore();
+   /**
     * Get the certificate file from the csr directory and create and returns a PKCS10CertificationRequest object
     * 
     * @param alias client alias
