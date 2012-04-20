@@ -28,7 +28,8 @@ __Or__
 4. Restart Tomcat6 Server
 
 ###Android
-1. Scan the QR-code below to install the application:
+1. You may need to go to Menu->Settings->Applications and check Unknown sources
+2. Scan the QR-code below to download & install the application:
 
 ![Android APK](http://qrcode.kaywa.com/img.php?s=6&d=http%3A%2F%2Fopenlaptop.nl%2Fopenremote%2FOpenRemoteConsole.apk)
 
