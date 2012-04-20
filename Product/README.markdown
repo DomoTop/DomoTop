@@ -20,6 +20,13 @@ Installing
 3. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
 4. Restart Tomcat6 Server
 
+__Or__
+
+1. Download the War from: http://openlaptop.nl/openremote/controller.war
+2. Deploy the war from the output directory into the Tomcat Web Application Manager
+3. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
+4. Restart Tomcat6 Server
+
 ###Android
 1. Scan the QR-code below to install the application:
 
