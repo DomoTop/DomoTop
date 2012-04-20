@@ -18,14 +18,14 @@ Installing
 1. Build the Controller from source either via ant war
 2. Deploy the war from the output directory into the Tomcat Web Application Manager
 3. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
-4. Restart Tomcat6 Server
+4. Restart Apache Tomcat 6 Server
 
 __Or__
 
 1. Download the War from: http://openlaptop.nl/openremote/controller.war
 2. Deploy the war from the output directory into the Tomcat Web Application Manager
 3. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
-4. Restart Tomcat6 Server
+4. Restart Apache Tomcat 6 Server
 
 ###Android
 1. You may need to go to Menu->Settings->Applications and check Unknown sources
