@@ -47,11 +47,20 @@
 									<div class="left"><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></div>
 									<div class="right"><a id="logOut" href="javascript:void(0);"><img src="image/logout.gif" alt="Log-out" /> Log-out</a></div>
 								</div>		
-								<#if errorMessage?has_content>
-									<#assign info_messsage_line='<p id="errMsg" class="errMsg" /><p id="activeErrMsg" class="activeErrMsg">${errorMessage}</p><p id="msg" class="msg" />'>							
-							  <#else>
-									<#assign info_messsage_line='<p id="errMsg" class="errMsg" /><p id="msg" class="msg" />'>
+								<#if warningMessage?has_content>
+									<#assign warning_message='<p id="activeUserManagementWarnMsg" class="activeWarnMsg">${warningMessage}</p>'>
+								<#else>
+									<#assign warning_message=''>
 								</#if>
+								
+								<#if errorMessage?has_content>
+									<#assign error_message='<p id="activeErrMsg" class="activeErrMsg">${errorMessage}</p>'>
+								<#else>
+									<#assign error_message=''>
+								</#if>
+																					
+								<#assign info_messsage_line='<p id="errMsg" class="errMsg" /> <p id="msg" class="msg" />${warning_message}${error_message}'>
+								
 							  <div id="tabContainer">
 							    <div class="tabs">
 							      <ul>
