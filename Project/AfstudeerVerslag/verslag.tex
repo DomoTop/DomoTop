@@ -492,10 +492,24 @@ getekend is ook de CA, die aanwezig is in de truststore van TomCat, vertrouwd
 TomCat deze client en krijgt het apparaat toegang tot de OpenRemote
 Controller.
 
-Toen het bovenstaande allemaal nabehoren werkte, werd er verder gegaan met het optimaleren en verfijnen van de OpenRemote Android applicatie en OpenRemote Controller. 
-In de Android applicatie is er gewerkt aan het automatisch sturen van CSR bestanden naar de Controller, tevens zoekt de Android applicatie automatisch naar het client certificaat zodra er gedrukt wordt op 'Done'.  Tot slot zijn er verschillende bugs opgelost, waaronder enkele stabiliteits problemen.
-In de OpenRemote Controller is er gewerkt aan verschillende kleine verbeteringen, zoals client certificaten automatisch laten verwijderen uit zowel de Key Store als database bij het drukken op 'Reset devices' knop. Maar ook wordt de CA en database automatisch aangemaakt aan het begin dat de applicatie wordt geïnstalleerd. Een apparaat kan nu ook vollledig verwijderd wordt uit het systeem, vervolgens is het nu mogelijk om de authenticatie via Client certificate aan \& uit te zetten. Tot slot is de OpenRemote Administrator Panel óók offline bereikbaar, daarbij maakt de login gebruik van de cache gegevens uit de database om te gebruiker te valideren.
+Toen het bovenstaande allemaal nabehoren werkte, werd er verder gegaan met het 
+optimaleren en verfijnen van de OpenRemote Android applicatie en OpenRemote Controller. 
+In de Android applicatie is er gewerkt aan het automatisch sturen van CSR bestanden naar de Controller, 
+tevens zoekt de Android applicatie automatisch naar het client certificaat 
+zodra er gedrukt wordt op 'Done'. Tot slot zijn er verschillende bugs opgelost, waaronder enkele stabiliteits problemen.
 
+In de OpenRemote Controller is er gewerkt aan verschillende kleine verbeteringen, 
+zoals client certificaten automatisch laten verwijderen uit zowel de Key Store als 
+database bij het drukken op 'Reset devices' knop. 
+Maar ook wordt de CA en database automatisch aangemaakt aan het begin dat de applicatie wordt geïnstalleerd. 
+Een apparaat kan nu ook vollledig verwijderd wordt uit het systeem, vervolgens is het nu mogelijk om 
+de authenticatie via Client certificate aan \& uit te zetten. 
+Tot slot is de OpenRemote Administrator Panel óók offline bereikbaar, 
+daarbij maakt de login module gebruik van de cache gegevens uit de database om de administrator gebruiker te valideren.
+
+Er is gekozen om het wachtwoord op te slaan in SHA512 (behoord tot de SHA-2 familie)  evenals bij de HTTP sessie wordt er gebruik gemaakt van 
+het SHA512 beveiligde hash algoritme, voorheen was dit MD5 echter is een MD5 hash relatief eenvoudig te kraken via 
+brute-force en/of rainbow table. Het voordeel van SHA512 is dat het gebruik maakt van 64-byte (512 bits) woord in tegenstelling tot 128 bits, waardoor het veel minder snel gekraakt kan worden.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
