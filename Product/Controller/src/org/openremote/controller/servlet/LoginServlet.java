@@ -36,6 +36,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.DefaultedHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
@@ -72,6 +76,7 @@ public class LoginServlet extends HttpServlet
   private FileService fileService =  (FileService) SpringContext
         .getInstance().getBean("fileService");
 
+  private static final int timeout = 10000;
 
   /**
    * Check username and password against the online interface
@@ -88,8 +93,15 @@ public class LoginServlet extends HttpServlet
      if(!databaseuser.equals("") && !username.equals(databaseuser)) {
         return -3;
      }
+
+     HttpParams params = new BasicHttpParams();
+
+     HttpConnectionParams.setConnectionTimeout(params, timeout);
+     HttpConnectionParams.setSoTimeout(params, timeout);
      
-     HttpClient httpClient = new DefaultHttpClient();
+     HttpClient httpClient = new DefaultHttpClient(params);
+
+     
      HttpGet httpGet = new HttpGet(PathUtil.addSlashSuffix(configuration.getBeehiveRESTRootUrl()) + "user/" + username
            + "/openremote.zip");
 
