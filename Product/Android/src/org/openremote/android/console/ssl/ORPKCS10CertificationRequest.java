@@ -179,6 +179,7 @@ public class ORPKCS10CertificationRequest {
 	    
 	    HttpPost httppost = new HttpPost(host + "/rest/cert/put/" + phoneInfo.getUrlEncodedDeviceName());
 		
+	    httppost.get
 	    try {
 	    	String csr = getCertificationRequestAsBase64(context, phoneInfo.getDeviceName(), email);
 	    	
