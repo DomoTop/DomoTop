@@ -509,7 +509,11 @@ daarbij maakt de login module gebruik van de cache gegevens uit de database om d
 
 Er is gekozen om het wachtwoord op te slaan in SHA512 (behoord tot de SHA-2 familie)  evenals bij de HTTP sessie wordt er gebruik gemaakt van 
 het SHA512 beveiligde hash algoritme, voorheen was dit MD5 echter is een MD5 hash relatief eenvoudig te kraken via 
-brute-force en/of rainbow table. Het voordeel van SHA512 is dat het gebruik maakt van 64-byte (512 bits) woord in tegenstelling tot 128 bits, waardoor het veel minder snel gekraakt kan worden.
+brute-force en/of rainbow table. Het voordeel van SHA512 is dat het gebruik maakt van 64-byte (512 bits) woord 
+in tegenstelling tot 128 bits, waardoor het veel minder snel gekraakt kan worden.
+
+Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt er aangeraden om gebruik te maken van 
+'Pepper & Salt' oftewel Peper en zout. Met deze termen wordt bedoeld dat aan het wachtwoord een bepaalde random lijst met karakters wordt tegevoegd (Salt) en een geheime constante (Pepper). Er is gekozen om een systeem constante te gebruiken als Pepper en een random lijst van karakters die gegeneerd wordt via het SHA-512 algoritme met een lengte van 32 bits. 
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}

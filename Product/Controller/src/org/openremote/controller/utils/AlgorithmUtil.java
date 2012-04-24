@@ -57,7 +57,7 @@ public class AlgorithmUtil {
 
    public static String getSalt() 
    {
-      int size = 16;
+      int size = 32;
       byte[] bytes = new byte[size];
       new Random().nextBytes(bytes);
       return new String(Base64.encode(bytes));
