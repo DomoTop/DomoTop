@@ -3,9 +3,11 @@ package org.openremote.controller.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
+import java.util.Random;
 
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 
 public class AlgorithmUtil {
    static
@@ -53,7 +55,11 @@ public class AlgorithmUtil {
       return new String(Hex.encodeHex(resultByte));
    }
 
-   public static String getSalt() {
-      return "TEST";
+   public static String getSalt() 
+   {
+      int size = 16;
+      byte[] bytes = new byte[size];
+      new Random().nextBytes(bytes);
+      return new String(Base64.encode(bytes));
    }
 }
