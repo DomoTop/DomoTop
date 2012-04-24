@@ -52,7 +52,7 @@ window.onload=function()
 $(document).ready(function() 
 {
 	// Ajax forms
-	showErrorMessage(); 	
+	showUserManagementWarningMessage(); 	
 	
   $('.statusSubmit').click(function(){
   	clearMessage();
@@ -100,7 +100,7 @@ $(document).ready(function()
   $('#caForm').ajaxForm(function(result) {
   	clearMessage();
   	if (result == 'OK') {
-			message("CA successfully created. <br/><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
+			message("CA successfully created. <br/><b><font color='#FF4500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
@@ -173,11 +173,11 @@ function displayPage()
   var ident = this.id.split("_")[1];
  	if(ident == 1) // first tab
  	{
- 		showErrorMessage();
+ 		showUserManagementWarningMessage();
  	}
  	else
  	{
-		hideErrorMessage();
+		hideUserManagementWarningMessage();
 	}
    
   //add class of activetabheader to new active tab and show contents
@@ -238,14 +238,14 @@ function delayedRefreshPage(delay)
 	setInterval("location.reload()", delay);
 }
 
-function showErrorMessage()
+function showUserManagementWarningMessage()
 {
-	$('#activeErrMsg').show();
+	$('#activeUserManagementWarnMsg').show();
 }
 
-function hideErrorMessage()
+function hideUserManagementWarningMessage()
 {	
-	$('#activeErrMsg').hide();
+	$('#activeUserManagementWarnMsg').hide();
 }
 
 function statusFormResult(result)

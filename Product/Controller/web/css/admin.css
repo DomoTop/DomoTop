@@ -6,13 +6,21 @@
 	cursor: hand;
 }
 
-.activeErrMsg
+.activeWarnMsg
 {
-	color:red;
+	color:#FFA500;
 	background:none repeat scroll 0 0 #FAFEEF;
 	border:1px solid #F6E5AD;
 	padding:5px;
 	display: none;
+}
+
+.activeErrMsg
+{
+	color:#FF4500;
+	background:none repeat scroll 0 0 #FAFEEF;
+	border:1px solid #F6E5AD;
+	padding:5px;
 }
 
 .heading

@@ -57,7 +57,7 @@ public class HTTPUtil {
     * 
     * @param serverUrl the current server url
     * @param panelName the current panel name
-    * 
+    *
     * @return the int
     */
    public static int downLoadPanelXml(Context context, String serverUrl, String panelName) {

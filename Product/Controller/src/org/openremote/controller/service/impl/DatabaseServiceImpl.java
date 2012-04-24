@@ -13,6 +13,7 @@ import org.hsqldb.Server;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.DatabaseService;
+import org.openremote.controller.utils.AlgorithmUtil;
 
 /**
  * Database service for creating connection, do sql statements, 
@@ -31,6 +32,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_NAME_4 = "authentication";
    private final static String CONFIGURATION_NAME_5 = "composer_password";
    private final static String CONFIGURATION_NAME_6 = "session_timestamp";
+   private final static String CONFIGURATION_NAME_7 = "salt";
    
    private final static String CONFIGURATION_TYPE_1 = "string";
    private final static String CONFIGURATION_TYPE_2 = "string";
@@ -38,9 +40,11 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_TYPE_4 = "boolean";
    private final static String CONFIGURATION_TYPE_5 = "string";
    private final static String CONFIGURATION_TYPE_6 = "string";
+   private final static String CONFIGURATION_TYPE_7 = "string";
      
    private final static String CONFIGURATION_VALUE_3 = "true";
    private final static String CONFIGURATION_VALUE_4 = "true";
+   private final static String CONFIGURATION_VALUE_7 = AlgorithmUtil.getSalt();
    
    private final static String CONFIGURATION_INFORMATION_1 = "The username of the administrator.";
    private final static String CONFIGURATION_INFORMATION_2 = "The CA path is the directory path where the CA (Certificate authority) files are located. For example the key store files.";
@@ -48,6 +52,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_INFORMATION_4 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";
    private final static String CONFIGURATION_INFORMATION_5 = "The password of the administrator.";
    private final static String CONFIGURATION_INFORMATION_6 = "The session timestamp";
+   private final static String CONFIGURATION_INFORMATION_7 = "This is a random salt used to check your password.";
    
    private ControllerConfiguration configuration;
    private static Connection connection;
@@ -191,7 +196,8 @@ public class DatabaseServiceImpl implements DatabaseService
                "(null, '" + CONFIGURATION_NAME_3 + "', '" + CONFIGURATION_VALUE_3 + "', '" + CONFIGURATION_TYPE_3 + "', '" + CONFIGURATION_INFORMATION_3 + "'), " +
                "(null, '" + CONFIGURATION_NAME_4 + "', '" + CONFIGURATION_VALUE_4 + "', '" + CONFIGURATION_TYPE_4 + "', '" + CONFIGURATION_INFORMATION_4 + "')," +
                "(null, '" + CONFIGURATION_NAME_5 + "', '', '" + CONFIGURATION_TYPE_5 + "', '" + CONFIGURATION_INFORMATION_5 + "')," + 
-               "(null, '" + CONFIGURATION_NAME_6 + "', '', '" + CONFIGURATION_TYPE_6 + "', '" + CONFIGURATION_INFORMATION_6 + "')")
+               "(null, '" + CONFIGURATION_NAME_6 + "', '', '" + CONFIGURATION_TYPE_6 + "', '" + CONFIGURATION_INFORMATION_6 + "')," +
+               "(null, '" + CONFIGURATION_NAME_7 + "', '" + CONFIGURATION_VALUE_7 + "', '" + CONFIGURATION_TYPE_7 + "', '" + CONFIGURATION_INFORMATION_7 + "')")
                .execute();  
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times

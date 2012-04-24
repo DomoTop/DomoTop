@@ -96,7 +96,7 @@ public class AdministratorServlet extends HttpServlet
    {
       Map<String, Object> root = new HashMap<String, Object>();
       String result = "";
-      String errorString = "";
+      String errorString = "", warningString = "";
       int numClients = 0;
       boolean isAuthenticationEnabled = false;
       Collection clientCollection = null, settingCollection = null;
@@ -124,24 +124,28 @@ public class AdministratorServlet extends HttpServlet
             {
                if(isAuthenticationEnabled)
                {
-                  errorString = "No clients in the database.";
+                  warningString = "No clients in the database.";
                }
             }
             root.put( "configurations", settingCollection );
          }
          else
          {
-            errorString = "Database problem!";
+            errorString = "Database problem!<br />";
          }
          
          if(configurationService.shouldReboot())
          {
-            errorString += "<br /><b><font color='#FFA500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>";
+            errorString += "<b>Do NOT forget to restart your Tomcat server manually to apply the changes.</b>";
          }
          
          if(!errorString.isEmpty())
          {
             root.put( "errorMessage", errorString);
+         }
+         if(!warningString.isEmpty())
+         {
+            root.put( "warningMessage", warningString);
          }
          root.put( "authEnabled", isAuthenticationEnabled);
          
