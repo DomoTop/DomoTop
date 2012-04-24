@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -64,6 +65,10 @@ public class LoginServlet extends HttpServlet
    * Common log category for HTTP
    */
   private final static Logger logger = Logger.getLogger(Constants.LOGIN_SERVLET_LOG_CATEGORY);
+  private final static String DATABASE_SALT_NAME = "salt";
+  private final static String PEPPER_PROPERTY_VALUE = "java.class.path";
+  private static String SALT_STRING = "cbb9e9c64deaa65656f77aed39f8903c92cd2a4595cae16ddcfe9176567990d9b015376a0f832c1099b5b31630e4e76f151b6bf5021e3989d523ed93dc9510c5";
+  private static Properties properties = System.getProperties();
   
   private ConfigurationService configurationService = (ConfigurationService) SpringContext
         .getInstance().getBean("configurationService");
@@ -118,12 +123,17 @@ public class LoginServlet extends HttpServlet
      if(databaseuser.equals("") && databasepassword.equals("")) {
         saveCredentials(username, password);
         return 0;
-     } else if(username.equals(username) && AlgorithmUtil.generateSHA512(password.getBytes()).equals(databasepassword)) {
+     } else if(username.equals(username) && this.getHashedPassword(password).equals(databasepassword)) {
         return 0;
      } else {
         return -2;   
      }
      
+  }
+  
+  private String getHashedPassword(String password)
+  {
+     return AlgorithmUtil.generateSHA512((password + this.getSalt() + this.getPepper()).getBytes());
   }
   
   /**
@@ -133,7 +143,7 @@ public class LoginServlet extends HttpServlet
   private void saveCredentials(String username, String password) {
      configurationService.updateItem("composer_username", username);
      
-     configurationService.updateItem("composer_password", AlgorithmUtil.generateSHA512(password.getBytes()));
+     configurationService.updateItem("composer_password", this.getHashedPassword(password));
   }
   
   /**
@@ -147,7 +157,7 @@ public class LoginServlet extends HttpServlet
      
      configurationService.updateItem("session_timestamp", timestamp);
      
-     String sha512 = AlgorithmUtil.generateSHA512((username + timestamp + AlgorithmUtil.generateSHA512(password.getBytes())).getBytes());
+     String sha512 = AlgorithmUtil.generateSHA512((username + timestamp + this.getHashedPassword(password)).getBytes());
      
      return sha512;
   }
@@ -165,6 +175,21 @@ public class LoginServlet extends HttpServlet
         return null;
      }
      return new String(Base64.encodeBase64((username + ":" + encodedPwd).getBytes()));
+  }
+  
+
+  /**
+   * Get a pepper value for generating a hash
+   * @return Salt String
+   */
+  private String getPepper()
+  {
+     return properties.getProperty(PEPPER_PROPERTY_VALUE, SALT_STRING);     
+  }
+  
+  private String getSalt()
+  {
+     return configurationService.getItem(DATABASE_SALT_NAME);
   }
   
   /**

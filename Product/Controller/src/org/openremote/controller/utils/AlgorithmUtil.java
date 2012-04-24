@@ -52,18 +52,8 @@ public class AlgorithmUtil {
       }
       return new String(Hex.encodeHex(resultByte));
    }
-   
-   public static String generateSHA512(String message)
-   {
-      byte[] resultByte = null;
-      MessageDigest md = null;
-      
-      try {
-         md = MessageDigest.getInstance("SHA-512");         
-         md.update(message.getBytes());
-         resultByte =  md.digest();
-      } catch (NoSuchAlgorithmException e) {
-      }
-      return new String(Hex.encodeHex(resultByte));
+
+   public static String getSalt() {
+      return "TEST";
    }
 }
