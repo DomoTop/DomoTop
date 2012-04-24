@@ -108,7 +108,13 @@ public class LoginServlet extends HttpServlet
            if(databaseuser == null || databaseuser.equals("")) {
               fileService.writeZipAndUnzip(resp.getEntity().getContent());
            }
-           saveCredentials(username, password);
+           
+           if(!configurationService.getItem("composer_password").equals(this.getHashedPassword(password)))
+           {
+              this.generateSalt();
+              saveCredentials(username, password);
+           }
+           
            return 0;
         } else if(401 == statuscode) {
            return -2;
@@ -190,6 +196,11 @@ public class LoginServlet extends HttpServlet
   private String getSalt()
   {
      return configurationService.getItem(DATABASE_SALT_NAME);
+  }
+  
+  private void generateSalt()
+  {
+     configurationService.updateItem(DATABASE_SALT_NAME, AlgorithmUtil.getSalt());
   }
   
   /**
