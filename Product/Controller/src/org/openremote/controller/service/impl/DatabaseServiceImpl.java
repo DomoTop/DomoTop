@@ -52,7 +52,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_INFORMATION_4 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";
    private final static String CONFIGURATION_INFORMATION_5 = "The password of the administrator.";
    private final static String CONFIGURATION_INFORMATION_6 = "The session timestamp";
-   private final static String CONFIGURATION_INFORMATION_7 = "This is a random salt used to check your password.";
+   private final static String CONFIGURATION_INFORMATION_7 = "This is a random salt used for hashing the password.";
    
    private ControllerConfiguration configuration;
    private static Connection connection;

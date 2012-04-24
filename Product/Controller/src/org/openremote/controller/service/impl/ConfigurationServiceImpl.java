@@ -124,7 +124,10 @@ public class ConfigurationServiceImpl implements ConfigurationService
       if(database != null)
       {
          // Get all configuration except the password
-         result = database.doSQL("SELECT * FROM configuration WHERE configuration_name != 'composer_password' AND configuration_name != 'session_timestamp'");
+         result = database.doSQL("SELECT * FROM configuration WHERE " +
+         		"configuration_name != 'composer_password' AND " +
+         		"configuration_name != 'session_timestamp' AND " +
+         		"configuration_name != 'salt'");
       }      
       return result;
    }
