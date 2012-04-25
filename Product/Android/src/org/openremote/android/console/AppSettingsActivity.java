@@ -21,6 +21,8 @@ package org.openremote.android.console;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.model.ControllerException;
 import org.openremote.android.console.model.ViewHelper;
@@ -583,6 +592,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             writeCustomServerToFile();
             requestPanelList();
+            checkAuthentication();
             requestAccess();
          }
          
@@ -591,6 +601,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
       custumeView.addView(customListView);
       custumeView.addView(buttonsView);
       requestPanelList();
+      checkAuthentication();
       requestAccess();
       return custumeView;
   }
@@ -615,6 +626,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
                writeCustomServerToFile();
                requestPanelList();
+               checkAuthentication();
                requestAccess();
             }
          }
@@ -662,6 +674,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                progressLayout.setVisibility(View.INVISIBLE);
             }
             requestPanelList();
+            checkAuthentication();
             requestAccess();
          }
       }.execute((Void) null);
@@ -671,6 +684,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             currentServer = (String)parent.getItemAtPosition(position);
             AppSettingsModel.setCurrentServer(AppSettingsActivity.this, currentServer);
             requestPanelList();
+            checkAuthentication();
             requestAccess();
          }
       });
@@ -712,11 +726,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 	   final Handler handler = new Handler()
 	   {
 		   public void handleMessage(Message msg) {
-			   if(msg.what == 200 || msg.what == 501) {
-				   AppSettingsModel.enableSSL(AppSettingsActivity.this, true);
-				   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
-				   sslToggleButton.setChecked(true);
-			   }
 			   if(progress.isShowing()) {
 				   progress.dismiss();
 			   }
@@ -729,7 +738,8 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 	   
 	   new Thread()
 	   {
-		   public void run() {
+		   public void run() 
+		   {
 			   handler.sendEmptyMessage(
 					   ORPKCS10CertificationRequest.getInstance(getApplicationContext())
 			   			.submitCertificationRequest(hostname)
@@ -738,6 +748,84 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 	   }.start();
    }
 
+   /**
+    * Check if Client Authentication is enabled on the server if so 
+    * enable to SSL button in the GUI
+    */   
+   private void checkAuthentication()
+   {
+	   final Handler checkHandler = new Handler()
+	   {
+		   public void handleMessage(Message msg) 
+		   {			   
+			   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
+			   if(msg.what == 1)
+			   {
+				   AppSettingsModel.enableSSL(AppSettingsActivity.this, true);
+				   sslToggleButton.setChecked(true);
+			   }
+			   else
+			   {
+				   AppSettingsModel.enableSSL(AppSettingsActivity.this, false);
+				   sslToggleButton.setChecked(false);   
+			   }
+		   }
+	   };
+	   new Thread()
+	   {
+		   public void run() 
+		   {
+			   if(this.checkAuthentication()) 
+			   {
+				   checkHandler.sendEmptyMessage(1);
+			   }
+			   else
+			   {
+				   checkHandler.sendEmptyMessage(0);
+			   }
+		   }
+		   
+		   private boolean checkAuthentication()
+		   {
+			   boolean returnValue = false;
+			   
+			   try
+			   {
+				   HttpRequestBase request = null;
+				   HttpResponse response = null;
+				   HttpParams params = new BasicHttpParams();
+	
+				   // set time-out at 3 seconds
+				   HttpConnectionParams.setConnectionTimeout(params, 3 * 1000);
+				   HttpConnectionParams.setSoTimeout(params, 3 * 1000);
+	
+				   HttpClient client = new DefaultHttpClient(params);
+				   request = new HttpGet(new URL(currentServer + "/rest/authentication/check").toURI());
+	
+				   response = client.execute(request);
+				   
+				   returnValue = (response.getStatusLine().getStatusCode() == 200) ? true : false;
+			   }
+			   catch(IOException e)
+			   {
+				   returnValue = false;
+			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
+			   }
+			   catch (IllegalArgumentException e) 
+			   {
+				   returnValue = false;
+			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
+			   }
+			   catch (URISyntaxException e) 
+			   {
+				   returnValue = false;
+			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Invalid URI: ", e);
+			   }			   
+			   return returnValue;
+		   }
+	   }.start();
+   }
+   
    private void retrieveCertificate()
    {
 	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
@@ -835,6 +923,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
                public void onClick(View v) {
                   super.onClick(v);
                   requestPanelList();
+                  checkAuthentication();
                   requestAccess();
                }
                
