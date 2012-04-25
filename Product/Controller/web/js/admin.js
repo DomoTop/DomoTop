@@ -22,6 +22,7 @@
 //SETTING UP OUR POPUP
 //0 means disabled; 1 means enabled;
 var popupStatus = 0;
+var loading = false;
 
 window.onload=function() 
 {
@@ -148,13 +149,19 @@ $(document).ready(function()
 	
 	//Click out event!
 	$("#backgroundPopup").click(function(){
-		disablePopup();
+		if(!loading)
+		{
+			disablePopup();
+		}
 	});
 	
 	//Press Escape event!
 	$(document).keypress(function(e){
-		if(e.keyCode==27 && popupStatus==1){
-			disablePopup();
+		if(!loading)
+		{
+			if(e.keyCode==27 && popupStatus==1){
+				disablePopup();
+			}
 		}
 	});
 });
@@ -353,6 +360,7 @@ function showLoading()
 		$("#backgroundPopup").fadeIn("slow");
 		$("#popupLoading").fadeIn("slow");
 		popupStatus = 1;
+		loading = true;
 		
 		// wait until restart is complete
 		setTimeout("waitLoading()", 6000);
@@ -367,6 +375,7 @@ function hideLoading()
 		$("#backgroundPopup").fadeOut("slow");
 		$("#popupLoading").fadeOut("slow");
 		popupStatus = 0;
+		loading = false;
 		delayedRefreshPage(500);
 	}
 }
