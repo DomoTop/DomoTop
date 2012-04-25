@@ -376,6 +376,18 @@
   </servlet>
 
   <!--
+   | Servlet for 'rest/authentication/check implementation.
+   +-->
+  <servlet>
+    <description>
+    	Returns 200 if authentication is enabled otherwise 404.
+    </description>
+    <display-name>Check if authentication is enabled or disabled -- /rest/authentication/check</display-name>
+    <servlet-name>CheckAuthentication</servlet-name>
+    <servlet-class>org.openremote.controller.rest.CheckAuthentication</servlet-class>
+  </servlet>
+  
+  <!--
    | Servlet for 'rest/panel/{id} implementation.
    +-->
   <servlet>
@@ -493,15 +505,28 @@
     <url-pattern>/rest/cert/check/*/</url-pattern>
   </servlet-mapping>
   
+    <!--
+   | Map Controller REST API servlet which makes it possible to check if authentication is enabled
+   | 'rest/authentication/check' URI.
+   +-->
+  <servlet-mapping>
+    <servlet-name>CheckAuthentication</servlet-name>
+    <url-pattern>/rest/authentication/check</url-pattern>
+  </servlet-mapping>
+    
+  <servlet-mapping>
+    <servlet-name>CheckAuthentication</servlet-name>
+    <url-pattern>/rest/authentication/check/</url-pattern>
+  </servlet-mapping>    
+    
   <!--
    | Map Controller REST API servlet which returns a panel definition by ID to
-   | 'rest/panel/id URI.
+   | 'rest/panel/id' URI.
    +-->
   <servlet-mapping>
     <servlet-name>FindPanelByID</servlet-name>
     <url-pattern>/rest/panel/*</url-pattern>
   </servlet-mapping>
-
 
 
   <servlet-mapping>
