@@ -99,13 +99,22 @@
 															</#if>
 															</form>
 														</TD>
-														<TD>							
-															<select name="group">
-																<option value="">No Group</option>											
-																<option<#if client.client_group_id == 1> selected</#if> value="admin">Administrator</option>
-																<option<#if client.client_group_id == 2> selected</#if> value="parent">Parent</option>
-																<option<#if client.client_group_id == 3> selected</#if> value="child">Childeren</option>
-															</select>
+														<TD>						
+														<#if client.client_group_id?has_content>							  									
+																<#assign client_group_id=client.client_group_id>
+															<#else>
+																<#assign client_group_id=-1>																	
+						  								</#if>				
+					  									<form class="groupForm" id="groupForm${client.client_id}" action=""
+					  									method="post">
+															<input type="hidden" name="client_id" value="${client.client_id}" />						
+																<select name="group_id" onchange="onChangeGroup(groupForm${client.client_id})">	
+																	<option<#if client_group_id == -1> selected</#if> value="-1">No Group</option>
+																<#list groups as group>	
+																	<option<#if group.group_id == client_group_id> selected</#if> value="${group.group_id}">${group.group_name?capitalize}</option>
+																</#list>
+																</select>
+															</form>
 														</TD>
 														<TD>
 															<form class="deleteForm" action="admin.htm?method=deleteUser" method="post">														

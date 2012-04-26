@@ -230,6 +230,32 @@ public class ClientServiceImpl implements ClientService {
    }
    
    /**
+    * Update the client's group
+    * 
+    * @param clientID id of the client
+    * @param groupID id of the group
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   @Override
+   public int updateClientGroup(int clientID, int groupID) {
+      int resultValue = -1;
+      PreparedStatement preparedStatement = null;
+      if (database != null) 
+      {         
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("UPDATE client SET client_group_id = ? WHERE client_id = ?");
+            preparedStatement.setInt(1, groupID);
+            preparedStatement.setInt(2, clientID);
+            resultValue = database.doUpdateSQL(preparedStatement);
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
+      }
+      return resultValue;
+   }
+   
+   /**
     * Deletes a client from the database
     * @param clientID The id of the client you want to remove
     * @return int value -1 or 0 is incorrect, 1 is action succeed

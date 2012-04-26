@@ -35,6 +35,7 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.service.GroupService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.openremote.controller.utils.ResultSetUtil;
@@ -62,6 +63,7 @@ public class AdministratorServlet extends HttpServlet
   private final static Logger logger = Logger.getLogger(Constants.SERVLET_LOG_CATEGORY);
 
   private static ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
+  private static GroupService groupService = (GroupService) SpringContext.getInstance().getBean("groupService");
   private static ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
  
   /**
@@ -99,12 +101,16 @@ public class AdministratorServlet extends HttpServlet
       String errorString = "", warningString = "";
       int numClients = 0;
       boolean isAuthenticationEnabled = false;
-      Collection clientCollection = null, settingCollection = null;
+      Collection clientCollection = null, groupCollection = null, settingCollection = null;
       
       ResultSet clients = clientService.getClients();     
       numClients = clientService.getNumClients();
       clientCollection = resultSetToCollection(clients);
       clientService.free();
+      
+      ResultSet groups = groupService.getGroups(); 
+      groupCollection = resultSetToCollection(groups);
+      groupService.free();
       
       ResultSet settings = configurationService.getAllItems();
       settingCollection = resultSetToCollection(settings);
@@ -114,7 +120,7 @@ public class AdministratorServlet extends HttpServlet
       {     
          isAuthenticationEnabled = configurationService.getBooleanItem("authentication");
          
-         if(clientCollection != null && settingCollection != null)
+         if(clientCollection != null && settingCollection != null && groupCollection != null)
          {
             if(numClients > 0)
             {
@@ -127,6 +133,7 @@ public class AdministratorServlet extends HttpServlet
                   warningString = "No clients in the database.";
                }
             }
+            root.put( "groups", groupCollection );
             root.put( "configurations", settingCollection );
          }
          else

@@ -63,6 +63,14 @@ public interface ClientService
     */
    int updateClientSerial(int clientID, String serial);
    /**
+    * Update the client's group
+    * 
+    * @param clientID id of the client
+    * @param groupID id of the group
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   int updateClientGroup(int clientID, int groupID);
+   /**
     * Write a empty string to the client serial in the database
     * 
     * @param clientID client ID
