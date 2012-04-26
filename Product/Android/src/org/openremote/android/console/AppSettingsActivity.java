@@ -182,7 +182,11 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 
 	   if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
 		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
-		   ViewHelper.showAlertViewWithTitle(this, "No Access", "The administrator didn't approve you yet so you don't have access.");
+		   if(AppSettingsModel.isSSLEnabled(getApplicationContext())) {
+			   ViewHelper.showAlertViewWithTitle(this, "No Access", "The administrator didn't approve you yet so you don't have access.");
+		   } else {
+			   ViewHelper.showAlertViewWithTitle(this, "No Access", "You don't have access to this controller at the moment. Is ssl enabled?");
+		   }
 	   }
    }
    
