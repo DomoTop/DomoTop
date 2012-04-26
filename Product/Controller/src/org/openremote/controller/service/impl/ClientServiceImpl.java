@@ -239,14 +239,22 @@ public class ClientServiceImpl implements ClientService {
    @Override
    public int updateClientGroup(int clientID, int groupID) {
       int resultValue = -1;
-      PreparedStatement preparedStatement = null;
+      PreparedStatement preparedStatement = null;     
       if (database != null) 
       {         
          try
-         {            
-            preparedStatement = database.createPrepareStatement("UPDATE client SET client_group_id = ? WHERE client_id = ?");
-            preparedStatement.setInt(1, groupID);
-            preparedStatement.setInt(2, clientID);
+         {
+            if(groupID == -1)
+            {
+               preparedStatement = database.createPrepareStatement("UPDATE client SET client_group_id = NULL WHERE client_id = ?");
+               preparedStatement.setInt(1, clientID);               
+            }
+            else
+            {
+               preparedStatement = database.createPrepareStatement("UPDATE client SET client_group_id = ? WHERE client_id = ?");
+               preparedStatement.setInt(1, groupID);
+               preparedStatement.setInt(2, clientID);
+            }
             resultValue = database.doUpdateSQL(preparedStatement);
          } catch (SQLException e) {
             logger.error("SQL Exception: " + e.getMessage());

@@ -422,8 +422,7 @@ public class AdministratorController extends MultiActionController
          result = false;
          logger.error("Group ID and/or Client ID is not a number");
       } 
-            
-      // TODO: groupID == -1 -> set client group id NULL
+
       String errorString = "";
       if(result)
       {
