@@ -1,0 +1,110 @@
+Index: config/config.properties
+===================================================================
+--- config/config.properties	(revision 6064)
++++ config/config.properties	(working copy)
+@@ -1,12 +1,12 @@
+ jdbc.driverClassName=com.mysql.jdbc.Driver
+-jdbc.url=jdbc:mysql://localhost:3306/beehive_3_0_0_alpha5?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
++jdbc.url=jdbc:mysql://localhost:3306/beehive?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+ jdbc.username = root
+-jdbc.password = root
++jdbc.password = test
+ 
+-beehive.REST.Root.Url = http://beehive.openremote.org/3.0/alpha5/rest/
++beehive.REST.Root.Url = http://localhost:8080/beehive/rest/
+ panel.xsd.path = /panel-2.0-M7.xsd
+ controller.xsd.path = /controller-2.0-M7.xsd
+-webapp.server.root = http://composer.openremote.org/demo
++webapp.server.root = http://localhost:8080/modeler/
+ 
+ controller.config.xml.path=/controller-config-2.0-M7.xml
+ controller.config.xsd.path=/controllerConfig-2.0-M7.xsd
+@@ -18,4 +18,4 @@
+ mail.sender.username=
+ mail.sender.password=
+ mail.smtp.auth.on=false
+-mail.smtp.timeout=25000
+\ No newline at end of file
++mail.smtp.timeout=25000
+Index: src/org/openremote/modeler/domain/component/UISwitch.java
+===================================================================
+--- src/org/openremote/modeler/domain/component/UISwitch.java	(revision 6064)
++++ src/org/openremote/modeler/domain/component/UISwitch.java	(working copy)
+@@ -34,6 +34,7 @@
+    private ImageSource onImage;
+    private ImageSource offImage;
+    private Switch switchCommand;
++   private String auth_group = "melvin";
+ 
+    public UISwitch() {
+       super();
+@@ -73,7 +74,15 @@
+    public void setSwitchCommand(Switch switchCommand) {
+       this.switchCommand = switchCommand;
+    }
++   
++   public String getAuthGroup() {
++      return auth_group;
++   }
+ 
++   public void setAuthGroup(String group) {
++      this.auth_group = group;
++   }
++   
+    @Override
+    public String getName() {
+       return "Switch";
+@@ -99,7 +108,7 @@
+    @JSON(include=false)
+    public String getPanelXml() {
+       StringBuffer xmlContent = new StringBuffer();
+-      xmlContent.append("        <switch id=\"" + getOid() + "\">\n");
++      xmlContent.append("        <switch test=\"testen\" id=\"" + getOid() + "\">\n");
+       if (getSensor() != null) {
+          xmlContent.append("<link type=\"sensor\" ref=\"" + getSensor().getOid() + "\">");
+          if (onImage != null && onImage.getSrc() != null) {
+Index: src/org/openremote/modeler/client/widget/propertyform/PropertyForm.java
+===================================================================
+--- src/org/openremote/modeler/client/widget/propertyform/PropertyForm.java	(revision 6064)
++++ src/org/openremote/modeler/client/widget/propertyform/PropertyForm.java	(working copy)
+@@ -34,6 +34,7 @@
+ import com.extjs.gxt.ui.client.widget.MessageBox;
+ import com.extjs.gxt.ui.client.widget.button.Button;
+ import com.extjs.gxt.ui.client.widget.form.FormPanel;
++import com.extjs.gxt.ui.client.widget.form.TextField;
+ import com.google.gwt.core.client.GWT;
+ 
+ /**
+@@ -54,6 +55,13 @@
+       setScrollMode(Scroll.AUTO);
+    }
+ 
++   protected void addGroupField() {
++      final TextField<String> name = new TextField<String>();
++      name.setFieldLabel("Group");
++      name.setName("group");
++      add(name);
++   }
++   
+    protected void addDeleteButton() {
+       if (componentContainer instanceof ComponentContainer) {
+          final ComponentContainer componentContainer = (ComponentContainer) this.componentContainer;
+@@ -81,6 +89,7 @@
+          });
+          add(deleteButton);
+       }
++      addGroupField();
+    }
+    
+    public PropertyForm(PropertyEditable componentContainer) {
+Index: build.properties
+===================================================================
+--- build.properties	(revision 6064)
++++ build.properties	(working copy)
+@@ -1,5 +1,5 @@
+ # Configure path to GWT SDK. IF you want compile the project, please download and config it.
+-gwt.sdk=/Users/juha/gwt/gwt-mac-1.6.4
++gwt.sdk=gwt-linux-1.6.4/
+ 
+ # Server directory to deploy
+ deploy.dir=D:/tomcat/webapps

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openremote xmlns="http://www.openremote.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.openremote.org protocol.xsd">
+	<protocol displayName="HTTP" tagName="http">
+		<attr name="url" label="URL">
+			<validations>
+				<allowBlank>false</allowBlank>
+				<maxLength>254</maxLength>
+				<regex message="URL should start with http(https,ftp):// just like 'http://www.google.com' ">(http|https|ftp)\://[a-zA-Z0-9\-\.]+(\.[a-zA-Z]{2,3})?(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*</regex>
+			</validations>
+		</attr>
+	</protocol>
+</openremote>
