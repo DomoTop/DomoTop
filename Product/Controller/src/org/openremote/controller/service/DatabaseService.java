@@ -3,6 +3,7 @@ package org.openremote.controller.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -35,7 +36,7 @@ public interface DatabaseService
     * Create a PreparedStatement from a query
     * @return PreparedStatement
     */
-   PreparedStatement createPrepareStatement(String query);
+   PreparedStatement createPrepareStatement(String query) throws SQLException;
    /**
     * Do a insert, update or delete SQL query into the database
     * 

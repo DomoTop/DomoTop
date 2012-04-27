@@ -144,9 +144,12 @@ public class AdministratorController extends MultiActionController
          return null;
       }
       
-      Enumeration names = request.getParameterNames(); 
+      Enumeration names = request.getParameterNames();
+      String errorMessage = "";
       boolean success = false;
       boolean reboot = false;
+      boolean changeAuthentication = false, authenticationValue = false;
+      
       while(names.hasMoreElements())
       {
          String name = (String) names.nextElement();
@@ -154,33 +157,43 @@ public class AdministratorController extends MultiActionController
          // Ignore the method and composer_password name
          if(!name.equals("method") && !name.equals("composer_password"))
          {
-            String value = request.getParameter(name);
-            // if type boolean
-            if(value.equals("true") || value.equals("false"))
+            if(!configurationService.isDisabled(name))
             {
-               boolean newvalue = Boolean.parseBoolean(value);
-               boolean oldvalue = configurationService.getBooleanItem(name);
-               
-               success = configurationService.updateItem(name, newvalue) == 1;
-               
-               if(name.equals("authentication")) 
+               success = true;
+            }
+            else
+            {
+               errorMessage = "The configuration item " + name + " is disabled, so can't be updated, please don't cheat.";
+               logger.error("The configuration item is disabled, so can't be updated.");
+               success = false;
+               reboot = false;
+            }
+            
+            if(success)
+            {
+               String value = request.getParameter(name);
+               // if type boolean
+               if(value.equals("true") || value.equals("false"))
                {
-                  //Check for "authentication" to set that in the web.xml
-                  if(newvalue != oldvalue) {
-                     try {
-                        configurationService.setAuthentication(newvalue);
-                        reboot = true;
-                     } catch (IOException e) {
-                        success = false;
-                        logger.error("old value: " + oldvalue + " - new value: " + newvalue);
-                        logger.error(e.getMessage());
-                     }   
+                  boolean newValue = Boolean.parseBoolean(value);
+                  boolean oldValue = configurationService.getBooleanItem(name);
+                  
+                  success = configurationService.updateItem(name, newValue) == 1;
+                  
+                  if(name.equals("authentication")) 
+                  {                     
+                     if(newValue != oldValue)
+                     {
+                        // authentication change should be applied
+                        changeAuthentication = true;
+                        authenticationValue = newValue;
+                     } 
                   }
                }
-            }
-            else // type is String
-            {
-               success = configurationService.updateItem(name, value) == 1;
+               else // type is String
+               {
+                  success = configurationService.updateItem(name, value) == 1;
+               }
             }
          }  
 
@@ -190,8 +203,20 @@ public class AdministratorController extends MultiActionController
          }
       }
       
+      if(changeAuthentication)
+      {
+         if(success = this.setAuthentication(authenticationValue))
+         {
+            reboot = true;
+         }
+         else
+         {
+            errorMessage = "Could not update disable flag of the configuration item(s).";
+         }
+      }
+      
       if(success)
-      {    
+      {         
          if(reboot) {
             response.getWriter().print(Constants.OK_REBOOT);
          } else {
@@ -200,11 +225,51 @@ public class AdministratorController extends MultiActionController
       }
       else
       {
-         response.getWriter().print("Failed to save the configuration into the database");
+         response.getWriter().print("Failed to save the configuration into the database: " + errorMessage);
       }
       return null;
    }
    
+   /**
+    * Do all changes when authentication checkbox value is changed
+    * @param newValue true if authentication is enabled, false when authentication should be disabled
+    * @return true if everything went successfully otherwise false
+    */
+   private boolean setAuthentication(boolean newValue) 
+   {
+      boolean success = true;
+      
+      // Check for "authentication" to set that in the web.xml
+      try 
+      {
+         // Change the disable flag of the following configuration items: 
+         // Note: If newValue is true updateConfiguration accept !newValue (false) and visa versa
+         if(configurationService.updateConfiguration("composer_username", !newValue) != 1)
+         {
+            success = false;
+         }
+         if(configurationService.updateConfiguration("ca_path", !newValue) != 1)
+         {
+            success = false;
+         }
+         if(configurationService.updateConfiguration("pin_check", !newValue) != 1)
+         {
+            success = false;
+         }
+         
+         if(success)
+         {
+            // Enable/disable the authentication in web.xml
+            configurationService.setAuthentication(newValue);
+         }
+      } catch (IOException e) {
+         success = false;
+         logger.error("Authentication could not be enabled or disabled");
+         logger.error(e.getMessage());
+      }  
+      return success;
+   }
+
    /**
     * Request handler of deleting an user from the client key store and database
     * 

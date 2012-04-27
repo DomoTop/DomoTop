@@ -223,6 +223,42 @@ public class ConfigurationServiceImpl implements ConfigurationService
    }
 
    /**
+    * Check if the configuration item is disabled
+    * @return true if disabled otherwise false
+    */
+   @Override
+   public boolean isDisabled(String name)
+   {
+      boolean returnValue = false;
+      PreparedStatement preparedStatement = null;
+      ResultSet resultSet = null;
+      
+       try {
+          if(database != null)
+          {
+             try
+             {            
+                preparedStatement = database.createPrepareStatement("SELECT configuration_disabled FROM configuration WHERE configuration_name = ? LIMIT 1");
+                preparedStatement.setString(1, name);
+                resultSet = database.doSQL(preparedStatement);
+             } catch (SQLException e) {
+                logger.error("SQL Exception: " + e.getMessage());
+             }
+             
+             if(resultSet != null) 
+             {
+                resultSet.next();
+                returnValue = resultSet.getBoolean("configuration_disabled");
+             }
+             database.free();
+          }
+       } catch (SQLException e) {
+          logger.error(e.getMessage());
+       }       
+       return returnValue;
+   }   
+   
+   /**
     * Retrieve a configuration item
     *
     * @param name The key of the configuration item
@@ -273,8 +309,34 @@ public class ConfigurationServiceImpl implements ConfigurationService
       {
          try
          {            
-            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_value = '' WHERE configuration_name = ? LIMIT 1");
+            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_value = '' WHERE configuration_name = ?");
             preparedStatement.setString(1, name);
+            resultValue = database.doUpdateSQL(preparedStatement); 
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage());
+         }
+      }
+      return resultValue;
+   }
+   
+   /**
+    * Enable or disable the configuration item
+    * @param name of the configuration item
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   @Override
+   public int updateConfiguration(String name, boolean newValue)
+   {
+      int resultValue = -1;
+      PreparedStatement preparedStatement = null;
+      
+      if (database != null) 
+      {
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("UPDATE configuration SET configuration_disabled = ? WHERE configuration_name = ?");
+            preparedStatement.setBoolean(1, newValue);
+            preparedStatement.setString(2, name);
             resultValue = database.doUpdateSQL(preparedStatement); 
          } catch (SQLException e) {
             logger.error("SQL Exception: " + e.getMessage());

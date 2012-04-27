@@ -146,16 +146,21 @@
 								        				<b>${configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${configuration.configuration_information}</span></span></#if>
 								        			</td>
 								        			<td>
+							        				<#if configuration.configuration_disabled>
+							        					<#assign disabled=' disabled'>
+							        				<#else>
+							        					<#assign disabled=''>			
+							        				</#if>								        				
 								        			<#if configuration.configuration_type == 'boolean'>
 								        				<#if configuration.configuration_value == 'true'>
 								        					<#assign checked=' checked'>
 								        				<#else>
 								        					<#assign checked=''>
-								        				</#if>					        				
-								        				<input type="checkbox" name="${configuration.configuration_name}" value="true"${checked} />
+								        				</#if>
+								        				<input type="checkbox" name="${configuration.configuration_name}" value="true"${checked}${disabled} />								        					
 								        				<input type="hidden" name="${configuration.configuration_name}" value="false" />		
 															<#else>
-																<input type="text" size="35" name="${configuration.configuration_name}" value="${configuration.configuration_value}" />
+																<input type="text" size="35" name="${configuration.configuration_name}" value="${configuration.configuration_value}"${disabled} />
 															</#if>
 															</td>
 														</tr>												
