@@ -34,7 +34,6 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    private ImageSource onImage;
    private ImageSource offImage;
    private Switch switchCommand;
-   private String group = "kebabdag";
 
    public UISwitch() {
       super();

@@ -77,7 +77,7 @@ public class ResourceServiceImpl implements ResourceService {
       File dir = makeSureDir(accountOid);
       File zipFile = new File(dir, Constant.ACCOUNT_RESOURCE_ZIP_NAME);
       FileOutputStream fos = null;
-
+       
       try {
          FileUtils.cleanDirectory(dir);
          fos = new FileOutputStream(zipFile);
