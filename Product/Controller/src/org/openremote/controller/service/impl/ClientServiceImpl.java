@@ -241,7 +241,7 @@ public class ClientServiceImpl implements ClientService {
       int resultValue = -1;
       PreparedStatement preparedStatement = null;     
       if (database != null) 
-      {         
+      {
          try
          {
             if(groupID == -1)

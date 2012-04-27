@@ -60,7 +60,11 @@ public interface ConfigurationService
     * @return true if the pin check is enabled otherwise false
     */
    boolean isPinCheckActive();
-   
+   /**
+    * Check if the configuration item is disabled
+    * @return true if disabled otherwise false
+    */
+   boolean isDisabled(String name);
    /**
     * Retrieve a configuration item
     *
@@ -90,6 +94,12 @@ public interface ConfigurationService
     * @return resultSet with the result
     */
    ResultSet getAllItems();
+   /**
+    * Enable or disable the configuration item
+    * @param name of the configuration item
+    * @return int value -1 or 0 is incorrect, 1 is action succeed
+    */
+   int updateConfiguration(String name, boolean newValue);
    /**
     * Save the boolean of the reboot flag
     * 
