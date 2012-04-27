@@ -34,6 +34,7 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    private ImageSource onImage;
    private ImageSource offImage;
    private Switch switchCommand;
+   private String group = "kebabdag";
 
    public UISwitch() {
       super();
@@ -73,7 +74,15 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    public void setSwitchCommand(Switch switchCommand) {
       this.switchCommand = switchCommand;
    }
-    
+
+   public String getGroup() {
+      return group;
+   }
+
+   public void setGroup(String group) {
+      this.group = group;
+   }
+   
    @Override
    public String getName() {
       return "Switch";
@@ -99,7 +108,7 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    @JSON(include=false)
    public String getPanelXml() {
       StringBuffer xmlContent = new StringBuffer();
-      xmlContent.append("        <switch id=\"" + getOid() + "\">\n");
+      xmlContent.append("        <switch group=\"" + getGroup() + "\" id=\"" + getOid() + "\">\n");
       if (getSensor() != null) {
          xmlContent.append("<link type=\"sensor\" ref=\"" + getSensor().getOid() + "\">");
          if (onImage != null && onImage.getSrc() != null) {

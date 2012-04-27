@@ -34,6 +34,7 @@ import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -81,8 +82,8 @@ public class PropertyForm extends FormPanel {
          });
          add(deleteButton);
       }
-   }
-   
+   } 
+      
    public PropertyForm(PropertyEditable componentContainer) {
       setFrame(true);
       setHeaderVisible(false);

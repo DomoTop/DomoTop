@@ -575,6 +575,7 @@
 				<xsd:element ref="link" minOccurs="0" maxOccurs="2"/>
 			</xsd:sequence>
 			<xsd:attribute name="id" type="idType" use="required"/>
+			<xsd:attribute name="group" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 	
