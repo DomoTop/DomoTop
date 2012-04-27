@@ -32,7 +32,9 @@ public abstract class UIControl extends UIComponent {
     * 
     */
    private static final long serialVersionUID = 2629776331131648211L;
-
+   
+   private String group;
+   
    public UIControl() {
       super();
    }
@@ -45,6 +47,14 @@ public abstract class UIControl extends UIComponent {
       return "UIControl";
    }
    
+   public String getGroup() {
+	  return group;
+   }
+
+   public void setGroup(String group) {
+	  this.group = group;
+   }
+
    public abstract List<UICommand> getCommands();
    
   

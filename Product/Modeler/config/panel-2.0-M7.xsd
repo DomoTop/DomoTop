@@ -328,6 +328,7 @@
 			<xsd:attribute name="name" type="xsd:string" use="required" />
 			<xsd:attribute name="repeat" type="xsd:boolean" use="optional"/>
 			<xsd:attribute name="hasControlCommand" type="xsd:boolean" use="optional"/>
+			<xsd:attribute name="group" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -492,6 +493,7 @@
 			<xsd:attribute name="thumbImage" type="xsd:string" use="optional"/>
 			<xsd:attribute name="vertical" type="xsd:boolean" use="optional" default="false"/>
 			<xsd:attribute name="passive" type="xsd:boolean" use="optional" default="false"/>
+			<xsd:attribute name="group" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 	

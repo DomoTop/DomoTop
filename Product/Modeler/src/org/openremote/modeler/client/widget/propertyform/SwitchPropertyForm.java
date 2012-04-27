@@ -50,6 +50,7 @@ public class SwitchPropertyForm extends PropertyForm {
       super(screenSwitch);
       setLabelWidth(90);
       addFields(screenSwitch, uiSwitch);
+      super.addGroupField(uiSwitch);
       super.addDeleteButton();
    }
    
@@ -138,22 +139,8 @@ public class SwitchPropertyForm extends PropertyForm {
       add(imageONField);
       add(imageOFFField);
       add(adapterSwitchCommand);
-      addGroupField(uiSwitch);
    }
-
-   protected void addGroupField(final UISwitch uiSwitch) {
-      final TextField<String> name = new TextField<String>();
-      name.setFieldLabel("Group");
-      name.setName("group");
-      name.addListener(Events.Blur, new Listener<BaseEvent>() {
-          @Override
-          public void handleEvent(BaseEvent be) {
-        	  uiSwitch.setGroup(name.getValue());
-          }
-       });
-      add(name);
-   }
-	   
+  
    
    /**
     * @param uiSwitch
