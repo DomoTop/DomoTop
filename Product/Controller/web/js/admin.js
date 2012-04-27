@@ -63,7 +63,7 @@ $(document).ready(function()
   $('.statusForm').ajaxForm(function(result) {  
   	clearMessage();	
 		statusFormResult(result);
-  }); 
+  });
   
   $('.deleteForm').ajaxForm(function(result) {
   	clearMessage();
@@ -105,8 +105,8 @@ $(document).ready(function()
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
-  }); 
-  
+  });
+    
   // Logout button
 	$('#logOut').click(function() {
 		clearMessage();
@@ -426,5 +426,23 @@ function centerPopup()
 	$("#backgroundPopup").css({
 		"height": windowHeight
 	});	
+}
+
+function onChangeGroup(form)
+{				
+	$.ajax({
+    type: "POST",
+    url: "admin.htm?method=updateGroup",	      
+		data: $(form).serialize(),
+    complete: function(response) {
+			clearMessage();
+	  	if (response.statusText == 'OK') {
+				message("Group of device is successfully updated.");
+			} else {
+				error("There was a problem updating the group of the device: " + response.statusText);
+			}    
+  	}
+	});						
+	return false;
 }
 

@@ -40,6 +40,7 @@ import org.openremote.controller.Constants;
 import org.openremote.controller.service.CertificateService;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.service.GroupService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -57,7 +58,9 @@ public class AdministratorController extends MultiActionController
    private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
          "configurationService"); 
    private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean(
-         "clientService");  
+         "clientService");
+   private static final GroupService groupService = (GroupService) SpringContext.getInstance().getBean(
+         "groupService");   
    private static final CertificateService certificateService = (CertificateService) SpringContext.getInstance().getBean(
          "certificateService");  
    static {
@@ -217,6 +220,7 @@ public class AdministratorController extends MultiActionController
       }  
       int clientID = -1;
       
+      // Client ID number check
       try
       {
          clientID = Integer.parseInt(request.getParameter("client_id"));
@@ -277,6 +281,7 @@ public class AdministratorController extends MultiActionController
       String action = request.getParameter("action");
       int clientID = -1;
       
+      // Client ID number check
       try
       {
          clientID = Integer.parseInt(request.getParameter("client_id"));
@@ -285,6 +290,7 @@ public class AdministratorController extends MultiActionController
       }   
       String errorString = "";
       
+      // Get client's pin
       try {
          ResultSet resultSet = clientService.getClient(clientID);
          while (resultSet.next()) 
@@ -389,7 +395,76 @@ public class AdministratorController extends MultiActionController
       }
       return null;
    }
-   
+  
+   /**
+    * Request handler for chaning the group of an user
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
+   public ModelAndView updateGroup(HttpServletRequest request, HttpServletResponse response) throws IOException,
+         ServletRequestBindingException {
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
+         return null;
+      }
+      boolean result = false;
+      int groupID = -1, clientID = -1;
+      
+      // Group ID number check & Client ID number check
+      try
+      {
+         groupID = Integer.parseInt(request.getParameter("group_id"));
+         clientID = Integer.parseInt(request.getParameter("client_id"));
+         result = true;
+      } catch ( NumberFormatException e) {
+         result = false;
+         logger.error("Group ID and/or Client ID is not a number");
+      } 
+
+      String errorString = "";
+      if(result)
+      {
+         // Group ID validation
+         groupService.getGroup(clientID);
+         if(groupService.getNumGroups() == 1)
+         {
+            result = true;
+         }
+         else
+         {
+            result = false;
+            errorString = "Group ID is not valid";
+         }
+         groupService.free();
+         
+         // Check if the client ID is valid in the database before we continue
+         if(!clientService.isClientIDValid(clientID))
+         {
+            result = false;
+            errorString = "Clien ID is not valid";
+         }
+      }      
+      
+      if(result)
+      {
+         int returnResult = clientService.updateClientGroup(clientID, groupID);
+         if(returnResult == 1)
+         {
+            response.getWriter().print(Constants.OK);
+         }
+         else
+         {
+            response.getWriter().print("The group of the device is not successfully updated.");
+         }
+      }
+      else
+      {
+         response.getWriter().print(errorString);
+      }
+      return null;
+   }   
 
    /**
     * Request handler logging out the administrator user

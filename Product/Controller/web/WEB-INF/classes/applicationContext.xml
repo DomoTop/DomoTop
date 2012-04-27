@@ -157,7 +157,12 @@
     <bean id="configurationService" class="org.openremote.controller.service.impl.ConfigurationServiceImpl" >
     	<property name="database" ref="databaseService"></property>
     </bean>
-
+    
+    <!-- service for group for getting group information for administrator panel -->
+    <bean id="groupService" class="org.openremote.controller.service.impl.GroupServiceImpl" >
+    	<property name="database" ref="databaseService"></property>
+    </bean>
+    
     <!-- service for listening the status of device -->
     <bean id="statusPollingService" class="org.openremote.controller.service.impl.StatusPollingServiceImpl" />
     
