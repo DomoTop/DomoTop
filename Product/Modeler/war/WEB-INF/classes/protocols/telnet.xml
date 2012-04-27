@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openremote xmlns="http://www.openremote.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.openremote.org protocol.xsd">
+	<protocol displayName="Telnet" tagName="telnet">
+		<attr name="ipAddress" label="IP Address">
+			<validations>
+				<allowBlank>false</allowBlank>
+				<!-- message is option -->
+				<regex message="IP addresses are usually represented in dot-decimal notation (four numbers, each ranging from 0 to 255, separated by dots, e.g. 208.77.188.166)">(?:(?:1\d{0,2}|[3-9]\d?|2(?:[0-5]{1,2}|\d)?|0)\.){3}(?:1\d{0,2}|[3-9]\d?|2(?:[0-5]{1,2}|\d)?|0)</regex>
+			</validations>
+		</attr>
+		<attr name="port" label="Port">
+			<validations>
+				<allowBlank>false</allowBlank>
+				<maxLength>5</maxLength>
+				<regex message="Port must be an integer number.">\d+</regex>
+			</validations>
+		</attr>
+		<attr name="command" label="Command">
+			<validations>
+				<allowBlank>false</allowBlank>
+				<maxLength>254</maxLength>
+				<regex message="Command is necessary">.*\w+.*</regex>
+			</validations>
+		</attr>
+	</protocol>
+</openremote>

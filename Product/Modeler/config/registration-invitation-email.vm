@@ -1,0 +1,27 @@
+<html>
+<body>
+
+<h2>Welcome to OpenRemote Boss 2.0 Online</h2>
+
+<p>
+${host} has invited you to share an OpenRemote Boss 2.0 Online account using  
+your own email address and password with ${role} role.
+</p>
+
+<p>
+To accept this invitation, please click the link below. You'll then create  
+a Account to log in to OpenRemote Boss 2.0 Online in the future. After you complete the process, 
+you will be able to access to the OpenRemote Boss 2.0 Online account.
+</p>
+
+<p>
+Please click here to accept your invitation:
+<a href="${webapp}/account.htm?method=accept&uid=${uid}&cid=${cid}&aid=${aid}">${webapp}/account.htm?method=accept&uid=${uid}&cid=${cid}&aid=${aid}</a>
+</p>
+
+<p>
+For questions or concerns about your account, please use public forums on
+<a href="http://www.openremote.org/display/forums/OpenRemote+Forums">http://www.openremote.org/display/forums/OpenRemote+Forums</a>
+</p>
+</body>
+</html>
