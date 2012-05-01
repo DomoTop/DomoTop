@@ -308,7 +308,7 @@
   <!--
   =================================================================================================
 
-    Identifier (component, sensor, command) definition.
+    Identifier (component, sensor, command, group) definition.
 
   =================================================================================================
   -->
@@ -318,7 +318,7 @@
 
         This is a unique natural number (upper bound 32-bit signed integer) identifier shared
         by all types within a controller.xml document instance, including component IDs,
-        sensor IDs and command IDs.
+        sensor IDs, command IDs and group IDs.
 
       ]]></xsd:documentation>
     </xsd:annotation>
@@ -402,7 +402,8 @@
           An example of a switch component definition might look like this:
 
             <components>
-		          <switch id = "nnn">
+		          <switch id = "nnn">                    
+			          <include type = "group" ref = "nnn" />
 			          <on>
 			            <include type = "command" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
@@ -424,6 +425,7 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "on"  minOccurs = "1" maxOccurs = "1"/>
         <xsd:element ref = "off" minOccurs = "1" maxOccurs = "1" />
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
@@ -505,6 +507,7 @@
 
             <components>
 		          <slider id = "nnn">
+			          <include type = "group" ref = "nnn" />
 			          <setValue>
 			            <include type = "command" ref = "nnn" />
 			          </setValue>
@@ -520,6 +523,7 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "setValue" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include"  minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
@@ -571,6 +575,7 @@
 
             <components>
 		          <button id = "nnn">
+                        <include type = "group" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
 			            <delay>500</delay>
@@ -584,6 +589,7 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:group ref = "macroGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
@@ -615,6 +621,7 @@
 
             <components>
 		          <label id = "nnn">
+			            <include type = "group" ref = "nnn" />
 			            <include type = "sensor" ref = "nnn" />
 		          </label>
 		          ...
@@ -625,6 +632,7 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
@@ -656,6 +664,7 @@
 
             <components>
 		          <image id = "nnn">
+			          <include type = "group" ref = "nnn" />
 			          <include type = "sensor" ref = "nnn" />
 		          </image>
 		          ...
@@ -666,6 +675,7 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
@@ -1036,10 +1046,10 @@
       <xsd:documentation><![CDATA[
 
           Include element is used by components and sensors to reference to other components,
-          sensors or protocol handlers (commands).
+          sensors, groups or protocol handlers (commands).
 
           The 'type' attribute indicates what type of component is being included or referenced.
-          Currently valid values are either 'sensor' or 'command'.
+          Currently valid values are either 'sensor', 'group' or 'command'.
 
           The 'ref' attribute must be the unique identifier of the referenced component or command.
 
@@ -1064,14 +1074,21 @@
     <xsd:annotation>
       <xsd:documentation><![CDATA[
 
-          Group element is used for getting all the group names from the controller.
+          Group element is used for getting all the group names from the controller. A group must 
+          have an unique ID and have also a group name (which is a human readable String).
 
-          Group element has only a name (which is a String)
+          A typical group element in a controller.xml document looks like this:
+
+          ...
+          <groups>
+             <group id = "nnn" name = "Parent" />
+          </groups>
 
       ]]></xsd:documentation>
     </xsd:annotation>
 
     <xsd:complexType>
+      <xsd:attribute name = "id" type = "idType" use = "required" />
       <xsd:attribute name = "name" type = "xsd:string" use = "required" />
     </xsd:complexType>
   </xsd:element>
@@ -1126,6 +1143,29 @@
 
     <xsd:choice>
       <xsd:element ref = "delay" minOccurs = "0" maxOccurs = "unbounded"/>
+      <xsd:element ref = "include"  minOccurs = "0" maxOccurs = "unbounded"/>
+    </xsd:choice>
+  </xsd:group>
+
+
+
+  <!--
+  =================================================================================================
+
+    Device group definition.
+
+  =================================================================================================
+  -->
+  <xsd:group name = "deviceGroup">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+          A device group defines a list of groups to a component.
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:choice>
       <xsd:element ref = "include"  minOccurs = "0" maxOccurs = "unbounded"/>
     </xsd:choice>
   </xsd:group>

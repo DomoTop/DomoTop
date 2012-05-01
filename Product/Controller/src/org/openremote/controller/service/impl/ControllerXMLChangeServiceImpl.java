@@ -242,8 +242,9 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
     while (groupElementIterator.hasNext())
     {
       Element sensorElement = groupElementIterator.next();
-      String name = sensorElement.getAttributeValue("name");
-      controllerXMLListenSharingData.addGroup(new Group(name));
+      String groupID = sensorElement.getAttributeValue("id");
+      String groupName = sensorElement.getAttributeValue("name");
+      controllerXMLListenSharingData.addGroup(new Group(groupName));
     }  
   }
   
