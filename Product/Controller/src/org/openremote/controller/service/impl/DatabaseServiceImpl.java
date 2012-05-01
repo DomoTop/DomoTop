@@ -201,11 +201,11 @@ public class DatabaseServiceImpl implements DatabaseService
                "(null, '" + CONFIGURATION_NAME_7 + "', '" + CONFIGURATION_VALUE_7 + "', '" + CONFIGURATION_TYPE_7 + "', '" + CONFIGURATION_INFORMATION_7 + "')")
                .execute(); 
          
-         connection.prepareStatement("INSERT INTO PUBLIC.client_group " +
+         /*connection.prepareStatement("INSERT INTO PUBLIC.client_group " +
                "(group_id, group_name) VALUES " +
                "(null, 'Parents'), " +
                "(null, 'Childeren')")
-               .execute();          
+               .execute(); */         
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times
          logger.error("SQL exception table filling: " + e.getMessage());

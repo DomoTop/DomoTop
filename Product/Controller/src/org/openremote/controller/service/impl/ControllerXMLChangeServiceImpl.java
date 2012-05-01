@@ -36,7 +36,9 @@ import org.openremote.controller.component.SensorBuilder;
 import org.openremote.controller.config.ControllerXMLListenSharingData;
 import org.openremote.controller.exception.ControllerException;
 import org.openremote.controller.exception.NoSuchComponentException;
+import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ControllerXMLChangeService;
+import org.openremote.controller.service.GroupService;
 import org.openremote.controller.service.StatusCacheService;
 import org.openremote.controller.statuscache.ChangedStatusTable;
 import org.openremote.controller.statuscache.PollingMachineThread;
@@ -46,6 +48,8 @@ import org.openremote.controller.utils.PathUtil;
  * Controller.xml monitoring service.
  * 
  * @author handy.wang 2010-03-19
+ * @author melroy.van.den.berg 2012-05-01
+ * 
  *
  */
 public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeService
@@ -59,7 +63,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private StatusCacheService statusCacheService;
   private ChangedStatusTable changedStatusTable;
   private SensorBuilder sensorBuilder;
-
+  private GroupService groupService;
    
   @SuppressWarnings("finally")
   @Override public synchronized boolean refreshController()
@@ -79,6 +83,8 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        clearChangedStatusTable();
        clearStatusCache();
        clearAndReloadSensors();
+       clearAndReloadGroups();
+       clearAndUpdateGroupDatabase();
        restartDevicePollingThreads();
        success = true;
     }
@@ -211,6 +217,51 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
       controllerXMLListenSharingData.addSensor(sensor);
     }
   }
+    
+  @SuppressWarnings("unchecked")
+  private void clearAndReloadGroups()
+  {
+    controllerXMLListenSharingData.getGroups().clear();
+
+    Element groupsElement = remoteActionXMLParser.queryElementFromXMLByName(Constants.GROUPS_ELEMENT_NAME);
+
+    logger.error("Try to get the groups");
+    
+    if (groupsElement == null)
+    {
+      throw new NoSuchComponentException("DOM element " + Constants.GROUPS_ELEMENT_NAME + " doesn't exist in " + Constants.CONTROLLER_XML);
+    }
+
+    List<Element> groupElements = groupsElement.getChildren();
+
+    if (groupElements == null)
+    {
+      throw new ControllerException("There is no sub DOM elements in " + Constants.GROUPS_ELEMENT_NAME + " in " + Constants.CONTROLLER_XML);
+    }
+
+    Iterator<Element> groupElementIterator = groupElements.iterator();
+
+    while (groupElementIterator.hasNext())
+    {
+      Element sensorElement = groupElementIterator.next();
+      String name = sensorElement.getAttributeValue("name");
+      logger.error("Group added with name: " + name);
+      controllerXMLListenSharingData.addGroup(new Group(name));
+    }  
+  }
+  
+  private void clearAndUpdateGroupDatabase()
+  {
+     groupService.dropGroups();
+     
+     List<Group> groups = controllerXMLListenSharingData.getGroups();
+
+     for (Group group : groups)
+     {        
+        groupService.addGroup(group.getName());
+     }
+  }
+  
    
   private void restartDevicePollingThreads()
   {
@@ -265,5 +316,16 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
     }
   }
 
+  /**
+   * Sets the group service.
+   * 
+   * @param database
+   *           service
+   */
+
+  public void setGroup(GroupService groupService) {
+     this.groupService = groupService;
+  }
+  
 }
 

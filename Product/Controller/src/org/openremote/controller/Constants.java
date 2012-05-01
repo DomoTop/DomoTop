@@ -127,6 +127,8 @@ public class Constants
 
   public static final String SENSORS_ELEMENT_NAME = "sensors";
 
+  public static final String GROUPS_ELEMENT_NAME = "groups";
+
   public static final String INCLUDE_ELEMENT_NAME = "include";
 
   public static final String SENSOR_TYPE_ATTRIBUTE_NAME = "type";
@@ -224,6 +226,5 @@ public class Constants
    * HTTP parameter name used for JSON-P function callback name.
    */
   public final static String CALLBACK_PARAM_NAME = "callback";
-
 
 }

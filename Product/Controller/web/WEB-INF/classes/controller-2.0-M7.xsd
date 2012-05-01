@@ -29,7 +29,7 @@
     <xsd:documentation><![CDATA[
 
       OpenRemote Controller XML Schema, version 2.0.
-      Authors: Juha Lindfors, Dan Cong, Javen Zhang.
+      Authors: Juha Lindfors, Dan Cong, Javen Zhang, Melroy van den Berg.
 
       This defines the following:
 
@@ -37,7 +37,8 @@
 			                     the one in panel.xml
       2. status sensor :   used to do polling to get current status of a device
       3. device command:   such as "TV on", to support different device command protocol
-      4. configuration:    controller configuration properties
+      4. groups        :   list of all the groups
+      5. configuration:    controller configuration properties
 
     ]]></xsd:documentation>
   </xsd:annotation>
@@ -74,6 +75,10 @@
 	      payload or serialization format. Protocol integration and adding new protocols happens
 	      via this abstraction.
 
+	      Groups section is a list of all the groups used in the controller. Every group will be
+	      added to the database, this will make it possible to the administrator to place a
+	      device in a group.
+
 	      Configuration section are controller configuration properties that can be used to
 	      change the behavior of the controller itself either by editing the configuration locally
 	      or through online tools.
@@ -86,6 +91,7 @@
         <xsd:element ref = "components" />
         <xsd:element ref = "sensors" />
         <xsd:element ref = "commands" />
+        <xsd:element ref = "groups" />
         <xsd:element ref = "config" />
       </xsd:sequence>
     </xsd:complexType>
@@ -1047,6 +1053,30 @@
   </xsd:element>
 
 
+  <!--
+  =================================================================================================
+
+    GROUP ELEMENT
+
+  =================================================================================================
+  -->
+  <xsd:element name = "group">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+          Group element is used for getting all the group names from the controller.
+
+          Group element has only a name (which is a String)
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:attribute name = "name" type = "xsd:string" use = "required" />
+    </xsd:complexType>
+  </xsd:element>
+
+
 
   <!--
   =================================================================================================
@@ -1074,7 +1104,6 @@
       <xsd:attribute name = "value" type = "xsd:string" use = "required" />
     </xsd:complexType>
   </xsd:element>
-
 
 
   <!--
@@ -1119,6 +1148,36 @@
     </xsd:annotation>
   </xsd:element>
 
+
+  <!--
+  =================================================================================================
+
+    Section <groups> tag
+
+  =================================================================================================
+  -->
+  <xsd:element name="groups">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+          The <groups> section is used to get all the groups used in the controller.
+
+          This element itself groups all groups in the controller, i.e.
+
+          <groups>
+            <group name = "Group readable name"/>
+            <group .../>
+          </groups>
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref = "group" minOccurs = "0" maxOccurs = "unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
 
   
 

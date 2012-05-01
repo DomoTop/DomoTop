@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openremote.controller.component.Sensor;
+import org.openremote.controller.model.Group;
 import org.openremote.controller.statuscache.PollingMachineThread;
 
 /**
  * 
  * @author handy.wang 2010-03-19
+ * @author melroy.van.den.berg 2012-05-01
  *
  */
 public class ControllerXMLListenSharingData {
@@ -35,6 +37,7 @@ public class ControllerXMLListenSharingData {
    private Boolean isControllerXMLChanged = false;
    private List<PollingMachineThread> pollingMachineThreads = new ArrayList<PollingMachineThread>();
    private List<Sensor> sensors = new ArrayList<Sensor>();
+   private List<Group> groups = new ArrayList<Group>();
    private StringBuffer controllerXMLFileContent = new StringBuffer();
    private StringBuffer panelXMLFileContent = new StringBuffer();
    
@@ -59,8 +62,16 @@ public class ControllerXMLListenSharingData {
       this.sensors.add(sensor);
    }
    
+   public void addGroup(Group group) {
+      this.groups.add(group);
+   }
+   
    public List<Sensor> getSensors() {
       return sensors;
+   }
+   
+   public List <Group> getGroups() {
+      return groups;
    }
 
    public void setControllerXMLFileContent(StringBuffer controllerXMLFileContent) {
