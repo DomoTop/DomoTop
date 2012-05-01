@@ -254,13 +254,18 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   
   private void clearAndUpdateGroupDatabase()
   {
-     groupService.dropGroups();
-     
-     List<Group> groups = controllerXMLListenSharingData.getGroups();
-
-     for (Group group : groups)
-     {        
-        groupService.addGroup(group.getName());
+     // Check if the groups count is higher than zero before clearing & updating the database
+     // TODO: Remove the auto-sync option in login, than this check can be deleted safely
+     if(controllerXMLListenSharingData.getGroups().size() > 0)
+     {
+        groupService.dropGroups();
+        
+        List<Group> groups = controllerXMLListenSharingData.getGroups();
+   
+        for (Group group : groups)
+        {        
+           groupService.addGroup(group.getName());
+        }
      }
   }
   
