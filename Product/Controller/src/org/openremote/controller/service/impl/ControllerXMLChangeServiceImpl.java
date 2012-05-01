@@ -227,25 +227,29 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
 
     if (groupsElement == null)
     {
-      throw new NoSuchComponentException("DOM element " + Constants.GROUPS_ELEMENT_NAME + " doesn't exist in " + Constants.CONTROLLER_XML);
+       // group element may be NULL can be ignore (backwards-compatible)
+       logger.info("DOM element " + Constants.GROUPS_ELEMENT_NAME + " doesn't exist in " + Constants.CONTROLLER_XML);
     }
-
-    List<Element> groupElements = groupsElement.getChildren();
-
-    if (groupElements == null)
+    else
     {
-      throw new ControllerException("There is no sub DOM elements in " + Constants.GROUPS_ELEMENT_NAME + " in " + Constants.CONTROLLER_XML);
+       List<Element> groupElements = groupsElement.getChildren();
+   
+       if (groupElements == null)
+       {
+         throw new ControllerException("There is no sub DOM elements in " + Constants.GROUPS_ELEMENT_NAME + " in " + Constants.CONTROLLER_XML);
+       }
+   
+       Iterator<Element> groupElementIterator = groupElements.iterator();
+   
+       while (groupElementIterator.hasNext())
+       {
+         Element sensorElement = groupElementIterator.next();
+         @SuppressWarnings("unused")
+         String groupID = sensorElement.getAttributeValue("id");
+         String groupName = sensorElement.getAttributeValue("name");
+         controllerXMLListenSharingData.addGroup(new Group(groupName));
+       }
     }
-
-    Iterator<Element> groupElementIterator = groupElements.iterator();
-
-    while (groupElementIterator.hasNext())
-    {
-      Element sensorElement = groupElementIterator.next();
-      String groupID = sensorElement.getAttributeValue("id");
-      String groupName = sensorElement.getAttributeValue("name");
-      controllerXMLListenSharingData.addGroup(new Group(groupName));
-    }  
   }
   
   private void clearAndUpdateGroupDatabase()

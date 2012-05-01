@@ -91,8 +91,8 @@
         <xsd:element ref = "components" />
         <xsd:element ref = "sensors" />
         <xsd:element ref = "commands" />
-        <xsd:element ref = "groups" />
-        <xsd:element ref = "config" />
+        <xsd:element ref = "groups" minOccurs = "0" />
+        <xsd:element ref = "config" /> 
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
