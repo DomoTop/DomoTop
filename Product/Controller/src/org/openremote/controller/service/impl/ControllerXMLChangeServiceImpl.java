@@ -37,6 +37,7 @@ import org.openremote.controller.config.ControllerXMLListenSharingData;
 import org.openremote.controller.exception.ControllerException;
 import org.openremote.controller.exception.NoSuchComponentException;
 import org.openremote.controller.model.Group;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ControllerXMLChangeService;
 import org.openremote.controller.service.GroupService;
 import org.openremote.controller.service.StatusCacheService;
@@ -64,7 +65,8 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private ChangedStatusTable changedStatusTable;
   private SensorBuilder sensorBuilder;
   private GroupService groupService;
-   
+  private ClientService clientService;
+  
   @SuppressWarnings("finally")
   @Override public synchronized boolean refreshController()
   {
@@ -222,7 +224,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private void clearAndReloadGroups()
   {
     controllerXMLListenSharingData.getGroups().clear();
-
+    logger.error("Updating groups");
     Element groupsElement = remoteActionXMLParser.queryElementFromXMLByName(Constants.GROUPS_ELEMENT_NAME);
 
     if (groupsElement == null)
@@ -244,9 +246,9 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        while (groupElementIterator.hasNext())
        {
          Element sensorElement = groupElementIterator.next();
-         @SuppressWarnings("unused")
          String groupID = sensorElement.getAttributeValue("id");
          String groupName = sensorElement.getAttributeValue("name");
+         logger.info("Add group with ID: " + groupID + " and name: " + groupName);
          controllerXMLListenSharingData.addGroup(new Group(groupName));
        }
     }
@@ -254,11 +256,20 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   
   private void clearAndUpdateGroupDatabase()
   {
+     logger.error("Clearing the group table + later update the group table");
      // Check if the groups count is higher than zero before clearing & updating the database
      // TODO: Remove the auto-sync option in login, than this check can be deleted safely
-     if(controllerXMLListenSharingData.getGroups().size() > 0)
-     {
-        groupService.dropGroups();
+     //if(controllerXMLListenSharingData.getGroups().size() > 0)
+     //{
+        if(groupService.dropGroups() != 1)
+        {
+           logger.error("SQL error: Problem with dropping all the groups from the database.");
+        }
+        
+        if(clientService.resetAllGroupClients() <= 0)
+        {
+           logger.error("SQL error: Problem with resetting the groups from all devices."); 
+        }
         
         List<Group> groups = controllerXMLListenSharingData.getGroups();
    
@@ -266,7 +277,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
         {        
            groupService.addGroup(group.getName());
         }
-     }
+     //}
   }
   
    
@@ -330,9 +341,21 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
    *           service
    */
 
-  public void setGroup(GroupService groupService) {
+  public void setGroupService(GroupService groupService) {
      this.groupService = groupService;
   }
+ 
+
+  /**
+   * Sets the client service.
+   * 
+   * @param database
+   *           service
+   */
+
+  public void setClientService(ClientService clientService) {
+     this.clientService = clientService;
+  }  
   
 }
 

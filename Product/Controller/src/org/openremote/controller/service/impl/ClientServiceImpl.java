@@ -285,7 +285,23 @@ public class ClientServiceImpl implements ClientService {
       
       return resultValue;
    }
-
+   
+   /**
+    * Reset all the groups of all the clients
+    * 
+    * @return int value -1 or 0 is incorrect, 1 or higher is correct
+    */
+   @Override   
+   public int resetAllGroupClients()
+   {
+      int resultValue = -1; 
+      if (database != null) 
+      {
+         resultValue = database.doUpdateSQL("UPDATE client SET client_group_id = NULL");
+      }
+      return resultValue;
+   }
+   
    /**
     * Update client serial number.
     * 
