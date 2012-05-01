@@ -224,7 +224,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private void clearAndReloadGroups()
   {
     controllerXMLListenSharingData.getGroups().clear();
-    logger.error("Updating groups");
+    logger.info("Updating groups");
     Element groupsElement = remoteActionXMLParser.queryElementFromXMLByName(Constants.GROUPS_ELEMENT_NAME);
 
     if (groupsElement == null)
@@ -256,28 +256,22 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   
   private void clearAndUpdateGroupDatabase()
   {
-     logger.error("Clearing the group table + later update the group table");
-     // Check if the groups count is higher than zero before clearing & updating the database
-     // TODO: Remove the auto-sync option in login, than this check can be deleted safely
-     //if(controllerXMLListenSharingData.getGroups().size() > 0)
-     //{
-        if(groupService.dropGroups() != 1)
-        {
-           logger.error("SQL error: Problem with dropping all the groups from the database.");
-        }
-        
-        if(clientService.resetAllGroupClients() <= 0)
-        {
-           logger.error("SQL error: Problem with resetting the groups from all devices."); 
-        }
-        
-        List<Group> groups = controllerXMLListenSharingData.getGroups();
-   
-        for (Group group : groups)
-        {        
-           groupService.addGroup(group.getName());
-        }
-     //}
+     if(groupService.dropGroups() != 1)
+     {
+        logger.error("SQL error: Problem with dropping all the groups from the database.");
+     }
+     
+     if(clientService.resetAllGroupClients() <= 0)
+     {
+        logger.error("SQL error: Problem with resetting the groups from all devices."); 
+     }
+     
+     List<Group> groups = controllerXMLListenSharingData.getGroups();
+
+     for (Group group : groups)
+     {        
+        groupService.addGroup(group.getName());
+     }
   }
   
    
