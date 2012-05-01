@@ -225,8 +225,6 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
 
     Element groupsElement = remoteActionXMLParser.queryElementFromXMLByName(Constants.GROUPS_ELEMENT_NAME);
 
-    logger.error("Try to get the groups");
-    
     if (groupsElement == null)
     {
       throw new NoSuchComponentException("DOM element " + Constants.GROUPS_ELEMENT_NAME + " doesn't exist in " + Constants.CONTROLLER_XML);
@@ -245,7 +243,6 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
     {
       Element sensorElement = groupElementIterator.next();
       String name = sensorElement.getAttributeValue("name");
-      logger.error("Group added with name: " + name);
       controllerXMLListenSharingData.addGroup(new Group(name));
     }  
   }
