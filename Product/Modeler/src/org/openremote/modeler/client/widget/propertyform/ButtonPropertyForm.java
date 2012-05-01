@@ -65,6 +65,7 @@ public class ButtonPropertyForm extends PropertyForm {
    public ButtonPropertyForm(ScreenButton screenButton, UIButton uiButton) {
       super(screenButton);
       addFields(screenButton, uiButton);
+      super.addGroupField(uiButton);
       super.addDeleteButton();
    }
    private void addFields(final ScreenButton screenButton, final UIButton uiButton) {

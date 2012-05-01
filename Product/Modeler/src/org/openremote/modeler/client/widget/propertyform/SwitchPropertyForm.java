@@ -32,10 +32,14 @@ import org.openremote.modeler.domain.component.ImageSource;
 import org.openremote.modeler.domain.component.UISwitch;
 
 import com.extjs.gxt.ui.client.data.BeanModel;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.AdapterField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 
 /**
  * A panel for display screen switch properties. 
@@ -46,6 +50,7 @@ public class SwitchPropertyForm extends PropertyForm {
       super(screenSwitch);
       setLabelWidth(90);
       addFields(screenSwitch, uiSwitch);
+      super.addGroupField(uiSwitch);
       super.addDeleteButton();
    }
    
@@ -135,7 +140,8 @@ public class SwitchPropertyForm extends PropertyForm {
       add(imageOFFField);
       add(adapterSwitchCommand);
    }
-
+  
+   
    /**
     * @param uiSwitch
     * @param command

@@ -24,9 +24,13 @@ import org.openremote.modeler.client.widget.component.ScreenTabbar;
 import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
+import org.openremote.modeler.domain.component.UIControl;
+import org.openremote.modeler.domain.component.UISwitch;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
@@ -34,6 +38,7 @@ import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -81,8 +86,22 @@ public class PropertyForm extends FormPanel {
          });
          add(deleteButton);
       }
+   } 
+
+   protected void addGroupField(final UIControl uiControl) {
+      final TextField<String> group = new TextField<String>();
+      group.setFieldLabel("Group");
+      group.setName("group");
+      group.setValue(uiControl.getGroup());
+      group.addListener(Events.Blur, new Listener<BaseEvent>() {
+          @Override
+          public void handleEvent(BaseEvent be) {
+        	  uiControl.setGroup(group.getValue());
+          }
+       });
+      add(group);
    }
-   
+	 
    public PropertyForm(PropertyEditable componentContainer) {
       setFrame(true);
       setHeaderVisible(false);

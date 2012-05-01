@@ -178,6 +178,8 @@ public class UIDesignerView extends TabItem {
                         }
                         Window.setStatus("Failed to save UI designer layout at: "
                               + DateTimeFormat.getFormat("HH:mm:ss").format(new Date()));
+                        
+                        System.out.println(caught.toString());
    
                      }
    
