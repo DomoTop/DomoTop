@@ -73,6 +73,7 @@ import org.openremote.modeler.domain.DeviceMacroItem;
 import org.openremote.modeler.domain.DeviceMacroRef;
 import org.openremote.modeler.domain.Group;
 import org.openremote.modeler.domain.GroupRef;
+import org.openremote.modeler.domain.MyGroup;
 import org.openremote.modeler.domain.Panel;
 import org.openremote.modeler.domain.ProtocolAttr;
 import org.openremote.modeler.domain.Screen;
@@ -106,6 +107,7 @@ import org.openremote.modeler.protocol.ProtocolContainer;
 import org.openremote.modeler.service.ControllerConfigService;
 import org.openremote.modeler.service.DeviceCommandService;
 import org.openremote.modeler.service.DeviceMacroService;
+import org.openremote.modeler.service.GroupService;
 import org.openremote.modeler.service.ResourceService;
 import org.openremote.modeler.service.UserService;
 import org.openremote.modeler.touchpanel.TouchPanelTabbarDefinition;
@@ -149,6 +151,8 @@ public class ResourceServiceImpl implements ResourceService {
    private UserService userService;
 
    private ControllerConfigService controllerConfigService = null;
+   private GroupService groupService = null;
+
 
    /**
     * {@inheritDoc}
@@ -541,6 +545,10 @@ public class ResourceServiceImpl implements ResourceService {
       this.deviceMacroService = deviceMacroService;
    }
 
+   public void setGroupService(GroupService service) {
+	   this.groupService = service;
+   }
+   
    /**
     * {@inheritDoc}
     */
@@ -637,6 +645,7 @@ public class ResourceServiceImpl implements ResourceService {
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
       Collection<ControllerConfig> configs = controllerConfigService.listAllConfigs();
+      Collection<MyGroup> groups = groupService.get();
       configs.removeAll(controllerConfigService.listAllexpiredConfigs());
       configs.addAll(controllerConfigService.listAllMissingConfigs());
 
@@ -654,6 +663,7 @@ public class ResourceServiceImpl implements ResourceService {
       context.put("maxId", maxId);
       context.put("configs", configs);
       context.put("stringUtils", StringUtils.class);
+      context.put("groups", groups);
 
       return VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
    }
