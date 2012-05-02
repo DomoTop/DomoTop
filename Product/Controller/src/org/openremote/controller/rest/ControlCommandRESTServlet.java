@@ -82,15 +82,12 @@ public class ControlCommandRESTServlet extends HttpServlet {
       Matcher matcher = pattern.matcher(url);      
       String controlID = null;
       String commandParam = null;
+      Principal DN = null;
       
       PrintWriter output = response.getWriter();
       
-      logger.error("Trying to get Client cert");
       if(request.getAuthType() == HttpServletRequest.CLIENT_CERT_AUTH)
       {
-         //String cStr = request.getHeader("auth-cert");
-         //logger.error("Client certificate: " + cStr);
-         
          // Obtain the certificate from the request, if any
          X509Certificate[] certs = null;
          if (request != null)
@@ -105,8 +102,7 @@ public class ControlCommandRESTServlet extends HttpServlet {
          }
          else
          {
-            Principal DN = certs[0].getIssuerDN();
-            logger.error("DN = " + DN);
+            DN = certs[0].getSubjectDN();
          }         
       }
       
@@ -115,7 +111,15 @@ public class ControlCommandRESTServlet extends HttpServlet {
          commandParam = matcher.group(2);
          try{
             if (isNotEmpty(controlID) && isNotEmpty(commandParam)) {
-                  controlCommandService.trigger(controlID, commandParam);
+                  
+                  if(DN != null)
+                  {
+                     controlCommandService.trigger(controlID, commandParam, DN);                     
+                  }
+                  else
+                  {
+                     controlCommandService.trigger(controlID, commandParam);
+                  }
 
                   // TODO : this just makes no sense -- why would you put HTTP 200 OK into an error document? chinese logic
                   output.print(JSONTranslator.translateXMLToJSON(acceptHeader, response, 200, RESTAPI.composeXMLErrorDocument(200, "SUCCESS")));

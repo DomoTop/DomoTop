@@ -91,7 +91,6 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        clearAndReloadSensors();
        clearAndReloadGroups();
        clearAndUpdateGroupDatabase();
-       loadComponentsTest();
        restartDevicePollingThreads();
        success = true;
     }
@@ -257,65 +256,6 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
          controllerXMLListenSharingData.addGroup(new Group(groupName));
        }
     }
-  }
-  
-  @SuppressWarnings("unchecked")
-  private void loadComponentsTest()
-  {
-     logger.error("Getting all components");
-     
-    Element elementsComponents = remoteActionXMLParser.queryElementFromXMLByName("components");
-   
-    if (elementsComponents == null)
-    {
-       throw new NoSuchComponentException("DOM element components doesn't exist in " + Constants.CONTROLLER_XML);
-    }
-    
-    List<Element> componentElements = elementsComponents.getChildren();
-
-    if (componentElements == null)
-    {
-      throw new ControllerException("There is no sub DOM elements in components in " + Constants.CONTROLLER_XML);
-    }
-
-    Iterator<Element> componentElementIterator = componentElements.iterator();
-
-    while (componentElementIterator.hasNext())
-    {
-      Element componentElement = componentElementIterator.next();
-      getGroupsFromComponent(componentElement);
-    }
-  }
-  
-  @SuppressWarnings("unchecked")
-  private void getGroupsFromComponent(Element componentElement) 
-  {
-     logger.error("Get groups from component");
-     String componentID = componentElement.getAttributeValue("id");
-     
-     List<Element>childerenOfComponent = componentElement.getChildren();
-     List<String> groupElementIDs = new ArrayList<String>();
-     String groupElementId = "";
-     for (Element childOfComponent:childerenOfComponent)
-     {
-        if ("include".equalsIgnoreCase(childOfComponent.getName()) && "group".equalsIgnoreCase(childOfComponent.getAttributeValue("type"))) 
-        {
-           groupElementId = childOfComponent.getAttributeValue("ref");
-           groupElementIDs.add(groupElementId);
-        }
-     }
-     
-     if (groupElementIDs.size() <= 0) {
-        logger.info("No groups for component ID: " + componentID);
-     }
-     
-     Element groupElement = null;
-     for (String groupElementID:groupElementIDs)
-     {
-        groupElement = remoteActionXMLParser.queryElementFromXMLById(groupElementID);
-        String groupName = groupElement.getAttributeValue("name");
-        logger.error("Component with ID: " + componentID + " has group name: " + groupName);
-     }
   }
   
   private void clearAndUpdateGroupDatabase()

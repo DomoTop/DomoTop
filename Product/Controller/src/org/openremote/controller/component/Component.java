@@ -47,6 +47,8 @@ public abstract class Component {
    
    public static final String INCLUDE_TYPE_SENSOR = "sensor";
    
+   public static final String INCLUDE_TYPE_GROUP = "group";
+   
    protected List<String> availableActions;
    
    /**

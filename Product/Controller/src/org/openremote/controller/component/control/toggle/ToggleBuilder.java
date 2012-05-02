@@ -70,11 +70,14 @@ public class ToggleBuilder extends ComponentBuilder {
 //            if (operation == i && !Control.STATUS_ELEMENT_NAME.equalsIgnoreCase(element.getName())) {
 //               List<Element> commandRefElements = element.getChildren();
 //               for (Element commandRefElement : commandRefElements) {
-//                  String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
-//                  Element commandElement = remoteActionXMLParser.queryElementFromXMLById(toggleElement.getDocument(),commandID);
-//                  Command command = commandFactory.getCommand(commandElement);
-//                  toggle.addExecutableCommand((ExecutableCommand) command);
-//               }
+//                  if (Control.COMMAND_ELEMENT_NAME.equalsIgnoreCase(commandRefElements.getAttributeValue("type"))) 
+//                  {
+//                     String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
+//                     Element commandElement = remoteActionXMLParser.queryElementFromXMLById(toggleElement.getDocument(),commandID);
+//                     Command command = commandFactory.getCommand(commandElement);
+//                     toggle.addExecutableCommand((ExecutableCommand) command);
+//                  }
+//                }
 //               break;
 //            }
 //            continue;

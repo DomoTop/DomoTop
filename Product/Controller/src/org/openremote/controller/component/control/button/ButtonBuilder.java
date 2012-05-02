@@ -21,7 +21,9 @@ package org.openremote.controller.component.control.button;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jdom.Element;
+import org.openremote.controller.Constants;
 import org.openremote.controller.command.DelayCommand;
 import org.openremote.controller.command.ExecutableCommand;
 import org.openremote.controller.component.Component;
@@ -34,7 +36,7 @@ import org.openremote.controller.component.control.Control;
  * @author Handy.Wang 2009-10-15
  */
 public class ButtonBuilder extends ComponentBuilder {
-   
+
     /**
      * Build Button with button xml element.
      * 
@@ -48,15 +50,21 @@ public class ButtonBuilder extends ComponentBuilder {
        Button button = new Button();
        if (button.isValidActionWith(commandParam)) {
           List<Element> commandRefElements = componentElement.getChildren();
-          for (Element commandRefElement : commandRefElements) {
-              if (Control.DELAY_ELEMENT_NAME.equalsIgnoreCase(commandRefElement.getName())) {
+          for (Element commandRefElement : commandRefElements)
+          {
+             if (Control.DELAY_ELEMENT_NAME.equalsIgnoreCase(commandRefElement.getName())) {
                   button.addExecutableCommand(new DelayCommand(commandRefElement.getTextTrim()));
                   continue;
               }
-              String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
-              Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
-              ExecutableCommand command = (ExecutableCommand) commandFactory.getCommand(commandElement);
-              button.addExecutableCommand(command);
+             
+             // Only get the includes from the component with type 'command'
+             if (Control.COMMAND_ELEMENT_NAME.equalsIgnoreCase(commandRefElement.getAttributeValue("type"))) 
+             { 
+                 String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
+                 Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
+                 ExecutableCommand command = (ExecutableCommand) commandFactory.getCommand(commandElement);
+                 button.addExecutableCommand(command);
+             }
           }
        }
        return button;

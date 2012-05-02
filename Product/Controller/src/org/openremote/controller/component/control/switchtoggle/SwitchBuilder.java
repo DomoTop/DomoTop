@@ -51,13 +51,18 @@ public class SwitchBuilder extends ComponentBuilder {
             Sensor sensor = parseSensor(componentElement, operationElement);
             switchToggle.setSensor(sensor);
          }
+         
          if (commandParam.equalsIgnoreCase(operationElement.getName())) {
             List<Element> commandRefElements = operationElement.getChildren();
             for (Element commandRefElement : commandRefElements) {
-               String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
-               Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
-               Command command = commandFactory.getCommand(commandElement);
-               switchToggle.addExecutableCommand((ExecutableCommand) command);
+               // Only get the includes from the component with type 'command'
+               if (Control.COMMAND_ELEMENT_NAME.equalsIgnoreCase(commandRefElement.getAttributeValue("type"))) 
+               {
+                  String commandID = commandRefElement.getAttributeValue(Control.REF_ATTRIBUTE_NAME);
+                  Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
+                  Command command = commandFactory.getCommand(commandElement);
+                  switchToggle.addExecutableCommand((ExecutableCommand) command);
+               }
             }      
             continue;
          }
