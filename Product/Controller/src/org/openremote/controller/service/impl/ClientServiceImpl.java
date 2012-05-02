@@ -458,6 +458,16 @@ public class ClientServiceImpl implements ClientService {
          logger.error("Database is not yet set (null)");
       }
       return returnValue;
+   }  
+
+   /**
+    * Get the client group ID via DN
+    * @return int group id
+    */
+   @Override
+   public String getGroupName(String DN) {
+      //TODO
+      return "parents";
    }
    
    /**

@@ -110,22 +110,22 @@ public class ControlCommandRESTServlet extends HttpServlet {
          controlID = matcher.group(1);
          commandParam = matcher.group(2);
          try{
-            if (isNotEmpty(controlID) && isNotEmpty(commandParam)) {
-                  
-                  if(DN != null)
-                  {
-                     controlCommandService.trigger(controlID, commandParam, DN);                     
-                  }
-                  else
-                  {
-                     controlCommandService.trigger(controlID, commandParam);
-                  }
-
-                  // TODO : this just makes no sense -- why would you put HTTP 200 OK into an error document? chinese logic
-                  output.print(JSONTranslator.translateXMLToJSON(acceptHeader, response, 200, RESTAPI.composeXMLErrorDocument(200, "SUCCESS")));
-               } else {
-                  throw new InvalidCommandTypeException(commandParam);
+            if (isNotEmpty(controlID) && isNotEmpty(commandParam))
+            {
+               if(DN != null)
+               {
+                  controlCommandService.trigger(controlID, commandParam, DN);                     
                }
+               else
+               {
+                  controlCommandService.trigger(controlID, commandParam);
+               }
+
+               // TODO : this just makes no sense -- why would you put HTTP 200 OK into an error document? chinese logic
+               output.print(JSONTranslator.translateXMLToJSON(acceptHeader, response, 200, RESTAPI.composeXMLErrorDocument(200, "SUCCESS")));
+            } else {
+               throw new InvalidCommandTypeException(commandParam);
+            }
          } catch (ControlCommandException e) {
             logger.error("ControlCommandException occurs", e);
             output.print(JSONTranslator.translateXMLToJSON(acceptHeader, response, e.getErrorCode(), RESTAPI.composeXMLErrorDocument(e.getErrorCode(), e.getMessage())));
