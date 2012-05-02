@@ -403,7 +403,6 @@
 
             <components>
 		          <switch id = "nnn">                    
-			          <include type = "group" ref = "nnn" />
 			          <on>
 			            <include type = "command" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
@@ -415,6 +414,7 @@
 			          </off>
 
 			          <include type = "sensor" ref = "nnn" />
+			          <include type = "group" ref = "nnn" />
 		          </switch>
 		          ...
 		        </components>
@@ -425,10 +425,10 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "on"  minOccurs = "1" maxOccurs = "1"/>
         <xsd:element ref = "off" minOccurs = "1" maxOccurs = "1" />
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
     </xsd:complexType>
@@ -507,12 +507,12 @@
 
             <components>
 		          <slider id = "nnn">
-			          <include type = "group" ref = "nnn" />
 			          <setValue>
 			            <include type = "command" ref = "nnn" />
 			          </setValue>
 
 			          <include type = "sensor" ref = "nnn" />
+			          <include type = "group" ref = "nnn" />
 		          </slider>
 		          ...
 		        </components>
@@ -523,9 +523,9 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "setValue" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include"  minOccurs = "0" maxOccurs = "unbounded"/>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
     </xsd:complexType>
@@ -575,11 +575,11 @@
 
             <components>
 		          <button id = "nnn">
-                        <include type = "group" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
 			            <include type = "command" ref = "nnn" />
 			            <delay>500</delay>
 			            <include type = "command" ref = "nnn" />
+                  <include type = "group" ref = "nnn" />
 		          </button>
 		          ...
 		        </components>
@@ -589,8 +589,8 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:group ref = "macroGroup" minOccurs = "0" maxOccurs = "unbounded"/>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
     </xsd:complexType>
@@ -621,8 +621,8 @@
 
             <components>
 		          <label id = "nnn">
-			            <include type = "group" ref = "nnn" />
 			            <include type = "sensor" ref = "nnn" />
+			            <include type = "group" ref = "nnn" />
 		          </label>
 		          ...
 		        </components>
@@ -632,8 +632,8 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
     </xsd:complexType>
@@ -664,8 +664,8 @@
 
             <components>
 		          <image id = "nnn">
-			          <include type = "group" ref = "nnn" />
 			          <include type = "sensor" ref = "nnn" />
+			          <include type = "group" ref = "nnn" />
 		          </image>
 		          ...
 		        </components>
@@ -675,8 +675,8 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
         <xsd:element ref = "include" minOccurs = "0" maxOccurs = "unbounded"/>
+        <xsd:group ref = "deviceGroup" minOccurs = "0" maxOccurs = "unbounded"/>
       </xsd:sequence>
       <xsd:attribute name = "id" type = "idType" use = "required" />
     </xsd:complexType>
