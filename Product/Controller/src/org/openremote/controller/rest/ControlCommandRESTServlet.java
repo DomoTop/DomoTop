@@ -21,6 +21,8 @@ package org.openremote.controller.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
+import java.security.cert.X509Certificate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,6 +84,31 @@ public class ControlCommandRESTServlet extends HttpServlet {
       String commandParam = null;
       
       PrintWriter output = response.getWriter();
+      
+      logger.error("Trying to get Client cert");
+      if(request.getAuthType() == HttpServletRequest.CLIENT_CERT_AUTH)
+      {
+         //String cStr = request.getHeader("auth-cert");
+         //logger.error("Client certificate: " + cStr);
+         
+         // Obtain the certificate from the request, if any
+         X509Certificate[] certs = null;
+         if (request != null)
+         {
+             certs = (X509Certificate[]) request
+                     .getAttribute("javax.servlet.request.X509Certificate");
+         }
+
+         if ((certs == null) || (certs.length == 0))
+         {
+            logger.error("No certificate?");
+         }
+         else
+         {
+            Principal DN = certs[0].getIssuerDN();
+            logger.error("DN = " + DN);
+         }         
+      }
       
       if (matcher.find()) {
          controlID = matcher.group(1);

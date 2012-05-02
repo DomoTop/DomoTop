@@ -22,15 +22,19 @@ package org.openremote.controller.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
+import org.openremote.controller.command.NoStatusCommand;
 import org.openremote.controller.command.RemoteActionXMLParser;
+import org.openremote.controller.command.StatusCommand;
 import org.openremote.controller.component.Sensor;
 import org.openremote.controller.component.SensorBuilder;
 import org.openremote.controller.config.ControllerXMLListenSharingData;
@@ -87,6 +91,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        clearAndReloadSensors();
        clearAndReloadGroups();
        clearAndUpdateGroupDatabase();
+       loadComponentsTest();
        restartDevicePollingThreads();
        success = true;
     }
@@ -254,6 +259,65 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
     }
   }
   
+  @SuppressWarnings("unchecked")
+  private void loadComponentsTest()
+  {
+     logger.error("Getting all components");
+     
+    Element elementsComponents = remoteActionXMLParser.queryElementFromXMLByName("components");
+   
+    if (elementsComponents == null)
+    {
+       throw new NoSuchComponentException("DOM element components doesn't exist in " + Constants.CONTROLLER_XML);
+    }
+    
+    List<Element> componentElements = elementsComponents.getChildren();
+
+    if (componentElements == null)
+    {
+      throw new ControllerException("There is no sub DOM elements in components in " + Constants.CONTROLLER_XML);
+    }
+
+    Iterator<Element> componentElementIterator = componentElements.iterator();
+
+    while (componentElementIterator.hasNext())
+    {
+      Element componentElement = componentElementIterator.next();
+      getGroupsFromComponent(componentElement);
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  private void getGroupsFromComponent(Element componentElement) 
+  {
+     logger.error("Get groups from component");
+     String componentID = componentElement.getAttributeValue("id");
+     
+     List<Element>childerenOfComponent = componentElement.getChildren();
+     List<String> groupElementIDs = new ArrayList<String>();
+     String groupElementId = "";
+     for (Element childOfComponent:childerenOfComponent)
+     {
+        if ("include".equalsIgnoreCase(childOfComponent.getName()) && "group".equalsIgnoreCase(childOfComponent.getAttributeValue("type"))) 
+        {
+           groupElementId = childOfComponent.getAttributeValue("ref");
+           groupElementIDs.add(groupElementId);
+        }
+     }
+     
+     if (groupElementIDs.size() <= 0) {
+        logger.info("No groups for component ID: " + componentID);
+     }
+     
+     Element groupElement = null;
+     for (String groupElementID:groupElementIDs)
+     {
+        groupElement = remoteActionXMLParser.queryElementFromXMLById(groupElementID);
+        String groupName = groupElement.getAttributeValue("name");
+        logger.error("Component with ID: " + componentID + " has group name: " + groupName);
+     }
+  }
+  
   private void clearAndUpdateGroupDatabase()
   {
      if(groupService.dropGroups() != 1)
@@ -261,7 +325,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
         logger.error("SQL error: Problem with dropping all the groups from the database.");
      }
      
-     if(clientService.resetAllGroupClients() <= 0)
+     if(clientService.resetAllGroupClients() < 0)
      {
         logger.error("SQL error: Problem with resetting the groups from all devices."); 
      }
