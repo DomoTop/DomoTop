@@ -19,9 +19,13 @@
 */
 package org.openremote.controller.service.impl;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jdom.Element;
+import org.openremote.controller.Constants;
 import org.openremote.controller.command.ExecutableCommand;
 import org.openremote.controller.command.RemoteActionXMLParser;
 import org.openremote.controller.component.ComponentFactory;
@@ -36,9 +40,12 @@ import org.openremote.controller.utils.MacrosIrDelayUtil;
  * The implementation for ControlCommandService class.
  * 
  * @author Handy.Wang
+ * @author Melroy.van.den.Berg 2012
  */
 public class ControlCommandServiceImpl implements ControlCommandService {
 
+   private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
+   
    private RemoteActionXMLParser remoteActionXMLParser;
    
    private ComponentFactory componentFactory;
@@ -61,6 +68,32 @@ public class ControlCommandServiceImpl implements ControlCommandService {
       
    }
    
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void trigger(String controlID, String commandParam, Principal DN) 
+   {
+      // TODO: Search DN in Database
+      // TODO: Get group from database
+      // TODO: Get group from XML Controller
+      // TODO: Match the group names
+      
+      logger.error("DN = " + DN.toString());
+      
+      List<String>groupElementIDs = getGroupsFromComponent(controlID);
+      Element groupElement = null;
+      for (String groupElementID:groupElementIDs)
+      {
+         groupElement = remoteActionXMLParser.queryElementFromXMLById(groupElementID);
+         String groupName = groupElement.getAttributeValue("name");
+         logger.error("Component with ID: " + controlID + " has group name: " + groupName);
+      }
+      
+      this.trigger(controlID, commandParam);
+   }
+   
+   
    private Control getControl(String controlID, String commandParam) {
       Element controlElement = remoteActionXMLParser.queryElementFromXMLById(controlID);
       if (controlElement == null) {
@@ -69,6 +102,30 @@ public class ControlCommandServiceImpl implements ControlCommandService {
       return (Control) componentFactory.getComponent(controlElement, commandParam);
    }
    
+   @SuppressWarnings("unchecked")
+   private List<String> getGroupsFromComponent(String componentID) 
+   {
+      Element componentElement = remoteActionXMLParser.queryElementFromXMLById(componentID);
+
+      List<Element>childerenOfComponent = componentElement.getChildren();
+      List<String> groupElementIDs = new ArrayList<String>();
+      String groupElementId = "";
+      for (Element childOfComponent:childerenOfComponent)
+      {
+         if (Control.INCLUDE_ELEMENT_NAME.equalsIgnoreCase(childOfComponent.getName()) && Control.INCLUDE_TYPE_GROUP.equalsIgnoreCase(childOfComponent.getAttributeValue("type"))) 
+         {
+            groupElementId = childOfComponent.getAttributeValue("ref");
+            groupElementIDs.add(groupElementId);
+         }
+      }
+      
+      if (groupElementIDs.size() <= 0) {
+         logger.info("No groups for component ID: " + componentID);
+      }
+      return groupElementIDs;     
+   }
+   
+   
    public void setRemoteActionXMLParser(RemoteActionXMLParser remoteActionXMLParser) {
       this.remoteActionXMLParser = remoteActionXMLParser;
    }
@@ -76,5 +133,4 @@ public class ControlCommandServiceImpl implements ControlCommandService {
    public void setComponentFactory(ComponentFactory componentFactory) {
       this.componentFactory = componentFactory;
    }
-   
 }

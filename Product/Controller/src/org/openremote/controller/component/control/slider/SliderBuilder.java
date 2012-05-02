@@ -55,15 +55,19 @@ public class SliderBuilder extends ComponentBuilder {
             slider.setSensor(sensor);
             continue;
          }
-         
+            
          /** non-sensor Element */
          if (Slider.EXECUTE_CONTENT_ELEMENT_NAME.equalsIgnoreCase(operationElement.getName())) {
             Element commandRefElement = (Element) operationElement.getChildren().get(0);
-            String commandID = commandRefElement.getAttributeValue(Component.REF_ATTRIBUTE_NAME);
-            Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
-            commandElement.setAttribute(Command.DYNAMIC_VALUE_ATTR_NAME, commandParam);
-            Command command = commandFactory.getCommand(commandElement);
-            slider.addExecutableCommand((ExecutableCommand) command);
+            // Only get the includes from the component with type 'command'
+            if (Control.COMMAND_ELEMENT_NAME.equalsIgnoreCase(commandRefElement.getAttributeValue("type"))) 
+            {
+               String commandID = commandRefElement.getAttributeValue(Component.REF_ATTRIBUTE_NAME);
+               Element commandElement = remoteActionXMLParser.queryElementFromXMLById(componentElement.getDocument(),commandID);
+               commandElement.setAttribute(Command.DYNAMIC_VALUE_ATTR_NAME, commandParam);
+               Command command = commandFactory.getCommand(commandElement);
+               slider.addExecutableCommand((ExecutableCommand) command);
+            }
             continue;
          } else {
             throw new InvalidElementException("Don't support element name \"" + operationElement.getName() + "\" in slider.");

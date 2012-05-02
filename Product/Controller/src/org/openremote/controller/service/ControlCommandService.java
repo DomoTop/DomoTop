@@ -19,6 +19,8 @@
 */
 package org.openremote.controller.service;
 
+import java.security.Principal;
+
 
 /**
  * The Interface ControlCommandService.
@@ -33,5 +35,12 @@ public interface ControlCommandService {
      * @param commandParam the command type
      */
     void trigger(String buttonID, String commandParam);
-    
+    /**
+     * Trigger with DN.
+     * 
+     * @param controlID the button id
+     * @param commandParam the command type
+     * @param Principal DN
+     */    
+    void trigger(String controlID, String commandParam, Principal DN);    
 }

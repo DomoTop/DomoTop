@@ -71,6 +71,12 @@ public interface ClientService
     */
    int updateClientGroup(int clientID, int groupID);
    /**
+    * Reset all the groups of all the clients
+    * 
+    * @return int value -1 or 0 is incorrect, 1 or higher is correct
+    */
+   int resetAllGroupClients();
+   /**
     * Write a empty string to the client serial in the database
     * 
     * @param clientID client ID

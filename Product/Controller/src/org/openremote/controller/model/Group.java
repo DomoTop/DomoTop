@@ -11,6 +11,12 @@ public class Group {
       this.level = level;
    }
    
+   public Group(String name)
+   {
+      this.name = name;
+      this.level = 0;
+   }
+   
    public String getName()
    {
       return name;

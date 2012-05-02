@@ -22,21 +22,28 @@ package org.openremote.controller.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
+import org.openremote.controller.command.NoStatusCommand;
 import org.openremote.controller.command.RemoteActionXMLParser;
+import org.openremote.controller.command.StatusCommand;
 import org.openremote.controller.component.Sensor;
 import org.openremote.controller.component.SensorBuilder;
 import org.openremote.controller.config.ControllerXMLListenSharingData;
 import org.openremote.controller.exception.ControllerException;
 import org.openremote.controller.exception.NoSuchComponentException;
+import org.openremote.controller.model.Group;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ControllerXMLChangeService;
+import org.openremote.controller.service.GroupService;
 import org.openremote.controller.service.StatusCacheService;
 import org.openremote.controller.statuscache.ChangedStatusTable;
 import org.openremote.controller.statuscache.PollingMachineThread;
@@ -46,6 +53,8 @@ import org.openremote.controller.utils.PathUtil;
  * Controller.xml monitoring service.
  * 
  * @author handy.wang 2010-03-19
+ * @author melroy.van.den.berg 2012-05-01
+ * 
  *
  */
 public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeService
@@ -59,8 +68,9 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private StatusCacheService statusCacheService;
   private ChangedStatusTable changedStatusTable;
   private SensorBuilder sensorBuilder;
-
-   
+  private GroupService groupService;
+  private ClientService clientService;
+  
   @SuppressWarnings("finally")
   @Override public synchronized boolean refreshController()
   {
@@ -79,6 +89,8 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        clearChangedStatusTable();
        clearStatusCache();
        clearAndReloadSensors();
+       clearAndReloadGroups();
+       clearAndUpdateGroupDatabase();
        restartDevicePollingThreads();
        success = true;
     }
@@ -211,6 +223,61 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
       controllerXMLListenSharingData.addSensor(sensor);
     }
   }
+    
+  @SuppressWarnings("unchecked")
+  private void clearAndReloadGroups()
+  {
+    controllerXMLListenSharingData.getGroups().clear();
+    logger.info("Updating groups");
+    Element groupsElement = remoteActionXMLParser.queryElementFromXMLByName(Constants.GROUPS_ELEMENT_NAME);
+
+    if (groupsElement == null)
+    {
+       // group element may be NULL can be ignore (backwards-compatible)
+       logger.info("DOM element " + Constants.GROUPS_ELEMENT_NAME + " doesn't exist in " + Constants.CONTROLLER_XML);
+    }
+    else
+    {
+       List<Element> groupElements = groupsElement.getChildren();
+   
+       if (groupElements == null)
+       {
+         throw new ControllerException("There is no sub DOM elements in " + Constants.GROUPS_ELEMENT_NAME + " in " + Constants.CONTROLLER_XML);
+       }
+   
+       Iterator<Element> groupElementIterator = groupElements.iterator();
+   
+       while (groupElementIterator.hasNext())
+       {
+         Element sensorElement = groupElementIterator.next();
+         String groupID = sensorElement.getAttributeValue("id");
+         String groupName = sensorElement.getAttributeValue("name");
+         logger.info("Add group with ID: " + groupID + " and name: " + groupName);
+         controllerXMLListenSharingData.addGroup(new Group(groupName));
+       }
+    }
+  }
+  
+  private void clearAndUpdateGroupDatabase()
+  {
+     if(groupService.dropGroups() != 1)
+     {
+        logger.error("SQL error: Problem with dropping all the groups from the database.");
+     }
+     
+     if(clientService.resetAllGroupClients() < 0)
+     {
+        logger.error("SQL error: Problem with resetting the groups from all devices."); 
+     }
+     
+     List<Group> groups = controllerXMLListenSharingData.getGroups();
+
+     for (Group group : groups)
+     {        
+        groupService.addGroup(group.getName());
+     }
+  }
+  
    
   private void restartDevicePollingThreads()
   {
@@ -265,5 +332,28 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
     }
   }
 
+  /**
+   * Sets the group service.
+   * 
+   * @param database
+   *           service
+   */
+
+  public void setGroupService(GroupService groupService) {
+     this.groupService = groupService;
+  }
+ 
+
+  /**
+   * Sets the client service.
+   * 
+   * @param database
+   *           service
+   */
+
+  public void setClientService(ClientService clientService) {
+     this.clientService = clientService;
+  }  
+  
 }
 

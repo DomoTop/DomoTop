@@ -195,6 +195,7 @@ public class FileServiceImpl implements FileService {
 
    }
    
+   // TODO: The encoding below is very unsafe and can be easily cracked via brute-force and/or rainbow table, please use SHA-512 hash algorithm
    private String encode(String username, String password) {
       Md5PasswordEncoder encoder = new Md5PasswordEncoder();
       String encodedPwd = encoder.encodePassword(password, username);

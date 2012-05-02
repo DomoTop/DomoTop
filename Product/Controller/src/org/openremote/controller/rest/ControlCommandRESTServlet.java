@@ -21,6 +21,8 @@ package org.openremote.controller.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
+import java.security.cert.X509Certificate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,15 +82,44 @@ public class ControlCommandRESTServlet extends HttpServlet {
       Matcher matcher = pattern.matcher(url);      
       String controlID = null;
       String commandParam = null;
+      Principal DN = null;
       
       PrintWriter output = response.getWriter();
+      
+      if(request.getAuthType() == HttpServletRequest.CLIENT_CERT_AUTH)
+      {
+         // Obtain the certificate from the request, if any
+         X509Certificate[] certs = null;
+         if (request != null)
+         {
+             certs = (X509Certificate[]) request
+                     .getAttribute("javax.servlet.request.X509Certificate");
+         }
+
+         if ((certs == null) || (certs.length == 0))
+         {
+            logger.error("No certificate?");
+         }
+         else
+         {
+            DN = certs[0].getSubjectDN();
+         }         
+      }
       
       if (matcher.find()) {
          controlID = matcher.group(1);
          commandParam = matcher.group(2);
          try{
             if (isNotEmpty(controlID) && isNotEmpty(commandParam)) {
-                  controlCommandService.trigger(controlID, commandParam);
+                  
+                  if(DN != null)
+                  {
+                     controlCommandService.trigger(controlID, commandParam, DN);                     
+                  }
+                  else
+                  {
+                     controlCommandService.trigger(controlID, commandParam);
+                  }
 
                   // TODO : this just makes no sense -- why would you put HTTP 200 OK into an error document? chinese logic
                   output.print(JSONTranslator.translateXMLToJSON(acceptHeader, response, 200, RESTAPI.composeXMLErrorDocument(200, "SUCCESS")));
