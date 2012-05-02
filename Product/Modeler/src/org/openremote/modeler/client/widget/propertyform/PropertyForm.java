@@ -25,21 +25,21 @@ import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
 import org.openremote.modeler.domain.component.UIControl;
-import org.openremote.modeler.domain.component.UISwitch;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.AdapterField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * The PropertyForm initialize the property form display style.
@@ -89,17 +89,33 @@ public class PropertyForm extends FormPanel {
    } 
 
    protected void addGroupField(final UIControl uiControl) {
-      final TextField<String> group = new TextField<String>();
-      group.setFieldLabel("Group");
-      group.setName("group");
-      group.setValue(uiControl.getGroup());
-      group.addListener(Events.Blur, new Listener<BaseEvent>() {
-          @Override
-          public void handleEvent(BaseEvent be) {
-        	  uiControl.setGroup(group.getValue());
-          }
-       });
-      add(group);
+		ListBox lb = new ListBox();
+		
+		//should become dynamic
+		String[] groups = {"foo", "bar", "baz", "toto", "tintin"};
+		for(int i = 0; i < groups.length; i++) {
+			lb.addItem(groups[i]);
+			if(uiControl.getGroup().equals(groups[i])) {
+				lb.setSelectedIndex(i);
+			}
+		}
+	
+		// Make enough room for all five items (setting this value to 1 turns it
+		// into a drop-down list).
+		lb.setVisibleItemCount(1);
+		lb.addChangeHandler(new ChangeHandler() {
+			
+			@Override
+			public void onChange(ChangeEvent arg0) {
+				ListBox lb = (ListBox)arg0.getSource();
+				uiControl.setGroup(lb.getItemText(lb.getSelectedIndex()));
+			}
+		});
+
+      
+		AdapterField adapterGroup = new AdapterField(lb);
+		adapterGroup.setFieldLabel("Group");     
+		add(adapterGroup);
    }
 	 
    public PropertyForm(PropertyEditable componentContainer) {
