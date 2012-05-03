@@ -44,6 +44,7 @@ public class ControllerException {
    private static final int INVALID_PANEL_XML = 427;
    private static final int NO_SUCH_PANEL = 428;
    private static final int INVALID_ELEMENT = 429;
+   private static final int INVALID_GROUP = 431;
    
    /**
     * Get exception message by code.
@@ -104,6 +105,9 @@ public class ControllerException {
             case CONTROLLER_UNAVAILABLE://0
             	errorMessage = "Current controller isn't available.";
             	break;
+            case INVALID_GROUP: // 431
+				errorMessage = "You are in placed in the wrong group (or you don't have a group).\n\nYou can't access this command.";
+				break;
          }
          if (errorMessage == null) {
             errorMessage = "Occured unknown error, satus code is " + erroCode;
