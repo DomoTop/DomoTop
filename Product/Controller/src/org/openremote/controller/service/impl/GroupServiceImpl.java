@@ -112,7 +112,7 @@ public class GroupServiceImpl implements GroupService
       if (database != null) 
       {
          try {
-            preparedStatement = database.createPrepareStatement(selectGroupQuery + limitByOne);
+            preparedStatement = database.createPrepareStatement(selectGroupQuery);
             preparedStatement.setInt(1, groupID);
             returnValue = database.doSQL(preparedStatement);
          } catch (SQLException e) {

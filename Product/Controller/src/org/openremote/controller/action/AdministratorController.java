@@ -491,24 +491,32 @@ public class AdministratorController extends MultiActionController
       String errorString = "";
       if(result)
       {
-         // Group ID validation
-         groupService.getGroup(clientID);
-         if(groupService.getNumGroups() == 1)
+         // Result is true when groupID is -1, meaning reset the group ID to NULL
+         if(groupID == -1)
          {
             result = true;
          }
          else
          {
-            result = false;
-            errorString = "Group ID is not valid";
+            // Group ID validation
+            groupService.getGroup(groupID);
+            if(groupService.getNumGroups() == 1)
+            {
+               result = true;
+            }
+            else
+            {
+               result = false;
+               errorString = "Group ID is not valid: " + groupID;
+            }
+            groupService.free();
          }
-         groupService.free();
          
          // Check if the client ID is valid in the database before we continue
          if(!clientService.isClientIDValid(clientID))
          {
             result = false;
-            errorString = "Clien ID is not valid";
+            errorString = "Clien ID is not valid: " + clientID;
          }
       }      
       
