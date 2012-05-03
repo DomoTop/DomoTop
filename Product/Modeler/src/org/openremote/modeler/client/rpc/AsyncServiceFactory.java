@@ -66,6 +66,8 @@ public class AsyncServiceFactory {
    
    private static UserRPCServiceAsync userRPCServiceAsync = null;
    
+   private static GroupRPCServiceAsync groupRPCServiceAsync = null;
+   
    /**
     * Gets the device macro service async.
     * 
@@ -186,5 +188,13 @@ public class AsyncServiceFactory {
       }
       
       return userRPCServiceAsync;
+   }
+   
+   public static GroupRPCServiceAsync getGroupRPCServiceAsync(){
+      if(groupRPCServiceAsync == null){
+    	  groupRPCServiceAsync = GWT.create(GroupRPCService.class);
+      }
+      
+      return groupRPCServiceAsync;
    }
 }

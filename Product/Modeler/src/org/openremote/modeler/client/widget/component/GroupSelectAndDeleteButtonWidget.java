@@ -71,4 +71,8 @@ public class GroupSelectAndDeleteButtonWidget extends LayoutContainer {
    public void addAddListener(SelectionListener<ButtonEvent> selectionListener) {
       this.deleteButton.addSelectionListener(selectionListener);
    }
+	
+	public void addItem(String result) {
+		select.addItem(result);
+	}
 }

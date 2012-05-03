@@ -18,6 +18,9 @@ package org.openremote.modeler.client.widget.propertyform;
 
 import org.openremote.modeler.client.event.WidgetDeleteEvent;
 import org.openremote.modeler.client.icon.Icons;
+import org.openremote.modeler.client.proxy.GroupBeanModelProxy;
+import org.openremote.modeler.client.rpc.AsyncServiceFactory;
+import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.client.utils.PropertyEditable;
 import org.openremote.modeler.client.utils.WidgetSelectionUtil;
 import org.openremote.modeler.client.widget.component.GroupSelectAndDeleteButtonWidget;
@@ -41,6 +44,7 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
@@ -114,8 +118,12 @@ public class PropertyForm extends FormPanel {
 						          new Listener<MessageBoxEvent>() {
 									@Override
 									public void handleEvent(MessageBoxEvent be) {
-										ClientGroupList.getInstance().add(new ClientGroup(be.getValue()));
-										widget.setGroups(ClientGroupList.getInstance().getAll(), uiControl.getGroup());
+										GroupBeanModelProxy.add(be.getValue(), new AsyncSuccessCallback<String>() {
+											@Override
+											public void onSuccess(String result) {
+												widget.addItem(result);
+											}
+										});
 									}
 								});
 			}

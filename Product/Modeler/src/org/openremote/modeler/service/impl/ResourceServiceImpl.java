@@ -64,6 +64,7 @@ import org.openremote.modeler.client.utils.PanelsAndMaxOid;
 import org.openremote.modeler.configuration.PathConfig;
 import org.openremote.modeler.domain.Absolute;
 import org.openremote.modeler.domain.Cell;
+import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.CommandDelay;
 import org.openremote.modeler.domain.CommandRefItem;
 import org.openremote.modeler.domain.ControllerConfig;
@@ -642,10 +643,7 @@ public class ResourceServiceImpl implements ResourceService {
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
       Collection<ControllerConfig> configs = controllerConfigService.listAllConfigs();
-      Collection<ClientGroup> groups = new ArrayList<ClientGroup>();
-//      for(BeanModel bean: BeanModelDataBase.userGroupTable.loadAll()) {
-//    	  groups.add((MyGroup) bean.getBean());
-//      }
+      Collection<ClientGroup> groups = ClientGroupList.getInstance().getAll();
       
       configs.removeAll(controllerConfigService.listAllexpiredConfigs());
       configs.addAll(controllerConfigService.listAllMissingConfigs());

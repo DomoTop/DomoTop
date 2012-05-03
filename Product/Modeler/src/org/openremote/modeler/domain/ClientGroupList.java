@@ -15,6 +15,7 @@ public class ClientGroupList {
 	
 	public void add(ClientGroup group) {
 		groups.add(group);
+		System.out.println(groups.size());
 	}
 	
 	public ClientGroup get(int id) {
@@ -22,16 +23,15 @@ public class ClientGroupList {
 	}
 	
 	public List<ClientGroup> getAll() {
+		System.out.println(groups.size());
+
 		return groups;
 	}
 	
 	public static ClientGroupList getInstance() {
 		if(instance == null) {
+			System.out.println("\n\n\n\n\n\n\n\nNEW INSTANCE\n\n\n\n\n\n\n");
 			instance = new ClientGroupList();
-			instance.add(new ClientGroup("test"));
-			instance.add(new ClientGroup("test1"));
-			instance.add(new ClientGroup("test2"));
-			instance.add(new ClientGroup("test3"));
 		}
 		return instance;
 	}
