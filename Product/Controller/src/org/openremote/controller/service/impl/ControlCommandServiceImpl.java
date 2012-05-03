@@ -79,16 +79,12 @@ public class ControlCommandServiceImpl implements ControlCommandService {
     */
    @Override
    public void trigger(String controlID, String commandParam, Principal DN) 
-   {
-      // TODO: Search DN in Database
-      // TODO: Get group from database
-      // TODO: Get group from XML Controller
-      // TODO: Match the group names
-      
+   {      
       // Get the group name from the control component
       List<String>groupElementIDs = getGroupsFromComponent(controlID);
       List<String>groupNames = new ArrayList<String>();
       Element groupElement = null;
+      String clientGroupName = "";
       boolean allowed = false;
       
       for (String groupElementID:groupElementIDs)
@@ -98,13 +94,16 @@ public class ControlCommandServiceImpl implements ControlCommandService {
          groupNames.add(groupName);
       }
       
-      String clientGroupName = clientService.getGroupName(DN.toString());
-      for (String groupName:groupNames)
+      clientGroupName = clientService.getGroupName(DN.toString());
+      if(!clientGroupName.isEmpty())
       {
-         if(clientGroupName.equals(groupName))
+         for (String groupName:groupNames)
          {
-            allowed = true;
-            break;
+            if(clientGroupName.equals(groupName))
+            {
+               allowed = true;
+               break;
+            }
          }
       }
       
@@ -155,5 +154,9 @@ public class ControlCommandServiceImpl implements ControlCommandService {
 
    public void setComponentFactory(ComponentFactory componentFactory) {
       this.componentFactory = componentFactory;
+   }
+   
+   public void setClientService(ClientService clientService) {
+      this.clientService = clientService;
    }
 }

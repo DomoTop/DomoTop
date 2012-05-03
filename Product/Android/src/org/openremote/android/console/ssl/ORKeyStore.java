@@ -400,6 +400,8 @@ public class ORKeyStore implements ORConnectionDelegate {
 		X509Certificate[] chain = null;
 		String dname = null;
 		
+		// TODO : 05-03 09:10:53.575: E/AndroidRuntime(23210): java.lang.ClassCastException: [Ljava.security.cert.Certificate;
+
 		try {
 			chain =  (X509Certificate[]) keystore.getCertificateChain(currentServer);
 

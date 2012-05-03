@@ -466,8 +466,29 @@ public class ClientServiceImpl implements ClientService {
     */
    @Override
    public String getGroupName(String DN) {
-      //TODO
-      return "parents";
+      
+      String returnValue = "";
+      PreparedStatement preparedStatement = null;
+      ResultSet resultSet = null;
+
+      if (database != null)
+      {
+         try
+         {            
+            preparedStatement = database.createPrepareStatement("SELECT group_name FROM client JOIN client_group ON (client.client_group_id = client_group.group_id) WHERE client_dn = ?");
+            preparedStatement.setString(1, DN);
+            resultSet = database.doSQL(preparedStatement);
+            
+            if(resultSet != null) 
+            {
+               resultSet.next();
+               returnValue = resultSet.getString("group_name");
+            }
+         } catch (SQLException e) {
+            logger.error("SQL Exception: " + e.getMessage() + " (this error can be ignored if you didn't grant access)");
+         }
+      }
+      return returnValue;
    }
    
    /**
