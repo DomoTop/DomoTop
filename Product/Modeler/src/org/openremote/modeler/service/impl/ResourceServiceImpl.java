@@ -59,6 +59,7 @@ import org.apache.velocity.exception.VelocityException;
 import org.openremote.modeler.client.Configuration;
 import org.openremote.modeler.client.Constants;
 import org.openremote.modeler.client.model.Command;
+import org.openremote.modeler.client.proxy.BeanModelDataBase;
 import org.openremote.modeler.client.utils.PanelsAndMaxOid;
 import org.openremote.modeler.configuration.PathConfig;
 import org.openremote.modeler.domain.Absolute;
@@ -73,7 +74,7 @@ import org.openremote.modeler.domain.DeviceMacroItem;
 import org.openremote.modeler.domain.DeviceMacroRef;
 import org.openremote.modeler.domain.Group;
 import org.openremote.modeler.domain.GroupRef;
-import org.openremote.modeler.domain.MyGroup;
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.Panel;
 import org.openremote.modeler.domain.ProtocolAttr;
 import org.openremote.modeler.domain.Screen;
@@ -107,7 +108,6 @@ import org.openremote.modeler.protocol.ProtocolContainer;
 import org.openremote.modeler.service.ControllerConfigService;
 import org.openremote.modeler.service.DeviceCommandService;
 import org.openremote.modeler.service.DeviceMacroService;
-import org.openremote.modeler.service.GroupService;
 import org.openremote.modeler.service.ResourceService;
 import org.openremote.modeler.service.UserService;
 import org.openremote.modeler.touchpanel.TouchPanelTabbarDefinition;
@@ -119,6 +119,8 @@ import org.openremote.modeler.utils.UIComponentBox;
 import org.openremote.modeler.utils.XmlParser;
 import org.openremote.modeler.utils.ZipUtils;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+
+import com.extjs.gxt.ui.client.data.BeanModel;
 
 /**
  * The Class ResourceServiceImpl.
@@ -151,7 +153,6 @@ public class ResourceServiceImpl implements ResourceService {
    private UserService userService;
 
    private ControllerConfigService controllerConfigService = null;
-   private GroupService groupService = null;
 
 
    /**
@@ -544,10 +545,6 @@ public class ResourceServiceImpl implements ResourceService {
    public void setDeviceMacroService(DeviceMacroService deviceMacroService) {
       this.deviceMacroService = deviceMacroService;
    }
-
-   public void setGroupService(GroupService service) {
-	   this.groupService = service;
-   }
    
    /**
     * {@inheritDoc}
@@ -645,7 +642,11 @@ public class ResourceServiceImpl implements ResourceService {
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
       Collection<ControllerConfig> configs = controllerConfigService.listAllConfigs();
-      Collection<MyGroup> groups = groupService.get();
+      Collection<ClientGroup> groups = new ArrayList<ClientGroup>();
+//      for(BeanModel bean: BeanModelDataBase.userGroupTable.loadAll()) {
+//    	  groups.add((MyGroup) bean.getBean());
+//      }
+      
       configs.removeAll(controllerConfigService.listAllexpiredConfigs());
       configs.addAll(controllerConfigService.listAllMissingConfigs());
 
@@ -664,8 +665,9 @@ public class ResourceServiceImpl implements ResourceService {
       context.put("configs", configs);
       context.put("stringUtils", StringUtils.class);
       context.put("groups", groups);
-
-      return VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
+      String xml = VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
+      System.out.println(xml);
+      return xml;
    }
 
    private void initGroupsAndScreens(Collection<Panel> panels, Set<Group> groups, Set<Screen> screens) {

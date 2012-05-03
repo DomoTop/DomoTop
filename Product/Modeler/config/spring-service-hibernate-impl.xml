@@ -82,7 +82,6 @@
 	<bean id="sensorService" class="org.openremote.modeler.service.impl.SensorServiceImpl" parent="abstractService"></bean>
 	<bean id="controllerConfigService" class="org.openremote.modeler.service.impl.ControllerConfigServiceImpl" parent="abstractService"/>
 	<bean id="templateService" class="org.openremote.modeler.service.impl.TemplateServiceImpl" parent="abstractService"/>
-	<bean id="groupService" class="org.openremote.modeler.service.impl.GroupServiceImpl" parent="abstractService"/>
 	
 </beans>
 

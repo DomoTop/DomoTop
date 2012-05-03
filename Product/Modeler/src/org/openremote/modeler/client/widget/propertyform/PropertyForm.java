@@ -20,10 +20,13 @@ import org.openremote.modeler.client.event.WidgetDeleteEvent;
 import org.openremote.modeler.client.icon.Icons;
 import org.openremote.modeler.client.utils.PropertyEditable;
 import org.openremote.modeler.client.utils.WidgetSelectionUtil;
+import org.openremote.modeler.client.widget.component.GroupSelectAndDeleteButtonWidget;
 import org.openremote.modeler.client.widget.component.ScreenTabbar;
 import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
+import org.openremote.modeler.domain.ClientGroup;
+import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.component.UIControl;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
@@ -34,7 +37,6 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.AdapterField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -46,7 +48,8 @@ import com.google.gwt.user.client.ui.ListBox;
  */
 public class PropertyForm extends FormPanel {
    private ComponentContainer componentContainer;
-
+   
+   
    public PropertyForm(ComponentContainer componentContainer) {
       this.componentContainer = componentContainer;
       setFrame(true);
@@ -89,33 +92,36 @@ public class PropertyForm extends FormPanel {
    } 
 
    protected void addGroupField(final UIControl uiControl) {
-		ListBox lb = new ListBox();
-		
-		//should become dynamic
-		String[] groups = {"foo", "bar", "baz", "toto", "tintin"};
-		for(int i = 0; i < groups.length; i++) {
-			lb.addItem(groups[i]);
-			if(uiControl.getGroup().equals(groups[i])) {
-				lb.setSelectedIndex(i);
-			}
-		}
-	
-		// Make enough room for all five items (setting this value to 1 turns it
-		// into a drop-down list).
-		lb.setVisibleItemCount(1);
-		lb.addChangeHandler(new ChangeHandler() {
+		final GroupSelectAndDeleteButtonWidget widget = new GroupSelectAndDeleteButtonWidget();
+		widget.setGroups(ClientGroupList.getInstance().getAll(), uiControl.getGroup());
+		widget.addChangeHandler(new ChangeHandler() {
 			
 			@Override
 			public void onChange(ChangeEvent arg0) {
 				ListBox lb = (ListBox)arg0.getSource();
-				uiControl.setGroup(lb.getItemText(lb.getSelectedIndex()));
+				if(lb.getItemText(lb.getSelectedIndex()).equals(GroupSelectAndDeleteButtonWidget.NO_GROUP_ITEM)) {
+					uiControl.setGroup(null);
+				} else {
+					uiControl.setGroup(lb.getItemText(lb.getSelectedIndex()));
+				}
 			}
 		});
-
-      
-		AdapterField adapterGroup = new AdapterField(lb);
-		adapterGroup.setFieldLabel("Group");     
-		add(adapterGroup);
+		
+		widget.addAddListener(new SelectionListener<ButtonEvent>() {
+			@Override
+			public void componentSelected(ButtonEvent ce) {
+				MessageBox.prompt("Add a new group", "Enter the name of your new group. This name has to be unique", 
+						          new Listener<MessageBoxEvent>() {
+									@Override
+									public void handleEvent(MessageBoxEvent be) {
+										ClientGroupList.getInstance().add(new ClientGroup(be.getValue()));
+										widget.setGroups(ClientGroupList.getInstance().getAll(), uiControl.getGroup());
+									}
+								});
+			}
+		});
+		
+		add(widget);
    }
 	 
    public PropertyForm(PropertyEditable componentContainer) {

@@ -72,6 +72,9 @@ public class BeanModelDataBase {
    /** Store all the DeviceItem models. */
    public static final BeanModelTable deviceMacroItemTable = new DeviceMacroBeanModelTable();
    
+   /** Store all the UserGroup models */
+   //public static final BeanModelTable userGroupTable = new BeanModelTable();
+   
    /** The Constant activityTable. */
    public static final BeanModelTable activityTable = new BeanModelTable();
    
