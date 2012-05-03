@@ -20,6 +20,7 @@
 package org.openremote.controller.service.impl;
 
 import java.security.Principal;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,12 @@ import org.openremote.controller.command.ExecutableCommand;
 import org.openremote.controller.command.RemoteActionXMLParser;
 import org.openremote.controller.component.ComponentFactory;
 import org.openremote.controller.component.control.Control;
+import org.openremote.controller.exception.InvalidGroupException;
 import org.openremote.controller.exception.NoSuchCommandException;
 import org.openremote.controller.exception.NoSuchComponentException;
+import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ControlCommandService;
+import org.openremote.controller.service.GroupService;
 import org.openremote.controller.utils.MacrosIrDelayUtil;
 
 
@@ -49,6 +53,8 @@ public class ControlCommandServiceImpl implements ControlCommandService {
    private RemoteActionXMLParser remoteActionXMLParser;
    
    private ComponentFactory componentFactory;
+   
+   private ClientService clientService;
    
    /**
     * {@inheritDoc}
@@ -73,21 +79,37 @@ public class ControlCommandServiceImpl implements ControlCommandService {
     */
    @Override
    public void trigger(String controlID, String commandParam, Principal DN) 
-   {
-      // TODO: Search DN in Database
-      // TODO: Get group from database
-      // TODO: Get group from XML Controller
-      // TODO: Match the group names
-      
-      logger.error("DN = " + DN.toString());
-      
+   {      
+      // Get the group name from the control component
       List<String>groupElementIDs = getGroupsFromComponent(controlID);
+      List<String>groupNames = new ArrayList<String>();
       Element groupElement = null;
+      String clientGroupName = "";
+      boolean allowed = false;
+      
       for (String groupElementID:groupElementIDs)
       {
          groupElement = remoteActionXMLParser.queryElementFromXMLById(groupElementID);
          String groupName = groupElement.getAttributeValue("name");
-         logger.error("Component with ID: " + controlID + " has group name: " + groupName);
+         groupNames.add(groupName);
+      }
+      
+      clientGroupName = clientService.getGroupName(DN.toString());
+      if(!clientGroupName.isEmpty())
+      {
+         for (String groupName:groupNames)
+         {
+            if(clientGroupName.equals(groupName))
+            {
+               allowed = true;
+               break;
+            }
+         }
+      }
+      
+      if(!allowed)
+      {
+         throw new InvalidGroupException("The command you try to execute is not allowed (you are in the wrong group)");
       }
       
       this.trigger(controlID, commandParam);
@@ -132,5 +154,9 @@ public class ControlCommandServiceImpl implements ControlCommandService {
 
    public void setComponentFactory(ComponentFactory componentFactory) {
       this.componentFactory = componentFactory;
+   }
+   
+   public void setClientService(ClientService clientService) {
+      this.clientService = clientService;
    }
 }

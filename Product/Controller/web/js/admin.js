@@ -436,10 +436,10 @@ function onChangeGroup(form)
 		data: $(form).serialize(),
     complete: function(response) {
 			clearMessage();
-	  	if (response.statusText == 'OK') {
+	  	if (response.responseText == 'OK') {
 				message("Group of device is successfully updated.");
 			} else {
-				error("There was a problem updating the group of the device: " + response.statusText);
+				error("There was a problem updating the group of the device: " + response.responseText);
 			}    
   	}
 	});						

@@ -107,7 +107,9 @@
   </bean>
   
     <!-- service for control command from panel -->
-    <bean id="controlCommandService" class="org.openremote.controller.service.impl.ControlCommandServiceImpl" />
+    <bean id="controlCommandService" class="org.openremote.controller.service.impl.ControlCommandServiceImpl">
+    	<property name="clientService" ref="clientService"></property>
+    </bean>
     
     <!-- controller.xml parser -->
     <bean id = "remoteActionXMLParser"

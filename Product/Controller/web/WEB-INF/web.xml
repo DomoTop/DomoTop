@@ -350,6 +350,19 @@
   </servlet>
 
   <!--
+   | Servlet for 'rest/device/group' implementation
+   +-->
+  <servlet>
+    <description>
+        Get group from device via client table
+    </description>
+
+    <display-name>Get group from device -- /rest/device/group</display-name>
+    <servlet-name>FindGroupFromDevice</servlet-name>
+    <servlet-class>org.openremote.controller.rest.FindGroupFromDevice</servlet-class>
+  </servlet>
+
+  <!--
    | Servlet for 'rest/cert/put/*' implementation
    +-->
   <servlet>
@@ -477,6 +490,19 @@
   <servlet-mapping>
     <servlet-name>FindCertificateByID</servlet-name>
     <url-pattern>/rest/cert/get/*/</url-pattern>
+  </servlet-mapping>
+
+  <!--
+   | Map Controller REST API servlet which returns the certificate
+   +-->
+  <servlet-mapping>
+    <servlet-name>FindGroupFromDevice</servlet-name>
+    <url-pattern>/rest/device/group</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>FindGroupFromDevice</servlet-name>
+    <url-pattern>/rest/device/group/</url-pattern>
   </servlet-mapping>
 
   <!--

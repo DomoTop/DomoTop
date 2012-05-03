@@ -49,6 +49,8 @@ public class ControlCommandException extends ControllerException
 
   public final static int INVALID_REFERENCE = 430;
 
+  public static final int INVALID_GROUP = 431;
+
 
   public ControlCommandException()
   {
