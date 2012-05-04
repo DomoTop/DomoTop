@@ -182,7 +182,8 @@
 	<!-- controller.xml change service -->
   <bean id = "controllerXMLChangeService" class="org.openremote.controller.service.impl.ControllerXMLChangeServiceImpl">
     <property name="groupService" ref="groupService"></property>
-    <property name="clientService" ref="clientService"></property>    	
+    <property name="clientService" ref="clientService"></property>
+    <property name="configurationService" ref="configurationService"></property>     	
   </bean>
 	
 	<bean id = "controllerXMLListenSharingData" class="org.openremote.controller.config.ControllerXMLListenSharingData" />
