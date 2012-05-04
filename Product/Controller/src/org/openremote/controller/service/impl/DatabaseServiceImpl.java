@@ -34,6 +34,7 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_NAME_6 = "session_timestamp";
    private final static String CONFIGURATION_NAME_7 = "salt";
    private final static String CONFIGURATION_NAME_8 = "first_time_sync";
+   private final static String CONFIGURATION_NAME_9 = "group_required";
    
    private final static String CONFIGURATION_TYPE_1 = "boolean";
    private final static String CONFIGURATION_TYPE_2 = "string";
@@ -43,11 +44,13 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_TYPE_6 = "string";
    private final static String CONFIGURATION_TYPE_7 = "string";
    private final static String CONFIGURATION_TYPE_8 = "boolean";
+   private final static String CONFIGURATION_TYPE_9 = "boolean";
 
    private final static String CONFIGURATION_VALUE_1 = "true";
    private final static String CONFIGURATION_VALUE_4 = "true";
    private final static String CONFIGURATION_VALUE_7 = AlgorithmUtil.getSalt();
    private final static String CONFIGURATION_VALUE_8 = "false";
+   private final static String CONFIGURATION_VALUE_9 = "true";
    
    private final static String CONFIGURATION_INFORMATION_1 = "When checked the authentication is activated, meaning devices must be accepted before they can use the OpenRemote Controller.<br/>If not checked there is no authentication and SSL security is not active.";    
    private final static String CONFIGURATION_INFORMATION_2 = "The username of the administrator.";
@@ -57,7 +60,8 @@ public class DatabaseServiceImpl implements DatabaseService
    private final static String CONFIGURATION_INFORMATION_6 = "The session timestamp";
    private final static String CONFIGURATION_INFORMATION_7 = "This is a random salt used for hashing the password.";
    private final static String CONFIGURATION_INFORMATION_8 = "A boolean to keep track of the first time synced.";
-   
+   private final static String CONFIGURATION_INFORMATION_9 = "When checked a group is required for a device.<br/>Otherwise a group is not required to set and will be ignored.";
+    
    private ControllerConfiguration configuration;
    private static Connection connection;
    private Server hsqlServer;
@@ -203,7 +207,8 @@ public class DatabaseServiceImpl implements DatabaseService
                "(null, '" + CONFIGURATION_NAME_5 + "', '', '" + CONFIGURATION_TYPE_5 + "', '" + CONFIGURATION_INFORMATION_5 + "')," + 
                "(null, '" + CONFIGURATION_NAME_6 + "', '', '" + CONFIGURATION_TYPE_6 + "', '" + CONFIGURATION_INFORMATION_6 + "')," +
                "(null, '" + CONFIGURATION_NAME_7 + "', '" + CONFIGURATION_VALUE_7 + "', '" + CONFIGURATION_TYPE_7 + "', '" + CONFIGURATION_INFORMATION_7 + "')," +
-               "(null, '" + CONFIGURATION_NAME_8 + "', '" + CONFIGURATION_VALUE_8 + "', '" + CONFIGURATION_TYPE_8 + "', '" + CONFIGURATION_INFORMATION_8 + "')")
+               "(null, '" + CONFIGURATION_NAME_8 + "', '" + CONFIGURATION_VALUE_8 + "', '" + CONFIGURATION_TYPE_8 + "', '" + CONFIGURATION_INFORMATION_8 + "')," +
+               "(null, '" + CONFIGURATION_NAME_9 + "', '" + CONFIGURATION_VALUE_9 + "', '" + CONFIGURATION_TYPE_9 + "', '" + CONFIGURATION_INFORMATION_9 + "')")
                .execute(); 
       } catch (SQLException e) {
          // ignore exceptions, because database filling can be done multiple times

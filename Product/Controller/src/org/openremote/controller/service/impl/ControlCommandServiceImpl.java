@@ -35,6 +35,7 @@ import org.openremote.controller.exception.InvalidGroupException;
 import org.openremote.controller.exception.NoSuchCommandException;
 import org.openremote.controller.exception.NoSuchComponentException;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.ControlCommandService;
 import org.openremote.controller.service.GroupService;
 import org.openremote.controller.utils.MacrosIrDelayUtil;
@@ -55,6 +56,8 @@ public class ControlCommandServiceImpl implements ControlCommandService {
    private ComponentFactory componentFactory;
    
    private ClientService clientService;
+
+   private ConfigurationService configurationService;
    
    /**
     * {@inheritDoc}
@@ -107,11 +110,13 @@ public class ControlCommandServiceImpl implements ControlCommandService {
          }
       }
       
-      if(!allowed)
-      {
-         throw new InvalidGroupException("The command you try to execute is not allowed (you are in the wrong group)");
-      }
-      
+      if(configurationService.getBooleanItem("group_required"))
+      {      
+         if(!allowed)
+         {
+            throw new InvalidGroupException("The command you try to execute is not allowed (you are in the wrong group)");
+         }
+      }      
       this.trigger(controlID, commandParam);
    }
    
@@ -158,5 +163,9 @@ public class ControlCommandServiceImpl implements ControlCommandService {
    
    public void setClientService(ClientService clientService) {
       this.clientService = clientService;
+   }
+   
+   public void setConfigurationService(ConfigurationService configurationService) {
+      this.configurationService = configurationService;
    }
 }

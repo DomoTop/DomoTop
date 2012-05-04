@@ -109,6 +109,7 @@
     <!-- service for control command from panel -->
     <bean id="controlCommandService" class="org.openremote.controller.service.impl.ControlCommandServiceImpl">
     	<property name="clientService" ref="clientService"></property>
+    	<property name="configurationService" ref="configurationService"></property>
     </bean>
     
     <!-- controller.xml parser -->
