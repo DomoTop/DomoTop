@@ -73,14 +73,6 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    public void setSwitchCommand(Switch switchCommand) {
       this.switchCommand = switchCommand;
    }
-
-   public String getGroup() {
-      return group;
-   }
-
-   public void setGroup(String group) {
-      this.group = group;
-   }
    
    @Override
    public String getName() {

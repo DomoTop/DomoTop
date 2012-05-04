@@ -18,19 +18,22 @@ package org.openremote.modeler.client.widget.propertyform;
 
 import org.openremote.modeler.client.event.WidgetDeleteEvent;
 import org.openremote.modeler.client.icon.Icons;
+import org.openremote.modeler.client.proxy.GroupBeanModelProxy;
+import org.openremote.modeler.client.rpc.AsyncServiceFactory;
+import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.client.utils.PropertyEditable;
 import org.openremote.modeler.client.utils.WidgetSelectionUtil;
+import org.openremote.modeler.client.widget.component.GroupSelectAndDeleteButtonWidget;
 import org.openremote.modeler.client.widget.component.ScreenTabbar;
 import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
+import org.openremote.modeler.domain.ClientGroup;
+import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.component.UIControl;
-import org.openremote.modeler.domain.component.UISwitch;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
@@ -38,15 +41,19 @@ import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * The PropertyForm initialize the property form display style.
  */
 public class PropertyForm extends FormPanel {
    private ComponentContainer componentContainer;
-
+   
+   
    public PropertyForm(ComponentContainer componentContainer) {
       this.componentContainer = componentContainer;
       setFrame(true);
@@ -89,17 +96,40 @@ public class PropertyForm extends FormPanel {
    } 
 
    protected void addGroupField(final UIControl uiControl) {
-      final TextField<String> group = new TextField<String>();
-      group.setFieldLabel("Group");
-      group.setName("group");
-      group.setValue(uiControl.getGroup());
-      group.addListener(Events.Blur, new Listener<BaseEvent>() {
-          @Override
-          public void handleEvent(BaseEvent be) {
-        	  uiControl.setGroup(group.getValue());
-          }
-       });
-      add(group);
+		final GroupSelectAndDeleteButtonWidget widget = new GroupSelectAndDeleteButtonWidget();
+		widget.setGroups(ClientGroupList.getInstance().getAll(), uiControl.getGroup());
+		widget.addChangeHandler(new ChangeHandler() {
+			
+			@Override
+			public void onChange(ChangeEvent arg0) {
+				ListBox lb = (ListBox)arg0.getSource();
+				if(lb.getItemText(lb.getSelectedIndex()).equals(GroupSelectAndDeleteButtonWidget.NO_GROUP_ITEM)) {
+					uiControl.setGroup(null);
+				} else {
+					uiControl.setGroup(lb.getItemText(lb.getSelectedIndex()));
+				}
+			}
+		});
+		
+		widget.addAddListener(new SelectionListener<ButtonEvent>() {
+			@Override
+			public void componentSelected(ButtonEvent ce) {
+				MessageBox.prompt("Add a new group", "Enter the name of your new group. This name has to be unique", 
+						          new Listener<MessageBoxEvent>() {
+									@Override
+									public void handleEvent(MessageBoxEvent be) {
+										GroupBeanModelProxy.add(be.getValue(), new AsyncSuccessCallback<String>() {
+											@Override
+											public void onSuccess(String result) {
+												widget.addItem(result);
+											}
+										});
+									}
+								});
+			}
+		});
+		
+		add(widget);
    }
 	 
    public PropertyForm(PropertyEditable componentContainer) {

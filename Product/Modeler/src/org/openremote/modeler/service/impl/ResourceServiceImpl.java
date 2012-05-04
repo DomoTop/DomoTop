@@ -59,10 +59,12 @@ import org.apache.velocity.exception.VelocityException;
 import org.openremote.modeler.client.Configuration;
 import org.openremote.modeler.client.Constants;
 import org.openremote.modeler.client.model.Command;
+import org.openremote.modeler.client.proxy.BeanModelDataBase;
 import org.openremote.modeler.client.utils.PanelsAndMaxOid;
 import org.openremote.modeler.configuration.PathConfig;
 import org.openremote.modeler.domain.Absolute;
 import org.openremote.modeler.domain.Cell;
+import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.CommandDelay;
 import org.openremote.modeler.domain.CommandRefItem;
 import org.openremote.modeler.domain.ControllerConfig;
@@ -73,6 +75,7 @@ import org.openremote.modeler.domain.DeviceMacroItem;
 import org.openremote.modeler.domain.DeviceMacroRef;
 import org.openremote.modeler.domain.Group;
 import org.openremote.modeler.domain.GroupRef;
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.Panel;
 import org.openremote.modeler.domain.ProtocolAttr;
 import org.openremote.modeler.domain.Screen;
@@ -118,6 +121,8 @@ import org.openremote.modeler.utils.XmlParser;
 import org.openremote.modeler.utils.ZipUtils;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import com.extjs.gxt.ui.client.data.BeanModel;
+
 /**
  * The Class ResourceServiceImpl.
  * 
@@ -149,6 +154,7 @@ public class ResourceServiceImpl implements ResourceService {
    private UserService userService;
 
    private ControllerConfigService controllerConfigService = null;
+
 
    /**
     * {@inheritDoc}
@@ -540,7 +546,7 @@ public class ResourceServiceImpl implements ResourceService {
    public void setDeviceMacroService(DeviceMacroService deviceMacroService) {
       this.deviceMacroService = deviceMacroService;
    }
-
+   
    /**
     * {@inheritDoc}
     */
@@ -637,6 +643,8 @@ public class ResourceServiceImpl implements ResourceService {
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
       Collection<ControllerConfig> configs = controllerConfigService.listAllConfigs();
+      Collection<ClientGroup> groups = ClientGroupList.getInstance().getAll();
+      
       configs.removeAll(controllerConfigService.listAllexpiredConfigs());
       configs.addAll(controllerConfigService.listAllMissingConfigs());
 
@@ -654,8 +662,10 @@ public class ResourceServiceImpl implements ResourceService {
       context.put("maxId", maxId);
       context.put("configs", configs);
       context.put("stringUtils", StringUtils.class);
-
-      return VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
+      context.put("groups", groups);
+      String xml = VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
+      System.out.println(xml);
+      return xml;
    }
 
    private void initGroupsAndScreens(Collection<Panel> panels, Set<Group> groups, Set<Screen> screens) {
