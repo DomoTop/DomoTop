@@ -122,6 +122,7 @@ function message(msg){
 		$('#msg').hide().text(msg);
 	} else {
 		$('#msg').show().html(msg);
+		setTimeout("clearMessage()", 4500);
 	}
 }
 
