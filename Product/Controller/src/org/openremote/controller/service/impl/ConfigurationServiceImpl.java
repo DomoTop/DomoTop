@@ -127,7 +127,8 @@ public class ConfigurationServiceImpl implements ConfigurationService
          result = database.doSQL("SELECT * FROM configuration WHERE " +
          		"configuration_name != 'composer_password' AND " +
          		"configuration_name != 'session_timestamp' AND " +
-         		"configuration_name != 'salt'");
+         		"configuration_name != 'salt' AND " +
+               "configuration_name != 'first_time_sync'");
       }      
       return result;
    }

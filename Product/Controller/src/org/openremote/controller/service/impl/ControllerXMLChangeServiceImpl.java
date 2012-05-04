@@ -42,6 +42,7 @@ import org.openremote.controller.exception.ControllerException;
 import org.openremote.controller.exception.NoSuchComponentException;
 import org.openremote.controller.model.Group;
 import org.openremote.controller.service.ClientService;
+import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.service.ControllerXMLChangeService;
 import org.openremote.controller.service.GroupService;
 import org.openremote.controller.service.StatusCacheService;
@@ -61,7 +62,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
 {
 
   private static Logger logger = Logger.getLogger(Constants.DEPLOYER_LOG_CATEGORY);
-
+  private static String FIRST_TIME_SYNC = "first_time_sync";
   
   private ControllerXMLListenSharingData controllerXMLListenSharingData;
   private RemoteActionXMLParser remoteActionXMLParser;
@@ -70,6 +71,8 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   private SensorBuilder sensorBuilder;
   private GroupService groupService;
   private ClientService clientService;
+  private ConfigurationService configurationService;
+  private String fileContentOld = "";
   
   @SuppressWarnings("finally")
   @Override public synchronized boolean refreshController()
@@ -81,6 +84,7 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
 
     logger.info("Controller.xml of Controller changed, refreshing controller.xml");
     boolean success = false;
+    String fileContent;
     tagControllerXMLChanged(true);
 
     try
@@ -89,8 +93,15 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
        clearChangedStatusTable();
        clearStatusCache();
        clearAndReloadSensors();
-       clearAndReloadGroups();
-       clearAndUpdateGroupDatabase();
+       
+       fileContent = controllerXMLListenSharingData.getControllerXMLFileContent();
+       // Be sure there is new content available of the controller XML
+       if(!fileContent.equals(fileContentOld))
+       {       
+          clearAndReloadGroups();
+          clearAndUpdateGroupDatabase();
+          fileContentOld = fileContent;
+       }
        restartDevicePollingThreads();
        success = true;
     }
@@ -103,6 +114,11 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
 
     finally
     {
+      if(!configurationService.getBooleanItem(FIRST_TIME_SYNC))
+      {
+         configurationService.updateItem(FIRST_TIME_SYNC, true);
+      }
+      
       tagControllerXMLChanged(false);
       String isSuccessInfo = success ? " success " : " failed ";
       logger.info("Finished refreshing controller.xml" + isSuccessInfo);
@@ -354,6 +370,17 @@ public class ControllerXMLChangeServiceImpl implements ControllerXMLChangeServic
   public void setClientService(ClientService clientService) {
      this.clientService = clientService;
   }  
+  
+  /**
+   * Sets the Configuration service.
+   * 
+   * @param configuration
+   *           service
+   */
+
+  public void setConfigurationService(ConfigurationService configurationService) {
+     this.configurationService = configurationService;
+  } 
   
 }
 

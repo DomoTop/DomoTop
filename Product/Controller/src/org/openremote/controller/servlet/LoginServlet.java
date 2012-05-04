@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.service.ControllerXMLChangeService;
 import org.openremote.controller.service.FileService;
 import org.openremote.controller.spring.SpringContext;
 import org.openremote.controller.utils.AuthenticationUtil;
@@ -71,8 +72,12 @@ public class LoginServlet extends HttpServlet
   private final static Logger logger = Logger.getLogger(Constants.LOGIN_SERVLET_LOG_CATEGORY);
   private final static String DATABASE_SALT_NAME = "salt";
   private final static String PEPPER_PROPERTY_VALUE = "java.class.path";
+  private static String FIRST_TIME_SYNC = "first_time_sync";
   private static String SALT_STRING = "cbb9e9c64deaa65656f77aed39f8903c92cd2a4595cae16ddcfe9176567990d9b015376a0f832c1099b5b31630e4e76f151b6bf5021e3989d523ed93dc9510c5";
   private static Properties properties = System.getProperties();
+  
+  private ControllerXMLChangeService controllerXMLChangeService = (ControllerXMLChangeService) SpringContext
+        .getInstance().getBean("controllerXMLChangeService");
   
   private ConfigurationService configurationService = (ConfigurationService) SpringContext
         .getInstance().getBean("configurationService");
@@ -113,12 +118,21 @@ public class LoginServlet extends HttpServlet
      httpGet.setHeader(Constants.HTTP_AUTHORIZATION_HEADER, Constants.HTTP_BASIC_AUTHORIZATION
            + encode(username, password));
 
+     boolean success = false;
      try {
         HttpResponse resp= httpClient.execute(httpGet);
         int statuscode = resp.getStatusLine().getStatusCode();
         if (200 == statuscode) {
-           if(databaseuser == null || databaseuser.equals("")) {
-              fileService.writeZipAndUnzip(resp.getEntity().getContent());
+           
+           if(!configurationService.getBooleanItem(FIRST_TIME_SYNC))
+           {
+              if(databaseuser == null || databaseuser.equals("")) {
+                 success = fileService.writeZipAndUnzip(resp.getEntity().getContent());
+                 if(success)
+                 {
+                    controllerXMLChangeService.refreshController();
+                 }
+              }
            }
            
            if(!configurationService.getItem("composer_password").equals(this.getHashedPassword(password)))
