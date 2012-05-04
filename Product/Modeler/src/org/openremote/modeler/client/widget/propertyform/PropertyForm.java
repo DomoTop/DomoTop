@@ -118,7 +118,7 @@ public class PropertyForm extends FormPanel {
 						          new Listener<MessageBoxEvent>() {
 									@Override
 									public void handleEvent(MessageBoxEvent be) {
-										GroupBeanModelProxy.add(be.getValue(), new AsyncSuccessCallback<String>() {
+										GroupBeanModelProxy.add(new ClientGroup(be.getValue()), new AsyncSuccessCallback<String>() {
 											@Override
 											public void onSuccess(String result) {
 												widget.addItem(result);

@@ -10,5 +10,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("group.smvc")
 public interface GroupRPCService extends RemoteService {
 
-	void add(String group);
+	void add(ClientGroup group);
 }

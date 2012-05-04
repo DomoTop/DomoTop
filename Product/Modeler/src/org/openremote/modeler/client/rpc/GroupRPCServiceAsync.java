@@ -6,5 +6,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface GroupRPCServiceAsync  {
 	
-	void add(String group, AsyncCallback<Void> callback);
+	void add(ClientGroup group, AsyncCallback<Void> callback);
 }

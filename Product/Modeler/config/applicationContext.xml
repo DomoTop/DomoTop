@@ -56,6 +56,7 @@
                 <value>org.openremote.modeler.domain.Switch</value>
                 <value>org.openremote.modeler.domain.Slider</value> 
                 <value>org.openremote.modeler.domain.ControllerConfig</value>
+                <value>org.openremote.modeler.domain.ClientGroup</value>
 			</list>
 		</property>
 		<property name="mappingResources">

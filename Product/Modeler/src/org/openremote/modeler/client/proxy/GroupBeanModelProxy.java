@@ -19,34 +19,27 @@
 */
 package org.openremote.modeler.client.proxy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openremote.modeler.client.model.TreeFolderBean;
 import org.openremote.modeler.client.rpc.AsyncServiceFactory;
 import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.domain.ClientGroup;
-import org.openremote.modeler.domain.Slider;
+import org.openremote.modeler.domain.Device;
 
 import com.extjs.gxt.ui.client.data.BeanModel;
-import com.extjs.gxt.ui.client.widget.MessageBox;
 
 public class GroupBeanModelProxy {
    private GroupBeanModelProxy() {
    }
      
-   public static void add(final String group, final AsyncSuccessCallback<String> callback){
+   public static void add(final ClientGroup group, final AsyncSuccessCallback<String> callback){
       if (group != null) {
-         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, 
-            new AsyncSuccessCallback<Void>() {
+         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<Void>() {
 
 				@Override
 				public void onSuccess(Void result) {
-					callback.onSuccess(group);
+					callback.onSuccess(group.getName());
 				}
 
                });
       }
    }
-
 }
