@@ -171,7 +171,7 @@ public class ORConnection
    }
 
    /** Execute the http request.*/
-   public void execute() {
+   private void execute() {
       new Thread(new Runnable() {
          public void run() {
             try {

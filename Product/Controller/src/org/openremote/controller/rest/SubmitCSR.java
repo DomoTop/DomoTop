@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
 import org.openremote.controller.exception.ControlCommandException;
+import org.openremote.controller.service.CertificateService;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
@@ -78,12 +79,16 @@ public class SubmitCSR extends RESTAPI
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
         "configurationService");
+  private static final CertificateService certificateService = (CertificateService) SpringContext.getInstance().getBean(
+        "certificateService");
   
   /**
    * Write CSR to file
+ * @throws Exception 
    */
-  protected long saveCsr(String username, String cert) throws IOException
+  protected long saveCsr(String username, String cert) throws Exception
   {
+     long returnValue = 0;
     String certificate = URLDecoder.decode(cert, "UTF-8");
     long timestamp = System.currentTimeMillis();
     String filename = URLDecoder.decode(username, "UTF-8") + timestamp + ".csr";
@@ -94,14 +99,26 @@ public class SubmitCSR extends RESTAPI
     out.write(certificate);
     out.close();
     String alias = filename.substring(0, filename.lastIndexOf('.'));
-    int retvalue = clientService.addClient(alias);
-    if(retvalue != 1)
+    int retvalue = clientService.addClient(alias, timestamp);
+    if(retvalue == 0)
     {
-        File file = new File(rootCaPath + CSR_PATH + filename);
-        file.delete();
-        throw new IOException("CSR was already submitted (this error can be ignored)");
+        throw new Exception("Error with database insert in client table.");
+    } 
+    else if (retvalue == 1) 
+    {
+       returnValue = timestamp;
+    } 
+    else if (retvalue == 2) 
+    { 
+       // Get timestamp via CSR
+       certificateService.parseCSRFile(alias);
+       returnValue = clientService.getTimestamp(certificateService.getPin(), certificateService.getDeviceName());
+       
+       // Certificate already exists, cleaning up
+       File file = new File(rootCaPath + CSR_PATH + filename);
+       file.delete();
     }
-    return timestamp;
+    return returnValue;
   }
 
   // Implement REST API ---------------------------------------------------------------------------
@@ -138,8 +155,12 @@ public class SubmitCSR extends RESTAPI
     catch (IOException e) 
     {
         logger.error("Failed to create certificate request file: " + e.getMessage());
-        //sendResponse(response, e.getMessage());
         sendResponse(response, 501, e.getMessage());
-    }
+    }    
+    catch (Exception e) 
+    {
+       logger.error("Failed to create certificate request file: " + e.getMessage());
+       sendResponse(response, 502, e.getMessage());
+   }
   }
 }

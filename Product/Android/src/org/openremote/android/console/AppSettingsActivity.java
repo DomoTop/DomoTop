@@ -846,8 +846,10 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 			   dialog.cancel();
 			   if(msg.what == 0) {
 				   startMain();   
+			   } else if(msg.what == 2) {
+				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "Connection error", "Can't connect to the server.");
 			   } else {
-				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "sadly you don't have access yet");
+				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access yet.\nPlease ask the administrator for permission.");
 			   }
 			   
 		   }  

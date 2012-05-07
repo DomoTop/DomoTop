@@ -76,6 +76,7 @@ public interface CertificateService
     * 
     * @return PrivateKey Object
     */
+   PrivateKey getCaPrivateKey();
    /**
     * Sign a certificate using a PCKS10 Certification request file and the PrivateKey from the CA
     * 
@@ -90,8 +91,33 @@ public interface CertificateService
     * @throws OperatorCreationException
     * @throws CertificateException
     */
-   PrivateKey getCaPrivateKey();
    X509Certificate signCertificate(PKCS10CertificationRequest inputCSR, PrivateKey caPrivate, String serial)
          throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
-         IOException, OperatorCreationException, CertificateException;
+         IOException, OperatorCreationException, CertificateException;   
+   /**
+    * Parse CSR File to pin, email, device name and cn
+    * 
+    * @param alias String alias of the csr
+    */
+   void parseCSRFile(String alias);   
+   /**
+    * CSR getter
+    * @return Pin
+    */
+   String getPin();
+   /**
+    * CSR getter
+    * @return e-mail
+    */
+   String getEmail();
+   /**
+    * CSR getter
+    * @return device name
+    */
+   String getDeviceName();
+   /**
+    * CSR getter
+    * @return cn
+    */
+   String getCN();
 }

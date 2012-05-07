@@ -20,6 +20,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Security;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
@@ -29,12 +30,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.pkcs.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -42,6 +52,7 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.DefaultSignatureAlgorithmIdentifierFinder;
@@ -53,6 +64,7 @@ import org.openremote.controller.ControllerConfiguration;
 import org.openremote.controller.service.CertificateService;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
+import org.openremote.controller.utils.AlgorithmUtil;
 
 import sun.misc.BASE64Decoder;
 
@@ -63,9 +75,14 @@ import sun.misc.BASE64Decoder;
  */
 
 public class CertificateServiceImpl implements CertificateService
-{
+{   
+   static {
+      Security.addProvider(new BouncyCastleProvider());
+   }
+   
    private static final String CA_PATH = "ca_path";
-   private static final String CA_ALIAS = "ca.alias";
+   private static final String CA_ALIAS = "ca.alias";  
+   private static final String CSRDir = "/ca/csr";
    private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
    private static final String KEYSTORE_PASSWORD = "password";
@@ -74,6 +91,11 @@ public class CertificateServiceImpl implements CertificateService
    private ClientService clientService;
    private ConfigurationService configurationService;
    private ControllerConfiguration controllerConfiguration;
+   
+   private String pin;
+   private String email;
+   private String deviceName;
+   private String cn;
    
    /**
     * Initialize CA Path, only if the CA Path is empty 
@@ -450,10 +472,8 @@ public class CertificateServiceImpl implements CertificateService
    @Override
    public PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException
    {
-      String rootCaPath = configurationService.getItem(CA_PATH);
-      String csrPath = rootCaPath + "/ca/csr/";
-      
-      File file = new File(csrPath + alias + ".csr");
+      String rootCADir = configurationService.getItem(CA_PATH);
+      File file = new File(rootCADir + CSRDir + "/" + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);
@@ -653,7 +673,101 @@ public class CertificateServiceImpl implements CertificateService
          logger.error("Key store: " + e.getMessage());
       }
       return success;
-   }      
+   }
+   
+   /**
+    * Parse CSR File to pin, email, device name and cn
+    * 
+    * @param alias String alias of the csr
+    */
+   @SuppressWarnings("deprecation")
+   @Override
+   public void parseCSRFile(String alias)
+   {
+      // init
+      pin = "";
+      email = "";
+      deviceName = "";
+      cn = "";
+      PKCS10CertificationRequest certificationRequest = null;
+      try {
+         certificationRequest = this.getCertificationRequest(alias);
+      } catch (IOException e) {
+         logger.error("Parse CSR error: " + e.getMessage());
+      }
+
+      if(certificationRequest != null)
+      {      
+         // Get pin
+         try {
+            ASN1Sequence seqkey = ASN1Sequence.getInstance(certificationRequest.getSubjectPublicKeyInfo().getPublicKey());
+            RSAPublicKeyStructure publicKey = new RSAPublicKeyStructure(seqkey);
+            
+            pin = AlgorithmUtil.generateMD5Sum(publicKey.getModulus().toByteArray());
+            pin = pin.substring(pin.length() - 4);
+         } catch (IOException e) {
+            logger.error("Can't get public key.");
+         }
+         
+         
+         Attribute[] attributes = certificationRequest.getAttributes(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest);
+         if(attributes != null && attributes.length >= 1)
+         {
+            
+            ASN1Set attributeSet = attributes[0].getAttrValues();
+            for (int i = 0; i != attributeSet.size(); i++)
+            {
+               ASN1Encodable object = attributeSet.getObjectAt(i);
+               X509Extensions extensions = X509Extensions.getInstance(object);
+               
+               X509Extension ext = extensions.getExtension(X509Extension.subjectAlternativeName);
+              
+               email = new String(ext.getValue().getOctets()).substring(4);               
+            }
+            
+            //get cn
+            X500Name cna = certificationRequest.getSubject();
+            cn = cna.toString();
+            X500Principal prin = null;
+            try {
+               prin = new X500Principal(cna.getEncoded());
+               cn = prin.getName(X500Principal.RFC1779);
+            } catch (IOException e) {
+               logger.error(e.getMessage());
+               logger.debug(e.getStackTrace());
+            }
+                        
+            // Get device name
+            deviceName = certificationRequest.getSubject().toString();
+            deviceName = deviceName.substring(deviceName.indexOf("CN=") + 3);
+          
+         }
+         else
+         {
+            logger.error("Certification request couldn't be decoded.");
+         }
+      }
+   }
+   
+   @Override
+   public String getPin() {
+      return pin;
+   }
+
+   @Override
+   public String getEmail() {
+      return email;
+   }
+
+   @Override
+   public String getDeviceName() {
+      return deviceName;
+   }
+
+   @Override
+   public String getCN() {
+      return cn;
+   }   
    
    /**
     * Convert a input stream to a String
