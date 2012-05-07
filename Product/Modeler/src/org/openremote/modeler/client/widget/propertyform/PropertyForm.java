@@ -106,7 +106,7 @@ public class PropertyForm extends FormPanel {
 			
 			@Override
 			public void onSuccess(List<ClientGroup> result) {
-				widget.setGroups(result, "");
+				widget.setGroups(result, uiControl.getGroup().getName());
 				
 				groups.clear();
 				groups.addAll(result);
@@ -137,10 +137,11 @@ public class PropertyForm extends FormPanel {
 						          new Listener<MessageBoxEvent>() {
 									@Override
 									public void handleEvent(MessageBoxEvent be) {
-										GroupBeanModelProxy.add(new ClientGroup(be.getValue()), new AsyncSuccessCallback<String>() {
+										GroupBeanModelProxy.add(new ClientGroup(be.getValue()), new AsyncSuccessCallback<ClientGroup>() {
 											@Override
-											public void onSuccess(String result) {
-												widget.addItem(result);
+											public void onSuccess(ClientGroup result) {
+												widget.addItem(result.getName());
+												groups.add(result);
 											}
 										});
 									}

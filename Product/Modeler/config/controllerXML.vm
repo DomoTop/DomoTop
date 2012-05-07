@@ -48,6 +48,9 @@
 		#if(${swh.getSensor()})
 			<include type="sensor" ref="${swh.getSensor().getOid()}"/>
 		#end
+		#if(${swh.getGroup()})
+			<include type="group" ref="${swh.getGroup().getOid()}"/>
+		#end
 		</switch>
   	#end
   ##<------------------------------------------------------------------------UIButton------------------------------------------------------------------
@@ -99,6 +102,9 @@
       #if(${uiSlider.getSensor()})
          <include type="sensor" ref="${uiSlider.getSensor().getOid()}"/>
       #end
+	  #if(${uiSlider.getGroup()})
+		<include type="group" ref="${uiSlider.getGroup().getOid()}"/>
+	  #end
       </slider>
     #end
   #end

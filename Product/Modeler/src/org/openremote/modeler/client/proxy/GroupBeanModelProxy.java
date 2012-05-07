@@ -32,13 +32,13 @@ public class GroupBeanModelProxy {
    private GroupBeanModelProxy() {
    }
      
-   public static void add(final ClientGroup group, final AsyncSuccessCallback<String> callback){
+   public static void add(final ClientGroup group, final AsyncSuccessCallback<ClientGroup> callback){
       if (group != null) {
-         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<Void>() {
+         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<ClientGroup>() {
 
 				@Override
-				public void onSuccess(Void result) {
-					callback.onSuccess(group.getName());
+				public void onSuccess(ClientGroup result) {
+					callback.onSuccess(result);
 				}
 
                });

@@ -119,7 +119,7 @@ public class UISlider extends UIControl implements SensorOwner, ImageSourceOwner
    @Override
    public String getPanelXml() {
       StringBuffer xmlContent = new StringBuffer();
-      xmlContent.append("        <slider group=\"" + getGroup() + "\" id=\"" + getOid() + "\" ");
+      xmlContent.append("        <slider group=\"" + getGroup().getName() + "\" id=\"" + getOid() + "\" ");
       if (isThumbUploaded()) {
          xmlContent.append("thumbImage=\"" + thumbImage.getImageFileName() + "\" ");
       }

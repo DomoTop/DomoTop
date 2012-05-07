@@ -636,9 +636,9 @@ public class ResourceServiceImpl implements ResourceService {
       ProtocolContainer protocolContainer = ProtocolContainer.getInstance();
       Collection<Sensor> sensors = getAllSensorWithoutDuplicate(screens, maxId);
       Collection<UISwitch> switchs = (Collection<UISwitch>) uiComponentBox.getUIComponentsByType(UISwitch.class);
-      Collection<UIComponent> buttons = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIButton.class);
+      Collection<UIControl> buttons = (Collection<UIControl>) uiComponentBox.getUIComponentsByType(UIButton.class);
       Collection<UIComponent> gestures = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(Gesture.class);
-      Collection<UIComponent> uiSliders = (Collection<UIComponent>) uiComponentBox
+      Collection<UIControl> uiSliders = (Collection<UIControl>) uiComponentBox
             .getUIComponentsByType(UISlider.class);
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
