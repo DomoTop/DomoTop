@@ -55,11 +55,12 @@ public class ORKeyStore implements ORConnectionDelegate {
 		Security.addProvider(new BouncyCastleProvider());
 	}
 	
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyStore.class.getName();
 	private final static String KEYSTORE_FILE = "keystore.bks";
 	private final static String KEYSTORE_PASSWORD = "password";
 	
 	private static ORKeyStore instance = null;
+	private boolean isCalled = false;
 	
 	private KeyStore keystore = null;
 	private Context context = null;
@@ -101,13 +102,13 @@ public class ORKeyStore implements ORConnectionDelegate {
 			}
 
 		} catch(KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "ORKeyStore:" + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "ORKeyStore:" + e.getMessage());
 		} catch (CertificateException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "ORKeyStore:" + e.getMessage());
 		} catch (FileNotFoundException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "ORKeyStore:" + e.getMessage());
 		} catch (IOException e) {
 			Log.e(LOG_CATEGORY, "Loading keystore" + e.getMessage());
 			file.delete();
@@ -124,15 +125,15 @@ public class ORKeyStore implements ORConnectionDelegate {
 			out = context.openFileOutput(KEYSTORE_FILE, Context.MODE_PRIVATE);
 			keystore.store(out, KEYSTORE_PASSWORD.toCharArray());
 		} catch (FileNotFoundException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "keystore:" + e.getMessage());
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "keystore:" + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "keystore:" + e.getMessage());
 		} catch (CertificateException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "keystore:" + e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, "Saving keystore " + e.getMessage());
+			Log.e(LOG_CATEGORY, "Saving keystore: " + e.getMessage());
 		}
 	}
 	
@@ -144,7 +145,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		try {
 			return keystore.size() <= 0;
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "isEmpty: " + e.getMessage());
 			return false;
 		}
 	}
@@ -185,7 +186,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 				saveKeyStore();
 				return true;
 			} catch (KeyStoreException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
+				Log.e(LOG_CATEGORY, "addCertificate: " + e.getMessage());
 			}
 		}
 		return false;
@@ -221,14 +222,15 @@ public class ORKeyStore implements ORConnectionDelegate {
 			
 			Log.d(LOG_CATEGORY, "Fetching certificate from: " + url);
 			
+			isCalled = false;
 			ORConnection connection = new ORConnection(context,
 														ORHttpMethod.GET,
 														false,
 														url,
-														this);
-			connection.execute();											
+														this);											
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			handler.sendEmptyMessage(1);
+			Log.e(LOG_CATEGORY, "getSignedChain: " + e.getMessage());
 		}		
 	}
 	
@@ -255,9 +257,9 @@ public class ORKeyStore implements ORConnectionDelegate {
 		    cert = (X509Certificate)cf.generateCertificate(is);
 			is.close();
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "certificateFromDocument: " + e.getMessage());
 		} catch (CertificateException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "certificateFromDocument: " + e.getMessage());
 		}
 	    
 	    return cert;
@@ -277,13 +279,13 @@ public class ORKeyStore implements ORConnectionDelegate {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 		    doc = db.parse(is); 
 		} catch (ParserConfigurationException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "XMLfromIS: " + e.getMessage());
 			return null;
 		} catch (SAXException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "XMLfromIS: " + e.getMessage());
             return null;
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "XMLfromIS: " + e.getMessage());
 			return null;
 		}
         return doc;
@@ -309,7 +311,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 			keystore.deleteEntry(host);
 			saveKeyStore();
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "deleteHost: " + e.getMessage());
 		}
 	}
 
@@ -323,7 +325,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 		try {
 			return keystore.containsAlias(alias);
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "contains: " + e.getMessage());
 			return false;
 		}
 	}
@@ -335,8 +337,13 @@ public class ORKeyStore implements ORConnectionDelegate {
 	@Override
 	public void urlConnectionDidFailWithException(Exception e) {
 	    if(fetchHandler != null) {
-	    	//fetchHandler.sendEmptyMessage(1);
-	    }		
+	    	if(!isCalled)
+	    	{
+	    		fetchHandler.sendEmptyMessage(2);
+		    	isCalled = true;
+		    	Log.d(LOG_CATEGORY, "urlConnectionDidFailWithException: " + e.getMessage());
+	    	}
+	    }
 	}
 
 	/**
@@ -347,13 +354,17 @@ public class ORKeyStore implements ORConnectionDelegate {
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
 		if(httpResponse.getStatusLine().getStatusCode() != 200) {
 		    if(fetchHandler != null) {
-		    	fetchHandler.sendEmptyMessage(1);
+		    	if(!isCalled)
+		    	{
+		    		fetchHandler.sendEmptyMessage(1);
+			    	isCalled = true;
+		    	}
 		    }
 		}
 	}
 
 	/**
-	 * This method gets called when an ORConnection finished succesfully
+	 * This method gets called when an ORConnection finished successfully
 	 * @param data The InputStream containing the body of the request 
 	 */
 	@Override
@@ -370,7 +381,11 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    }
 	    
 	    if(fetchHandler != null) {
-	    	fetchHandler.sendEmptyMessage(what);
+	    	if(!isCalled)
+	    	{
+	    		fetchHandler.sendEmptyMessage(what);
+		    	isCalled = true;
+	    	}
 	    }
 	}
 	
@@ -384,13 +399,21 @@ public class ORKeyStore implements ORConnectionDelegate {
 		StringBuilder info = new StringBuilder("Certificate information:\n");
 		try {
 			Certificate[] certs = keystore.getCertificateChain(alias);
-			X509Certificate cert = (X509Certificate) certs[0];
-			info.append("Subject: " + cert.getSubjectDN().getName().replace(",", "\n\t\t\t") + "\n");
-			info.append("Issuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t") + "\n");
-			info.append("Valid from: " + cert.getNotBefore() + "\n");
-			info.append("Valid till: " + cert.getNotAfter());
+			if(certs != null)
+			{
+				X509Certificate cert = (X509Certificate) certs[0];
+				info.append("Subject: " + cert.getSubjectDN().getName().replace(",", "\n\t\t\t") + "\n");
+				info.append("Issuer: \t" + cert.getIssuerDN().getName().replace(",", "\n\t\t\t") + "\n");
+				info.append("Valid from: " + cert.getNotBefore() + "\n");
+				info.append("Valid till: " + cert.getNotAfter());
+			}
+			else
+			{
+				info.append("No certificate available.");
+			}
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			info.append("Can't get certificate.\nKeyStore is corrupt.");
+			Log.e(LOG_CATEGORY, "aliasInformation: " + e.getMessage());
 		}
 		return info.toString();
 	}
@@ -400,13 +423,12 @@ public class ORKeyStore implements ORConnectionDelegate {
 		X509Certificate[] chain = null;
 		String dname = null;
 		
-		// TODO : 05-03 09:10:53.575: E/AndroidRuntime(23210): java.lang.ClassCastException: [Ljava.security.cert.Certificate;
-
 		try {
 			chain =  (X509Certificate[]) keystore.getCertificateChain(currentServer);
-
 		} catch (KeyStoreException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "checkCertificateChain keystore: " + e.getMessage());
+		} catch(ClassCastException e) {
+			Log.e(LOG_CATEGORY, "checkCertificateChain classcast: " + e.getMessage());
 		}
 		
 		if(chain != null) {
@@ -421,7 +443,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 				
 				valid = response.getStatusLine().getStatusCode() == 200;
 			} catch (IOException e) {
-				Log.e(LOG_CATEGORY, e.getMessage());
+				Log.e(LOG_CATEGORY, "checkCertificateChain io: " + e.getMessage());
 			}
 		}
 
