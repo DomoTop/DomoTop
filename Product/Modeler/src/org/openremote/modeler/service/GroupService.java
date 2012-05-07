@@ -19,11 +19,12 @@
 */
 package org.openremote.modeler.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import org.openremote.modeler.domain.MyGroup;
+import org.openremote.modeler.domain.ClientGroup;
 
 public interface GroupService {
-   public void add(MyGroup group);
-   public ArrayList<MyGroup> get();
+   public void add(ClientGroup group);
+   public List<ClientGroup> getAll();
+   public ClientGroup get(int id);
 }

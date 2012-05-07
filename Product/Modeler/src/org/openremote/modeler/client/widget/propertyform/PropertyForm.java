@@ -32,7 +32,6 @@ import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
 import org.openremote.modeler.domain.ClientGroup;
-import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.component.UIControl;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
