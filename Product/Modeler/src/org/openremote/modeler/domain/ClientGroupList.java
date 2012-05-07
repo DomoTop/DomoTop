@@ -32,6 +32,8 @@ public class ClientGroupList {
 		if(instance == null) {
 			System.out.println("\n\n\n\n\n\n\n\nNEW INSTANCE\n\n\n\n\n\n\n");
 			instance = new ClientGroupList();
+			instance.add(new ClientGroup("jippie"));
+			instance.add(new ClientGroup("pic"));
 		}
 		return instance;
 	}

@@ -16,6 +16,9 @@
  */
 package org.openremote.modeler.client.widget.propertyform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openremote.modeler.client.event.WidgetDeleteEvent;
 import org.openremote.modeler.client.icon.Icons;
 import org.openremote.modeler.client.proxy.GroupBeanModelProxy;
@@ -97,7 +100,19 @@ public class PropertyForm extends FormPanel {
 
    protected void addGroupField(final UIControl uiControl) {
 		final GroupSelectAndDeleteButtonWidget widget = new GroupSelectAndDeleteButtonWidget();
-		widget.setGroups(ClientGroupList.getInstance().getAll(), uiControl.getGroup());
+		final List<ClientGroup> groups = new ArrayList<ClientGroup>();
+		
+		GroupBeanModelProxy.getAll(new AsyncSuccessCallback<List<ClientGroup>>() {
+			
+			@Override
+			public void onSuccess(List<ClientGroup> result) {
+				widget.setGroups(result, "");
+				
+				groups.clear();
+				groups.addAll(result);
+			}
+		});
+		
 		widget.addChangeHandler(new ChangeHandler() {
 			
 			@Override
@@ -106,7 +121,11 @@ public class PropertyForm extends FormPanel {
 				if(lb.getItemText(lb.getSelectedIndex()).equals(GroupSelectAndDeleteButtonWidget.NO_GROUP_ITEM)) {
 					uiControl.setGroup(null);
 				} else {
-					uiControl.setGroup(lb.getItemText(lb.getSelectedIndex()));
+					for(ClientGroup group: groups) {
+						if(group.getName().equals(lb.getItemText(lb.getSelectedIndex()))) {
+							uiControl.setGroup(group);
+						}
+					}
 				}
 			}
 		});

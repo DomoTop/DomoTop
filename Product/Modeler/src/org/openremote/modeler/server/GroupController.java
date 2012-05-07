@@ -13,7 +13,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public class GroupController extends BaseGWTSpringControllerWithHibernateSupport implements GroupRPCService  {
 	
 	public void add(ClientGroup group) {
-		//ClientGroupList.getInstance().add(group);
-		//clientService.save(group);
+		ClientGroupList.getInstance().add(group);
+	}
+	
+	public List<ClientGroup> loadAll() {
+		return ClientGroupList.getInstance().getAll();
 	}
 }

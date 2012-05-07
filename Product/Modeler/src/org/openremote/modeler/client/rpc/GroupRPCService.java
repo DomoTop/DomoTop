@@ -11,4 +11,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface GroupRPCService extends RemoteService {
 
 	void add(ClientGroup group);
+	List<ClientGroup> loadAll();
 }
