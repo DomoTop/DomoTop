@@ -24,7 +24,6 @@ import java.util.List;
 import org.openremote.modeler.domain.ClientGroup;
 
 public interface GroupService {
-   public void add(ClientGroup group);
+   public ClientGroup add(ClientGroup group);
    public List<ClientGroup> getAll();
-   public ClientGroup get(int id);
 }
