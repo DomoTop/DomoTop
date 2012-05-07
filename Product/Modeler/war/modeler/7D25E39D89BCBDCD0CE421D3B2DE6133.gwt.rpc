@@ -1,8 +1,6 @@
 com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true
 java.lang.Boolean, true
 java.lang.Exception, false
-java.lang.Long, true
-java.lang.Number, false
 java.lang.RuntimeException, false
 java.lang.String, true
 java.lang.Throwable, false
@@ -19,8 +17,7 @@ java.util.TreeMap, true
 java.util.TreeSet, true
 java.util.Vector, true
 net.sf.gilead.pojo.java5.LightEntity, false
-org.openremote.modeler.client.model.AutoSaveResponse, true
-org.openremote.modeler.client.utils.PanelsAndMaxOid, true
+org.openremote.modeler.client.utils.ScreenFromTemplate, true
 org.openremote.modeler.client.utils.SensorLink, true
 org.openremote.modeler.client.utils.SensorLink$LinkerChild, true
 org.openremote.modeler.domain.Absolute, true
@@ -31,6 +28,7 @@ org.openremote.modeler.domain.Background$RelativeType, true
 org.openremote.modeler.domain.BusinessEntity, false
 org.openremote.modeler.domain.Cell, true
 [Lorg.openremote.modeler.domain.Cell;, true
+org.openremote.modeler.domain.ClientGroup, true
 org.openremote.modeler.domain.CommandDelay, true
 [Lorg.openremote.modeler.domain.CommandDelay;, true
 org.openremote.modeler.domain.CommandRefItem, true
@@ -55,9 +53,7 @@ org.openremote.modeler.domain.DeviceMacroRef, true
 org.openremote.modeler.domain.Group, true
 org.openremote.modeler.domain.GroupRef, true
 [Lorg.openremote.modeler.domain.GroupRef;, true
-[Lorg.openremote.modeler.domain.Group;, true
 org.openremote.modeler.domain.Panel, true
-[Lorg.openremote.modeler.domain.Panel;, true
 org.openremote.modeler.domain.Protocol, true
 org.openremote.modeler.domain.ProtocolAttr, true
 [Lorg.openremote.modeler.domain.ProtocolAttr;, true
@@ -71,7 +67,6 @@ org.openremote.modeler.domain.ScreenPair, true
 org.openremote.modeler.domain.ScreenPair$OrientationType, true
 org.openremote.modeler.domain.ScreenPairRef, true
 [Lorg.openremote.modeler.domain.ScreenPairRef;, true
-[Lorg.openremote.modeler.domain.Screen;, true
 org.openremote.modeler.domain.Sensor, true
 org.openremote.modeler.domain.SensorCommandRef, true
 org.openremote.modeler.domain.SensorRefItem, false
@@ -88,6 +83,8 @@ org.openremote.modeler.domain.SwitchCommandOffRef, true
 org.openremote.modeler.domain.SwitchCommandOnRef, true
 org.openremote.modeler.domain.SwitchSensorRef, true
 [Lorg.openremote.modeler.domain.Switch;, true
+org.openremote.modeler.domain.Template, true
+[Lorg.openremote.modeler.domain.Template;, true
 org.openremote.modeler.domain.UICommand, true
 org.openremote.modeler.domain.User, true
 [Lorg.openremote.modeler.domain.User;, true
@@ -111,11 +108,7 @@ org.openremote.modeler.domain.component.UITabbar$Scope, true
 org.openremote.modeler.domain.component.UITabbarItem, true
 [Lorg.openremote.modeler.domain.component.UITabbarItem;, true
 org.openremote.modeler.exception.BeehiveNotAvailableException, true
-org.openremote.modeler.exception.FileOperationException, true
-org.openremote.modeler.exception.IllegalRestUrlException, true
 org.openremote.modeler.exception.ResourceFileLostException, true
-org.openremote.modeler.exception.UIRestoreException, true
-org.openremote.modeler.exception.XmlExportException, true
 org.openremote.modeler.touchpanel.TouchPanelCanvasDefinition, true
 org.openremote.modeler.touchpanel.TouchPanelDefinition, true
 org.openremote.modeler.touchpanel.TouchPanelTabbarDefinition, true

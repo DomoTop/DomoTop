@@ -64,7 +64,6 @@ import org.openremote.modeler.client.utils.PanelsAndMaxOid;
 import org.openremote.modeler.configuration.PathConfig;
 import org.openremote.modeler.domain.Absolute;
 import org.openremote.modeler.domain.Cell;
-import org.openremote.modeler.domain.ClientGroupList;
 import org.openremote.modeler.domain.CommandDelay;
 import org.openremote.modeler.domain.CommandRefItem;
 import org.openremote.modeler.domain.ControllerConfig;
@@ -109,6 +108,7 @@ import org.openremote.modeler.protocol.ProtocolContainer;
 import org.openremote.modeler.service.ControllerConfigService;
 import org.openremote.modeler.service.DeviceCommandService;
 import org.openremote.modeler.service.DeviceMacroService;
+import org.openremote.modeler.service.GroupService;
 import org.openremote.modeler.service.ResourceService;
 import org.openremote.modeler.service.UserService;
 import org.openremote.modeler.touchpanel.TouchPanelTabbarDefinition;
@@ -154,6 +154,8 @@ public class ResourceServiceImpl implements ResourceService {
    private UserService userService;
 
    private ControllerConfigService controllerConfigService = null;
+   
+   private GroupService groupService = null;
 
 
    /**
@@ -557,6 +559,10 @@ public class ResourceServiceImpl implements ResourceService {
    public void setControllerConfigService(ControllerConfigService controllerConfigService) {
       this.controllerConfigService = controllerConfigService;
    }
+   
+   public void setGroupService(GroupService groupService) {
+	   this.groupService = groupService;
+   }
 
    @Override
    public String getRelativeResourcePathByCurrentAccount(String fileName) {
@@ -636,14 +642,14 @@ public class ResourceServiceImpl implements ResourceService {
       ProtocolContainer protocolContainer = ProtocolContainer.getInstance();
       Collection<Sensor> sensors = getAllSensorWithoutDuplicate(screens, maxId);
       Collection<UISwitch> switchs = (Collection<UISwitch>) uiComponentBox.getUIComponentsByType(UISwitch.class);
-      Collection<UIComponent> buttons = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIButton.class);
+      Collection<UIControl> buttons = (Collection<UIControl>) uiComponentBox.getUIComponentsByType(UIButton.class);
       Collection<UIComponent> gestures = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(Gesture.class);
-      Collection<UIComponent> uiSliders = (Collection<UIComponent>) uiComponentBox
+      Collection<UIControl> uiSliders = (Collection<UIControl>) uiComponentBox
             .getUIComponentsByType(UISlider.class);
       Collection<UIComponent> uiImages = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UIImage.class);
       Collection<UIComponent> uiLabels = (Collection<UIComponent>) uiComponentBox.getUIComponentsByType(UILabel.class);
       Collection<ControllerConfig> configs = controllerConfigService.listAllConfigs();
-      Collection<ClientGroup> groups = ClientGroupList.getInstance().getAll();
+      Collection<ClientGroup> groups = groupService.getAll();
       
       configs.removeAll(controllerConfigService.listAllexpiredConfigs());
       configs.addAll(controllerConfigService.listAllMissingConfigs());

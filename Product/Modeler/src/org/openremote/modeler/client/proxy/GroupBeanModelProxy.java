@@ -19,6 +19,8 @@
 */
 package org.openremote.modeler.client.proxy;
 
+import java.util.List;
+
 import org.openremote.modeler.client.rpc.AsyncServiceFactory;
 import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.domain.ClientGroup;
@@ -30,16 +32,25 @@ public class GroupBeanModelProxy {
    private GroupBeanModelProxy() {
    }
      
-   public static void add(final ClientGroup group, final AsyncSuccessCallback<String> callback){
+   public static void add(final ClientGroup group, final AsyncSuccessCallback<ClientGroup> callback){
       if (group != null) {
-         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<Void>() {
+         AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<ClientGroup>() {
 
 				@Override
-				public void onSuccess(Void result) {
-					callback.onSuccess(group.getName());
+				public void onSuccess(ClientGroup result) {
+					callback.onSuccess(result);
 				}
 
                });
       }
+   }
+   
+   public static void getAll(final AsyncSuccessCallback<List<ClientGroup>> callback){
+	   AsyncServiceFactory.getGroupRPCServiceAsync().loadAll(new AsyncSuccessCallback<List<ClientGroup>>() {
+			@Override
+			public void onSuccess(List<ClientGroup> result) {
+				callback.onSuccess(result);
+			}	   
+	   });
    }
 }

@@ -21,6 +21,7 @@ package org.openremote.modeler.domain.component;
 
 import java.util.List;
 
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.UICommand;
 
 /**
@@ -33,7 +34,7 @@ public abstract class UIControl extends UIComponent {
     */
    private static final long serialVersionUID = 2629776331131648211L;
    
-   private String group;
+   private ClientGroup group;
    
    public UIControl() {
       super();
@@ -47,11 +48,11 @@ public abstract class UIControl extends UIComponent {
       return "UIControl";
    }
    
-   public String getGroup() {
+   public ClientGroup getGroup() {
 	  return group;
    }
 
-   public void setGroup(String group) {
+   public void setGroup(ClientGroup group) {
 	  this.group = group;
    }
 

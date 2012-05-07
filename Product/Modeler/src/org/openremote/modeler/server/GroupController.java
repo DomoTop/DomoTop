@@ -1,19 +1,29 @@
 package org.openremote.modeler.server;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.openremote.modeler.client.rpc.GroupRPCService;
 import org.openremote.modeler.domain.ClientGroup;
-import org.openremote.modeler.domain.ClientGroupList;
+import org.openremote.modeler.service.GroupService;
 
 import com.extjs.gxt.ui.client.widget.grid.ColumnHeader.Group;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 public class GroupController extends BaseGWTSpringControllerWithHibernateSupport implements GroupRPCService  {
+	private GroupService groupService;
 	
-	public void add(ClientGroup group) {
-		//ClientGroupList.getInstance().add(group);
-		//clientService.save(group);
+	public ClientGroup add(ClientGroup group) {
+		groupService.add(group);
+		return group;
+	}
+	
+	public List<ClientGroup> loadAll() {
+		return groupService.getAll();
+	}
+	
+	public void setGroupService(GroupService groupService) {
+		this.groupService = groupService;
 	}
 }

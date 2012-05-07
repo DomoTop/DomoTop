@@ -3,10 +3,16 @@ java.lang.Exception, false
 java.lang.RuntimeException, false
 java.lang.String, true
 java.lang.Throwable, false
+java.util.ArrayList, true
+java.util.Arrays$ArrayList, true
 java.util.HashMap, true
 java.util.IdentityHashMap, true
 java.util.LinkedHashMap, true
+java.util.LinkedList, true
+java.util.Stack, true
 java.util.TreeMap, true
+java.util.Vector, true
 net.sf.gilead.pojo.java5.LightEntity, false
 org.openremote.modeler.domain.BusinessEntity, false
 org.openremote.modeler.domain.ClientGroup, true
+[Lorg.openremote.modeler.domain.ClientGroup;, true

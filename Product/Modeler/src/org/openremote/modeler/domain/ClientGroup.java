@@ -39,8 +39,9 @@ public class ClientGroup extends BusinessEntity
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-   @Override
+
+
+   @Override 
    public int hashCode() {
       return (int) getOid();
    }
