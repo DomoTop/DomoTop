@@ -26,6 +26,7 @@ public class ControllerException {
    public static final int CONTROLLER_UNAVAILABLE = 0;
 
    public static final int UNAUTHORIZED = 401;
+   public static final int FORBIDDEN_ERROR = 403;
    public static final int REQUEST_ERROR = 404;
 
    public static final int SERVER_ERROR = 500;
@@ -102,6 +103,9 @@ public class ControllerException {
             case UNAUTHORIZED://401
                errorMessage = "You can't execute a protected command without authentication.";
                break;
+            case FORBIDDEN_ERROR://403
+                errorMessage = "Forbidden, invalid access to resource.";
+                break;
             case CONTROLLER_UNAVAILABLE://0
             	errorMessage = "Current controller isn't available.";
             	break;
