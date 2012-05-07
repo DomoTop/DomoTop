@@ -40,4 +40,9 @@ public class ClientGroup extends BusinessEntity
 		this.name = name;
 	}
 
+
+   @Override 
+   public int hashCode() {
+      return (int) getOid();
+   }
 }
