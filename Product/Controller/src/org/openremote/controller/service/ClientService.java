@@ -19,9 +19,11 @@ public interface ClientService
     * Add new client to the database.
     * 
     * @param alias clients alias
+    * @param timestamp
+    *           timestamp of the csr
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
-   int addClient(String csrFileName);
+   int addClient(String alias, long timestamp);
    /**
     * Add new client to the database.
     * 
@@ -33,9 +35,11 @@ public interface ClientService
     *           the client e-mail address
     * @param alias
     *           the client alias
+    * @param timestamp
+    *           timestamp of the csr
     * @return int 0 = error with select or insert, 1 insert query went successfully, 2 user already exists
     */
-   int addClient(String pinCode, String deviceName, String email, String fileName, String cn);
+   int addClient(String pinCode, String deviceName, String email, String fileName, String cn, long timestamp);
    /**
     * Get one client result set from the database.
     * 
@@ -96,11 +100,6 @@ public interface ClientService
     */
    int removeClient(int clientID);      
    /**
-    * Get Client serial
-    * @return String serial
-    */
-   String getSerial();
-   /**
     * Get the X509 Certificate from the client key store file via username alias
     * @param alias is the certificate alias name
     */
@@ -130,6 +129,13 @@ public interface ClientService
     * @return int group id
     */
    String getGroupName(String DN);   
+   /**
+    * Get timestamp from client via alias and pin
+    * @param alias
+    * @param pin
+    * @return long timestamp
+    */
+   long getTimestamp(String pin, String deviceName);
    /**
     * Close the result set.
     */

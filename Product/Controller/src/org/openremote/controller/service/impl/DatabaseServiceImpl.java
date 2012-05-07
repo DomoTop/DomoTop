@@ -160,6 +160,7 @@ public class DatabaseServiceImpl implements DatabaseService
                      "client_device_name VARCHAR(150), "+
                      "client_email VARCHAR(250), "+
                      "client_alias VARCHAR(200), "+
+                     "client_timestamp BIGINT, "+
                      "client_active BOOLEAN DEFAULT FALSE NOT NULL, "+
                      "client_creation_timestamp TIMESTAMP DEFAULT NOW,  "+
                      "client_modification_timestamp TIMESTAMP DEFAULT NOW,  "+
