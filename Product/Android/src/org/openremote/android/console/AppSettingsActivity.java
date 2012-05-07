@@ -655,6 +655,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             new ArrayList<String>());
       lv.setAdapter(serverListAdapter);
       
+      
       new IPAutoDiscoveryServer(){
          @Override
          protected void onProgressUpdate(Void... values) {
@@ -724,32 +725,37 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
     * Submits a Certification Request to the controller
     */
    private void requestAccess()
-   {
+   { 
 	   final String hostname = AppSettingsActivity.currentServer;
-	   final ProgressDialog progress = new ProgressDialog(this);
-	   final Handler handler = new Handler()
-	   {
-		   public void handleMessage(Message msg) {
-			   if(progress.isShowing()) {
-				   progress.dismiss();
-			   }
-		   }
-	   };
-	   
-	   if(isActivityResumed()) {
-		   progress.show();
-	   }
-	   
-	   new Thread()
-	   {
-		   public void run() 
+
+	   if(!TextUtils.isEmpty(hostname))
+	   {	   
+		   final ProgressDialog progress = new ProgressDialog(this);
+		   final Handler handler = new Handler()
 		   {
-			   handler.sendEmptyMessage(
-					   ORPKCS10CertificationRequest.getInstance(getApplicationContext())
-			   			.submitCertificationRequest(hostname)
-			   		);
+			   public void handleMessage(Message msg) {
+				   if(progress.isShowing()) {
+					   progress.dismiss();
+				   }
+			   }
+		   };
+		   
+		   if(isActivityResumed()) {
+			   progress.show();
 		   }
-	   }.start();
+		  
+		   
+		   new Thread()
+		   {
+			   public void run() 
+			   {
+				   handler.sendEmptyMessage(
+						   ORPKCS10CertificationRequest.getInstance(getApplicationContext())
+				   			.submitCertificationRequest(hostname)
+				   		);
+			   }
+		   }.start();
+	   }
    }
 
    /**
@@ -793,38 +799,41 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		   {
 			   boolean returnValue = false;
 			   
-			   try
-			   {
-				   HttpRequestBase request = null;
-				   HttpResponse response = null;
-				   HttpParams params = new BasicHttpParams();
-	
-				   // set time-out at 3 seconds
-				   HttpConnectionParams.setConnectionTimeout(params, 3 * 1000);
-				   HttpConnectionParams.setSoTimeout(params, 3 * 1000);
-	
-				   HttpClient client = new DefaultHttpClient(params);
-				   request = new HttpGet(new URL(currentServer + "/rest/authentication/check").toURI());
-	
-				   response = client.execute(request);
-				   
-				   returnValue = (response.getStatusLine().getStatusCode() == 200) ? true : false;
+			   if (!TextUtils.isEmpty(currentServer))
+			   {			   
+				   try
+				   {
+					   HttpRequestBase request = null;
+					   HttpResponse response = null;
+					   HttpParams params = new BasicHttpParams();
+		
+					   // set time-out at 3 seconds
+					   HttpConnectionParams.setConnectionTimeout(params, 3 * 1000);
+					   HttpConnectionParams.setSoTimeout(params, 3 * 1000);
+		
+					   HttpClient client = new DefaultHttpClient(params);
+					   request = new HttpGet(new URL(currentServer + "/rest/authentication/check").toURI());
+		
+					   response = client.execute(request);
+					   
+					   returnValue = (response.getStatusLine().getStatusCode() == 200) ? true : false;
+				   }
+				   catch(IOException e)
+				   {
+					   returnValue = false;
+				       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
+				   }
+				   catch (IllegalArgumentException e) 
+				   {
+					   returnValue = false;
+				       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
+				   }
+				   catch (URISyntaxException e) 
+				   {
+					   returnValue = false;
+				       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Invalid URI: ", e);
+				   }
 			   }
-			   catch(IOException e)
-			   {
-				   returnValue = false;
-			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
-			   }
-			   catch (IllegalArgumentException e) 
-			   {
-				   returnValue = false;
-			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Can't check authentication: ", e);
-			   }
-			   catch (URISyntaxException e) 
-			   {
-				   returnValue = false;
-			       Log.e(Constants.LOG_CATEGORY + "AUTH_CHECK", "Invalid URI: ", e);
-			   }			   
 			   return returnValue;
 		   }
 	   }.start();
@@ -832,7 +841,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    
    private void retrieveCertificate()
    {
-	   final ORKeyStore ks = ORKeyStore.getInstance(getApplicationContext());
 	   final Button doneButton = (Button)findViewById(R.id.setting_done);
 	   doneButton.setEnabled(false);
 	   final ProgressDialog dialog = ProgressDialog.show(this, "Fetching certificate", "Busy fetching certificate");	 
@@ -850,17 +858,14 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "Connection error", "Can't connect to the server.");
 			   } else {
 				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access yet.\nPlease ask the administrator for permission.");
-			   }
-			   
+			   }			   
 		   }  
-	   };
-	   
+	   };	   
 
-			   ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
-					   AppSettingsModel.getCurrentServer(getApplicationContext()), 
-					   handler
-				);
-		   
+	   ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
+			   AppSettingsModel.getCurrentServer(getApplicationContext()), 
+			   handler
+		);		  
    }
    
    /**
