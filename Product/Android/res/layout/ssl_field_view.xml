@@ -13,7 +13,26 @@
 	   android:paddingLeft="10px"
 	   android:paddingTop="5px"
 	   android:paddingBottom="5px"
-	    />
+	    />	
+	<TableRow android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10px"
+		android:paddingTop="6px"
+		android:paddingBottom="6px"
+		android:id="@+id/ssl_pin_row">
+		<TextView android:text="@string/ssl_clientcert_pin"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_weight="1.0"/>
+		<TextView android:id="@+id/ssl_clientcert_pin"
+		android:layout_width="150px"
+		android:layout_height="wrap_content"
+		android:textSize="16sp"
+		android:textStyle="bold"
+		android:gravity="left"
+		android:paddingRight="10dp" 
+		android:singleLine="true" />
+	</TableRow>	
 	<TableRow android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:paddingLeft="10px">
@@ -42,21 +61,4 @@
 		android:hint="8443"
 		android:singleLine="true"/>
 	</TableRow>
-	<TableRow android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="10px"
-		android:id="@+id/ssl_pin_row">
-		<TextView android:text="@string/ssl_clientcert_pin"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:layout_weight="1.0"/>
-		<TextView android:id="@+id/ssl_clientcert_pin"
-		android:layout_width="150px"
-		android:layout_height="wrap_content"
-		android:textSize="16sp"
-		android:gravity="right"
-		android:paddingRight="10dp" 
-		android:singleLine="true" />
-	</TableRow>	
-
 </LinearLayout>

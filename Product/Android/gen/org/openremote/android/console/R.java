@@ -93,10 +93,10 @@ containing a value of this type.
         public static final int password=0x7f080009;
         public static final int setting_cancel=0x7f080002;
         public static final int setting_done=0x7f080001;
-        public static final int ssl_clientcert_pin=0x7f080010;
-        public static final int ssl_pin_row=0x7f08000f;
-        public static final int ssl_port=0x7f08000e;
-        public static final int ssl_toggle=0x7f08000d;
+        public static final int ssl_clientcert_pin=0x7f08000e;
+        public static final int ssl_pin_row=0x7f08000d;
+        public static final int ssl_port=0x7f080010;
+        public static final int ssl_toggle=0x7f08000f;
         public static final int username=0x7f080008;
         public static final int vertical_seekbar=0x7f080013;
         public static final int vertical_seekbar_maxvalue_image=0x7f080012;

@@ -203,7 +203,7 @@
 									<p id="loadingArea">
 										 <center>
 										 	Please wait...<br/><br/><br/>
-											<img src="image/spinner.gif" alt"Loading..." border=0 />
+											<img src="image/spinner.gif" alt="Loading..." border=0 />
 										 </center>
 									</p>
 								</div>				
