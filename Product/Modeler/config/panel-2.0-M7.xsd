@@ -337,6 +337,7 @@
 			<xsd:element ref="default"/>
 			<xsd:element ref="pressed"/>
 			<xsd:element ref="navigate"/>
+			<xsd:element ref="clientgroup"/>
 		</xsd:choice>
 	</xsd:group>
 	
@@ -365,6 +366,7 @@
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
+
 	
 
 	<!-- ###############  sensor link  ################ -->
@@ -420,6 +422,20 @@
 			<xsd:attribute name="id" type="xsd:int"/>
 			<xsd:attribute name="src" type="xsd:string" use="required"/>
 			<xsd:attribute name="style" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- ###############  clientgroup     ################ -->
+	
+	<xsd:element name="clientgroup">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				A group for components
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="id" type="idType" use="required" />
+			<xsd:attribute name="name" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 	

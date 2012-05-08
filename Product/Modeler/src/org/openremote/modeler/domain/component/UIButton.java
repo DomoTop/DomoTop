@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.persistence.Transient;
 
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.UICommand;
 import org.openremote.modeler.utils.StringUtils;
 
@@ -174,6 +175,9 @@ public class UIButton extends UIControl implements ImageSourceOwner{
             xmlContent.append(" to=\"" + navigate.getToLogical() + "\"");
          }
          xmlContent.append(" />\n");
+      }
+      for(ClientGroup group: getGroups()) {
+    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
       }
       xmlContent.append("        </button>\n");
       return xmlContent.toString();
