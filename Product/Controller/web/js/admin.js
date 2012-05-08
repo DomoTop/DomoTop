@@ -123,7 +123,7 @@ $(document).ready(function()
 	
 	// Pop-up
 	//Click the button event!
-	$(".button").click(function() {		
+	$(".button").live('click', function() {		
 		// get the client ID from the HTML attribute of the button clicked
 		var element = arguments[0] || window.event;
 			
