@@ -131,7 +131,7 @@ public class ControlView extends ComponentView implements ORConnectionDelegate {
         	 try {
 	        	 InputStream in = httpResponse.getEntity().getContent();
 	        	 BufferedReader read = new BufferedReader(new InputStreamReader(in));
-	        	 String line = "", message = null;
+	        	 String line = "", message = "";
 	        	 while((line = read.readLine()) != null) {
 	        		 message += line;
 	        	 }

@@ -256,6 +256,10 @@ public class AdministratorController extends MultiActionController
          {
             success = false;
          }
+         if(configurationService.updateConfiguration("group_required", !newValue) != 1)
+         {
+            success = false;
+         }
          
          if(success)
          {

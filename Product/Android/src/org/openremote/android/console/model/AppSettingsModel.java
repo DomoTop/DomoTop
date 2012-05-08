@@ -28,6 +28,7 @@ import org.openremote.android.console.Constants;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 
@@ -352,31 +353,35 @@ public class AppSettingsModel implements Serializable
 
     String configuredControllerURL = getCurrentServer(context);
 
-    try
+    if(!TextUtils.isEmpty(configuredControllerURL))
     {
-      int configuredPort = new URL(configuredControllerURL).getPort();
-
-      if (configuredPort == -1)
-      {
-        return DEFAULT_HTTPD_SSL_PORT;
-      }
-      else
-      {
-        return DEFAULT_TOMCAT_SSL_PORT;
-      }
-
+	    try
+	    {
+	      int configuredPort = new URL(configuredControllerURL).getPort();
+	
+	      if (configuredPort == -1)
+	      {
+	        return DEFAULT_HTTPD_SSL_PORT;
+	      }
+	      else
+	      {
+	        return DEFAULT_TOMCAT_SSL_PORT;
+	      }
+	
+	    }
+	    catch (MalformedURLException e)
+	    {
+	      //   if we enforce proper URL on controller URL set, we can assume this only occurs
+	      //   as programming error, no need to propagate back up to user
+	
+	      Log.e(LOG_CATEGORY, "Controller URL is invalid", e);
+	
+	      // Best guess return value...
+	
+	      return DEFAULT_TOMCAT_SSL_PORT;
+	    }
     }
-    catch (MalformedURLException e)
-    {
-      //   if we enforce proper URL on controller URL set, we can assume this only occurs
-      //   as programming error, no need to propagate back up to user
-
-      Log.e(LOG_CATEGORY, "Controller URL is invalid", e);
-
-      // Best guess return value...
-
-      return DEFAULT_TOMCAT_SSL_PORT;
-    }
+    return DEFAULT_TOMCAT_SSL_PORT;
   }
    
   /**

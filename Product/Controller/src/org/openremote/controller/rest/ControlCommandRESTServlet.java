@@ -98,7 +98,7 @@ public class ControlCommandRESTServlet extends HttpServlet {
 
          if ((certs == null) || (certs.length == 0))
          {
-            logger.error("No certificate?");
+            logger.error("No certificate found - however Client authentication is enabled. Something is wrong...");
          }
          else
          {

@@ -387,8 +387,15 @@ function waitLoading()
 	      type: "GET",
 	      url: "administrator",
 	      complete: function(response) {
-		      if(response.status == 200) {
-		          hideLoading();
+		      if(response.status == 200) {	
+		      		if(response.responseText.length > 0)
+		      		{		        	
+		          	hideLoading();
+		          }
+		          else
+		          {
+		          	waitLoading();
+		          }
 		      } else if(response.status == 404) {
 		          waitLoading();
 		      }

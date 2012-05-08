@@ -62,6 +62,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -770,14 +771,18 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		   {			   
 			   final ToggleButton sslToggleButton = (ToggleButton)findViewById(R.id.ssl_toggle);
 			   if(msg.what == 1)
-			   {
+			   {				   
 				   AppSettingsModel.enableSSL(AppSettingsActivity.this, true);
 				   sslToggleButton.setChecked(true);
+				   // show pin
+				   findViewById(R.id.ssl_pin_row).setVisibility(View.VISIBLE);
 			   }
 			   else
 			   {
 				   AppSettingsModel.enableSSL(AppSettingsActivity.this, false);
-				   sslToggleButton.setChecked(false);   
+				   sslToggleButton.setChecked(false);  
+				   // hide pin
+				   findViewById(R.id.ssl_pin_row).setVisibility(View.GONE);
 			   }
 		   }
 	   };

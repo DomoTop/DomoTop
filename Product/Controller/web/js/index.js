@@ -13,6 +13,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
  * http://www.fsf.org.
  */
+var timeOut;
 
 $(document).ready(function() {
 	var checkedMode = $("input[name='mode']:checked").val();
@@ -122,7 +123,8 @@ function message(msg){
 		$('#msg').hide().text(msg);
 	} else {
 		$('#msg').show().html(msg);
-		setTimeout("clearMessage()", 4500);
+		clearTimeout(timeOut);
+		timeOut = setTimeout("clearMessage()", 4500);
 	}
 }
 

@@ -158,7 +158,7 @@
 								        					<#assign checked=''>
 								        				</#if>
 								        				<input type="checkbox" name="${configuration.configuration_name}" value="true"${checked}${disabled} />								        					
-								        				<input type="hidden" name="${configuration.configuration_name}" value="false" />		
+								        				<input type="hidden" name="${configuration.configuration_name}" value="false"${disabled} />		
 															<#else>
 																<input type="text" size="35" name="${configuration.configuration_name}" value="${configuration.configuration_value}"${disabled} />
 															</#if>
