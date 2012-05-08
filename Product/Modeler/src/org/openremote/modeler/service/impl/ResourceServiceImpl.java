@@ -605,7 +605,9 @@ public class ResourceServiceImpl implements ResourceService {
          context.put("groups", groups);
          context.put("screens", screens);
          context.put("stringUtils", StringUtils.class);
-         return VelocityEngineUtils.mergeTemplateIntoString(velocity, PANEL_XML_TEMPLATE, context);
+         String xml = VelocityEngineUtils.mergeTemplateIntoString(velocity, PANEL_XML_TEMPLATE, context);
+         System.out.println(xml);
+         return xml;
       } catch (VelocityException e) {
          throw new XmlExportException("Failed to read panel.xml", e);
       }

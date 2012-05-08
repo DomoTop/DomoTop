@@ -328,6 +328,7 @@
 			<xsd:attribute name="name" type="xsd:string" use="required" />
 			<xsd:attribute name="repeat" type="xsd:boolean" use="optional"/>
 			<xsd:attribute name="hasControlCommand" type="xsd:boolean" use="optional"/>
+			<xsd:attribute name="group" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -336,6 +337,7 @@
 			<xsd:element ref="default"/>
 			<xsd:element ref="pressed"/>
 			<xsd:element ref="navigate"/>
+			<xsd:element ref="clientgroup"/>
 		</xsd:choice>
 	</xsd:group>
 	
@@ -364,6 +366,7 @@
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
+
 	
 
 	<!-- ###############  sensor link  ################ -->
@@ -419,6 +422,20 @@
 			<xsd:attribute name="id" type="xsd:int"/>
 			<xsd:attribute name="src" type="xsd:string" use="required"/>
 			<xsd:attribute name="style" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- ###############  clientgroup     ################ -->
+	
+	<xsd:element name="clientgroup">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				A group for components
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="id" type="idType" use="required" />
+			<xsd:attribute name="name" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -492,6 +509,7 @@
 			<xsd:attribute name="thumbImage" type="xsd:string" use="optional"/>
 			<xsd:attribute name="vertical" type="xsd:boolean" use="optional" default="false"/>
 			<xsd:attribute name="passive" type="xsd:boolean" use="optional" default="false"/>
+			<xsd:attribute name="group" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -541,7 +559,7 @@
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="item" maxOccurs="unbounded"></xsd:element>
+				<xsd:element ref="item" minOccurs="0" maxOccurs="unbounded"></xsd:element>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
