@@ -59,7 +59,7 @@ public class ORPKCS10CertificationRequest {
 	}
 	
 	// Constants ------------------------------------------------------------------------------------
-	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORKeyPair.class.getName();
+	public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + ORPKCS10CertificationRequest.class.getName();
 	 
 	private static final String CSR_ALGORITHM = "SHA1WithRSA";
 	public static final String TIMESTAMP_FILE = "timestamp";
@@ -153,13 +153,13 @@ public class ORPKCS10CertificationRequest {
 	                                  new DERSet(attribute),
 	                                  keypair.getPrivate());
 		} catch (InvalidKeyException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "getCertificationRequest: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "getCertificationRequest: " + e.getMessage());
 		} catch (NoSuchProviderException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "getCertificationRequest: " + e.getMessage());
 		} catch (SignatureException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "getCertificationRequest: " + e.getMessage());
 		}
 
 		return kpGen;
@@ -203,13 +203,13 @@ public class ORPKCS10CertificationRequest {
 	        
 	        return response.getStatusLine().getStatusCode();
 	    } catch (ClientProtocolException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "submitCertificationRequest: " + e.getMessage());
 	    } catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());			
+			Log.e(LOG_CATEGORY, "submitCertificationRequest: " + e.getMessage());			
 	    } catch (IllegalStateException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "submitCertificationRequest: " + e.getMessage());
 	    } catch (IllegalArgumentException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "submitCertificationRequest: " + e.getMessage());
 	    }
 	    return -1;
 	}
@@ -233,9 +233,9 @@ public class ORPKCS10CertificationRequest {
 			out.write(timestamp);
 			out.close();
 		} catch (FileNotFoundException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "saveTimestamp: " + e.getMessage());
 		} catch (IOException e) {
-			Log.e(LOG_CATEGORY, e.getMessage());
+			Log.e(LOG_CATEGORY, "saveTimestamp: " + e.getMessage());
 		} 
 	}
 }
