@@ -16,10 +16,15 @@
  */
 package org.openremote.modeler.domain.component;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Transient;
 
 import org.openremote.modeler.client.utils.IDUtil;
 import org.openremote.modeler.domain.BusinessEntity;
+import org.openremote.modeler.domain.ClientGroup;
 
 import flexjson.JSON;
 
@@ -33,6 +38,7 @@ import flexjson.JSON;
 public abstract class UIComponent extends BusinessEntity {
 
    private transient boolean removed = false;
+   private Set<ClientGroup> groups = new HashSet<ClientGroup>();
 
    public UIComponent() {
    }
@@ -134,7 +140,48 @@ public abstract class UIComponent extends BusinessEntity {
       UIComponent other = (UIComponent) obj;
       return other.getPanelXml().equals(getPanelXml());
    }
+   
+   /**
+    * @deprecated
+    * Use getGroups()
+    * @return the first group
+    */
+   public ClientGroup getGroup() {
+	   ClientGroup group = null;
+	   if(!groups.isEmpty()) {
+		   group = (ClientGroup) groups.toArray()[0];
+	   }
+	   return group;
+   }
+   
+   /**
+    * @return All the groups of the component
+    */
+   public Collection<ClientGroup> getGroups() {
+	   return groups;
+   }
+   
+   /**
+    * Add a group to the component
+    * @param group The group you want to add.
+    */
+   public void addGroup(ClientGroup group) {
+	   groups.add(group);
+   }
 
+   /**
+    * @deprecated
+    * Set the current group of the Component
+    * @param group The group you want to set
+    */
+   public void setGroup(ClientGroup group) {
+	   //Temporary, because we are only supporting one group at the moment.
+	   if(groups.size() > 1) {
+		   groups.clear();
+	   }
+	   groups.add(group);
+   }
+   
    @Override
    public int hashCode() {
       return (int) getOid();
