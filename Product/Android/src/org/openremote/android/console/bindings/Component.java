@@ -37,7 +37,7 @@ public class Component extends BusinessEntity {
    private int frameHeight;
       
    /** The component's group */
-   protected ArrayList<ORGroup> groups;
+   protected ArrayList<ORGroup> groups = new ArrayList<ORGroup>();
    
    /**
     * Builds the component by parse component node.
@@ -85,8 +85,14 @@ public class Component extends BusinessEntity {
    protected ArrayList<ORGroup> createGroups(Node elementNode) {
 	  ArrayList<ORGroup> groups = new ArrayList<ORGroup>();
       for (Node groupNode = elementNode.getFirstChild(); groupNode != null; groupNode = groupNode.getNextSibling()) {
-    	  groups.add(new ORGroup(groupNode));
+    	  if(groupNode.getNodeType() == Node.ELEMENT_NODE) {
+    		  groups.add(new ORGroup(groupNode));
+    	  }
       }
       return groups;
+   }
+   
+   public ArrayList<ORGroup> getGroups() {
+	   return groups;
    }
 }
