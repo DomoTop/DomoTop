@@ -606,7 +606,6 @@ public class ResourceServiceImpl implements ResourceService {
          context.put("screens", screens);
          context.put("stringUtils", StringUtils.class);
          String xml = VelocityEngineUtils.mergeTemplateIntoString(velocity, PANEL_XML_TEMPLATE, context);
-         System.out.println(xml);
          return xml;
       } catch (VelocityException e) {
          throw new XmlExportException("Failed to read panel.xml", e);
@@ -672,7 +671,6 @@ public class ResourceServiceImpl implements ResourceService {
       context.put("stringUtils", StringUtils.class);
       context.put("groups", groups);
       String xml = VelocityEngineUtils.mergeTemplateIntoString(velocity, CONTROLLER_XML_TEMPLATE, context);
-      System.out.println(xml);
       return xml;
    }
 

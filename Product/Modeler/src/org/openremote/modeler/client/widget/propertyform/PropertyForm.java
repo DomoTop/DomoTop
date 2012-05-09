@@ -97,6 +97,10 @@ public class PropertyForm extends FormPanel {
       }
    } 
 
+   /**
+    * A function to add the group field to the property form	
+    * @param uiControl the component to attach the group to
+    */
    protected void addGroupField(final UIControl uiControl) {
 		final GroupSelectAndDeleteButtonWidget widget = new GroupSelectAndDeleteButtonWidget();
 		final List<ClientGroup> groups = new ArrayList<ClientGroup>();

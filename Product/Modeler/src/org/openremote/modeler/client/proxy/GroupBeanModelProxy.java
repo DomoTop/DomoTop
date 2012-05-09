@@ -31,7 +31,9 @@ import com.extjs.gxt.ui.client.data.BeanModel;
 public class GroupBeanModelProxy {
    private GroupBeanModelProxy() {
    }
-     
+	/**
+	 * Add a group to the list
+	 */
    public static void add(final ClientGroup group, final AsyncSuccessCallback<ClientGroup> callback){
       if (group != null) {
          AsyncServiceFactory.getGroupRPCServiceAsync().add(group, new AsyncSuccessCallback<ClientGroup>() {
@@ -44,7 +46,10 @@ public class GroupBeanModelProxy {
                });
       }
    }
-   
+	/**
+	 * Retrieve all the groups
+	 * @return A list containing all the groups
+	 */
    public static void getAll(final AsyncSuccessCallback<List<ClientGroup>> callback){
 	   AsyncServiceFactory.getGroupRPCServiceAsync().loadAll(new AsyncSuccessCallback<List<ClientGroup>>() {
 			@Override

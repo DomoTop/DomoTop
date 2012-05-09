@@ -142,8 +142,7 @@ public abstract class UIComponent extends BusinessEntity {
    }
    
    /**
-    * @deprecated
-    * Use getGroups()
+    * @deprecated Use getGroups()
     * @return the first group
     */
    public ClientGroup getGroup() {
@@ -170,7 +169,7 @@ public abstract class UIComponent extends BusinessEntity {
    }
 
    /**
-    * @deprecated
+    * @deprecated use addGroup(ClientGroup)
     * Set the current group of the Component
     * @param group The group you want to set
     */

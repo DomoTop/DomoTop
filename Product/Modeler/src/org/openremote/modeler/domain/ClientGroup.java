@@ -10,6 +10,10 @@ import javax.persistence.Table;
 
 import org.openremote.modeler.client.utils.IDUtil;
 
+/**
+ * A class which represents a Group. These groups can be linked to a UIComponent, to enforce rights on these components
+ * @author <a href="mailto:vincent.kriek@tass.nl">Vincent Kriek</a>
+ */
 @Entity
 @Table(name = "clientgroup")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -25,17 +29,28 @@ public class ClientGroup extends BusinessEntity
 		super();
 	}
 	
+	/**
+	 * Instantiate a ClientGroup using a new unique ID and given name
+	 * @param name The name of the new group
+	 */
 	public ClientGroup(String name) {
 		super();
 		this.setName(name);
 		this.setOid(IDUtil.nextID());
 	}
-		
+	
+	/**
+	 * @return The name of the group
+	 */
 	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Set a new name to the group
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
