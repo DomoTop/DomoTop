@@ -492,7 +492,7 @@ TomCat deze client en krijgt het apparaat toegang tot de OpenRemote Controller.
 
 Toen het bovenstaande allemaal nabehoren werkte, werd er verder gegaan met het
 optimaleren en verfijnen van de OpenRemote Android applicatie en OpenRemote
-Controller.  In de Android applicatie is er gewerkt aan het automatisch sturen
+Controller. In de Android applicatie is er gewerkt aan het automatisch sturen
 van CSR bestanden naar de Controller, tevens zoekt de Android applicatie
 automatisch naar het client certificaat zodra er gedrukt wordt op 'Done'. Tot
 slot zijn er verschillende bugs opgelost, waaronder enkele stabiliteits
@@ -521,7 +521,7 @@ is dat het gebruik maakt van 64-byte (512 bits) woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
 
 Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt
-er aangeraden om gebruik te maken van 'Pepper & Salt' oftewel peper en zout. Met
+er aangeraden om gebruik te maken van 'Pepper \& Salt' oftewel peper en zout. Met
 deze termen wordt bedoeld dat aan het wachtwoord met een bepaalde random lijst
 met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
 toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
@@ -535,24 +535,28 @@ algoritme met een lengte van 32 bits die gebruikt wordt als 'Zout'.
   \caption{Het TomCat logo}
 \end{wrapfigure}
 
-Om van het bovenstaande idee tot een goed einde te brengen is het noodzakelijk
-dat er onder Android onderzochtwordt hoe er een client CSR bestand gemaakt kan
+Als de client certificaten niet meer gegeneerd mogen worden op de server,
+vanwege veiligheids redenen, immers ook de private key wordt op dat moment over
+de lijn gestuurd is het verstandig om zoveel mogelijk lokaal te doen. Om dit
+tot een goed einde te brengen is is het noodzakelijk
+dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
 worden en hoe het client certificaat vervolgens geïmporteerd kan worden in de
 keystore van Android. Op de server waar ook de OpenRemote Controller draait werd
 er gekeken hoe je een CA aanmaakt voor de TomCat server, hoe je client
 certification request files kan omzetten in normale client certificaten die
 ondertekend zijn door het CA certificaat. En hoe je de client certificaten
-vervolgens kan opslaan in één keystore op de server, zodat er op een later
-termijn nog steeds informatie opgevraagd kan worden over een client certificaat.
-Op de server en de OpenRemote controller werkte dit eerst via het openssl
-commando, later is deze code in zijn geheel omgeschreven in native Java code en
+vervolgens kan opslaan in één keystore op de server, zodat er op een langer
+termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
+Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
+commando afgehandeld, later is deze code in zijn geheel omgeschreven in native Java code en
 wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
 keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
 worden met de pin die aanwezig is op het Android apparaat, indien de pins van
 Android en de administrator panel overeenkomen, is er met zekerheid te zeggen
-dat het hetzelfde apparaat betreft. Naast 'User management' heeft de
+dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke
+sleutel die aanwezig is in het client certificaat. Naast 'User management' heeft de
 administrator panel ook een tab genaamd 'Configuration'. In deze tab is het
 mogelijk om bepaalde instellingen te veranderen zoals of de authenticiteit of
 pin check aan- of uitgezetten.  De administrator panel is beveiligd door een
@@ -583,6 +587,13 @@ niet te verplichten, dit kan ingesteld worden via de 'Configuration' tab in de
 administrator panel. Als groepen niet verplicht zijn, dan heeft het apparaat
 automatisch toegang tot alle mogelijke commando's naar de server, hoewel nog steeds
 authenticatie vereist kan zijn.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=0.6\textwidth]{usergroups.pdf}
+   \end{center}
+   \caption{Gebruikers koppelen aan groepen}
+\end{figure}
 
 \newpage
 \section{Resultaten}
