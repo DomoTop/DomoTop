@@ -6,9 +6,12 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.openremote.modeler.client.utils.IDUtil;
+
+import flexjson.JSON;
 
 /**
  * A class which represents a Group. These groups can be linked to a UIComponent, to enforce rights on these components
@@ -23,6 +26,7 @@ public class ClientGroup extends BusinessEntity
 {
 	private static final long serialVersionUID = -2459473632461178339L;
 	private String name;
+	private Account account;
 		
 	@SuppressWarnings("unused")
 	private ClientGroup() {
@@ -58,5 +62,15 @@ public class ClientGroup extends BusinessEntity
     @Override 
     public int hashCode() {
        return (int) getOid();
+    }
+    
+    @ManyToOne
+    @JSON(include = false)
+    public Account getAccount() {
+       return account;
+    }
+
+    public void setAccount(Account account) {
+       this.account = account;
     }
 }

@@ -56,6 +56,8 @@ public class Account extends BusinessEntity {
    
    private List<Slider> sliders;
 
+   private List<ClientGroup> groups;
+   
    /**
     * Instantiates a new account.
     */
@@ -161,5 +163,22 @@ public class Account extends BusinessEntity {
       this.configs = configs;
    }
    
-   
+   /**
+    * Gets the ClientGroup's.
+    * 
+    * @return the devices
+    */
+   @OneToMany(mappedBy = "account")
+   public List<ClientGroup> getGroups() {
+      return groups;
+   }
+
+   /**
+    * Sets the devices.
+    * 
+    * @param devices the new devices
+    */
+   public void setGroups(List<ClientGroup> groups) {
+      this.groups = groups;
+   }  
 }

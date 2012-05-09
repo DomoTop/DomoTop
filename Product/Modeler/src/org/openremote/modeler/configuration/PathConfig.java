@@ -244,4 +244,8 @@ public class PathConfig {
    public String getControllerConfigPath(){
       return configuration.getControllerConfigPath();
    }
+   
+   public String getSerializedGroupsFile(Account account) {
+	   return userFolder(account) + "groups.obj";
+   }
 }
