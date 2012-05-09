@@ -181,6 +181,18 @@ public abstract class UIComponent extends BusinessEntity {
 	   groups.add(group);
    }
    
+   /**
+    * A utility function to add the group section to the xml. 
+    * @param xmlContent The StringBuffer containing the XML
+    */
+   public void addGroupsToXML(StringBuffer xmlContent) {
+      xmlContent.append("            <clientgroups>\n");
+      for(ClientGroup group: getGroups()) {
+    	  xmlContent.append("              <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
+      }
+      xmlContent.append("            </clientgroups>\n");
+   }
+   
    @Override
    public int hashCode() {
       return (int) getOid();

@@ -154,9 +154,7 @@ public class UISlider extends UIControl implements SensorOwner, ImageSourceOwner
             xmlContent.append("/>\n");
          }
       }
-      for(ClientGroup group: getGroups()) {
-    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
-      }
+      addGroupsToXML(xmlContent);
       xmlContent.append("        </slider>\n");
       return xmlContent.toString();
    }

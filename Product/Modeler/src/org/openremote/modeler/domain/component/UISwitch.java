@@ -111,9 +111,7 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
          }
          xmlContent.append("</link>");
       }
-      for(ClientGroup group: getGroups()) {
-    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
-      }
+      addGroupsToXML(xmlContent);
       xmlContent.append("        </switch>\n");
       return xmlContent.toString();
    }

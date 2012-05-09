@@ -176,9 +176,7 @@ public class UIButton extends UIControl implements ImageSourceOwner{
          }
          xmlContent.append(" />\n");
       }
-      for(ClientGroup group: getGroups()) {
-    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
-      }
+      addGroupsToXML(xmlContent);
       xmlContent.append("        </button>\n");
       return xmlContent.toString();
    }

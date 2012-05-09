@@ -337,7 +337,7 @@
 			<xsd:element ref="default"/>
 			<xsd:element ref="pressed"/>
 			<xsd:element ref="navigate"/>
-			<xsd:element ref="clientgroup"/>
+			<xsd:element ref="clientgroups"/>
 		</xsd:choice>
 	</xsd:group>
 	
@@ -427,6 +427,19 @@
 	
 	<!-- ###############  clientgroup     ################ -->
 	
+	<xsd:element name="clientgroups">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				A group for components
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="clientgroup" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:element name="clientgroup">
 		<xsd:annotation>
 			<xsd:documentation><![CDATA[
