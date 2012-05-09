@@ -41,6 +41,8 @@ public class Switch extends SensorComponent {
       for (int i = 0; i < nodeNum; i++) {
          if (childNodes.item(i).getNodeType() == Node.ELEMENT_NODE && LINK.equals(childNodes.item(i).getNodeName())) {
             this.parser(childNodes.item(i));
+         } else if (GROUP.equals(childNodes.item(i).getNodeName())) {
+             this.groups = createGroups(childNodes.item(i));
          }
       }
    }

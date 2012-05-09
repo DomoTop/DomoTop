@@ -71,6 +71,8 @@ public class BusinessEntity implements Serializable {
    public static final String LANDSCAPE = "landscape";
    public static final String INVERSE_SCREEN_ID = "inverseScreenId";
 
+   public static final String GROUP = "clientgroups";
+
    public static final String COLORPICKER = "colorpicker";
    
    public static final String BG_IMAGE_RELATIVE_POSITION_LEFT = "LEFT";

@@ -19,6 +19,8 @@
 */
 package org.openremote.android.console.bindings;
 
+import java.util.ArrayList;
+
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -71,6 +73,8 @@ public class ORButton extends Control {
                this.pressedImage = createImage(elementNode);
             } else if (NAVIGATE.equals(elementNode.getNodeName())) {
                this.navigate = new Navigate(elementNode);
+            } else if (GROUP.equals(elementNode.getNodeName())) {
+               this.groups = createGroups(elementNode);
             }
          }
       }
@@ -115,4 +119,5 @@ public class ORButton extends Control {
       }
       return null;
    }
+
 }

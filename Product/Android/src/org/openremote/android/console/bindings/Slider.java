@@ -120,6 +120,8 @@ public class Slider extends SensorComponent {
             // min and max nodes
             else if (MIN_VALUE.equalsIgnoreCase(childNodeNameOfSlider) || MAX_VALUE.equalsIgnoreCase(childNodeNameOfSlider)) {
                parseMinMaxNode(childNodesOfSlider.item(i));
+            } else if (GROUP.equalsIgnoreCase(childNodeNameOfSlider)) {
+                this.groups = createGroups(childNodesOfSlider.item(i));
             }
          }
       }

@@ -19,6 +19,8 @@
 */
 package org.openremote.android.console.bindings;
 
+import java.util.ArrayList;
+
 import org.openremote.android.console.model.XMLEntityDataBase;
 import org.w3c.dom.Node;
 
@@ -33,6 +35,9 @@ public class Component extends BusinessEntity {
    private int componentId;
    private int frameWidth;
    private int frameHeight;
+      
+   /** The component's group */
+   protected ArrayList<ORGroup> groups;
    
    /**
     * Builds the component by parse component node.
@@ -71,5 +76,17 @@ public class Component extends BusinessEntity {
    public void setFrameHeight(int frameHeight) {
       this.frameHeight = frameHeight;
    }
-
+   
+   /**
+    * A method to extract the groups from a node
+    * @param elementNode The <clientgroups> element
+    * @return A list of groups
+    */
+   protected ArrayList<ORGroup> createGroups(Node elementNode) {
+	  ArrayList<ORGroup> groups = new ArrayList<ORGroup>();
+      for (Node groupNode = elementNode.getFirstChild(); groupNode != null; groupNode = groupNode.getNextSibling()) {
+    	  groups.add(new ORGroup(groupNode));
+      }
+      return groups;
+   }
 }
