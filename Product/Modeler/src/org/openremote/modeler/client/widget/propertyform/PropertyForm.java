@@ -109,7 +109,12 @@ public class PropertyForm extends FormPanel {
 			
 			@Override
 			public void onSuccess(List<ClientGroup> result) {
-				widget.setGroups(result, uiControl.getGroup().getName());
+				ClientGroup currentGroup = uiControl.getGroup();
+				if(currentGroup == null) {
+					widget.setGroups(result, "");
+				} else {
+					widget.setGroups(result, currentGroup.getName());
+				}
 				
 				groups.clear();
 				groups.addAll(result);

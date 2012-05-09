@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.RangeSensor;
 import org.openremote.modeler.domain.Sensor;
 import org.openremote.modeler.domain.Slider;
@@ -119,7 +120,7 @@ public class UISlider extends UIControl implements SensorOwner, ImageSourceOwner
    @Override
    public String getPanelXml() {
       StringBuffer xmlContent = new StringBuffer();
-      xmlContent.append("        <slider group=\"" + getGroup().getName() + "\" id=\"" + getOid() + "\" ");
+      xmlContent.append("        <slider id=\"" + getOid() + "\" ");
       if (isThumbUploaded()) {
          xmlContent.append("thumbImage=\"" + thumbImage.getImageFileName() + "\" ");
       }
@@ -152,6 +153,9 @@ public class UISlider extends UIControl implements SensorOwner, ImageSourceOwner
             }
             xmlContent.append("/>\n");
          }
+      }
+      for(ClientGroup group: getGroups()) {
+    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
       }
       xmlContent.append("        </slider>\n");
       return xmlContent.toString();

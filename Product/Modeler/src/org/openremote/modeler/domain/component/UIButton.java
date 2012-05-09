@@ -146,7 +146,7 @@ public class UIButton extends UIControl implements ImageSourceOwner{
    @Override
    public String getPanelXml() {
       StringBuffer xmlContent = new StringBuffer();
-      xmlContent.append("        <button group=\"" + getGroup().getName() + "\" id=\"" + getOid() + "\" name=\"" + StringUtils.escapeXml(getName()) + "\"");
+      xmlContent.append("        <button id=\"" + getOid() + "\" name=\"" + StringUtils.escapeXml(getName()) + "\"");
       if (uiCommand != null) {
          xmlContent.append(" hasControlCommand=\"true\"");
       }

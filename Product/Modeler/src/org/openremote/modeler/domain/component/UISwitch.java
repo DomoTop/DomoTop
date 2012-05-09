@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.persistence.Transient;
 
+import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.Sensor;
 import org.openremote.modeler.domain.Switch;
 import org.openremote.modeler.domain.UICommand;
@@ -99,7 +100,7 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
    @JSON(include=false)
    public String getPanelXml() {
       StringBuffer xmlContent = new StringBuffer();
-      xmlContent.append("        <switch group=\"" + getGroup().getName() + "\" id=\"" + getOid() + "\">\n");
+      xmlContent.append("        <switch id=\"" + getOid() + "\">\n");
       if (getSensor() != null) {
          xmlContent.append("<link type=\"sensor\" ref=\"" + getSensor().getOid() + "\">");
          if (onImage != null && onImage.getSrc() != null) {
@@ -109,6 +110,9 @@ public class UISwitch extends UIControl implements SensorOwner ,ImageSourceOwner
             xmlContent.append("          <state name=\"off\" value=\"" + offImage.getImageFileName() + "\"/>\n");
          }
          xmlContent.append("</link>");
+      }
+      for(ClientGroup group: getGroups()) {
+    	  xmlContent.append("          <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
       }
       xmlContent.append("        </switch>\n");
       return xmlContent.toString();
