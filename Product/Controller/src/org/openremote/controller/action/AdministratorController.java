@@ -80,6 +80,7 @@ public class AdministratorController extends MultiActionController
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {    
       if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.sendRedirect("/controller/login");
          return null;
       }
       boolean success = false;
@@ -141,6 +142,7 @@ public class AdministratorController extends MultiActionController
    ServletRequestBindingException 
    {      
       if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.sendRedirect("/controller/login");
          return null;
       }
       
@@ -285,6 +287,7 @@ public class AdministratorController extends MultiActionController
    public ModelAndView deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException,
    ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.sendRedirect("/controller/login");
          return null;
       }  
       int clientID = -1;
@@ -343,6 +346,7 @@ public class AdministratorController extends MultiActionController
    public ModelAndView changeUserStatus(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.sendRedirect("/controller/login");
          return null;
       }      
       boolean result = false;
@@ -476,6 +480,7 @@ public class AdministratorController extends MultiActionController
    public ModelAndView updateGroup(HttpServletRequest request, HttpServletResponse response) throws IOException,
          ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.sendRedirect("/controller/login");
          return null;
       }
       boolean result = false;
