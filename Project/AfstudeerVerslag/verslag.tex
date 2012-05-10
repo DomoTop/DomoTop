@@ -870,25 +870,40 @@ de volgende link
 \url{http://openremote.org/pages/viewpage.action?pageId=19439381&focusedCommentId=19440285#comment-19440285}. 
  
 \subsection{Iteratie 7}
+
+In deze iteratie is er gewerkt aan het implementeren van groepen in OpenRemote.
+Deze functies houdt in dat je een groep toe kan wijzen aan een knop in de layout
+designer, en een telefoon/tablet aan een groep toe wijzen. Op het moment dat er
+een device en een knop in dezelfde groep zitten, zal de actie die aan de knop
+hangt doorgevoerd worden.
+
 \begin{table}[htpb]
   \caption{Eisen iteratie 7}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
-        Als beheerder wil ik authenticatie en authorisatie uit kunnen    \\
-        schakelen om terug te vallen op de standaard onbeveiligde        \\ 
-        verbinding                                                       \\\hline
-        Als gebruiker wil ik alleen via SSL port \& client certificaten  \\ 
-        bij de OpenRemote Controller kunnen komen                        \\\hline
-        Als ontwikkelaar wil ik documentatie hebben over de implementatie\\ 
-        van het authenticatie systeem                                    \\\hline
-        Als ontwikkelaar wil ik een patch van de toevoegingen ten        \\
-        opzichte van een OpenRemote release                              \\\hline
+        Als beheerder kan ik groepen aanmaken om gebruikers in te delen  \\\hline
+        Als beheerder kan ik gebruikers toewijzen aan groepen om         \\ 
+        gebruikers rechten te geven                                      \\\hline
+        Als beheerder kan ik knoppen toewijzen aan groepen om groepen    \\ 
+        rechten te geven                                                 \\\hline
     \end{tabular}
   \end{center}
 \end{table}
 
+De modeler is uitgebreid met de mogelijkheid om groepen aan te maken, en
+vervolgens deze groepen toe te kunnen wijzen aan "besturingselementen". Er kan
+nu een groep toegewezen worden aan een knop, een switch en een slider. In de XML
+die vervolgens gegenereerd wordt zijn ook de groepen toegevoegd. 
 
+In de controller kan een gebruiker toegewezen worden aan een groep. Deze groepen
+zijn hetzelfde als de groepen die worden aangemaakt in modeler en worden
+meegestuurd in de XML. Standaard heeft een gebruiker geen groep, en dus geen
+rechten, en in het administrator paneel kan een groep toegewezen worden.
+
+Mocht er toch op een knop gedrukt worden op de android applicatie wordt er een
+melding getoond met daarin het bericht dat de gebruiker niet in de correcte
+groep zit. 
 
 \newpage
 \section{Verklarende woordenlijst}
@@ -962,10 +977,10 @@ dit nummer kan worden in het document als referentie.
 \newpage
 
 \begin{landscape}
-\subsection{Bijlage 2: Plan van Aanpak}
+\subsection{Bijlage 2: }
 \begin{figure}[h!]
   \centering
-    \includegraphics[height=0.5\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
+    \includegraphics[height=0.80\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
   \label{fig:tls}
   \caption{DomoTop Sequence Diagram - Afhandelen van een request via een TLS
   capable OpenRemote Controller}
