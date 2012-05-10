@@ -109,7 +109,7 @@
 					  									method="post">
 															<input type="hidden" name="client_id" value="${client.client_id}" />						
 																<select name="group_id" onchange="onChangeGroup(groupForm${client.client_id})">	
-																	<option<#if client_group_id == -1> selected</#if> value="-1">No Group</option>
+																	<option<#if client_group_id == -1> selected</#if> value="-1">Default</option>
 																<#list groups as group>	
 																	<option<#if group.group_id == client_group_id> selected</#if> value="${group.group_id}">${group.group_name?capitalize}</option>
 																</#list>
