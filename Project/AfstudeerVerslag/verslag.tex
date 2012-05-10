@@ -810,7 +810,6 @@ gebruiker toegang heeft tot het systeem. Mocht dat niet het geval zijn, zal hij
 de gebruiker geen toegang tot het systeem geven.
 Zie bijlage 2.
 
-
 Om een aantal dingen te kunnen aanpassen als beheerder is er ook een
 configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
 ingesteld zoals onder andere het pad waar de CA opgeslagen wordt en of de PIN
@@ -828,6 +827,68 @@ een gebruikersnaam en wachtwoordcombinatie. Deze combinatie is dezelfde als
 waarmee ingelogd wordt op \url{http://composer.openremote.org/}. Deze worden,
 wanneer er ingelogd wordt gecontrolleerd online of, als er geen
 internetverbinding is, lokaal met de cache die te vinden is in de database.
+
+\subsection{Iteratie 6}
+\begin{table}[htpb]
+  \caption{Eisen iteratie 6}
+  \begin{center}
+    \begin{tabular}{|| l ||}\hline
+        Eis                                                              \\\hline\hline
+        Als beheerder wil ik authenticatie en authorisatie uit kunnen    \\
+        schakelen om terug te vallen op de standaard onbeveiligde        \\ 
+        verbinding                                                       \\\hline
+        Als gebruiker wil ik alleen via SSL port \& client certificaten  \\ 
+        bij de OpenRemote Controller kunnen komen                        \\\hline
+        Als ontwikkelaar wil ik documentatie hebben over de implementatie\\ 
+        van het authenticatie systeem                                    \\\hline
+        Als ontwikkelaar wil ik een patch van de toevoegingen ten        \\
+        opzichte van een OpenRemote release                              \\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+In de zesde iteratie van dit project is er gewerkt aan het opleveren van een
+stabiele release voor de ontwikkelaars van OpenRemote. Zoals eerder vermeld is
+er in dit project gewerkt aan het uitbreiden van een bestaand open source
+project namelijk OpenRemote. 
+
+Er is nu voor gezorgd dat het verbinden met SSL client certificaten verplicht
+gesteld kan worden. Dit betekent dat vanaf deze iteratie het alleen mogelijk is
+om te verbinden met de Controller met behulp van een bekent SSL Client
+Certificaat. Dit is gedaan met behulp van rollen in TomCat. Er wordt,
+als er verbinding wordt gemaakt, gecontroleert of het client certificaat bekend
+is bij de Controller. Zo ja, dan is er toegang, anders niet.
+
+Ook is ervoor gezorgd dat onze uitbreidingen op OpenRemote simpel uit te zetten
+zijn. Er is een checkbox bijgekomen in het configuratie paneel welke, als er
+deze uitgevinkt wordt, er voor zorgt dat TomCat niet meer controleert op client
+certificaten. 
+
+Tevens is er ook contact opgenomen met OpenRemote om onze vorderingen te tonen.
+Dit is gedaan via een bericht op het forum van OpenRemote welke te vinden is via
+de volgende link 
+\url{http://openremote.org/pages/viewpage.action?pageId=19439381&focusedCommentId=19440285#comment-19440285}. 
+ 
+\subsection{Iteratie 7}
+\begin{table}[htpb]
+  \caption{Eisen iteratie 7}
+  \begin{center}
+    \begin{tabular}{|| l ||}\hline
+        Eis                                                              \\\hline\hline
+        Als beheerder wil ik authenticatie en authorisatie uit kunnen    \\
+        schakelen om terug te vallen op de standaard onbeveiligde        \\ 
+        verbinding                                                       \\\hline
+        Als gebruiker wil ik alleen via SSL port \& client certificaten  \\ 
+        bij de OpenRemote Controller kunnen komen                        \\\hline
+        Als ontwikkelaar wil ik documentatie hebben over de implementatie\\ 
+        van het authenticatie systeem                                    \\\hline
+        Als ontwikkelaar wil ik een patch van de toevoegingen ten        \\
+        opzichte van een OpenRemote release                              \\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
 
 \newpage
 \section{Verklarende woordenlijst}
