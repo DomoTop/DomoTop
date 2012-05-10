@@ -13,16 +13,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
  * http://www.fsf.org.
  *
- * @Author: Adrian "yEnS" Mato Gondelle
- * @website: www.yensdesign.com
- * @email: yensamg@gmail.com
+ * @Author: Melroy van den Berg
+ * @email: melroy.van.den.berg@tass.nl
  * @license: Feel free to use it, but keep this credits please!					
  */
 
 //SETTING UP OUR POPUP
 //0 means disabled; 1 means enabled;
 var popupStatus = 0;
-var loading = false;
+var focusPopUp = false;
 
 window.onload=function() 
 {
@@ -70,6 +69,9 @@ $(document).ready(function()
   	if (result == 'OK') {
 			message("Device was successfully deleted.");
 			delayedRefreshPage(500);
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
 		} else {
 			error("Device deletion was unsuccessfully: " + result);
 		}
@@ -87,6 +89,9 @@ $(document).ready(function()
   	if (result == 'OK') {
 			message("Settings are successfully saved. Reloading...");
 			delayedRefreshPage(800);
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
 		} else if(result == 'OK_REBOOT') {
 			//centering with css
 			centerPopup();	
@@ -102,6 +107,9 @@ $(document).ready(function()
   	clearMessage();
   	if (result == 'OK') {
 			message("CA successfully created. <br/><b><font color='#FF4500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
 		} else {
 			error("CA creation was unsuccessfully: " + result);
 		}
@@ -149,7 +157,7 @@ $(document).ready(function()
 	
 	//Click out event!
 	$("#backgroundPopup").click(function(){
-		if(!loading)
+		if(!focusPopUp)
 		{
 			disablePopup();
 		}
@@ -157,7 +165,7 @@ $(document).ready(function()
 	
 	//Press Escape event!
 	$(document).keypress(function(e){
-		if(!loading)
+		if(!focusPopUp)
 		{
 			if(e.keyCode==27 && popupStatus==1){
 				disablePopup();
@@ -291,6 +299,9 @@ function statusFormResult(result)
 				changeButtonToStatusSubmit(result);
 			}
 		}
+	} else if (resultString == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
 	} else {
 		error("User status is unsuccessfully: " + result);
 	}
@@ -311,6 +322,11 @@ function changeButtonToStatusSubmit(result)
 	{
 		changeButtonToSubmitType(resultID, "button");
 		changeElementClass(resultID, "statusSubmit button deny_button");
+	}
+	else if(resultAction == 'UNAUTHORIZED')
+	{
+		centerPopup();
+		showLogin();
 	}
 	else
 	{
@@ -360,7 +376,7 @@ function showLoading()
 		$("#backgroundPopup").fadeIn("slow");
 		$("#popupLoading").fadeIn("slow");
 		popupStatus = 1;
-		loading = true;
+		focusPopUp = true;
 		
 		// wait until restart is complete
 		setTimeout("waitLoading()", 6000);
@@ -375,8 +391,23 @@ function hideLoading()
 		$("#backgroundPopup").fadeOut("slow");
 		$("#popupLoading").fadeOut("slow");
 		popupStatus = 0;
-		loading = false;
+		focusPopUp = false;
 		delayedRefreshPage(500);
+	}
+}
+
+// show login pop-up
+function showLogin()
+{
+	//loads popup only if it is disabled
+	if(popupStatus==0){
+		$("#backgroundPopup").css({
+			"opacity": "0.7"
+		});
+		$("#backgroundPopup").fadeIn("slow");
+		$("#popupLogin").fadeIn("slow");
+		popupStatus = 1;
+		focusPopUp = true;
 	}
 }
 
@@ -416,6 +447,9 @@ function centerPopup()
 	var loadingHeight = $("#popupLoading").height();
 	var loadingWidth = $("#popupLoading").width();
 	
+	var loginHeight = $("#popupLogin").height();
+	var loginWidth = $("#popupLogin").width();
+	
 	//centering
 	$("#popupPin").css({
 		"position": "absolute",
@@ -427,6 +461,12 @@ function centerPopup()
 		"position": "absolute",
 		"top": windowHeight/2-loadingHeight/2,
 		"left": windowWidth/2-loadingWidth/2
+	});
+	
+	$("#popupLogin").css({
+		"position": "absolute",
+		"top": windowHeight/2-loginHeight/2,
+		"left": windowWidth/2-loginWidth/2
 	});	
 	
 	//only need force for IE6	
@@ -445,6 +485,9 @@ function onChangeGroup(form)
 			clearMessage();
 	  	if (response.responseText == 'OK') {
 				message("Group of device is successfully updated.");
+			} else if (response.responseText == 'UNAUTHORIZED') {
+				centerPopup();
+				showLogin();				
 			} else {
 				error("There was a problem updating the group of the device: " + response.responseText);
 			}    

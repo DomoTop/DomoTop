@@ -107,6 +107,7 @@ public class Constants
   
   public final static String OK_REBOOT = "OK_REBOOT";
 
+  public final static String UNAUTHORIZED = "UNAUTHORIZED";
  
   public static final String SERVER_RESPONSE_TIME_OUT = "TIMEOUT";
 
