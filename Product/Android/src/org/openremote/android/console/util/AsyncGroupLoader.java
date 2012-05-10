@@ -76,7 +76,7 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
 		connection = new ORConnection(context, 
 							ORHttpMethod.GET, 
 							false, 
-							AppSettingsModel.getCurrentServer(context) + "/rest/device/group", 
+							AppSettingsModel.getSecuredServer(context) + "/rest/device/group", 
 							this);
 		this.context = context;
 	}
