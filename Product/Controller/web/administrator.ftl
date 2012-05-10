@@ -206,7 +206,22 @@
 											<img src="image/spinner.gif" alt="Loading..." border=0 />
 										 </center>
 									</p>
-								</div>				
+								</div>
+								<div id="popupLogin">
+									<h1>Login</h1>		
+									Session has been expired, please login again.					
+									<form action="login" method="post">
+										<p>
+											<label for="username">username : </label><br/> <input id="username" name="username" type="text" />
+										</p>
+										<p> 
+											<label for="password">password : </label><br/> <input id="password" name="password" type="password" />
+										</p>
+										<p>
+											<input type="submit" value="Login" />
+										</p> 
+									</form>
+								</div>									
 								<p><a href="index.html"><img src="image/back.png" alt="Back" border=0 /> Back</a></p>
 							</TD>
 						</TR>

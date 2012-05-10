@@ -194,7 +194,7 @@ span.info:hover span
 	z-index:1;
 }
 
-#popupPin, #popupLoading
+#popupPin, #popupLoading, #popupLogin
 {
 	display:none;
 	position:fixed;
@@ -217,7 +217,13 @@ span.info:hover span
 	width: 350px;
 }
 
-#popupPin h1, #popupLoading h1
+#popupLogin
+{
+	width: 300px;
+	height: 230px;
+}
+
+#popupPin h1, #popupLoading h1, #popupLogin h1
 {
 	text-align:left;
 	color:#266131;
