@@ -243,10 +243,6 @@ public class LoginServlet extends HttpServlet
      HttpSession session = request.getSession(true);
      PrintWriter out = response.getWriter();
      Object auth = session.getAttribute("authenticated");
-         
-     if(auth != null) {
-        out.write(auth.toString());
-     }
      
      int ret = checkOnline(username, password);
      if(ret == 0) {
