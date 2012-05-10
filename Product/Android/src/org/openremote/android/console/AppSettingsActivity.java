@@ -402,7 +402,6 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
             if(AppSettingsModel.isSSLEnabled(getApplicationContext()) 
             		&& AppSettingsModel.getSSLPort(getApplicationContext()) == 8443) {
             	retrieveCertificate();
-            	AsyncGroupLoader.loadGroup(getApplicationContext());
             	return;
             }
             startMain();

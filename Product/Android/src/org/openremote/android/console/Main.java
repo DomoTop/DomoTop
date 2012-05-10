@@ -22,6 +22,7 @@ package org.openremote.android.console;
 import org.openremote.android.console.bindings.Screen;
 import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.net.IPAutoDiscoveryClient;
+import org.openremote.android.console.util.AsyncGroupLoader;
 import org.openremote.android.console.util.AsyncResourceLoader;
 import org.openremote.android.console.util.ImageUtil;
 
@@ -69,6 +70,8 @@ public class Main extends GenericActivity {
         }
         isRefreshingController = false;
         
+        //Load the current group
+    	AsyncGroupLoader.loadGroup(getApplicationContext());
         checkNetType();
         readDisplayMetrics();        
         if(!checkServerAndPanel()) {        
