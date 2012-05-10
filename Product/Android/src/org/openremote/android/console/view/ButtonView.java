@@ -67,8 +67,8 @@ public class ButtonView extends ControlView {
       int height = button.getFrameHeight();
       uiButton.setId(button.getComponentId());
       String groupname = "nogroup";
-      ORGroup group = button.getGroups().get(0);
-      if(group != null) {
+      if(button.getGroups().size() > 0) {
+          ORGroup group = button.getGroups().get(0);
     	  groupname = group.getName();
       }
       
