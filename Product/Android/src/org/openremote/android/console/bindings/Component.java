@@ -20,6 +20,7 @@
 package org.openremote.android.console.bindings;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openremote.android.console.model.XMLEntityDataBase;
 import org.w3c.dom.Node;
@@ -92,7 +93,11 @@ public class Component extends BusinessEntity {
       return groups;
    }
    
-   public ArrayList<ORGroup> getGroups() {
+   /**
+    * Return a list with all the groups
+    * @return A list with all the ORGroup's
+    */
+   public List<ORGroup> getGroups() {
 	   return groups;
    }
 }
