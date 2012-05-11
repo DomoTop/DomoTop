@@ -20,41 +20,21 @@
 
 package org.openremote.android.console.util;
 
-import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
-import org.openremote.android.console.AppSettingsActivity;
 import org.openremote.android.console.Constants;
-import org.openremote.android.console.GroupActivity;
-import org.openremote.android.console.LoginViewActivity;
-import org.openremote.android.console.Main;
-import org.openremote.android.console.R;
 import org.openremote.android.console.model.AppSettingsModel;
-import org.openremote.android.console.model.ControllerException;
-import org.openremote.android.console.model.ViewHelper;
-import org.openremote.android.console.model.XMLEntityDataBase;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
-import org.openremote.android.console.net.ORControllerServerSwitcher;
 import org.openremote.android.console.net.ORHttpMethod;
-import org.openremote.android.console.net.ORNetworkCheck;
-import org.openremote.android.console.ssl.ORKeyStore;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils.TruncateAt;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 /**
  * It's responsible for downloading resources in backgroud and updte progress in text.
@@ -69,14 +49,17 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
     private Context context;
 	
     public static void loadGroup(Context context) {
-    	new AsyncGroupLoader(context);
+		String server = AppSettingsModel.getSecuredServer(context);
+		if(!TextUtils.isEmpty(server)) {
+			new AsyncGroupLoader(context, server);
+		}
     }
     
-	private AsyncGroupLoader(Context context) {
+	private AsyncGroupLoader(Context context, String server) {
 		connection = new ORConnection(context, 
 							ORHttpMethod.GET, 
 							false, 
-							AppSettingsModel.getSecuredServer(context) + "/rest/device/group", 
+							server + "/rest/device/group", 
 							this);
 		this.context = context;
 	}
@@ -92,16 +75,6 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
 			Log.e(LOG_CATEGORY + " urlConnectionDidFailWithException", 
 					httpResponse.getStatusLine().getStatusCode() + ", reason:" 
 							+ httpResponse.getStatusLine().getStatusCode());
-			
-			try {
-				urlConnectionDidReceiveData(httpResponse.getEntity().getContent());
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
