@@ -71,7 +71,9 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
 
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
-		if(httpResponse.getStatusLine().getStatusCode() != 200) {
+		if(httpResponse.getStatusLine().getStatusCode() == 404) {
+			AppSettingsModel.setGroup(context, "");
+		} else if(httpResponse.getStatusLine().getStatusCode() != 200) {
 			Log.e(LOG_CATEGORY + " urlConnectionDidFailWithException", 
 					httpResponse.getStatusLine().getStatusCode() + ", reason:" 
 							+ httpResponse.getStatusLine().getStatusCode());
