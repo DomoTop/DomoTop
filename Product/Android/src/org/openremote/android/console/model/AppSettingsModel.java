@@ -102,6 +102,11 @@ public class AppSettingsModel implements Serializable
    * The port number to connect to if encrypted SSL communication is used.
    */
   private static final String SSL_PORT = "sslPort";
+  
+  /**
+   * The group to which this device 
+   */
+  private static final String GROUP = "group";
 
 
   // Class Methods --------------------------------------------------------------------------------
@@ -410,10 +415,29 @@ public class AppSettingsModel implements Serializable
   }
 
 
+	public static void setGroup(Context context, String group) {
+		if(group != null && !TextUtils.isDigitsOnly(group)) {
+			SharedPreferences.Editor editor = context.getSharedPreferences(
+				APP_SETTINGS,
+				Context.MODE_PRIVATE
+			).edit();
+			
+			editor.putString(GROUP, group);
+			editor.commit();
+		}
+	}
+	
+	public static String getGroup(Context context) {
+		return context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE)
+				.getString(GROUP, "");
+	}
+
 
   // Constructors ---------------------------------------------------------------------------------
 
 
   private AppSettingsModel() {}
+
+
 
 }

@@ -102,14 +102,16 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
         //   So for now, an empty catch block, until I can build proper test cases for these
         //                                                                                    [JPL]
         //
-    	
-    	if(e.getMessage().contains("SSL")) {
-    		//Handle error
-    		//Probably no access/
-    		result.setAction(TO_SETTING);
-    		return result;
-    	} else {
-    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
+    	if(e != null) {
+	    	if(e.getMessage().contains("SSL")) {
+	    		//Handle error
+	    		//Probably no access/
+	    		result.setAction(TO_SETTING);
+	    		return result;
+	    	} else {
+	    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
+	    	}
+
     	}
       }
 
