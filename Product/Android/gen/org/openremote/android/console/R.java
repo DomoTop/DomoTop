@@ -67,17 +67,18 @@ containing a value of this type.
         public static final int lock=0x7f02000c;
         public static final int orlogo=0x7f02000d;
         public static final int progress_bg=0x7f02000e;
-        public static final int progress_horizontal=0x7f02000f;
-        public static final int progress_vertical=0x7f020010;
-        public static final int seek_bar_style=0x7f020011;
-        public static final int seek_thumb=0x7f020012;
-        public static final int seek_thumb_normal=0x7f020013;
-        public static final int seek_thumb_pressed=0x7f020014;
-        public static final int seek_thumb_selected=0x7f020015;
-        public static final int slider_thumb=0x7f020016;
-        public static final int slider_thumb_disabled=0x7f020017;
-        public static final int vertical_seekbar_background=0x7f020018;
-        public static final int vertical_seekbar_progress=0x7f020019;
+        public static final int progress_bg_disabled=0x7f02000f;
+        public static final int progress_horizontal=0x7f020010;
+        public static final int progress_vertical=0x7f020011;
+        public static final int seek_bar_style=0x7f020012;
+        public static final int seek_thumb=0x7f020013;
+        public static final int seek_thumb_normal=0x7f020014;
+        public static final int seek_thumb_pressed=0x7f020015;
+        public static final int seek_thumb_selected=0x7f020016;
+        public static final int slider_thumb=0x7f020017;
+        public static final int slider_thumb_disabled=0x7f020018;
+        public static final int vertical_seekbar_background=0x7f020019;
+        public static final int vertical_seekbar_progress=0x7f02001a;
     }
     public static final class id {
         public static final int app_version=0x7f080016;
