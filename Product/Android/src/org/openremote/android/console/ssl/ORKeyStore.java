@@ -229,7 +229,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 														url,
 														this);											
 		} catch (IOException e) {
-			handler.sendEmptyMessage(1);
+			handler.sendEmptyMessage(-1);
 			Log.e(LOG_CATEGORY, "getSignedChain: " + e.getMessage());
 		}		
 	}
@@ -339,7 +339,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    if(fetchHandler != null) {
 	    	if(!isCalled)
 	    	{
-	    		fetchHandler.sendEmptyMessage(2);
+	    		fetchHandler.sendEmptyMessage(-1);
 		    	isCalled = true;
 		    	Log.d(LOG_CATEGORY, "urlConnectionDidFailWithException: " + e.getMessage());
 	    	}
@@ -352,15 +352,22 @@ public class ORKeyStore implements ORConnectionDelegate {
 	 */
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
-		if(httpResponse.getStatusLine().getStatusCode() != 200) {
-		    if(fetchHandler != null) {
-		    	if(!isCalled)
-		    	{
-		    		fetchHandler.sendEmptyMessage(1);
-			    	isCalled = true;
-		    	}
-		    }
+		int what = 0;
+		if(httpResponse.getStatusLine().getStatusCode() == 404) {
+			what = 1;
+		} else if(httpResponse.getStatusLine().getStatusCode() == 431) {
+			what = 2;
+		} else if(httpResponse.getStatusLine().getStatusCode() == 432) {
+			what = 3;
 		}
+		
+	    if(fetchHandler != null && httpResponse.getStatusLine().getStatusCode() != 200) {
+	    	if(!isCalled)
+	    	{
+	    		fetchHandler.sendEmptyMessage(what);
+		    	isCalled = true;
+	    	}
+	    }
 	}
 
 	/**

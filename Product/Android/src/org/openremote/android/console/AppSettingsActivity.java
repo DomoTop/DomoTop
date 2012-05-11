@@ -48,7 +48,6 @@ import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.ssl.ORPKCS10CertificationRequest;
 import org.openremote.android.console.ssl.ORKeyPair;
 import org.openremote.android.console.ssl.ORKeyStore;
-import org.openremote.android.console.util.AsyncGroupLoader;
 import org.openremote.android.console.util.FileUtil;
 import org.openremote.android.console.util.StringUtil;
 import org.openremote.android.console.view.PanelSelectSpinnerView;
@@ -857,13 +856,23 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		   public void handleMessage(Message msg) {
 			   doneButton.setEnabled(true);
 			   dialog.cancel();
-			   if(msg.what == 0) {
-				   startMain();   
-			   } else if(msg.what == 2) {
-				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "Connection error", "Can't connect to the server.");
-			   } else {
-				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access yet.\nPlease ask the administrator for permission.");
-			   }			   
+			   switch(msg.what) {
+				   	case -1:
+						ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "Connection error", "Can't connect to the server.");
+						break;
+				   	case 0:
+				   		startMain();
+				   		break;
+				   	case 1:
+						ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access.\nPlease ask the administrator for permission.");
+						break;
+				   	case 2:	
+						ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access.\nYour certificate is invalid.");
+				   		break;
+				   	case 3:
+						ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access.\nYour certificate expired.");
+				   		break;
+			   }		   
 		   }  
 	   };
 
