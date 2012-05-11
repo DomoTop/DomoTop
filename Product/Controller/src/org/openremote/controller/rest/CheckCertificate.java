@@ -34,7 +34,7 @@ public class CheckCertificate extends RESTAPI {
             xml.append(Constants.STATUS_XML_HEADER);
                         
             String dname = URLDecoder.decode(matcher.group(1), "UTF-8");
-            logger.error(dname);
+
             if(clientService.isClientValid(dname)) {
                xml.append("<valid>true</valid>");
             } else {

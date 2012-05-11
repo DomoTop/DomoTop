@@ -103,6 +103,7 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
         //                                                                                    [JPL]
         //
     	if(e != null) {
+	    	Log.e(LOG_CATEGORY, "AsyncReSourceLoader: ", e);
 	    	if(e.getMessage().contains("SSL")) {
 	    		//Handle error
 	    		//Probably no access/
@@ -111,7 +112,6 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
 	    	} else {
 	    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
 	    	}
-
     	}
       }
 

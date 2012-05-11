@@ -111,6 +111,9 @@ public class FindCertificateByID extends RESTAPI
       Certificate certificate = clientService.getClientCertificate(username);
       if(certificate != null)
       {
+         // Check client certificate
+         //if(clientService.(dn, datum)
+         
          sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
       }
       else

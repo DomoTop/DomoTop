@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -225,7 +226,7 @@ public class ORConnection
          if (httpResponse.getStatusLine().getStatusCode() == Constants.HTTP_SUCCESS) {
             delegate.urlConnectionDidReceiveData(httpResponse.getEntity().getContent());
          } else {
-            Log.e(LOG_CATEGORY, "Get the entity's content of httpresponse fail.");
+            Log.i(LOG_CATEGORY, "Get the entity's content of httpresponse fail, with status code: " + httpResponse.getStatusLine().getStatusCode());
          }
       } catch (IllegalStateException e) {
          Log.e(LOG_CATEGORY, "Get the entity's content of httpresponse fail.", e);

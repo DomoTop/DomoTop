@@ -377,7 +377,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    
 	    int what = 1;
 	    if(chain[0] != null && chain[1] != null) {
-		    what = addCertificate(host, chain) ? 0 : 1;
+		    what = this.addCertificate(host, chain) ? 0 : 1;
 	    }
 	    
 	    if(fetchHandler != null) {
@@ -418,21 +418,37 @@ public class ORKeyStore implements ORConnectionDelegate {
 		return info.toString();
 	}
 	
-	public void checkCertificateChain(String currentServer, Handler handler) {
+	/**
+	 * Check the certificate chain from the current server
+	 * @param currentServer
+	 * @param handler
+	 */
+	public void checkCertificateChain(String currentServer, Handler handler)
+	{
 		boolean valid = false;
-		X509Certificate[] chain = null;
+		Certificate[] chain = null;
+		X509Certificate[] x509certs = null;
 		String dname = null;
 		
 		try {
-			chain =  (X509Certificate[]) keystore.getCertificateChain(currentServer);
+			chain = keystore.getCertificateChain(currentServer);
+			
+			if(chain != null)
+			{
+			 	x509certs = new X509Certificate[chain.length];
+			 	
+			 	for (int i = 0; i < x509certs.length; i++) {
+			 		x509certs[i] = (X509Certificate)chain[i];
+			 	}
+			}
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, "checkCertificateChain keystore: " + e.getMessage());
 		} catch(ClassCastException e) {
 			Log.e(LOG_CATEGORY, "checkCertificateChain classcast: " + e.getMessage());
 		}
 		
-		if(chain != null) {
-			dname = chain[0].getSubjectDN().getName().replace(",", ", ");
+		if(x509certs != null && x509certs.length >= 1) {
+			dname = x509certs[0].getSubjectDN().getName().replace(",", ", ");
 			Log.d(LOG_CATEGORY, dname);
 			
 			try {

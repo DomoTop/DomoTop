@@ -865,12 +865,12 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access yet.\nPlease ask the administrator for permission.");
 			   }			   
 		   }  
-	   };	   
+	   };
 
-	   ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
+	ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
 			   AppSettingsModel.getCurrentServer(getApplicationContext()), 
 			   handler
-		);		  
+		);
    }
    
    /**
