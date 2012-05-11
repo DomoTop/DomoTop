@@ -420,8 +420,8 @@ public class ClientServiceImpl implements ClientService
    }  
 
    /**
-    * Get the client group ID via DN
-    * @return int group id
+    * Get the client group name via DN
+    * @return string group name
     */
    @Override
    public String getGroupName(String DN) {

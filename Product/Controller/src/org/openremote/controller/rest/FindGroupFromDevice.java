@@ -75,8 +75,11 @@ public class FindGroupFromDevice extends RESTAPI
      Principal DN = null;
     try
     {
+       logger.error("Tring to get group");
+       logger.error("Auth type: " + request.getAuthType());
        if(request.getAuthType() == HttpServletRequest.CLIENT_CERT_AUTH)
        {
+          logger.error("Has client cert");
           // Obtain the certificate from the request, if any
           X509Certificate[] certs = null;
           if (request != null)
@@ -87,17 +90,27 @@ public class FindGroupFromDevice extends RESTAPI
 
           if ((certs == null) || (certs.length == 0))
           {
-             logger.error("No certificate?");
+             logger.error("No certificate found - however Client authentication is enabled. Something is wrong...");
           }
           else
           {
              DN = certs[0].getSubjectDN();
+             logger.error("DN= " +  DN);
           }         
        }
        
        if(DN != null)
        {
-          sendResponse(response, getGroup(DN));
+          String groupName = getGroup(DN);
+          if(!groupName.isEmpty())
+          {
+             sendResponse(response, groupName);
+          }
+          else
+          {
+             response.setStatus(404);
+             sendResponse(response, "");             
+          }
        }
        else
        {

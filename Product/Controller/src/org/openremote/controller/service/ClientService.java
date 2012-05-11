@@ -125,8 +125,8 @@ public interface ClientService
     */
    boolean isClientValid(String dname);
    /**
-    * Get the client group ID
-    * @return int group id
+    * Get the client group name via DN
+    * @return string group name
     */
    String getGroupName(String DN);   
    /**
