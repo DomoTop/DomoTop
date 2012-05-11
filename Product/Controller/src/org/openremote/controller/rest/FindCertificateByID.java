@@ -26,9 +26,12 @@ import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +45,8 @@ import org.openremote.controller.exception.ControlCommandException;
 import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.ConfigurationService;
 import org.openremote.controller.spring.SpringContext;
+
+import sun.security.x509.X509Cert;
 
 /**
  * This servlet implements the REST API '/rest/certificate/create' functionality which creates
@@ -79,8 +84,10 @@ public class FindCertificateByID extends RESTAPI
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean("configurationService");
   private static final String CA_ALIAS = "ca.alias";
-
-  protected String getChain(String username) throws IOException
+  private static final String ERROR_INVALID_DN = "INVALID_DN";
+  private static final String ERROR_DATE_EXPIRED = "DATE_EXPIRED";
+  
+  protected String getChain(String username) throws Exception
   {
      username = URLDecoder.decode(username, "UTF-8");
     String rootCAPath = configurationService.getItem("ca_path");
@@ -113,8 +120,25 @@ public class FindCertificateByID extends RESTAPI
       {
          // Check client certificate
          //if(clientService.(dn, datum)
+         X509Certificate x509cert = (X509Certificate) certificate;
+         Principal dname = x509cert.getSubjectDN();
+         Date notAfterDate = x509cert.getNotAfter();
          
-         sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
+         if(clientService.isClientValid(dname.toString()))
+         {
+            if(clientService.isClientDateValid(notAfterDate))
+            {
+               sb.append(new String(Base64.encodeBase64(certificate.getEncoded())));
+            }
+            else
+            {
+               throw new Exception(ERROR_DATE_EXPIRED);               
+            }
+         }
+         else
+         {
+            throw new Exception(ERROR_INVALID_DN);
+         }
       }
       else
       {
@@ -162,6 +186,17 @@ public class FindCertificateByID extends RESTAPI
         logger.error("Failed to get certificate: " + e.getMessage());
         response.setStatus(404);
         sendResponse(response, "No certificate by that name");
-    }
+    } catch (Exception e) {
+       if(e.getMessage().equals(ERROR_INVALID_DN))
+       {        
+          logger.error("Certificate has an invalid DN.");
+          response.setStatus(431);     
+          sendResponse(response, "Invalid DN");
+       } else if(e.getMessage().equals(ERROR_DATE_EXPIRED)) {
+          logger.error("Certificate has been expired.");
+          response.setStatus(432); 
+          sendResponse(response, "Date expired"); 
+       }   
+   }
   }
 }

@@ -10,6 +10,7 @@ import java.security.cert.X509Certificate;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.openremote.controller.Constants;
@@ -485,6 +486,50 @@ public class ClientServiceImpl implements ClientService
    }   
    
    /**
+    * Check if the client is valid based on a dname
+    * @param dname the dynamic name
+    * @return true if the client is valid
+    */
+   public boolean isClientValid(String dname) {
+         boolean returnValue = false;
+         PreparedStatement preparedStatement = null;
+         
+         if (database != null) 
+         {
+            try {
+               preparedStatement = database.createPrepareStatement(checkClientQuery + limitByOne);
+               preparedStatement.setString(1, dname);
+               database.doSQL(preparedStatement);
+               returnValue = database.getNumRows() == 1;
+            } catch (SQLException e) {
+               logger.error("SQL Exception: " + e.getMessage());
+            }
+         } else {
+            logger.error("Database is not yet set (null)");
+         }
+         return returnValue;
+   }
+
+   /**
+    * Check if the client's date is valid
+    * @param date the date (not after date)
+    * @return true if the client data is valid
+    */  
+   @Override
+   public boolean isClientDateValid(Date date) {
+      boolean returnValue = false;
+      Date currentDate = new Date();
+      
+      if(currentDate.before(date)){
+         returnValue = true;
+      } else if(currentDate.equals(date)) {
+         returnValue = true;
+      }
+      
+      return returnValue;
+   }
+   
+   /**
     * Close the result set.
     */
    @Override
@@ -521,29 +566,4 @@ public class ClientServiceImpl implements ClientService
    public void setCertificateService(CertificateService certificateService) {
       this.certificateService = certificateService;
    }   
-
-   /**
-    * Check if the client is valid based on a dname
-    * @param dname the dynamic name
-    * @return true if the client is valid
-    */
-   public boolean isClientValid(String dname) {
-         boolean returnValue = false;
-         PreparedStatement preparedStatement = null;
-         
-         if (database != null) 
-         {
-            try {
-               preparedStatement = database.createPrepareStatement(checkClientQuery + limitByOne);
-               preparedStatement.setString(1, dname);
-               database.doSQL(preparedStatement);
-               returnValue = database.getNumRows() == 1;
-            } catch (SQLException e) {
-               logger.error("SQL Exception: " + e.getMessage());
-            }
-         } else {
-            logger.error("Database is not yet set (null)");
-         }
-         return returnValue;
-   }
 }

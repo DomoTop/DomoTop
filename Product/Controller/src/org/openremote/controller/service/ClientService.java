@@ -1,7 +1,9 @@
 package org.openremote.controller.service;
 
+import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
+import java.util.Date;
 
 /**
  * @author <a href="mailto:melroy.van.den.berg@tass.nl">Melroy van den Berg</a> 2012
@@ -125,9 +127,15 @@ public interface ClientService
     */
    boolean isClientValid(String dname);
    /**
+    * Check if the client's date is valid
+    * @param date the date (not after date)
+    * @return true if the client data is valid
+    */  
+   boolean isClientDateValid(Date date);   
+   /**
     * Get the client group name via DN
     * @return string group name
-    */
+    */   
    String getGroupName(String DN);   
    /**
     * Get timestamp from client via alias and pin
@@ -139,5 +147,5 @@ public interface ClientService
    /**
     * Close the result set.
     */
-   void free();
+   void free();   
 }
