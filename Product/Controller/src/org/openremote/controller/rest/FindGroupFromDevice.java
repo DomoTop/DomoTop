@@ -98,12 +98,13 @@ public class FindGroupFromDevice extends RESTAPI
              logger.error("DN= " +  DN);
           }         
        }
-       
+
        if(DN != null)
        {
           String groupName = getGroup(DN);
           if(!groupName.isEmpty())
           {
+             response.setStatus(200);
              sendResponse(response, groupName);
           }
           else

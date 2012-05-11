@@ -377,7 +377,7 @@ public class ORKeyStore implements ORConnectionDelegate {
 	    
 	    int what = 1;
 	    if(chain[0] != null && chain[1] != null) {
-		    what = addCertificate(host, chain) ? 0 : 1;
+		    what = this.addCertificate(host, chain) ? 0 : 1;
 	    }
 	    
 	    if(fetchHandler != null) {
@@ -418,7 +418,12 @@ public class ORKeyStore implements ORConnectionDelegate {
 		return info.toString();
 	}
 	
-	public void checkCertificateChain(String currentServer, Handler handler) throws Exception 
+	/**
+	 * Check the certificate chain from the current server
+	 * @param currentServer
+	 * @param handler
+	 */
+	public void checkCertificateChain(String currentServer, Handler handler)
 	{
 		boolean valid = false;
 		Certificate[] chain = null;
@@ -428,15 +433,14 @@ public class ORKeyStore implements ORConnectionDelegate {
 		try {
 			chain = keystore.getCertificateChain(currentServer);
 			
-			if(chain == null)
+			if(chain != null)
 			{
-				throw new Exception("No certificate chain found for server: " + currentServer);				
+			 	x509certs = new X509Certificate[chain.length];
+			 	
+			 	for (int i = 0; i < x509certs.length; i++) {
+			 		x509certs[i] = (X509Certificate)chain[i];
+			 	}
 			}
-		 	x509certs = new X509Certificate[chain.length];
-		 	
-		 	for (int i = 0; i < x509certs.length; i++) {
-		 		x509certs[i] = (X509Certificate)chain[i];
-		 	}			
 		} catch (KeyStoreException e) {
 			Log.e(LOG_CATEGORY, "checkCertificateChain keystore: " + e.getMessage());
 		} catch(ClassCastException e) {

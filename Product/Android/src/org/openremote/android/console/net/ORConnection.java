@@ -226,7 +226,7 @@ public class ORConnection
          if (httpResponse.getStatusLine().getStatusCode() == Constants.HTTP_SUCCESS) {
             delegate.urlConnectionDidReceiveData(httpResponse.getEntity().getContent());
          } else {
-            Log.e(LOG_CATEGORY, "Get the entity's content of httpresponse fail.");
+            Log.i(LOG_CATEGORY, "Get the entity's content of httpresponse fail, with status code: " + httpResponse.getStatusLine().getStatusCode());
          }
       } catch (IllegalStateException e) {
          Log.e(LOG_CATEGORY, "Get the entity's content of httpresponse fail.", e);
