@@ -288,10 +288,12 @@ public class SliderView extends SensoryControlView implements ORSeekBar.OnSeekBa
       }
 
       horizontalSeekBar.setLayoutParams(new TableRow.LayoutParams(slider.getFrameWidth(), SEEK_BAR_MIN_HEIGHT));
-      if (slider.getThumbImage() != null) {
-         Drawable thumbDrawable = ImageUtil.createFromPathQuietly(Constants.FILE_FOLDER_PATH
-               + slider.getThumbImage().getSrc());
-         horizontalSeekBar.setThumb(thumbDrawable);
+      if(!isAllowed(slider.getGroups())) {
+    	  horizontalSeekBar.setThumb(context.getResources().getDrawable(R.drawable.slider_thumb_disabled));
+      } else if (slider.getThumbImage() != null) {
+          Drawable thumbDrawable = ImageUtil.createFromPathQuietly(Constants.FILE_FOLDER_PATH
+                  + slider.getThumbImage().getSrc());
+            horizontalSeekBar.setThumb(thumbDrawable);
       }
       
       if (slider.getMinImage() != null) {

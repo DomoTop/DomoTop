@@ -75,8 +75,9 @@ containing a value of this type.
         public static final int seek_thumb_pressed=0x7f020014;
         public static final int seek_thumb_selected=0x7f020015;
         public static final int slider_thumb=0x7f020016;
-        public static final int vertical_seekbar_background=0x7f020017;
-        public static final int vertical_seekbar_progress=0x7f020018;
+        public static final int slider_thumb_disabled=0x7f020017;
+        public static final int vertical_seekbar_background=0x7f020018;
+        public static final int vertical_seekbar_progress=0x7f020019;
     }
     public static final class id {
         public static final int app_version=0x7f080016;
