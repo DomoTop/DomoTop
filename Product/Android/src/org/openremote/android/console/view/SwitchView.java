@@ -127,6 +127,8 @@ public class SwitchView extends SensoryControlView {
          }
         
      });
+      button.setEnabled(isAllowed(switchComponent.getGroups()));
+      
       addView(button);
    }
    

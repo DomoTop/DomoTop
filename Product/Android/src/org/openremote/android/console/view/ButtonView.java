@@ -24,7 +24,6 @@ import java.util.TimerTask;
 
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.bindings.ORButton;
-import org.openremote.android.console.bindings.ORGroup;
 import org.openremote.android.console.model.ListenerConstant;
 import org.openremote.android.console.model.ORListenerManager;
 import org.openremote.android.console.util.ImageUtil;
@@ -66,13 +65,8 @@ public class ButtonView extends ControlView {
       int width = button.getFrameWidth();
       int height = button.getFrameHeight();
       uiButton.setId(button.getComponentId());
-      String groupname = "nogroup";
-      if(button.getGroups().size() > 0) {
-          ORGroup group = button.getGroups().get(0);
-    	  groupname = group.getName();
-      }
       
-      uiButton.setText(button.getName() + groupname);
+      uiButton.setText(button.getName());
       
       uiButton.setTextSize(Constants.DEFAULT_FONT_SIZE);
       uiButton.setLayoutParams(new FrameLayout.LayoutParams(width, height));
@@ -122,8 +116,12 @@ public class ButtonView extends ControlView {
          }
       };
       uiButton.setOnTouchListener(touchListener);
+      
+      uiButton.setEnabled(isAllowed(button.getGroups()));
+      
       addView(uiButton);
    }
+
 
    private void sendCommand() {
       sendCommandRequest("click");

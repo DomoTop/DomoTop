@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Timer;
 
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ import org.openremote.android.console.LoginDialog;
 import org.openremote.android.console.bindings.ColorPicker;
 import org.openremote.android.console.bindings.Component;
 import org.openremote.android.console.bindings.ORButton;
+import org.openremote.android.console.bindings.ORGroup;
 import org.openremote.android.console.bindings.Slider;
 import org.openremote.android.console.bindings.Switch;
 import org.openremote.android.console.model.AppSettingsModel;
@@ -40,6 +42,7 @@ import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.net.ORUnBlockConnection;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -69,6 +72,28 @@ public class ControlView extends ComponentView implements ORConnectionDelegate {
       return controlView;
    }
 
+   /**
+    * Read the groups of the element, and return wether or not this device is allowed
+    * to use this view
+    * @param groups A list of groups that has access to this element
+    * @return If this element should be disabled
+    */
+   protected boolean isAllowed(List<ORGroup> groups) {
+	   String device_group = AppSettingsModel.getGroup(getContext());
+	   boolean allowed = false;
+	   if(groups == null || groups.size() == 0) {
+		   allowed = true;
+	   } else if(!TextUtils.isEmpty(device_group)) {
+		   for(ORGroup group: groups) {
+			   if(device_group.equals(group.getName())) {
+				   allowed = true;
+				   break;
+			   }
+		   }
+	   }
+	   return allowed;
+   }
+   
    /**
     * Send command request to controller by command type.
     * 
