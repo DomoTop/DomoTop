@@ -861,16 +861,22 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 				   startMain();   
 			   } else if(msg.what == 2) {
 				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "Connection error", "Can't connect to the server.");
+			   } else if(msg.what == 3) {
+				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have a certificate chain.\nPlease ask the administrator for permission.");				
 			   } else {
 				   ViewHelper.showAlertViewWithTitle(AppSettingsActivity.this, "No access", "You don't have access yet.\nPlease ask the administrator for permission.");
 			   }			   
 		   }  
 	   };	   
 
-	   ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
-			   AppSettingsModel.getCurrentServer(getApplicationContext()), 
-			   handler
-		);		  
+	   try {
+		ORKeyStore.getInstance(getApplicationContext()).checkCertificateChain(
+				   AppSettingsModel.getCurrentServer(getApplicationContext()), 
+				   handler
+			);
+		} catch (Exception e) {
+			handler.sendEmptyMessage(3);
+		}		  
    }
    
    /**
