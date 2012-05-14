@@ -110,6 +110,9 @@ public class SliderView extends SensoryControlView implements ORSeekBar.OnSeekBa
       // Get the seekbar instance from rootView(TableLayout).
       verticalSeekBar = (ORSeekBar) seekBarRootView.findViewById(R.id.vertical_seekbar);
       
+      // Set the state of the seekbar
+      verticalSeekBar.setEnabled(isAllowed(slider.getGroups()));
+      
       //Set custom track image, include minTrack and maxTrack.
       Drawable maxTrackDrawable = null;
       Drawable minTrackDrawable = null;
@@ -227,6 +230,9 @@ public class SliderView extends SensoryControlView implements ORSeekBar.OnSeekBa
             (ViewGroup) findViewById(R.id.horizontal_seekbar_root_layout));
       
       horizontalSeekBar = (ORSeekBar) seekBarRootView.findViewById(R.id.horizontal_seekbar);
+      
+      horizontalSeekBar.setEnabled(isAllowed(slider.getGroups()));
+      
       boolean clipImage = false;
       //Set custom track image, include minTrack and maxTrack.
       Drawable maxTrackDrawable = null;

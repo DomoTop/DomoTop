@@ -38,7 +38,7 @@ public class Component extends BusinessEntity {
    private int frameHeight;
       
    /** The component's group */
-   protected ArrayList<ORGroup> groups = new ArrayList<ORGroup>();
+   protected List<ORGroup> groups = new ArrayList<ORGroup>();
    
    /**
     * Builds the component by parse component node.
