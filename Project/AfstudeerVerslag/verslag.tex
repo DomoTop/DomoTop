@@ -1,5 +1,7 @@
 \documentclass[]{article}
 
+\usepackage[textwidth=14cm]{geometry}
+
 %Used to improve the headers
 \usepackage{fancyhdr}
 
@@ -349,6 +351,13 @@ de voortgang evenals de bedrijfsbegeleider. SCRUM is, met de review
 momenten, hier een mooie techniek voor. Tevens is binnen het bedrijf veel
 kennis en expertise over SCRUM.
 
+\begin{figure}[htpb]
+  \begin{center}
+    \includegraphics[width=0.80\textwidth]{scrum.pdf}
+  \end{center}
+  \caption{scrum}
+\end{figure}
+
 TASS heeft een interne website[2] opgezet, die Sensei genoemd wordt, waarin
 een grote bron aan informatie over SCRUM is opgenomen. Tevens zijn er een
 aantal personen binnen het bedrijf SCRUM-experts wat betekent dat vragen of
@@ -365,6 +374,13 @@ elementen van de backlogs bij om op deze manier alles inzichtelijk te
 houden.
 
 \subsection{Versiebeheer}
+
+\begin{wrapfigure}{l}{0.3\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{git.pdf}
+  \end{center}
+  \caption{Git}
+\end{wrapfigure}
 De techniek de we gebruiken om code en document versies bij te houden is
 git. Git is een “version control system” net als bijvoorbeeld subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
@@ -382,16 +398,23 @@ webinterface. In deze webinterface kan de code ingezien worden, issues
 worden aangemaakt en er is een wiki aanwezig.
 
 \subsection{Documenten}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{docs.pdf}
+  \end{center}
+  \caption{Google Docs}
+\end{wrapfigure}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
 meerdere mensen in een document te werken zonder conflicten te krijgen. Ook
 de SCRUM spreadsheets staan Google Documenten.
 
-Voor het afstudeerverslag hebben we voor \LaTeX gekozen. Dit omdat het
+Voor het afstudeerverslag hebben we voor \LaTeX  gekozen. Dit omdat het
 makkelijker is om de opmaak en uiterlijk te wijzigen en dit meer mogelijkheden
 biedt dan het meer beperkt Google Documenten. Ook bestond de wens bij studenten
-om meer ervaring op te doen met \LaTeX en dit leek hen de de uitgelezen kans om
+om meer ervaring op te doen met \LaTeX  en dit leek hen de de uitgelezen kans om
 dit te doen
 
 \subsection{Programmeertalen}
@@ -410,7 +433,15 @@ database te staan.  RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
 noodzakelijk.
 
-Er is gekozen voor HSQLDB vanwege het feit dat deze database 100% in Java
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \begin{center}
+    \includegraphics[width=0.30\textwidth]{hsql.pdf}
+  \end{center}
+  \caption{HyperSQL}
+\end{wrapfigure}
+
+Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
 is geschreven (net als de Controller van OpenRemote), volledig open-source,
 HSQLDB heeft een relatief weinig impact op het systeem en is multithreaded.
 HSQLDB is namelijk klein en gebruikt weinig bronnen. Tot slot voldoet
@@ -425,6 +456,13 @@ eens geschikt om te gebruiken in combinatie met een TomCat server.
 Voor de Android applicatie wordt gebruik gemaakt van de Eclipse
 ontwikkelomgeving met de ADT plugin. Hiermee is het makkelijk om wijziging
 live te draaien op een tablet of een emulator.
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{eclipse.pdf}
+  \end{center}
+  \caption{Eclipse}
+\end{wrapfigure}
 
 Bij het programmeren van de OpenRemote Controller wordt er gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
@@ -447,15 +485,12 @@ type bestanden. Desalniettemin is het optioneel om de Eclipse Colorer
 plugin te gebruiken, het is enkel gekozen voor gemaks doeleinden.
 
 \subsection{Libraries}
-Om in Java met encryptie en TLS te kunnen werken in native Java code wordt
-er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
-Bouncy Castle is een bibliotheek die binnen het project onder andere
-gebruikt wordt om nieuwe certificaten te kunnen generen vanuit Java code
-alsmede een CSR bestand uit te lezen en deze gegevens gebruiken om een
-nieuw certificaat te onderteken door middel van een CA. Ook het gebruikte
-CA certificaat wordt aangemaakt door middel van Bouncy Castle. Ook onder 
-Android wordt er gebruik gemaakt van de Bouncy Castle bibliotheek, echter 
-heet dat onder Android Spongy Castle, maar is exact dezelfde code.
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=0.6\textwidth]{freemarker.pdf}
+   \end{center}
+   \caption{FreeMarker}
+\end{figure}
 
 In de OpenRemote Controller is er gebruikt gemaakt van een template engine
 genaamd Freemarker[6]. Deze template engine maakt het mogelijk om statische
@@ -466,6 +501,22 @@ begrijpen maar toch doeltreffend. FreeMarker forceert zich op het gebruik
 van een Model View Controller software architectuur. FreeMarker wordt ook
 vaak gebruikt voor servlet gebaseerde web applicatie ontwikkeling en dat is
 exact wat de OpenRemote Controller is.
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.55\textwidth]{bouncyjava.pdf}
+  \end{center}
+  \caption{Bouncy Castle}
+\end{wrapfigure}
+Om in Java met encryptie en TLS te kunnen werken in native Java code wordt
+er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
+Bouncy Castle is een bibliotheek die binnen het project onder andere
+gebruikt wordt om nieuwe certificaten te kunnen generen vanuit Java code
+alsmede een CSR bestand uit te lezen en deze gegevens gebruiken om een
+nieuw certificaat te onderteken door middel van een CA. Ook het gebruikte
+CA certificaat wordt aangemaakt door middel van Bouncy Castle. Ook onder 
+Android wordt er gebruik gemaakt van de Bouncy Castle bibliotheek, echter 
+heet dat onder Android Spongy Castle, maar is exact dezelfde code.
 
 \newpage
 \section{Uitvoering}
