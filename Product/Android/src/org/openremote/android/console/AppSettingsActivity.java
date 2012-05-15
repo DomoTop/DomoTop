@@ -179,7 +179,7 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
    @Override
 	protected void onResume() {
 	   super.onResume();
-
+	   
 	   if(getIntent().getBooleanExtra("SSL_CLIENT", false)) {
 		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
 		   if(AppSettingsModel.isSSLEnabled(getApplicationContext())) {
@@ -187,6 +187,12 @@ public class AppSettingsActivity extends GenericActivity implements ORConnection
 		   } else {
 			   ViewHelper.showAlertViewWithTitle(this, "No Access", "You don't have access to this controller at the moment. Is ssl enabled?");
 		   }
+	   }
+	   else if(getIntent().getBooleanExtra("SSL_CLIENT_PROTOCOL", false)) {
+		   Toast.makeText(this, "You don't have access yet", Toast.LENGTH_LONG).show();
+		   if(AppSettingsModel.isSSLEnabled(getApplicationContext())) {
+			   ViewHelper.showAlertViewWithTitle(this, "No Access", "There went something wrong setting up the SSL connection. Please try again.");
+		   }   
 	   }
    }
    

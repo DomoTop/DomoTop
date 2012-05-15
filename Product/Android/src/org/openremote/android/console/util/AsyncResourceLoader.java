@@ -23,6 +23,9 @@ package org.openremote.android.console.util;
 import java.util.Iterator;
 import java.io.IOException;
 
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLProtocolException;
+
 import org.apache.http.HttpResponse;
 import org.openremote.android.console.AppSettingsActivity;
 import org.openremote.android.console.Constants;
@@ -56,18 +59,19 @@ import android.widget.TextView;
  */
 public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLoaderResult> {
    private static final int TO_LOGIN = 0xF00A;
-   private static final int TO_SETTING = 0xF00B;
-   private static final int TO_GROUP = 0xF00C;
-   private static final int SWITCH_TO_OTHER_CONTROLER = 0xF00D;
+   private static final int TO_SETTING_SSL_PROTOCOL_ERROR = 0xF00B;
+   private static final int TO_SETTING_SSL_ERROR = 0xF00C;
+   private static final int TO_GROUP = 0xF00D;
+   private static final int SWITCH_TO_OTHER_CONTROLER = 0xF00E;
    
    public final static String LOG_CATEGORY = Constants.LOG_CATEGORY + AsyncResourceLoader.class.getName();
-
+   private ORKeyStore orKeyStore;
    
    private Activity activity;
    
    public AsyncResourceLoader(Activity activity) {
       this.activity = activity;
-      
+      this.orKeyStore = ORKeyStore.getInstance(activity);
    }
    
    /** 
@@ -92,6 +96,24 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
       {
         checkResponse = ORNetworkCheck.verifyControllerURL(activity, AppSettingsModel.getCurrentServer(activity));
       }
+      catch (SSLProtocolException e) 
+      {
+		//Probably no access
+		result.setAction(TO_SETTING_SSL_PROTOCOL_ERROR);
+		Log.e(LOG_CATEGORY, "AsyncReSourceLoader: ", e);  
+		
+		// Delete & create a new keystore
+		orKeyStore.delete();
+		orKeyStore.create();
+  		return result;	  
+      }
+      catch (SSLException e)
+      {
+  		//Probably no access
+  		result.setAction(TO_SETTING_SSL_ERROR);
+    	Log.e(LOG_CATEGORY, "AsyncReSourceLoader: ", e);
+  		return result;
+      }
       catch (IOException e)
       {
         // TODO :
@@ -104,15 +126,8 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
         //
     	if(e != null) {
 	    	Log.e(LOG_CATEGORY, "AsyncReSourceLoader: ", e);
-	    	if(e.getMessage().contains("SSL")) {
-	    		//Handle error
-	    		//Probably no access/
-	    		result.setAction(TO_SETTING);
-	    		return result;
-	    	} else {
-	    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
-	    	}
-    	}
+    		Log.e("OpenRemote/DOWNLOAD", e.getMessage());
+	    }
       }
 
      
@@ -172,7 +187,7 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
 			
         	if(AppSettingsModel.isSSLEnabled(activity) || html.contains("client certificate chain")) 
         	{
-        		result.setAction(TO_SETTING);		
+        		result.setAction(TO_SETTING_SSL_ERROR);		
         	} else {
         		result.setAction(TO_LOGIN);
             	result.setStatusCode(ControllerException.UNAUTHORIZED);
@@ -181,7 +196,7 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          }
          
          if(checkResponse != null && checkResponse.getStatusLine().getStatusCode() == 403) {
-     		result.setAction(TO_SETTING);
+     		result.setAction(TO_SETTING_SSL_ERROR);
             return result;
          }
          
@@ -248,11 +263,18 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
          intent.setClass(activity, LoginViewActivity.class);
          intent.setData(Uri.parse(Main.LOAD_RESOURCE));
          break;
-      case TO_SETTING:
+      case TO_SETTING_SSL_PROTOCOL_ERROR:
     	  //If the host is in the keystore, delete it. It is obviously invalid.
-    	  ORKeyStore.getInstance(activity).deleteHost(AppSettingsModel.getCurrentServer(activity));
+    	  orKeyStore.deleteHost(AppSettingsModel.getCurrentServer(activity));
     	  
-    	  intent.setClass(activity, AppSettingsActivity.class);
+    	  intent.setClass(activity, AppSettingsActivity.class);    	  
+    	  intent.putExtra("SSL_CLIENT_PROTOCOL", true);
+    	  break;
+      case TO_SETTING_SSL_ERROR:
+    	  //If the host is in the keystore, delete it. It is obviously invalid.
+    	  orKeyStore.deleteHost(AppSettingsModel.getCurrentServer(activity));
+    	  
+    	  intent.setClass(activity, AppSettingsActivity.class);    	  
     	  intent.putExtra("SSL_CLIENT", true);
     	  break;
       case SWITCH_TO_OTHER_CONTROLER:
