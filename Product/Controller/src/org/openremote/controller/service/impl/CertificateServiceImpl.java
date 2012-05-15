@@ -82,7 +82,7 @@ public class CertificateServiceImpl implements CertificateService
    
    private static final String CA_PATH = "ca_path";
    private static final String CA_ALIAS = "ca.alias";  
-   private static final String CSRDir = "/ca/csr";
+   private static final String CSRDir = "/csr/";
    private final static Logger logger = Logger.getLogger(Constants.SERVICE_LOG_CATEGORY);
    private static final X500Name CA_NAME = new X500Name("C=NL,O=TASS,OU=Software Developer,CN=CA_MelroyvdBerg");
    private static final String KEYSTORE_PASSWORD = "password";
@@ -122,6 +122,16 @@ public class CertificateServiceImpl implements CertificateService
       
       return existsAliasInKeyStore(keyStorePath, CA_ALIAS);
    }
+
+   /**
+    * Create the CA directory structure
+    */
+   @Override
+   public boolean createDirectoryStructure() 
+   {
+      String rootCADir = configurationService.getItem(CA_PATH);
+      return new File(rootCADir + CSRDir).mkdirs();
+   }   
    
    /**
     * Create a new CA, first dropping all clients from the database, create a new key pair
@@ -473,7 +483,7 @@ public class CertificateServiceImpl implements CertificateService
    public PKCS10CertificationRequest getCertificationRequest(String alias) throws IOException
    {
       String rootCADir = configurationService.getItem(CA_PATH);
-      File file = new File(rootCADir + CSRDir + "/" + alias + ".csr");
+      File file = new File(rootCADir + CSRDir + alias + ".csr");
       String data = "";
 
       FileInputStream fis = new FileInputStream(file);

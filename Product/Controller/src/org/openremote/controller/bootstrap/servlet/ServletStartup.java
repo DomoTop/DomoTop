@@ -22,7 +22,6 @@ package org.openremote.controller.bootstrap.servlet;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContextEvent;
@@ -33,7 +32,6 @@ import org.openremote.controller.net.IPAutoDiscoveryServer;
 import org.openremote.controller.net.RoundRobinTCPServer;
 import org.openremote.controller.net.RoundRobinUDPServer;
 import org.openremote.controller.service.CertificateService;
-import org.openremote.controller.service.ClientService;
 import org.openremote.controller.service.DatabaseService;
 import org.openremote.controller.service.ServiceContext;
 import org.openremote.controller.service.PollingMachinesService;
@@ -140,7 +138,9 @@ public class ServletStartup implements ServletContextListener
       // Init CA
       CertificateService caService = (CertificateService) SpringContext.getInstance().getBean("certificateService");
       // init CA Path
-      caService.initCaPath();
+      caService.initCaPath();  
+      // create directory structure
+      caService.createDirectoryStructure();
       
       // Create new CA if necessary
       if(!caService.ifCaExists())

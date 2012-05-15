@@ -29,6 +29,11 @@ public interface CertificateService
     */
    boolean ifCaExists();
    /**
+    * Create the CA directory structure
+    * @return true if directory structure is successfully created
+    */
+   boolean createDirectoryStructure();
+   /**
     * Create a new CA, first dropping all clients from the database, create a new key pair
     * build a new certificate and finally store it in the key store
     * (if the server key store does not exists yet it will be created)
