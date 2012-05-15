@@ -29,9 +29,9 @@ be sure you place the connector below somewhere after the line `<Service name="C
     enableLookups="true" disableUploadTimeout="true"
     acceptCount="100" maxThreads="200"
     scheme="https" secure="true" SSLEnabled="true"
-    keystoreFile="/usr/share/tomcat6/cert/server.jks"
+    keystoreFile="/var/lib/tomcat6/server/cert/server.jks"
     keystoreType="JKS" keystorePass="password"
-    truststoreFile="/usr/share/tomcat6/cert/server.jks"
+    truststoreFile="/var/lib/tomcat6/server/cert/server.jks"
     truststoreType="JKS" truststorePass="password"
     SSLVerifyClient="require" SSLEngine="on" SSLVerifyDepth="2" sslProtocol="TLS" />
 ```

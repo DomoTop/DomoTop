@@ -75,7 +75,7 @@ public class SubmitCSR extends RESTAPI
   private final static Logger logger = Logger.getLogger(Constants.REST_ALL_PANELS_LOG_CATEGORY);
 
   private final static String CA_PATH = "ca_path";
-  private final static String CSR_PATH = "/ca/csr/";
+  private final static String CSR_PATH = "/csr/";
   private static final ClientService clientService = (ClientService) SpringContext.getInstance().getBean("clientService");
   private static final ConfigurationService configurationService = (ConfigurationService) SpringContext.getInstance().getBean(
         "configurationService");

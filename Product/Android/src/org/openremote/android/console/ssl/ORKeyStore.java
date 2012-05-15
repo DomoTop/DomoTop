@@ -292,6 +292,26 @@ public class ORKeyStore implements ORConnectionDelegate {
 	}
 
 	/**
+	 * Create a new empty keystore file
+	 */
+	public void create()
+	{
+		try {
+			keystore = KeyStore.getInstance("BKS");
+			keystore.load(null, null);
+			saveKeyStore();
+		} catch (KeyStoreException e) {
+			Log.e(LOG_CATEGORY, "create: " + e.getMessage());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e(LOG_CATEGORY, "create: " + e.getMessage());
+		} catch (CertificateException e) {
+			Log.e(LOG_CATEGORY, "create: " + e.getMessage());
+		} catch (IOException e) {
+			Log.e(LOG_CATEGORY, "create: " + e.getMessage());
+		}
+	}
+	
+	/**
 	 * Delete the current KeyStore saved in KEYSTORE_FILE
 	 */
 	public void delete() 
