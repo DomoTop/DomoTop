@@ -416,13 +416,13 @@ public class AppSettingsModel implements Serializable
 
 
 	public static void setGroup(Context context, String group) {
-		if(group != null && !TextUtils.isDigitsOnly(group)) {
+		if(group != null) {
 			SharedPreferences.Editor editor = context.getSharedPreferences(
 				APP_SETTINGS,
 				Context.MODE_PRIVATE
 			).edit();
 			
-			Log.e(LOG_CATEGORY + "GROUP", "group: " + group);
+			Log.i(LOG_CATEGORY + "GROUP", "group: " + group);
 			editor.putString(GROUP, group);
 			editor.commit();
 		}
