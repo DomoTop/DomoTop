@@ -19,8 +19,8 @@ Installing
 __Or__
 1. Download the War from: http://openlaptop.nl/openremote/controller.war
 
-2. Enable SSL in the TomCat server using client authentication. Edit the server.xml file located the /var/lib/tomcat6/conf directory. Copy & past the Connector code listed below (be sure you place the connector somewhere after the line: """ <Service name="Catalina"> """:
-¨¨¨    <Connector clientAuth="true" port="8443" minSpareThreads="5" maxSpareThreads="75"
+2. Enable SSL in the TomCat server using client authentication. Edit the server.xml file located the /var/lib/tomcat6/conf directory. Copy & past the Connector code listed below (be sure you place the connector somewhere after the line: `<Service name="Catalina">`:
+`   <Connector clientAuth="true" port="8443" minSpareThreads="5" maxSpareThreads="75"
         enableLookups="true" disableUploadTimeout="true"
         acceptCount="100" maxThreads="200"
         scheme="https" secure="true" SSLEnabled="true"
@@ -28,7 +28,7 @@ __Or__
         keystoreType="JKS" keystorePass="password"
         truststoreFile="/usr/share/tomcat6/cert/server.jks"
         truststoreType="JKS" truststorePass="password"
-        SSLVerifyClient="require" SSLEngine="on" SSLVerifyDepth="2" sslProtocol="TLS" /> ¨¨¨
+        SSLVerifyClient="require" SSLEngine="on" SSLVerifyDepth="2" sslProtocol="TLS" /> `
 
 
 3. Deploy the war from the output directory into the Tomcat Web Application Manager
