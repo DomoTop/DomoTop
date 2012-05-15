@@ -16,20 +16,21 @@ Installing
 
 ###Controller
 1. Build the Controller from source either via ant war
+
 __Or__
+
 1. Download the War from: http://openlaptop.nl/openremote/controller.war
 
 2. Enable SSL in the TomCat server using client authentication. Edit the server.xml file located the /var/lib/tomcat6/conf directory. Copy & past the Connector code listed below (be sure you place the connector somewhere after the line: `<Service name="Catalina">`:
-`   <Connector clientAuth="true" port="8443" minSpareThreads="5" maxSpareThreads="75"
-        enableLookups="true" disableUploadTimeout="true"
-        acceptCount="100" maxThreads="200"
-        scheme="https" secure="true" SSLEnabled="true"
-        keystoreFile="/usr/share/tomcat6/cert/server.jks"
-        keystoreType="JKS" keystorePass="password"
-        truststoreFile="/usr/share/tomcat6/cert/server.jks"
-        truststoreType="JKS" truststorePass="password"
-        SSLVerifyClient="require" SSLEngine="on" SSLVerifyDepth="2" sslProtocol="TLS" /> `
-
+`<Connector clientAuth="true" port="8443" minSpareThreads="5" maxSpareThreads="75"
+    enableLookups="true" disableUploadTimeout="true"
+    acceptCount="100" maxThreads="200"
+    scheme="https" secure="true" SSLEnabled="true"
+    keystoreFile="/usr/share/tomcat6/cert/server.jks"
+    keystoreType="JKS" keystorePass="password"
+    truststoreFile="/usr/share/tomcat6/cert/server.jks"
+    truststoreType="JKS" truststorePass="password"
+    SSLVerifyClient="require" SSLEngine="on" SSLVerifyDepth="2" sslProtocol="TLS" /> `
 
 3. Deploy the war from the output directory into the Tomcat Web Application Manager
 4. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
