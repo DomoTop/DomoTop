@@ -19,9 +19,15 @@
 */
 package org.openremote.android.console;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.bindings.Screen;
 import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.net.IPAutoDiscoveryClient;
+import org.openremote.android.console.net.ORConnection;
+import org.openremote.android.console.net.ORHttpMethod;
 import org.openremote.android.console.util.AsyncGroupLoader;
 import org.openremote.android.console.util.AsyncResourceLoader;
 import org.openremote.android.console.util.ImageUtil;
@@ -31,6 +37,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -70,16 +78,17 @@ public class Main extends GenericActivity {
         }
         isRefreshingController = false;
         
-        //Load the current group
-    	AsyncGroupLoader.loadGroup(getApplicationContext());
+        //Load the current group        
         checkNetType();
         readDisplayMetrics();        
-        if(!checkServerAndPanel()) {        
-           new AsyncResourceLoader(this).execute((Void) null);
+        
+		if(!checkServerAndPanel()) {        
+           new AsyncResourceLoader(Main.this).execute((Void) null);
         }
     }
-    
-    /**
+
+  
+	/**
      * Display toast with message "switching controller".
      */
     public static void prepareToastForSwitchingController() {

@@ -24,13 +24,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.openremote.android.console.Constants;
 import org.openremote.android.console.model.AppSettingsModel;
 import org.openremote.android.console.net.ORConnection;
 import org.openremote.android.console.net.ORConnectionDelegate;
 import org.openremote.android.console.net.ORHttpMethod;
+import org.openremote.android.console.net.SelfCertificateSSLSocketFactory;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -43,32 +51,60 @@ import android.util.Log;
  * @author Dan Cong
  *
  */
-public class AsyncGroupLoader implements ORConnectionDelegate {
+public class AsyncGroupLoader extends Thread {
     private static final String LOG_CATEGORY = Constants.LOG_CATEGORY + AsyncGroupLoader.class.getName();
-	private ORConnection connection;
     private Context context;
+    private boolean done = false; 
 	
-    public static void loadGroup(Context context) {
-		String server = AppSettingsModel.getSecuredServer(context);
-		if(!TextUtils.isEmpty(server)) {
-			new AsyncGroupLoader(context, server);
-		}
+    public AsyncGroupLoader(Context context) {
+    	this.context = context;
     }
     
-	private AsyncGroupLoader(Context context, String server) {
-		connection = new ORConnection(context, 
-							ORHttpMethod.GET, 
-							false, 
-							server + "/rest/device/group", 
-							this);
-		this.context = context;
-	}
-
-	@Override
-	public void urlConnectionDidFailWithException(Exception e) {
-		Log.e(LOG_CATEGORY + " urlConnectionDidFailWithException", e.getMessage());
-	}
-
+    @Override
+    public void run() {
+    	synchronized (this) {	
+			String server = AppSettingsModel.getSecuredServer(context);
+			if(!TextUtils.isEmpty(server)) {
+		    	HttpResponse response = null;
+		    	try {
+					URL url = new URL(server + "/rest/device/group");
+			    	HttpGet request = new HttpGet(url.toString());
+			    	HttpClient client = new DefaultHttpClient();
+		            Scheme sch = new Scheme(url.getProtocol(), new SelfCertificateSSLSocketFactory(context), url.getPort());
+		            client.getConnectionManager().getSchemeRegistry().register(sch);
+			       
+					response = client.execute(request);
+				} catch (ClientProtocolException e) {
+					Log.e(LOG_CATEGORY + " run:", e.getMessage());
+				} catch (IOException e) {
+					Log.e(LOG_CATEGORY + " run:", e.getMessage());
+				}
+	
+		    	String group = "";
+		    	if(response != null && response.getStatusLine().getStatusCode() == 200) {
+		    		String tmp;
+		    		try {
+			    		BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		    			while((tmp = in.readLine()) != null) {
+		    				group += tmp;
+		    			}
+		    		} catch (IOException e) {
+		    			Log.e(LOG_CATEGORY + " urlConnectionDidReceiveData:", e.getMessage());
+		    		}	
+		    		
+		    	}
+	    		AppSettingsModel.setGroup(context, group);
+			}	
+			done = true;
+			notify();
+		}
+    }
+	
+    public boolean isDone() {
+    	return done;
+    }
+    
+	/*	
 	@Override
 	public void urlConnectionDidReceiveResponse(HttpResponse httpResponse) {
 		if(httpResponse.getStatusLine().getStatusCode() == 404) {
@@ -78,6 +114,7 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
 					httpResponse.getStatusLine().getStatusCode() + ", reason:" 
 							+ httpResponse.getStatusLine().getStatusCode());
 		}
+		resourceLoader.setWaitingForGroup(false);
 	}
 
 	@Override
@@ -94,5 +131,6 @@ public class AsyncGroupLoader implements ORConnectionDelegate {
 		
 		AppSettingsModel.setGroup(context, group);
 	}
+	*/
    
 }

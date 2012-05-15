@@ -64,10 +64,16 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
 
    
    private Activity activity;
+   private AsyncGroupLoader groupLoader;	
    
    public AsyncResourceLoader(Activity activity) {
       this.activity = activity;
       
+      /**
+       * Start the retrieving our group from the ORB
+       */
+      this.groupLoader = new AsyncGroupLoader(activity.getApplicationContext());
+      this.groupLoader.start();
    }
    
    /** 
@@ -207,6 +213,17 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
             ORControllerServerSwitcher.detectGroupMembers(activity);
          }
       }).start();
+
+      if(result.getAction() == TO_GROUP && !groupLoader.isDone()) {
+    	  synchronized(groupLoader) {
+    		  try {
+				groupLoader.wait();
+			} catch (InterruptedException e) {
+	            Log.e("OpenRemote/DOWNLOAD", "Waiting for groupLoader interrupted");
+			}
+    	  }
+      }
+      
       return result;
    }
 
@@ -268,7 +285,6 @@ public class AsyncResourceLoader extends AsyncTask<Void, String, AsyncResourceLo
       activity.startActivity(intent);
       activity.finish();
    }
-
 }
 
 /**
@@ -314,4 +330,5 @@ class AsyncResourceLoaderResult {
    public void setCanUseLocalCache(boolean canUseLocalCache) {
       this.canUseLocalCache = canUseLocalCache;
    }
+
 }

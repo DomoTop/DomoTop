@@ -422,7 +422,7 @@ public class AppSettingsModel implements Serializable
 				Context.MODE_PRIVATE
 			).edit();
 			
-			Log.d(LOG_CATEGORY + "GROUP", "group: " + group);
+			Log.e(LOG_CATEGORY + "GROUP", "group: " + group);
 			editor.putString(GROUP, group);
 			editor.commit();
 		}
