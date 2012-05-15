@@ -1,5 +1,6 @@
 \documentclass[]{article}
 
+%Set page to 14cm
 \usepackage[textwidth=14cm]{geometry}
 
 %Used to improve the headers
@@ -135,8 +136,12 @@ Eindhoven, Nederland\\
     1.05    &09-04-2012  &Vincent Kriek       &Verslag compleet in \LaTeX      \\\hline
     1.06    &10-04-2012  &Melroy van den Berg &Uitvoering geschreven           \\\hline
     1.07    &25-04-2012  &Melroy van den Berg &Uitvoering uitgebreid           \\\hline
-    1.08    &04-05-2012  &Melroy van den Berg &Uitvoering + Methoden \& Technieken uitgebreid \\\hline
-    1.09    &14-05-2012  &Melroy van den Berg &Conclusie + Inleiding + Samenvatting geschreven \\\hline
+    1.08    &26-04-2012  &Vincent Kriek       &Resultaten uitgebreid           \\\hline
+    1.09    &04-05-2012  &Melroy van den Berg &Uitvoering + Methoden \&        \\ 
+            &            &                    &Technieken uitgebreid           \\\hline
+    1.10    &14-05-2012  &Melroy van den Berg &Conclusie + Inleiding +         \\
+            &            &                    &Samenvatting geschreven         \\\hline 
+    1.11    &14-05-2012  &Vincent Kriek       &Voorwoord                       \\\hline
 \end{tabular}
 
 \newpage
@@ -176,6 +181,52 @@ alle begeleiding.
 \listoffigures
 
 \newpage
+\section*{Samenvatting}
+\addcontentsline{toc}{section}{Samenvatting}
+Het software project genaamd OpenRemote wordt uitgebreid met een beter
+beveiligingssysteem dan wat er op dit moment bestaat. OpenRemote is een software
+applicatie om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
+een PlugTop computer om hierop de OpenRemote Controller te draaien, wat functioneert als
+zijnde een server. Vandaar onze projectnaam DomoTop (Domotica PlugTop).
+De beveiligingtechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
+waarin het bijzonder gebruik wordt gemaakt van client certificaten om de
+gebruikers/apparaten te authenticeren. Later in het DomoTop project is er
+gekozen om ook de mogelijkheid te geven om groepen aan te maken. Waardoor het
+het mogelijk is om apparaten te plaatsen in een specifieke groep, hierdoor is
+het dus mogelijk om apparaten te autoriseren.
+
+Deze opdracht is afkomstig en bedacht door het bedrijf TASS. De opdracht wordt
+begeleid door de people manager Gerben Blom, technische begeleiders Berry
+Borgers en Bas Burgers. Deze stageopdracht is gevonden via onze school Avans Den
+Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
+Melroy van den Berg \& Vincent Kriek.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=0.6\textwidth]{TopLevelDesignORSecurity.pdf}
+   \end{center}
+   \caption{Flowchart initial request}
+\end{figure}
+
+De opdrachtgever vond het belangrijk om OpenRemote software te beveiligen en een
+oplossing te vinden van een authenticatie mechanisme zonder gebruik te hoeven
+maken van gebruikersnaam/wachtwoord. Tevens was het belangrijk dat er ervaring
+en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote
+Controller gaat draaien. Tot slot was ook onderzoek nodig naar verschillende
+Domotica protocollen en verschillende manieren van beveiligen.
+Hierdoor is er kennis en ervaring opgedaan op gebied van onderandere domotica,
+Google Android, Embedded Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven
+met onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS,
+waarbij onderzoek naar gedaan is om het uiteindelijk te kunnen implementeren. 
+
+Op dit moment is OpenRemote beveiligd via client certificaten en kan de
+administrator via de OpenRemote administrator panel apparaten goed-/afkeuren. De
+administrator panel is een webbased applicatie en behoord tot de OpenRemote
+Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
+gekoppeld worden aan knoppen, sliders en/of switches, waarna je deze groepen in
+de administrator panel kan koppelen aan apparaten.
+
+\newpage
 \section{Inleiding}
 Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol is binnen
 onze samenleving, er wordt immers veel gesproken over beveiliging kwesties in
@@ -196,7 +247,7 @@ hoofdstukken, zoals onderandere probleemanalyse, methoden en technieken en resul
 Tot slot eindigd dit verslag het met een conclusie en aanbevelingen.
 
 \newpage
-\section{Samenvatting}
+\section*{Samenvatting}
 Het software project genaamd OpenRemote wordt uitgebreid met een beter
 beveiligingssysteem dan wat er op dit moment bestaat. OpenRemote is een software
 applicatie om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
@@ -822,6 +873,13 @@ Tijdens de tweede iteratie is er gewerkt aan het opzetten van een
 testopstelling met OpenRemote, de DreamPlug en de X10 hardware. Ook is er
 onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
 
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{android.pdf}
+  \end{center}
+  \caption{Android}
+\end{wrapfigure}
+
 Met de test opstelling kon aan het eind van de iteratie een lamp
 aangestuurd worden met de OpenRemote controller, welke moest draaien op de
 DreamPlug, met de OpenRemote app om een lamp aan te zetten via een X10
@@ -1170,16 +1228,20 @@ dit nummer kan worden in het document als referentie.
 \section{Verantwoording individuele bijdrage}
 
 \begin{tabular}{|| l | c | c ||}\hline
-    Onderdeel           &   \multicolumn{2}{|c||}{Verantwoordelijke} \\\hline
-                        & Melroy van den Berg & Vincent Kriek        \\\hline\hline
-    Hoofdstuk 1         &                     &  X                   \\\hline
-    Hoofdstuk 2.1       &                     &  X                   \\\hline
-    Hoofdstuk 2.2       &                     &  X                   \\\hline
-    Hoofdstuk 3         &       X             &                      \\\hline
-    Hoofdstuk 4         &       X             &  X                   \\\hline
-    Hoofdstuk 5         &       X             &                      \\\hline
-    Hoofdstuk 6         &                     &  X                   \\\hline
-\end{tabular}
+    Onderdeel              &   \multicolumn{2}{|c||}{Verantwoordelijke} \\\hline
+                           & Melroy van den Berg & Vincent Kriek        \\\hline\hline
+    Voorwoord              &                     &  X                   \\\hline
+    Samenvatting           &       X             &                      \\\hline
+    Inleiding              &       X             &                      \\\hline
+    De plaats van de...    &                     &  X                   \\\hline
+    Probleemanalyse        &                     &  X                   \\\hline
+    Plan van Aanpak        &       X             &                      \\\hline
+    Methoden en Technieken &       X             &  X                   \\\hline
+    Uitvoering             &       X             &                      \\\hline
+    Resultaten             &                     &  X                   \\\hline
+    Conclusies             &       X             &                      \\\hline
+    Aanbeveling            &                     &  X                   \\\hline
+\end{tabular}              
 
 
 \end{document}
