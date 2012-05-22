@@ -175,10 +175,12 @@ public abstract class UIComponent extends BusinessEntity {
     */
    public void setGroup(ClientGroup group) {
 	   //Temporary, because we are only supporting one group at the moment.
-	   if(groups.size() > 1) {
+	   if(groups.size() >= 1) {
 		   groups.clear();
 	   }
-	   groups.add(group);
+	   if(group != null) {
+		   groups.add(group);
+	   }
    }
    
    /**
