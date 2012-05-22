@@ -187,8 +187,12 @@ public abstract class UIComponent extends BusinessEntity {
     */
    public void addGroupsToXML(StringBuffer xmlContent) {
       xmlContent.append("            <clientgroups>\n");
-      for(ClientGroup group: getGroups()) {
-    	  xmlContent.append("              <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
+      if(groups != null && groups.size() > 0) {
+	      for(ClientGroup group: groups) {
+	    	  if(group != null) {
+	    		  xmlContent.append("              <clientgroup id=\"" + group.getOid() + "\" name=\"" + group.getName() + "\"/> \n");
+	    	  }
+	      }
       }
       xmlContent.append("            </clientgroups>\n");
    }
