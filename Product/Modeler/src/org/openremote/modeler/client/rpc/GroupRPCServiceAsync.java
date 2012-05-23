@@ -19,4 +19,9 @@ public interface GroupRPCServiceAsync  {
 	 * @return A list containing all the groups
 	 */
 	void loadAll(AsyncCallback<List<ClientGroup>> callback);
+	/**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	void delete(ClientGroup group, AsyncCallback<ClientGroup> callback);
 }

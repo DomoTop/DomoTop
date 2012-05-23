@@ -38,4 +38,11 @@ public class GroupController extends BaseGWTSpringControllerWithHibernateSupport
 	public void setGroupService(GroupService groupService) {
 		this.groupService = groupService;
 	}
+	/**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	public ClientGroup delete(ClientGroup group) {
+		return groupService.delete(group);
+	}
 }

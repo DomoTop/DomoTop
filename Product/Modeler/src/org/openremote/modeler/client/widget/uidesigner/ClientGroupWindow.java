@@ -111,13 +111,22 @@ public class ClientGroupWindow extends Dialog {
     	@Override
     	public void componentSelected(ButtonEvent ce) {
     		if(allGroupsBox != null) {
-    			int index = allGroupsBox.getSelectedIndex();
+    			final int index = allGroupsBox.getSelectedIndex();
     			String name = allGroupsBox.getItemText(index);
-    			allGroupsBox.removeItem(index);
+    			ClientGroup group = null;
+    			for(int i = 0; i < allGroups.size(); i++) {
+    				if(name.equals(allGroups.get(i).getName())) {
+    					group = allGroups.get(i);
+    					break;
+    				}
+    			}
     			
-    			//GroupBeanModelProxy.delete();
+    			GroupBeanModelProxy.delete(group, new AsyncSuccessCallback<ClientGroup>() {
+    				public void onSuccess(ClientGroup result) {
+    	    			allGroupsBox.removeItem(index);
+    				}
+				});
     		}
-    		//TODO: REFRESH LISTBOX
     	}
       });
 

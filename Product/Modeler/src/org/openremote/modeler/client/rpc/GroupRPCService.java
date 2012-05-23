@@ -21,4 +21,9 @@ public interface GroupRPCService extends RemoteService {
 	 * @return A list containing all the groups
 	 */
 	List<ClientGroup> loadAll();
+	/**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	ClientGroup delete(ClientGroup group);
 }

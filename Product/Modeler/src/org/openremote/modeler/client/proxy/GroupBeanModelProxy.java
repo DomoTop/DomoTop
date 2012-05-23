@@ -27,6 +27,7 @@ import org.openremote.modeler.domain.ClientGroup;
 import org.openremote.modeler.domain.Device;
 
 import com.extjs.gxt.ui.client.data.BeanModel;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class GroupBeanModelProxy {
    private GroupBeanModelProxy() {
@@ -57,5 +58,18 @@ public class GroupBeanModelProxy {
 				callback.onSuccess(result);
 			}	   
 	   });
-   }
+   }	
+   /**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	public static void delete(ClientGroup group, final AsyncSuccessCallback<ClientGroup> callback) {
+		AsyncServiceFactory.getGroupRPCServiceAsync().delete(group, new AsyncSuccessCallback<ClientGroup>() {
+			
+			@Override
+			public void onSuccess(ClientGroup result) {
+				callback.onSuccess(result);
+			}
+		});
+	}
 }

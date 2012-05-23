@@ -32,6 +32,14 @@ public class GroupServiceImpl extends BaseAbstractService<ClientGroup> implement
 		List<ClientGroup> groups = userService.getAccount().getGroups();
 		return groups;
 	}
+	/**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	public ClientGroup delete(ClientGroup group) {
+		genericDAO.delete(group);
+		return group;
+	}
 	
 	public void setUserService(UserService service) {
 		this.userService = service;

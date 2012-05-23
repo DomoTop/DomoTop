@@ -29,6 +29,7 @@ import org.openremote.modeler.client.utils.WidgetSelectionUtil;
 import org.openremote.modeler.client.widget.component.GroupSelectAndDeleteButtonWidget;
 import org.openremote.modeler.client.widget.component.ScreenTabbar;
 import org.openremote.modeler.client.widget.component.ScreenTabbarItem;
+import org.openremote.modeler.client.widget.uidesigner.ClientGroupWindow;
 import org.openremote.modeler.client.widget.uidesigner.ComponentContainer;
 import org.openremote.modeler.client.widget.uidesigner.GridLayoutContainerHandle;
 import org.openremote.modeler.domain.ClientGroup;
@@ -42,6 +43,7 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.AdapterField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -102,7 +104,6 @@ public class PropertyForm extends FormPanel {
     * @param uiControl the component to attach the group to
     */
    protected void addGroupField(final UIControl uiControl) {
-		final GroupSelectAndDeleteButtonWidget widget = new GroupSelectAndDeleteButtonWidget();
 		final List<ClientGroup> groups = new ArrayList<ClientGroup>();
 		
 		GroupBeanModelProxy.getAll(new AsyncSuccessCallback<List<ClientGroup>>() {
@@ -111,9 +112,9 @@ public class PropertyForm extends FormPanel {
 			public void onSuccess(List<ClientGroup> result) {
 				ClientGroup currentGroup = uiControl.getGroup();
 				if(currentGroup == null) {
-					widget.setGroups(result, "");
+					//widget.setGroups(result, "");
 				} else {
-					widget.setGroups(result, currentGroup.getName());
+					//widget.setGroups(result, currentGroup.getName());
 				}
 				
 				groups.clear();
@@ -121,43 +122,17 @@ public class PropertyForm extends FormPanel {
 			}
 		});
 		
-		widget.addChangeHandler(new ChangeHandler() {
-			
-			@Override
-			public void onChange(ChangeEvent arg0) {
-				ListBox lb = (ListBox)arg0.getSource();
-				if(lb.getItemText(lb.getSelectedIndex()).equals(GroupSelectAndDeleteButtonWidget.NO_GROUP_ITEM)) {
-					uiControl.setGroup(null);
-				} else {
-					for(ClientGroup group: groups) {
-						if(group.getName().equals(lb.getItemText(lb.getSelectedIndex()))) {
-							uiControl.setGroup(group);
-						}
-					}
-				}
-			}
-		});
-		
-		widget.addAddListener(new SelectionListener<ButtonEvent>() {
+		Button group = new Button("Select");
+		group.addSelectionListener(new SelectionListener<ButtonEvent>() {
 			@Override
 			public void componentSelected(ButtonEvent ce) {
-				MessageBox.prompt("Add a new group", "Enter the name of your new group. This name has to be unique", 
-						          new Listener<MessageBoxEvent>() {
-									@Override
-									public void handleEvent(MessageBoxEvent be) {
-										GroupBeanModelProxy.add(new ClientGroup(be.getValue()), new AsyncSuccessCallback<ClientGroup>() {
-											@Override
-											public void onSuccess(ClientGroup result) {
-												widget.addItem(result.getName());
-												groups.add(result);
-											}
-										});
-									}
-								});
+				new ClientGroupWindow(groups);
 			}
 		});
 		
-		add(widget);
+        AdapterField adapterCommand = new AdapterField(group);
+        adapterCommand.setFieldLabel("Group:");
+		
    }
 	 
    public PropertyForm(PropertyEditable componentContainer) {

@@ -38,4 +38,9 @@ public interface GroupService {
     * @return All the groups
     */
    public List<ClientGroup> getAll();
+	/**
+	 * Deletes a clientgroup 
+	 * @param group The group you want to delete
+	 */
+	public ClientGroup delete(ClientGroup group);
 }
