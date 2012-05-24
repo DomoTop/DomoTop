@@ -20,16 +20,22 @@
 package org.openremote.modeler.client.widget.uidesigner;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.openremote.modeler.client.event.SubmitEvent;
 import org.openremote.modeler.client.icon.Icons;
 import org.openremote.modeler.client.proxy.GroupBeanModelProxy;
 import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.domain.ClientGroup;
+import org.openremote.modeler.domain.Switch;
 
+import com.extjs.gxt.ui.client.data.BeanModel;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.WindowEvent;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.MessageBox;
@@ -45,22 +51,30 @@ import com.extjs.gxt.ui.client.event.Listener;
  */
 public class ClientGroupWindow extends Dialog {
    private List<ClientGroup> allGroups;
-   private List<ClientGroup> selectedGroups = new ArrayList<ClientGroup>();
+   private final Collection<ClientGroup> selectedGroups;
    
    private ListBox allGroupsBox;
    private ListBox selectedGroupsBox;
 	
    /**
     * Instantiates a new clientgroup window.
+ * @param collection 
     */
-   public ClientGroupWindow(List<ClientGroup> groups) {
+   public ClientGroupWindow(List<ClientGroup> groups, Collection<ClientGroup> selected) {
 	  this.allGroups = groups;
-	   
+	  if(selected != null) {
+		  this.selectedGroups = selected;
+	  } else {
+		  this.selectedGroups = null;
+	  }
+	  
       initial();
       initButtons();
       initLists();
+      
+      addButtonListener();
+      
       show();
-
    }
    
    private void initButtons() {
@@ -138,7 +152,7 @@ public class ClientGroupWindow extends Dialog {
    }
    
    private void initLists() {
-	   LayoutContainer groupContainer1 = new LayoutContainer();    
+	  LayoutContainer groupContainer1 = new LayoutContainer();    
       groupContainer1.setStyleAttribute("float", "left");
       groupContainer1.setStyleAttribute("padding", "10px");
       groupContainer1.setTitle("Group List");
@@ -147,8 +161,10 @@ public class ClientGroupWindow extends Dialog {
       allGroupsBox = new ListBox();
       allGroupsBox.setWidth("130px");
       allGroupsBox.setVisibleItemCount(10);      
-      for(int i = 0; i < allGroups.size(); i++) {
-    	  allGroupsBox.addItem(allGroups.get(i).getName());
+      for(ClientGroup group:allGroups) { 
+    	  if(!contains(selectedGroups, group.getName())) {
+    		  allGroupsBox.addItem(group.getName());
+    	  }
       }  
       groupContainer1.add(allGroupsBox);
       
@@ -163,6 +179,11 @@ public class ClientGroupWindow extends Dialog {
       selectedGroupsBox = new ListBox();
       selectedGroupsBox.setWidth("130px");
       selectedGroupsBox.setVisibleItemCount(10); 
+      
+      for(ClientGroup group:selectedGroups) {
+    	  selectedGroupsBox.addItem(group.getName());
+      }
+      
       groupContainer2.add(selectedGroupsBox); 
       
       LayoutContainer groupContainer3 = new LayoutContainer();
@@ -171,7 +192,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.setStyleAttribute("margin", "20px");
       
       Button addAll = new Button("Add all >>");
-      addAll.setWidth(50);
+      addAll.setWidth(80);
       
       addAll.addSelectionListener(new SelectionListener<ButtonEvent>() {
 		@Override
@@ -186,7 +207,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(addAll);
       
       Button addOne = new Button("Add >");
-      addOne.setWidth(50);
+      addOne.setWidth(80);
       
       addOne.addSelectionListener(new SelectionListener<ButtonEvent>() {
       	@Override
@@ -201,7 +222,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(addOne);
       
       Button remove = new Button("Remove <");
-      remove.setWidth(50);
+      remove.setWidth(80);
       
       remove.addSelectionListener(new SelectionListener<ButtonEvent>() {
     	@Override
@@ -215,7 +236,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(remove);
       
       Button removeAll = new Button("Remove all <<");
-      removeAll.setWidth(50);
+      removeAll.setWidth(80);
       
       removeAll.addSelectionListener(new SelectionListener<ButtonEvent>() {
 		@Override
@@ -243,10 +264,47 @@ public class ClientGroupWindow extends Dialog {
       setButtons(Dialog.OKCANCEL);  
       setHideOnButtonClick(true);
       setBodyBorder(false);
-      setStyleAttribute("padding", "10px");
-      
-      
-     
+      setStyleAttribute("padding", "10px");   
    }
+   
+   private boolean contains(Collection<ClientGroup> groups, String group) {
+	   for(ClientGroup element: groups) {
+		   if(element.getName().equals(group)) {
+			   return true;
+		   }
+	   }	   
+	   return false;
+   }
+   
+   private void addButtonListener() {
+	      addListener(Events.BeforeHide, new Listener<WindowEvent>() {
+	         public void handleEvent(WindowEvent be) {
+	            if (be.getButtonClicked() == getButtonById("ok")) {	            	
+	            	for(int i = 0; i < selectedGroupsBox.getItemCount(); i++) {
+	            		if(!contains(selectedGroups, selectedGroupsBox.getItemText(i))) {
+	            			for(ClientGroup group: allGroups) {
+	            				if(group.getName().equals(selectedGroupsBox.getItemText(i))) {
+	            					selectedGroups.add(group);
+	            				}
+	            			}
+	            		} 
+	            	}
+	            	
+	            	for(ClientGroup group: selectedGroups) {
+	            		boolean add = false;
+	            		for(int j = 0; j < selectedGroupsBox.getItemCount(); j++) {
+	            			if(group.getName().equals(selectedGroupsBox.getItemText(j))) {
+	            				add = true;
+	            			}
+	            		}
+	            		
+	            		if(!add) {
+	            			selectedGroups.remove(group);
+	            		}
+	            	}
+	            }
+	         }
+	      }); 
+	   }
    
 }

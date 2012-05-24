@@ -126,13 +126,13 @@ public class PropertyForm extends FormPanel {
 		group.addSelectionListener(new SelectionListener<ButtonEvent>() {
 			@Override
 			public void componentSelected(ButtonEvent ce) {
-				new ClientGroupWindow(groups);
+				new ClientGroupWindow(groups, uiControl.getGroups());
 			}
 		});
 		
-        AdapterField adapterCommand = new AdapterField(group);
-        adapterCommand.setFieldLabel("Group:");
-		
+        AdapterField adapterGroup = new AdapterField(group);
+        adapterGroup.setFieldLabel("Group");
+        add(adapterGroup);
    }
 	 
    public PropertyForm(PropertyEditable componentContainer) {
