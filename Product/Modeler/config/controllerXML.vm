@@ -48,8 +48,10 @@
 		#if(${swh.getSensor()})
 			<include type="sensor" ref="${swh.getSensor().getOid()}"/>
 		#end
-		#if(${swh.getGroup()})
-			<include type="group" ref="${swh.getGroup().getOid()}"/>
+		#if(${swh.getGroups()})
+			#foreach($group in $swh.getGroups())
+				<include type="group" ref="${group.getOid()}"/>
+			#end
 		#end
 		</switch>
   	#end
@@ -66,8 +68,10 @@
 				#end
 			#end
 		#end
-		#if(${button.getGroup()})
-			<include type="group" ref="${button.getGroup().getOid()}"/>
+		#if(${button.getGroups()})
+			#foreach($group in $button.getGroups())
+				<include type="group" ref="${group.getOid()}"/>
+			#end
 		#end
 		</button>
   #end
@@ -102,9 +106,11 @@
       #if(${uiSlider.getSensor()})
          <include type="sensor" ref="${uiSlider.getSensor().getOid()}"/>
       #end
-	  #if(${uiSlider.getGroup()})
-		<include type="group" ref="${uiSlider.getGroup().getOid()}"/>
-	  #end
+		#if(${uiSlider.getGroups()})
+			#foreach($group in $uiSlider.getGroups())
+				<include type="group" ref="${group.getOid()}"/>
+			#end
+		#end
       </slider>
     #end
   #end
