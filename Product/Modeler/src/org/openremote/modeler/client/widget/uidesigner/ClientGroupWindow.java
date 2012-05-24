@@ -19,18 +19,14 @@
 */
 package org.openremote.modeler.client.widget.uidesigner;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.openremote.modeler.client.event.SubmitEvent;
 import org.openremote.modeler.client.icon.Icons;
 import org.openremote.modeler.client.proxy.GroupBeanModelProxy;
 import org.openremote.modeler.client.rpc.AsyncSuccessCallback;
 import org.openremote.modeler.domain.ClientGroup;
-import org.openremote.modeler.domain.Switch;
 
-import com.extjs.gxt.ui.client.data.BeanModel;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
@@ -69,16 +65,15 @@ public class ClientGroupWindow extends Dialog {
 	  }
 	  
       initial();
-      initButtons();
-      initLists();
-      
+   
       addButtonListener();
       
       show();
    }
    
-   private void initButtons() {
-	  LayoutContainer buttonContainer = new LayoutContainer();     
+   private void initButtons(LayoutContainer container) {
+	  LayoutContainer buttonContainer = new LayoutContainer();    
+	  buttonContainer.setStyleAttribute("padding-bottom", "10px");
 	      
       Button add = new Button("Add");
       add.setIcon(((Icons) GWT.create(Icons.class)).add());
@@ -147,11 +142,10 @@ public class ClientGroupWindow extends Dialog {
 
       buttonContainer.add(delete);
       
-      add(buttonContainer);
-      
+      container.add(buttonContainer);  
    }
    
-   private void initLists() {
+   private void initLists(LayoutContainer container) {
 	  LayoutContainer groupContainer1 = new LayoutContainer();    
       groupContainer1.setStyleAttribute("float", "left");
       groupContainer1.setStyleAttribute("padding", "10px");
@@ -192,6 +186,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.setStyleAttribute("margin", "20px");
       
       Button addAll = new Button("Add all >>");
+      addAll.setStyleAttribute("padding-top", "10px");
       addAll.setWidth(80);
       
       addAll.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -207,6 +202,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(addAll);
       
       Button addOne = new Button("Add >");
+      addOne.setStyleAttribute("padding-top", "10px");
       addOne.setWidth(80);
       
       addOne.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -222,6 +218,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(addOne);
       
       Button remove = new Button("Remove <");
+      remove.setStyleAttribute("padding-top", "10px");
       remove.setWidth(80);
       
       remove.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -236,6 +233,7 @@ public class ClientGroupWindow extends Dialog {
       groupContainer3.add(remove);
       
       Button removeAll = new Button("Remove all <<");
+      removeAll.setStyleAttribute("padding-top", "10px");
       removeAll.setWidth(80);
       
       removeAll.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -250,9 +248,9 @@ public class ClientGroupWindow extends Dialog {
       
       groupContainer3.add(removeAll);
       
-      add(groupContainer1);
-      add(groupContainer3);      
-      add(groupContainer2);
+      container.add(groupContainer1);
+      container.add(groupContainer3);      
+      container.add(groupContainer2);
    }
    
    private void initial() {
@@ -264,15 +262,25 @@ public class ClientGroupWindow extends Dialog {
       setButtons(Dialog.OKCANCEL);  
       setHideOnButtonClick(true);
       setBodyBorder(false);
-      setStyleAttribute("padding", "10px");   
+
+      
+      LayoutContainer container = new LayoutContainer();
+      container.setStyleAttribute("padding", "10px");   
+      
+      initButtons(container);
+      initLists(container);
+      
+      add(container);
    }
    
    private boolean contains(Collection<ClientGroup> groups, String group) {
-	   for(ClientGroup element: groups) {
-		   if(element.getName().equals(group)) {
-			   return true;
+	   if(groups != null) {
+		   for(ClientGroup element: groups) {
+			   if(element.getName().equals(group)) {
+				   return true;
+			   }
 		   }
-	   }	   
+	   }
 	   return false;
    }
    
@@ -284,7 +292,9 @@ public class ClientGroupWindow extends Dialog {
 	            		if(!contains(selectedGroups, selectedGroupsBox.getItemText(i))) {
 	            			for(ClientGroup group: allGroups) {
 	            				if(group.getName().equals(selectedGroupsBox.getItemText(i))) {
-	            					selectedGroups.add(group);
+	            					if(selectedGroups != null) {
+	            						selectedGroups.add(group);
+	            					}
 	            				}
 	            			}
 	            		} 
@@ -299,8 +309,10 @@ public class ClientGroupWindow extends Dialog {
 	            		}
 	            		
 	            		if(!add) {
-	            			selectedGroups.remove(group);
-	            		}
+        					if(selectedGroups != null) {
+        						selectedGroups.remove(group);
+        					}	            		
+        				}
 	            	}
 	            }
 	         }
