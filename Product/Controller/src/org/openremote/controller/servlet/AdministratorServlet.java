@@ -101,7 +101,7 @@ public class AdministratorServlet extends HttpServlet
       String errorString = "", warningString = "";
       int numClients = 0;
       boolean isAuthenticationEnabled = false;
-      Collection clientCollection = null, groupCollection = null, settingCollection = null;
+      Collection clientCollection = null, groupCollection = null, settingCollection = null, advancedSettingCollection = null;
       
       ResultSet clients = clientService.getClients();     
       numClients = clientService.getNumClients();
@@ -112,15 +112,20 @@ public class AdministratorServlet extends HttpServlet
       groupCollection = resultSetToCollection(groups);
       groupService.free();
       
-      ResultSet settings = configurationService.getAllItems();
+      ResultSet settings = configurationService.getConfigurationItems();
       settingCollection = resultSetToCollection(settings);
       configurationService.free();
+      
+      ResultSet advancedSettings = configurationService.getAdvancedConfigurationItems();
+      advancedSettingCollection = resultSetToCollection(advancedSettings);
+      configurationService.free();      
+      
       
       try 
       {     
          isAuthenticationEnabled = configurationService.getBooleanItem("authentication");
          
-         if(clientCollection != null && settingCollection != null && groupCollection != null)
+         if(clientCollection != null && settingCollection != null && advancedSettingCollection != null && groupCollection != null)
          {
             if(numClients > 0)
             {
@@ -135,6 +140,7 @@ public class AdministratorServlet extends HttpServlet
             }
             root.put( "groups", groupCollection );
             root.put( "configurations", settingCollection );
+            root.put( "advanced_configurations", advancedSettingCollection );
          }
          else
          {

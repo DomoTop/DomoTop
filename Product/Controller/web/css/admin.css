@@ -31,6 +31,14 @@
 	font-weight:bold;
 }
 
+#advanced
+{
+	display: none;
+	margin: 10px;
+	padding-left: 6px;
+	border: 1px solid #aaaaaa;
+}
+
 div.top{text-align:right;margin:1em 0;padding:0}
 div.top div{display:inline;white-space:nowrap}
 div.top div.left{float:left}

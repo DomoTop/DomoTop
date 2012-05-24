@@ -85,23 +85,13 @@ $(document).ready(function()
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
-  	clearMessage();
-  	if (result == 'OK') {
-			message("Settings are successfully saved. Reloading...");
-			delayedRefreshPage(800);
-		} else if (result == 'UNAUTHORIZED') {
-			centerPopup();
-			showLogin();
-		} else if(result == 'OK_REBOOT') {
-			//centering with css
-			centerPopup();	
-							
-			//load loading popup
-			showLoading();
-		} else {
-			error("There was a problem with saving the settings: " + result);
-		}
+  	saveSettings();
   }); 
+  
+  $('#saveAdvancedSettings').ajaxForm(function(result) {
+		saveSettings();
+  }); 
+  
     
   $('#caForm').ajaxForm(function(result) {
   	clearMessage();
@@ -163,7 +153,7 @@ $(document).ready(function()
 		}
 	});
 	
-	//Press Escape event!
+	//Press Escape event
 	$(document).keypress(function(e){
 		if(!focusPopUp)
 		{
@@ -172,7 +162,32 @@ $(document).ready(function()
 			}
 		}
 	});
+	
+	//Advanced button event
+	$("#advanced-button").click(function(){
+     $('#advanced').slideToggle("fast");
+	});
 });
+
+function saveSettings()
+{
+  	clearMessage();
+  	if (result == 'OK') {
+			message("Settings are successfully saved. Reloading...");
+			delayedRefreshPage(800);
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
+		} else if(result == 'OK_REBOOT') {
+			//centering with css
+			centerPopup();	
+							
+			//load loading popup
+			showLoading();
+		} else {
+			error("There was a problem with saving the settings: " + result);
+		}
+}
 
 // on click of one of tabs
 function displayPage() 
