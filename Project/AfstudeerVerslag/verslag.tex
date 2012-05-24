@@ -32,7 +32,7 @@
 \makeatother
 
 %add version command, use \version to insert current version
-\newcommand{\version}{1.12}
+\newcommand{\version}{1.13}
 
 % Alter some LaTeX defaults for better treatment of figures:
 % See p.105 of "TeX Unbound" for suggested values.
@@ -69,6 +69,8 @@
 
 \begin{document}
 
+\thispagestyle{plain}
+
 \title{Afstudeerverslag}
 \author{Vincent Kriek \and Melroy van den Berg}
 
@@ -80,6 +82,7 @@
    \end{center}
 \end{figure}
 
+%\vspace*{-3cm}
 \vspace*{\fill}
 
 \begin{tabular}{|| l | l || l | l ||}\hline
@@ -143,6 +146,7 @@ Eindhoven, Nederland\\
             &            &                    &Samenvatting geschreven         \\\hline 
     1.11    &14-05-2012  &Vincent Kriek       &Voorwoord                       \\\hline
     1.12    &21-05-2012  &Vincent Kriek       &Voorwoord verbeterd             \\\hline
+    1.13    &24-06-2012  &Melroy van den Berg &Document lay-out verbeterd      \\\hline
 \end{tabular}
 
 \newpage
@@ -251,51 +255,6 @@ kunnen doen.
 In dit verslag worden bovenstaande punten besproken verdeeld in verschillende
 hoofdstukken, zoals onderandere probleemanalyse, methoden en technieken en resultaten.
 Tot slot eindigd dit verslag het met een conclusie en aanbevelingen.
-
-\newpage
-\section*{Samenvatting}
-Het software project genaamd OpenRemote wordt uitgebreid met een beter
-beveiligingssysteem dan wat er op dit moment bestaat. OpenRemote is een software
-applicatie om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
-een PlugTop computer om hierop de OpenRemote Controller te draaien, wat functioneert als
-zijnde een server. Vandaar onze projectnaam DomoTop (Domotica PlugTop).
-De beveiligingtechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
-waarin het bijzonder gebruik wordt gemaakt van client certificaten om de
-gebruikers/apparaten te authenticeren. Later in het DomoTop project is er
-gekozen om ook de mogelijkheid te geven om groepen aan te maken. Waardoor het
-het mogelijk is om apparaten te plaatsen in een specifieke groep, hierdoor is
-het dus mogelijk om apparaten te autoriseren.
-
-Deze opdracht is afkomstig en bedacht door het bedrijf TASS. De opdracht wordt
-begeleid door de people manager Gerben Blom, technische begeleiders Berry
-Borgers en Bas Burgers. Deze stageopdracht is gevonden via onze school Avans Den
-Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
-Melroy van den Berg \& Vincent Kriek.
-
-\begin{figure}[htpb]
-   \begin{center}
-     \includegraphics[width=0.6\textwidth]{TopLevelDesignORSecurity.pdf}
-   \end{center}
-   \caption{Flowchart initial request}
-\end{figure}
-
-De opdrachtgever vond het belangrijk om OpenRemote software te beveiligen en een
-oplossing te vinden van een authenticatie mechanisme zonder gebruik te hoeven
-maken van gebruikersnaam/wachtwoord. Tevens was het belangrijk dat er ervaring
-en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote
-Controller gaat draaien. Tot slot was ook onderzoek nodig naar verschillende
-Domotica protocollen en verschillende manieren van beveiligen.
-Hierdoor is er kennis en ervaring opgedaan op gebied van onderandere domotica,
-Google Android, Embedded Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven
-met onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS,
-waarbij onderzoek naar gedaan is om het uiteindelijk te kunnen implementeren. 
-
-Op dit moment is OpenRemote beveiligd via client certificaten en kan de
-administrator via de OpenRemote administrator panel apparaten goed-/afkeuren. De
-administrator panel is een webbased applicatie en behoord tot de OpenRemote
-Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
-gekoppeld worden aan knoopen, sliders en/of switches, waarna je deze groepen in
-de administrator panel kan koppelen aan apparaten.
 
 \newpage
 \section{De plaats van de afstudeerder binnen de organisatie}
@@ -413,6 +372,7 @@ afgezien van een globale gebruikersnaam en wachtwoord voor het hele
 systeem. Dit is niet gewenst en onze opdracht is om dit te verhelpen door
 er een authenticatie en autorisatie mechanisme aan toe te voegen.
 
+\newpage
 \subsection{Probleemstelling}
 
 Het probleem wat opgelost moet worden is dat onbevoegden makkelijk toegang
@@ -507,6 +467,7 @@ zien en bij te kunnen houden. Deze burndown charts houden verschillende
 elementen van de backlogs bij om op deze manier alles inzichtelijk te
 houden.
 
+\newpage
 \subsection{Versiebeheer}
 
 \begin{wrapfigure}{l}{0.3\textwidth}
@@ -557,6 +518,7 @@ werken op een bestaand project. Voor de controller wordt gebruik gemaak van
 Java, evenals voor de composer. De verschillende applicaties maken gebruik
 van Java op Android en Objective-C op iOS.
 
+\newpage
 \subsection{Database}
 Er is gebruik gemaakt van RazorSQL[3], met dit programma is het mogelijk om
 SQL queries te maken, typen en de testen via een grafische interface en dit
@@ -1147,7 +1109,7 @@ Kortom het beveiligen van OpenRemote is gelukt en de gemaakte code kan weer
 levert worden aan de OpenRemote community, waarna ook de rest van de wereld
 gebruik kan maken van onze technieken om OpenRemote te beveiligen. 
 
-In dit project zijn niet alle wensen verwerkt in het project. Het eerste waar
+Binnen het DomoTop project zijn er punten die nog verbeterd kunnen worden. Het eerste waar
 aan gewerkt zou kunnen worden is het implementeren van de beveilings
 verbeteringen in het OpenRemote project in de iOS client. Op dit moment is er in
 de iOS client niks veranderd en kan deze dus niet worden gebruikt om onze
@@ -1223,6 +1185,7 @@ TomCat.
 
 \newpage
 \section{Bronnen}
+[Wordt nog bijgewerkt]
 
 \newpage
 \section{Bijlagen}
