@@ -142,7 +142,7 @@
 							        	<table cellpadding="4" border="0">
 													<#list configurations as configuration>
 							           		<tr>
-								        			<td align="left" width="160">
+								        			<td align="left" width="220">
 								        				<b>${configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${configuration.configuration_information}</span></span></#if>
 								        			</td>
 								        			<td>
@@ -173,11 +173,14 @@
 												</table>
 											</form>
 											<br/><br/>
-											<form id="caForm" action="admin.htm?method=resetSettings" method="post">
-												<b>Reset Settings:</b> <input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
+											<form id="dropUsersForm" action="admin.htm?method=dropClients" method="post">
+												<input type="submit" value="Drop users" onClick="return confirm('You are about to drop all the users.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
+											</form>
+											<form id="resetSettingsForm" action="admin.htm?method=resetSettings" method="post">
+												<input type="submit" value="Reset to default settings" onClick="return confirm('You are about to reset to the default settings.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
 											</form>
 											
-											<button type="button" id="advanced-button">Advanced Settings</button>
+											<button type="button" id="advanced-button">Advanced Settings...</button>
 											
 											<div id="advanced">
 												<br/>
@@ -185,7 +188,7 @@
 							        	<table cellpadding="4" border="0">
 													<#list advanced_configurations as advanced_configuration>
 							           		<tr>
-								        			<td align="left" width="160">
+								        			<td align="left" width="220">
 								        				<b>${advanced_configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if advanced_configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${advanced_configuration.configuration_information}</span></span></#if>
 								        			</td>
 								        			<td>
@@ -214,11 +217,10 @@
 														</td>
 													</tr>
 												</table>
-											</form>										
-												
+											</form>
 																	
 											<form id="caForm" action="admin.htm?method=setupCA" method="post">
-												<b>Reset settings including CA*:</b> <input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
+												<input type="submit" value="Reset settings including CA*" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
 												* CA = <a target="_blank" href="http://en.wikipedia.org/wiki/Certificate_authority" title="Certificate Authority more information...">Certificate Authority</a>
 											</form>
 							      </div>				      

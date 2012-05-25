@@ -149,7 +149,7 @@ public class AdministratorServlet extends HttpServlet
          
          if(configurationService.shouldReboot())
          {
-            errorString += "<b>Do NOT forget to restart your Tomcat server manually to apply the changes.</b>";
+            errorString += "<b>Do NOT forget to restart Tomcat manually to apply the changes.</b>";
          }
          
          if(!errorString.isEmpty())

@@ -70,7 +70,7 @@ public class AdministratorController extends MultiActionController
    private PrivateKey privateKey = null;
    
    /**
-    * Create a new CA, imports the certificate into the server's key store and saves the private key
+    * Reset all settings and create a new CA, imports the certificate into the server's key store and saves the private key
     * 
     * @param request
     *           HTTP servlet request
@@ -78,28 +78,19 @@ public class AdministratorController extends MultiActionController
     *           HTTP response to the servlet
     */
    public ModelAndView setupCA(HttpServletRequest request, HttpServletResponse response) throws IOException,
-         ServletRequestBindingException {    
+         ServletRequestBindingException {
       if(!AuthenticationUtil.isAuth(request, configurationService)){
          response.getWriter().print(Constants.UNAUTHORIZED);
          return null;
       }
       boolean success = false;
-      success = certificateService.deleteClientKeyStore();
+      // Reset client keystore & database
+      success = this.resetClients(response);
+      
       if(success)
       {
-         if(clientService.dropClients() == 1)
-         { 
-            success = true;
-         }
-         else
-         {
-            success = false;
-         }
-      }
-      else
-      {
-         response.getWriter().print("Couldn't delete client keystore.");
-      }
+         success = this.resetSettings(response);
+      }      
       
       if(success)
       {         
@@ -110,10 +101,6 @@ public class AdministratorController extends MultiActionController
             response.getWriter().print("Failed to create and/or save a CA certificate into the server's keystore.");
          }
       }
-      else
-      {
-         response.getWriter().print("Failed to empty the database table.");
-      }
       
       if(success)
       {   
@@ -121,6 +108,59 @@ public class AdministratorController extends MultiActionController
          configurationService.setReboot();
          
          response.getWriter().print(Constants.OK);
+      }
+      
+      return null;
+   }
+   
+   /**
+    * Reset settings to default settings
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
+   public ModelAndView resetSettings(HttpServletRequest request, HttpServletResponse response) throws IOException,
+         ServletRequestBindingException {    
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.getWriter().print(Constants.UNAUTHORIZED);
+         return null;
+      }
+      boolean success = false;
+      // Reset client keystore & database
+      success = this.resetClients(response);
+      
+      if(success)
+      {
+         success = this.resetSettings(response);
+      }
+      
+      if(success)
+      {
+         response.getWriter().print(Constants.OK);
+      }
+      return null;
+   }
+   
+   /**
+    * Drop all the users from the database
+    * 
+    * @param request
+    *           HTTP servlet request
+    * @param response
+    *           HTTP response to the servlet
+    */
+   public ModelAndView dropClients(HttpServletRequest request, HttpServletResponse response) throws IOException,
+   ServletRequestBindingException {
+      if(!AuthenticationUtil.isAuth(request, configurationService)){
+         response.getWriter().print(Constants.UNAUTHORIZED);
+         return null;
+      }
+      
+      if(this.resetClients(response))
+      {
+         response.getWriter().print(Constants.OK);         
       }
       
       return null;
@@ -230,50 +270,6 @@ public class AdministratorController extends MultiActionController
          response.getWriter().print("Failed to save the configuration into the database: " + errorMessage);
       }
       return null;
-   }
-   
-   /**
-    * Do all changes when authentication checkbox value is changed
-    * @param newValue true if authentication is enabled, false when authentication should be disabled
-    * @return true if everything went successfully otherwise false
-    */
-   private boolean setAuthentication(boolean newValue) 
-   {
-      boolean success = true;
-      
-      // Check for "authentication" to set that in the web.xml
-      try 
-      {
-         // Change the disable flag of the following configuration items: 
-         // Note: If newValue is true updateConfiguration accept !newValue (false) and visa versa
-         if(configurationService.updateConfiguration("composer_username", !newValue) != 1)
-         {
-            success = false;
-         }
-         if(configurationService.updateConfiguration("ca_path", !newValue) != 1)
-         {
-            success = false;
-         }
-         if(configurationService.updateConfiguration("pin_check", !newValue) != 1)
-         {
-            success = false;
-         }
-         if(configurationService.updateConfiguration("group_required", !newValue) != 1)
-         {
-            success = false;
-         }
-         
-         if(success)
-         {
-            // Enable/disable the authentication in web.xml
-            configurationService.setAuthentication(newValue);
-         }
-      } catch (IOException e) {
-         success = false;
-         logger.error("Authentication could not be enabled or disabled");
-         logger.error(e.getMessage());
-      }  
-      return success;
    }
 
    /**
@@ -565,6 +561,103 @@ public class AdministratorController extends MultiActionController
       response.getWriter().print(Constants.OK);
       return null;
    }
+   
+   /**
+    * Resets configuration table to the default settings
+    * @param response HttpServletResponse
+    * @return boolean true if everything went successful
+    * @throws IOException
+    */ 
+   private boolean resetSettings(HttpServletResponse response) throws IOException
+   {
+      boolean success = false;
+      success = configurationService.resetConfigurations();
+      if(!success) 
+      {
+         response.getWriter().print("Couldn't reset to default settings.");
+      }
+      
+      if(success)
+      {
+         certificateService.initCaPath();
+      }
+      
+      return success;
+   }
+   
+   
+   /**
+    * Resets the clients from the key store and database
+    * @param response HttpServletResponse
+    * @return boolean true if everything went successful
+    * @throws IOException 
+    */ 
+   private boolean resetClients(HttpServletResponse response) throws IOException
+   {
+      boolean success = false;
+      success = certificateService.deleteClientKeyStore();
+      if(success)
+      {
+         if(clientService.dropClients() == 1)
+         { 
+            success = true;
+         }
+         else
+         {
+            success = false;
+         }
+      }
+      else
+      {
+         response.getWriter().print("Couldn't delete client keystore. Maybe the CA Path is incorrect.");
+      }
+      return success;
+   }
+   
+   /**
+    * Do all changes when authentication checkbox value is changed
+    * @param newValue true if authentication is enabled, false when authentication should be disabled
+    * @return true if everything went successfully otherwise false
+    */
+   private boolean setAuthentication(boolean newValue) 
+   {
+      boolean success = true;
+      
+      // Check for "authentication" to set that in the web.xml
+      try 
+      {
+         // Change the disable flag of the following configuration items: 
+         // Note: If newValue is true updateConfiguration accept !newValue (false) and visa versa
+         if(configurationService.updateConfiguration("composer_username", !newValue) != 1)
+         {
+            success = false;
+         }
+         if(configurationService.updateConfiguration("ca_path", !newValue) != 1)
+         {
+            success = false;
+         }
+         if(configurationService.updateConfiguration("pin_check", !newValue) != 1)
+         {
+            success = false;
+         }
+         if(configurationService.updateConfiguration("group_required", !newValue) != 1)
+         {
+            success = false;
+         }
+         
+         if(success)
+         {
+            // Enable/disable the authentication in web.xml
+            configurationService.setAuthentication(newValue);
+         }
+      } catch (IOException e) {
+         success = false;
+         logger.error("Authentication could not be enabled or disabled");
+         logger.error(e.getMessage());
+      }  
+      return success;
+   }   
+   
    
    /**
     * Accept the client, adding it to the client key store

@@ -89,6 +89,12 @@ public interface ConfigurationService
     */
    int emptyItem(String name);
    /**
+    * Reset the configuration table to default settings
+    * 
+    * @return true is success else false
+    */
+   boolean resetConfigurations();   
+   /**
     * Get all items (configurations values and names) from the database
     * @return resultSet with the result
     */

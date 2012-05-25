@@ -111,7 +111,19 @@ public class ConfigurationServiceImpl implements ConfigurationService
       }
       return resultValue;
    }
-
+   
+   /**
+    * Reset the configuration table to default settings
+    * 
+    * @return true is success else false
+    * @see initCaPath()
+    */
+   @Override
+   public boolean resetConfigurations()
+   {
+      return database.resetConfigurationTables();  
+   }
+   
    
    /**
     * Get all items (configurations values and names) from the database

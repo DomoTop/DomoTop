@@ -85,18 +85,17 @@ $(document).ready(function()
   });   
 
   $('#saveSettings').ajaxForm(function(result) {
-  	saveSettings();
+  	saveSettings(result);
   }); 
   
   $('#saveAdvancedSettings').ajaxForm(function(result) {
-		saveSettings();
-  }); 
-  
+		saveSettings(result);
+  });  
     
   $('#caForm').ajaxForm(function(result) {
   	clearMessage();
   	if (result == 'OK') {
-			message("CA successfully created. <br/><b><font color='#FF4500'>Do NOT forget to restart your Tomcat server manually to apply the changes.</font></b>");
+			error("<font color='green'>CA successfully created.</font><br/><b><font color='#FF4500'>Do NOT forget to restart Tomcat manually to apply the changes.</font></b>");
 		} else if (result == 'UNAUTHORIZED') {
 			centerPopup();
 			showLogin();
@@ -104,8 +103,34 @@ $(document).ready(function()
 			error("CA creation was unsuccessfully: " + result);
 		}
   });
+  
+	$('#dropUsersForm').ajaxForm(function(result) {
+  	clearMessage();
+  	if (result == 'OK') {
+			message("All users are dropped successfully.");
+			delayedRefreshPage(800);
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
+		} else {
+			error("Dropping all users was unsuccessfully: " + result);
+		}
+  });
+		 
+  $('#resetSettingsForm').ajaxForm(function(result) {
+  	clearMessage();
+  	if (result == 'OK') {
+			message("Settings are reset to the default settings. Reloading...");
+			delayedRefreshPage(1000);
+		} else if (result == 'UNAUTHORIZED') {
+			centerPopup();
+			showLogin();
+		} else {
+			error("Resetting settings to default settings failed: " + result);
+		}
+  });
     
-  // Logout button
+  // Logout button  
 	$('#logOut').click(function() {
 		clearMessage();
 		$.get("admin.htm?method=logOut",
@@ -169,7 +194,7 @@ $(document).ready(function()
 	});
 });
 
-function saveSettings()
+function saveSettings(result)
 {
   	clearMessage();
   	if (result == 'OK') {

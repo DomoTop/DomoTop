@@ -48,7 +48,13 @@ public interface DatabaseService
     * 
     * @return 0 or -1 is unsuccessfully, 1 (or higher) is successfully 
     */
-   int doUpdateSQL(PreparedStatement preparedStatement);   
+   int doUpdateSQL(PreparedStatement preparedStatement);
+   /**
+    * Reset the database configuration table to default settings
+    * 
+    * @return boolean true if success else false
+    */
+   boolean resetConfigurationTables();
    /**
     * Get the number of rows of the result set (after a doSQL)
     * 
