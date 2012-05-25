@@ -130,8 +130,16 @@
 													</TR>
 													</#if>
 												</TBODY>
-												</TABLE>			
+												</TABLE>												
 												<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
+												<form id="dropUsersForm" action="admin.htm?method=dropClients" method="post">
+													<#if clients?exists>
+														<#assign drop_users=''>
+													<#else>
+															<#assign drop_users=' disabled'>														
+													</#if>
+													<input type="submit" value="Drop users" onClick="return confirm('You are about to drop all the users.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"${drop_users} /><br/><br/>
+												</form>
 											<#else>
 												<b><i><font color="#ee2222">To use this feature, please enable 'Authentication' in the configuration tab.</font></i></b>
 											</#if>
@@ -173,9 +181,6 @@
 												</table>
 											</form>
 											<br/><br/>
-											<form id="dropUsersForm" action="admin.htm?method=dropClients" method="post">
-												<input type="submit" value="Drop users" onClick="return confirm('You are about to drop all the users.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
-											</form>
 											<form id="resetSettingsForm" action="admin.htm?method=resetSettings" method="post">
 												<input type="submit" value="Reset to default settings" onClick="return confirm('You are about to reset to the default settings.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
 											</form>
