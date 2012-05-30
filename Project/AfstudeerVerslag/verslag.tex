@@ -31,6 +31,10 @@
 %Used to display "normal" paragraph's without indentation and with blank line
 \usepackage[parfill]{parskip}
 
+%Don't break paragraphs in page
+\widowpenalties 1 10000
+\raggedbottom
+
 %Stop wordbreaking
 %\usepackage[none]{hyphenat}
 
@@ -356,7 +360,7 @@ vragen kan men bij deze afdeling terecht.
 \section{Probleemanalyse}
 Binnen de opdracht waren er een probleemsituatie onstaan die hieronder
 beschreven worden. Naar aanleiding van deze probleemsituaties is er een
-probleemanalyse gemaakt.
+probleemstelling opgesteld.
 
 \subsection{Probleemsituatie}
 
@@ -382,7 +386,6 @@ afgezien van een globale gebruikersnaam en wachtwoord voor het hele
 systeem. Dit is niet gewenst en dit opdracht is om dit te verhelpen door
 er een authenticatie en autorisatie mechanisme aan toe te voegen.
 
-\newpage
 \subsection{Probleemstelling}
 
 Het probleem wat opgelost moet worden is dat onbevoegden makkelijk toegang
@@ -390,30 +393,34 @@ kunnen krijgen op een OpenRemote systeem. Voor dit probleem is de
 volgende doelstelling geformuleerd: Het implementeren van beveiliging in
 OpenRemote, zodat onbevoegden geen toegang kunnen krijgen op het systeem.
 
-Het eerste deelprobleem die te definiëren is over deze probleemstelling is:
+Het eerste deelprobleem die te defini"eren is over deze probleemstelling is:
 Welke beveiligingstechnieken zijn het best te gebruiken in deze situatie?
 Deze doelstelling zal onderzocht moeten worden en uiteindelijk moet het
-onderzoek geïmplementeerd worden in OpenRemote.
+onderzoek ge\"implementeerd worden in OpenRemote.
+
+Het tweede deelprobleem wat opgelost moet worden is: De ontwikkelaars
+moeten de code van OpenRemote doorgronden om deze uiteindelijk uit te
+kunnen breiden. Voordat er aan de slag kan worden gaan met uitbreiding van
+OpenRemote moet de code eerst onderzocht worden.
 
 De volgende probleemstelling die opgelost moet worden binnen het project
 is: Geselecteerde gebruikers moet toestemming tot het systeem kunnen worden
 verleend. Deze probleemstelling gaat meer richting de autorisatie en over
 hoe men gebruikers toestemming kan geven tot een systeem.
 
-Het laatste deelprobleem wat opgelost moet worden is: De ontwikkelaars
-moeten de code van OpenRemote doorgronden om deze uiteindelijk uit te
-kunnen breiden. Voordat er aan de slag kan worden gaan met uitbreiding van
-OpenRemote moet de code eerst onderzocht worden.
+Het laatste probleem wat gedefinieerd kan worden is: Er moeten groepen gemaakt
+kunnen worden om rechten aan gebruikers te geven. Op deze manier kunnen knoppen
+alleen toegankelijk zijn voor een deel van de gebruikers. 
 
-Voor dit project zal SCRUM gebruikt als ontwikkelmethodiek, omdat het
-daarmee makkelijk is een lopend project mee door te ontwikkelen. Voor meer
+Voor dit project zal SCRUM gebruikt worden als ontwikkelmethodiek, omdat het
+daarmee makkelijk is een lopend project door te ontwikkelen. Voor meer
 informatie zie het hoofdstuk “Methoden en Technieken”.
 
 \newpage
 \section{Plan van Aanpak}
 
 In dit hoofdstuk wordt er een samenvatting gegeven van het plan  van  aanpak
-document, zie het volledige plan van aanpak bijlage  x.  Het  doel  van  het
+, zie het volledige plan van aanpak in bijlage 1.  Het  doel  van  het
 project is  van  het  om  OpenRemote  te  beveiligen  en  dit  eventueel  te
 demonstreren.  De  opdracht  binnen  het  project  is   om   OpenRemote   te
 beveiligen. Op dit moment is er geen enkele manier van beveiliging  aanwezig
@@ -437,8 +444,8 @@ OpenRemote het beste  te  beveiligen.  Met  deze  informatie  wordt  er  een
 prototype ontwikkeld. Nadat er een volledig werkend  prototype  is,  kan  er
 gekeken worden of en waar dit product uitgebreid en verbeterd kan worden.
 
-Zie bijlage x voor de  lijst  van  risico's,  afspraken,  deadlines  en  een
-weekplanning.
+Zie bijlage 1 voor het volledige plan van aanpak met daarin een lijst  van
+risico's,  afspraken,  deadlines  en  een weekplanning.
 
 \newpage
 \section{Methoden en Technieken}
