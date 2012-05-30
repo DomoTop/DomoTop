@@ -1,11 +1,12 @@
 \documentclass[]{article}
 
+%Change helvetica
 \usepackage[scaled]{helvet}
 \renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
 
 %Set page to 14cm
-\usepackage[textwidth=14cm]{geometry}
+\usepackage[textwidth=16cm]{geometry}
 
 %Used to improve the headers
 \usepackage{fancyhdr}
@@ -29,6 +30,9 @@
 
 %Used to display "normal" paragraph's without indentation and with blank line
 \usepackage[parfill]{parskip}
+
+%Stop wordbreaking
+%\usepackage[none]{hyphenat}
 
 %Use \insertdate to insert current formatted date
 \makeatletter
@@ -157,21 +161,22 @@ Eindhoven, Nederland\\
 \section*{Voorwoord}
 \addcontentsline{toc}{section}{Voorwoord}
 Domotica systemen nemen een steeds prominentere rol aan in de huidige
-samenleving. Denk bijvoorbeeld aan de living colors lampen van philips, het
-KlikAanKlikUit systeem wat je voor twee tientjes bij de blokker haalt en het
+samenleving. Denk bijvoorbeeld aan de Living Colors lampen van Philips, het
+KlikAanKlikUit systeem wat je voor twee tientjes bij de Blokker haalt en het
 nieuwe Toon van Eneco. Maar wat voor soort beveiliging zit er op zulke systemen?
 En wat voor beveiling zou het meest geschikt zijn? In onze stage hebben bekeken
 hoe dit soort systemen het best beveiligd kunnen worden.
 
-In de presentatie kan niet alles getoond worden wat er is uitgevoerd en bereikt
+In de presentatie kan niet alles getoond worden wat er is gedaan en bereikt
 tijdens de afstudeerstage. Om alles toch goed toe te lichten hebben we dit
-verslag opgesteld.  Onze docent en derde beoordelaar kunnen in dit verslag
-nalezen hoe wij onze stage hebben aangepakt, welke tools we gebruikt hebben en
-wat voor resultaten we hebben bereikt.
+verslag opgesteld.  Onze docenten, gecommiteerde en andere ge"intresseerden
+kunnen in dit verslag nalezen hoe wij onze stage hebben aangepakt, welke
+methodes en technieken we gebruikt hebben en wat voor resultaten we hebben
+bereikt.
 
-Tijdens de stage hebben we veel geleerd over beveiliging. Toen we begonnen met
-de stage was onze kennis van security nog redelijk beperkt. Samen met Berry
-Borgers, een van onze technische begeleiders, hebben we een aantal keuzes
+Voordat we met de stage begonnen was onze kennis van beveiliging nog beperkt,
+maar tijdens onze stage hebben we veel geleerd over dit vakgebied. Samen met
+Berry Borgers, \'e\'en van onze technische begeleiders, hebben we een aantal keuzes
 gemaakt over hoe we het project aan zouden pakken. Het onderzoek wat hieraan
 vooraf ging heeft, samen met de stage, ons veel geleerd over beveiliging.
 
@@ -179,14 +184,15 @@ Het beveiligen van OpenRemote was voor TASS tweeledig. Het is bedoeld als
 demonstratieproject op beurzen en scholen. Hiermee is aan te tonen wat er
 allemaal mogelijk is op domotica gebied en welke rol beveiliging daar in speelt.
 Tevens was het een onderzoeksproject, om te kijken hoe een domoticasysteem
-het gebruiksvriendelijkst en best beveiligd kan worden.
+het best beveiligd kan worden zonder in te leveren op het gebied van
+gebruiksvriendelijkheid.
 
 We willen Gerben Blom bedanken voor alle begeleiding die we op projectmatig vlak
 gekregen hebben. Tevens willen we Berry Borger bedanken voor de technische
 beleiding, informatie en advies op security gebied. Tevens willen we Bas Burgers
 bedanken voor advies en begeleiding op technisch gebied. Ook willen we onze
 begeiding vanuit school bedanken, met dan in het bijzonder Peter Kailuhu voor
-alle begeleiding.
+de coachingsgesprekken en informatie over de eisen vanuit school.
 
 \newpage
 \tableofcontents
