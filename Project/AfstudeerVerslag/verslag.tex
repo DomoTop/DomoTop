@@ -203,17 +203,17 @@ de coachingsgesprekken en informatie over de eisen vanuit school.
 \newpage
 \section*{Samenvatting}
 \addcontentsline{toc}{section}{Samenvatting}
-Het software project genaamd OpenRemote wordt uitgebreid met een beter
-beveiligingssysteem dan wat er op dit moment bestaat. OpenRemote is een software
-applicatie om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
+Het software project genaamd OpenRemote is uitgebreid met een beter
+beveiligingssysteem dan er voorheen inzat. OpenRemote is een software
+pakket om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
 een PlugTop computer om hierop de OpenRemote Controller te draaien, wat functioneert als
 zijnde een server. Vandaar onze projectnaam DomoTop (Domotica PlugTop).
 De beveiligingtechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
 waarin het bijzonder gebruik wordt gemaakt van client certificaten om de
-gebruikers/apparaten te authenticeren. Later in het DomoTop project is er
-gekozen om ook de mogelijkheid te geven om groepen aan te maken. Waardoor het
-het mogelijk is om apparaten te plaatsen in een specifieke groep, hierdoor is
-het dus mogelijk om apparaten te autoriseren.
+gebruikers/apparaten te authenticeren. Ook is er later in het DomoTop project
+voor gekozen om de mogelijkheid te geven om groepen aan te maken waardoor
+het het mogelijk is om apparaten te plaatsen in een specifieke groep. Hierdoor
+is het dus mogelijk om apparaten te autoriseren.
 
 Deze opdracht is afkomstig en bedacht door het bedrijf TASS. De opdracht wordt
 begeleid door de people manager Gerben Blom, technische begeleiders Berry
@@ -223,20 +223,20 @@ Melroy van den Berg \& Vincent Kriek.
 
 \begin{figure}[htpb]
    \begin{center}
-     \includegraphics[width=0.6\textwidth]{TopLevelDesignORSecurity.pdf}
+     \includegraphics[width=0.7\textwidth]{TopLevelDesignORSecurity.pdf}
    \end{center}
    \caption{Flowchart initial request}
 \end{figure}
 
-De opdrachtgever vond het belangrijk om OpenRemote software te beveiligen en een
-oplossing te vinden van een authenticatie mechanisme zonder gebruik te hoeven
-maken van gebruikersnaam/wachtwoord. Tevens was het belangrijk dat er ervaring
-en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote
-Controller gaat draaien. Tot slot was ook onderzoek nodig naar verschillende
-Domotica protocollen en verschillende manieren van beveiligen.
-Hierdoor is er kennis en ervaring opgedaan op gebied van onderandere domotica,
-Google Android, Embedded Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven
-met onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS,
+TASS vond het belangrijk om OpenRemote software te beveiligen en een oplossing
+te vinden van een authenticatie mechanisme zonder gebruik te hoeven maken van
+een gebruikersnaam/wachtwoord. Tevens was het belangrijk dat er ervaring en
+onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
+gaat draaien. Tot slot was ook onderzoek nodig naar verschillende Domotica
+protocollen en verschillende manieren van beveiligen.  Hierdoor is er kennis en
+ervaring opgedaan op gebied van onder andere domotica, Google Android, Embedded
+Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven met
+onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS,
 waarbij onderzoek naar gedaan is om het uiteindelijk te kunnen implementeren. 
 
 Op dit moment is OpenRemote beveiligd via client certificaten en kan de
@@ -250,20 +250,21 @@ de administrator panel kan koppelen aan apparaten.
 \section{Inleiding}
 Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol is binnen
 onze samenleving, er wordt immers veel gesproken over beveiliging kwesties in
-het actuele nieuws. Zo is KPN onlangs wederom weer gehackt en dit keer door een 17
+het nieuws. Zo is KPN onlangs wederom weer gehackt en dit keer door een 17
 jarige jongen of
 er worden weer allerei persoonlijke gegevens en/of logingegevens verspreid via het
 internet.
 In dit verslag wordt besproken hoe de beveiliging is gesteld met een
 softwareapplicatie genaamd OpenRemote. OpenRemote is een applicatie die
 bedoeld om thuis een (eigen) domotica systeem op te zetten. Hoewel er wel een
-mogelijkheid van beperkte beveiliging aanwezig is, wordt er gekeken naar betere
-alternatieve om dit product te beveiligen en later uit te breiden. Het zou een
+Hoewel de mogelijkheid bestaat om een vorm van beveiling aan te zetten is deze
+erg beperkt. Daarom wordt er gekeken naar betere
+alternatieven om dit product te beveiligen en later uit te breiden. Het zou een
 nare ervaring zijn als ineens je buren bijvoorbeeld je lampen in jouw huis aan en uit
 kunnen doen.
 
 In dit verslag worden bovenstaande punten besproken verdeeld in verschillende
-hoofdstukken, zoals onderandere probleemanalyse, methoden en technieken en resultaten.
+hoofdstukken, zoals onder andere probleemanalyse, methoden en technieken en resultaten.
 Tot slot eindigd dit verslag het met een conclusie en aanbevelingen.
 
 \newpage
