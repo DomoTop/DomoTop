@@ -450,8 +450,8 @@ risico's,  afspraken,  deadlines  en  een weekplanning.
 \newpage
 \section{Methoden en Technieken}
 
-Binnen het project zullen er een aantal methoden, technieken en tools
-gebruikt worden om het project tot een goed eind te brengen. Hier zullen de
+Binnen het project zijn er een aantal methoden, technieken en tools
+gebruikt worden om tot een goed eind te komen. Hier zullen de
 verschillende keuzes voor methoden, technieken en tools toegelicht worden.
 
 \subsection{Ontwikkelmethodiek}
@@ -460,7 +460,7 @@ moest een duidelijke voortgang kunnen laten zien door het project heen. De
 begeleider vanuit school moet goed op de hoogte gehouden kunnen worden van
 de voortgang evenals de bedrijfsbegeleider. SCRUM is, met de review
 momenten, hier een mooie techniek voor. Tevens is binnen het bedrijf veel
-kennis en expertise over SCRUM.
+kennis en expertise over SCRUM aanwezig.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -469,7 +469,7 @@ kennis en expertise over SCRUM.
   \caption{scrum}
 \end{figure}
 
-TASS heeft een interne website[2] opgezet, die Sensei genoemd wordt, waarin
+TASS heeft een interne website[2] opgezet, genaamd Sensei, waarin
 een grote bron aan informatie over SCRUM is opgenomen. Tevens zijn er een
 aantal personen binnen het bedrijf SCRUM-experts wat betekent dat vragen of
 problemen altijd beantwoord kunnen worden door een van de experts.
@@ -507,7 +507,7 @@ Om toch een centrale plaats te hebben waar alle verandering naartoe
 gestuurd te worden hebben wij ervoor gekozen om Github te gebruiken. Github
 is een online platform voor git-repositories, met een erg goede
 webinterface. In deze webinterface kan de code ingezien worden, issues
-worden aangemaakt en er is een wiki aanwezig.
+worden aangemaakt en is er een wiki aanwezig.
 
 \subsection{Documenten}
 
@@ -515,7 +515,7 @@ worden aangemaakt en er is een wiki aanwezig.
   \begin{center}
     \includegraphics[width=0.20\textwidth]{docs.pdf}
   \end{center}
-  \caption{Google Docs}
+  \caption{Google Documenten}
 \end{wrapfigure}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
@@ -523,26 +523,26 @@ snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
 meerdere mensen in een document te werken zonder conflicten te krijgen. Ook
 de SCRUM spreadsheets staan Google Documenten.
 
-Voor het afstudeerverslag is er voor \LaTeX  gekozen. Dit omdat het
+Voor het afstudeerverslag is er voor \LaTeX\space gekozen. Dit omdat het
 makkelijker is om de opmaak en uiterlijk te wijzigen en dit meer mogelijkheden
 biedt dan het meer beperkt Google Documenten. Ook bestond de wens bij studenten
-om meer ervaring op te doen met \LaTeX  en dit leek hen de de uitgelezen kans om
+om meer ervaring op te doen met \LaTeX\space en dit leek hen de de uitgelezen kans om
 dit te doen
 
 \subsection{Programmeertalen}
 De talen die gebruikt gaan worden liggen al vast aangezien er verder 
-gewerkt op een bestaand project. Voor de controller wordt gebruik gemaak van
+gewerkt wordt op een bestaand project. Voor de controller wordt gebruik gemaak van
 Java, evenals voor de composer. De verschillende applicaties maken gebruik
 van Java op Android en Objective-C op iOS.
 
 \newpage
 \subsection{Database}
-Er is gebruik gemaakt van RazorSQL[3], met dit programma is het mogelijk om
+Er is gebruik gemaakt van RazorSQL[3]. Met dit programma is het mogelijk om
 SQL queries te maken, typen en de testen via een grafische interface en dit
 alles werkt ook met de database die gebruikt wordt bij het DomoTop project,
 genaamd HSQLDB[4]. In deze database worden gegevens opgeslagen van de
-apparaten die zich aanmelden bij OpenRemote evenals de groepen komen in de
-database te staan.  RazorSQL is enkel een tool die gebruikt is bij het
+apparaten die zich aanmelden bij OpenRemote evenals de groepen.
+RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
 noodzakelijk.
 
@@ -555,14 +555,14 @@ noodzakelijk.
 \end{wrapfigure}
 
 Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
-is geschreven (net als de Controller van OpenRemote), volledig open-source,
-HSQLDB heeft een relatief weinig impact op het systeem en is multithreaded.
+is geschreven (net als de Controller van OpenRemote), volledig open-source is,
+relatief weinig impact heeft op het system en multithreaded is.
 HSQLDB is namelijk klein en gebruikt weinig bronnen. Tot slot voldoet
 HSQLDB aan alle eisen en beschikt over alle mogelijkheden die noodzakelijk
 zijn binnen het DomoTop project, denk hierbij aan tabellen aanmaken, rijen
 toevoegen, updaten, verwijderen en veel meer. Alternatieven van HSQLDB zijn
-niet in native Java code geschreven,  vraagt ook meer van het systeem qua
-bronnen en zijn groter als HSQLDB. Sommige alternatieven zijn zelfs niet
+niet in native Java geschreven,  vraagt meer van het systeem qua
+bronnen en zijn groter dan HSQLDB. Sommige alternatieven zijn zelfs niet
 eens geschikt om te gebruiken in combinatie met een TomCat server.
 
 \subsection{Ontwikkelomgeving}
@@ -577,12 +577,11 @@ live te draaien op een tablet of een emulator.
   \caption{Eclipse}
 \end{wrapfigure}
 
-Bij het programmeren van de OpenRemote Controller wordt er gebruik gemaakt
+Bij het programmeren van de OpenRemote Controller wordt er ook gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
 en deze Controller is ook vanaf het begin af aan gestart in de Eclipse
 ontwikkeling omgeving. Omdat OpenRemote Controller al ontwikkeld is in
-Eclipse, wordt er ook gebruik gemaakt van Eclipse. In Eclipse wordt Ant
-Build gebruikt om de Controller te bouwen en compileren. Uiteindelijk krijg
+Eclipse, wordt er ook gebruik gemaakt van Eclipse. Er wordt gebruik gemaakt van Ant om de Controller te bouwen en compileren. Uiteindelijk krijg
 je één WAR bestand, deze WAR kan eenvoudig geïmporteerd worden in de TomCat
 Web Application Manager waarna de Controller gebruikt kan worden. TomCat is
 de webserver die OpenRemote al gebruikt om de OpenRemote Controller op te
@@ -592,7 +591,7 @@ ook al mee werkt.
 
 Tevens wordt er gebruik gemaakt van een Eclipse plugin genaamd Colorer[5].
 Met deze plugin is het mogelijk om syntax highlighting aan te zetten voor
-XML (HTML) documenten, maar ook CSS en JavaScript bestanden. Er is hiervoor
+XML/HTML documenten, maar ook CSS en JavaScript bestanden. Er is hiervoor
 gekozen, omdat Eclipse standaard geen highlighting heeft voor bovengenoemde
 type bestanden. Desalniettemin is het optioneel om de Eclipse Colorer
 plugin te gebruiken, het is enkel gekozen voor gemaks doeleinden.
@@ -621,15 +620,15 @@ exact wat de OpenRemote Controller is.
   \end{center}
   \caption{Bouncy Castle}
 \end{wrapfigure}
-Om in Java met encryptie en TLS te kunnen werken in native Java code wordt
-er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
-Bouncy Castle is een bibliotheek die binnen het project onder andere
-gebruikt wordt om nieuwe certificaten te kunnen generen vanuit Java code
-alsmede een CSR bestand uit te lezen en deze gegevens gebruiken om een
-nieuw certificaat te onderteken door middel van een CA. Ook het gebruikte
-CA certificaat wordt aangemaakt door middel van Bouncy Castle. Ook onder 
-Android wordt er gebruik gemaakt van de Bouncy Castle bibliotheek, echter 
-heet dat onder Android Spongy Castle, maar is exact dezelfde code.
+Om te kunnen werken met encryptie en TLS te kunnen werken in native Java code
+wordt er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
+Bouncy Castle is een bibliotheek die binnen het project onder andere gebruikt
+wordt om nieuwe certificaten te kunnen generen vanuit Java code alsmede een CSR
+bestand uit te lezen en deze gegevens gebruiken om een nieuw certificaat te
+onderteken door middel van een CA. Ook het gebruikte CA certificaat wordt
+aangemaakt door middel van Bouncy Castle. Ook onder Android wordt er gebruik
+gemaakt van de Bouncy Castle bibliotheek, echter heet dat onder Android Spongy
+Castle, maar is exact dezelfde code.
 
 \newpage
 \section{Uitvoering}
@@ -644,17 +643,18 @@ heet dat onder Android Spongy Castle, maar is exact dezelfde code.
 Het begin van de stage stond in het teken van onderzoek. Er was bij ons
 weinig kennis van het domotica veld, OpenRemote, PlugTop computers en
 beveiliging dus al deze velden moesten onderzocht worden. Het project begon
-met een globaal onderzoek naar het domotica veld en PlugTop computers. Alle
-onderzoeken zijn gedocumenteerd in verschillende documenten die te vinden
-zijn in de bijlages. Het volgende onderzoek wat is gehouden was naar het
+met een globaal onderzoek naar het domotica veld en PlugTop computers. Het
+volgende onderzoek wat is gehouden was naar het
 OpenRemote software pakket en eventuele alternatieven.
 
 Het laatste onderzoek wat is gedaan is naar de beveiligingstechnieken die
 bestaan. Voordat het onderzoek begon, is er een gesprek gehouden met Berry
-Borgers aangezien hij al veel kennis had over het beveilingsgebied. De
-keuzes die zijn gemaakt in het document is in overleg met Berry Borgers
-gebeurd. Dit onderzoek is gedocumenteerd in het Engels zodat het
-makkelijkst te delen is met de ontwikkelaars van OpenRemote.
+Borgers aangezien hij over veel kennis beschike met betrekking tot het
+beveilingsgebied. De keuzes
+die zijn gemaakt in het document is in overleg met Berry Borgers gebeurd. Dit
+onderzoek is gedocumenteerd in het Engels zodat het makkelijkst te delen is met
+de ontwikkelaars van OpenRemote.  Alle onderzoeken zijn gedocumenteerd in
+verschillende documenten die te vinden zijn in de bijlages.
 
 Na het onderzoek is er begonnen met het ontwikkelen van de gekozen oplossing:
 TLS te implementeren in OpenRemote om OpenRemote veiliger te maken. Dit gebeurd
@@ -667,7 +667,7 @@ wordt verleend om de OpenRemote Controller te gebruiken.
 Het is noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote
 applicatie van Android te modificeren. De aanpak was om allereerst alles op de
 server, waar ook de OpenRemote Controller draait, de certificaten te maken en te
-genereren. Het CSR bestand wordt aangemaakt \& ondertekend op de server en ook
+genereren. Het CSR bestand wordt aangemaakt en ondertekend op de server en ook
 het client certificaat wordt gegenereerd op de server. Omdat het belangrijk is
 dat alles juist functioneert, wordt er gebruik gemaakt van het openssl commando
 in de terminal onder Linux. De certificaten die gegenereerd worden, worden
@@ -679,10 +679,10 @@ telkens opnieuw herstart hoefde te worden, is er gekozen om een eigen
 worden aan de truststore van TomCat en zolang de client certificaten ondertekend
 worden door hetzelfde CA certificaat is het mogelijk om de oorsprong van het
 client certificaat te achterhalen. Indien het client certificaat inderdaad
-getekend is ook de CA, die aanwezig is in de truststore van TomCat, vertrouwd
+getekend is door de CA, die aanwezig is in de truststore van TomCat, vertrouwd
 TomCat deze client en krijgt het apparaat toegang tot de OpenRemote Controller.
 
-Toen het bovenstaande allemaal nabehoren werkte, werd er verder gegaan met het
+Toen het bovenstaande allemaal naar behoren werkte, werd er verder gegaan met het
 optimaleren en verfijnen van de OpenRemote Android applicatie en OpenRemote
 Controller. In de Android applicatie is er gewerkt aan het automatisch sturen
 van CSR bestanden naar de Controller, tevens zoekt de Android applicatie
@@ -692,13 +692,13 @@ problemen.
 
 In de OpenRemote Controller is er gewerkt aan verschillende kleine
 verbeteringen, zoals client certificaten automatisch laten verwijderen uit zowel
-de Key Store als database bij het drukken op 'Reset devices' knop.  Maar ook
+de key store als database bij het drukken op 'Reset devices' knop.  Maar ook
 wordt de CA en database automatisch aangemaakt aan het begin dat de applicatie
-wordt geïnstalleerd.  Een apparaat kan nu ook vollledig verwijderd wordt uit het
+wordt ge\"installeerd.  Een apparaat kan nu ook volledig verwijderd wordt uit het
 systeem, vervolgens is het nu mogelijk om de authenticatie via Client
-certificate aan \& uit te zetten. 
+certificate aan en uit te zetten. 
 
-Wanneer er geen rechtstreeks toegang is tot het internet op de server van de
+Wanneer er geen rechtstreeks toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
 logingegevens van de Beehive server.  Er is daarom gekozen bij de login module
 gebruik te maken van de cache gegevens uit de database om de administrator te
@@ -718,7 +718,7 @@ deze termen wordt bedoeld dat aan het wachtwoord met een bepaalde random lijst
 met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
 toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
 'Pepper' en een random lijst van karakters die gegeneerd wordt via het SHA-512
-algoritme met een lengte van 32 bits die gebruikt wordt als 'Zout'. 
+algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
@@ -727,17 +727,18 @@ algoritme met een lengte van 32 bits die gebruikt wordt als 'Zout'.
   \caption{Het TomCat logo}
 \end{wrapfigure}
 
-Als de client certificaten niet meer gegeneerd mogen worden op de server,
-vanwege veiligheids redenen, immers ook de private key wordt op dat moment over
-de lijn gestuurd is het verstandig om zoveel mogelijk lokaal te doen. Om dit
-tot een goed einde te brengen is is het noodzakelijk
+De client certificaten worden niet meer gegenereerd op de server vanwege
+veiligheidsredenen. Als de certificaten overgestuurd worden, wordt namelijk ook
+de private key over de lijn gestuurd wat ervoor kan zorgen dat deze onderschept
+wordt. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
+voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
 dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
 worden en hoe het client certificaat vervolgens geïmporteerd kan worden in de
 keystore van Android. Op de server waar ook de OpenRemote Controller draait werd
 er gekeken hoe je een CA aanmaakt voor de TomCat server, hoe je client
 certification request files kan omzetten in normale client certificaten die
 ondertekend zijn door het CA certificaat. En hoe je de client certificaten
-vervolgens kan opslaan in één keystore op de server, zodat er op een langer
+vervolgens kan opslaan in \'e\'en keystore op de server, zodat er op een langer
 termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
 Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
 commando afgehandeld, later is deze code in zijn geheel omgeschreven in native Java code en
@@ -745,13 +746,13 @@ wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
 keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
-worden met de pin die aanwezig is op het Android apparaat, indien de pins van
+worden met de pin die aanwezig is op het Android apparaat, indien de pin van
 Android en de administrator panel overeenkomen, is er met zekerheid te zeggen
 dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke
 sleutel die aanwezig is in het client certificaat. Naast 'User management' heeft de
 administrator panel ook een tab genaamd 'Configuration'. In deze tab is het
 mogelijk om bepaalde instellingen te veranderen zoals of de authenticiteit of
-pin check aan- of uitgezetten.  De administrator panel is beveiligd door een
+pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
 gebruikersnaam en wachtwoord die overeen moet komen met een bestaand OpenRemote
 Designer account. Op deze manier is het administratie paneel enkel toegankelijk
 voor de administrator.
@@ -766,14 +767,14 @@ voor de administrator.
 Er was veel vraag vanuit de OpenRemote community om apparaten in groepen onder
 te kunnen brengen. Hier is dan ook gehoor aangegeven, hoewel het binnen het
 project al op de planning stond om deze mogelijkheid te implementeren. In de
-OpenRemote Composer (ookwel Modeler genoemd) is het nu mogelijk om groepen toe
+OpenRemote Composer (ook wel Modeler genoemd) is het nu mogelijk om groepen toe
 te voegen en vervolgens knoppen, sliders en switches te koppelen aan een groep. Vervolgens
 wordt het gegenereerde XML bestand uitgelezen in de OpenRemote Controller,
 waarna de lijst met groepen in de database wordt opgeslagen. Via de
 administrator panel is het mogelijk om apparaten te koppelen aan een bepaalde
 groep. Zodra de gebruiker van een apparaat op bijvoorbeeld een knop drukt,
-controlleert de OpenRemote Controller door middel van het client certificaat tot
-welke groep de client behoord om vervolgens te controlleren of deze groep ook
+controleert de OpenRemote Controller door middel van het client certificaat tot
+welke groep de client behoord om vervolgens te controleren of deze groep ook
 gekoppeld is aan de knop die ingedrukt was.  Tot slot is er een optie om groepen
 niet te verplichten, dit kan ingesteld worden via de 'Configuration' tab in de
 administrator panel. Als groepen niet verplicht zijn, dan heeft het apparaat
@@ -792,7 +793,7 @@ authenticatie vereist kan zijn.
 
 Zoals al eerder vermeld, wordt er in het project gewerkt met de SCRUM
 ontwikkeltechniek. Deze ontwikkeltechniek werkt met verschillende iteraties
-waar verschillende requirements afgerond worden. Na afloop van een iteratie
+waar verschillende eisen afgerond worden. Na afloop van een iteratie
 kunnen er veranderingen aangebracht worden in de lijst met eisen. Hier zal
 per iteratie besproken worden wat de eisen waren van van de desbetreffende
 iteratie en welke resultaten deze heeft opgeleverd.
@@ -801,7 +802,7 @@ iteratie en welke resultaten deze heeft opgeleverd.
 De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
 werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
 delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
-domotica hardware, plugtops en OpenRemote.
+domotica hardware, PlugTops en OpenRemote.
 
 \begin{table}[htpb]
   \caption{Eisen iteratie 1}
@@ -896,8 +897,8 @@ te authenticeren door middel van SSL Client Certificaten.
 Voor de Proof-of-Concept waren een aantal eisen. Als eerste moet de client
 een aanvraag kunnen doen bij de server voor een certificaat. Deze aanvraag
 moet in een lijstje te zien zijn waarna er een certificaat terug wordt
-gestuurd naar de client. Dit certificaat wordt gegenereerd op de server en
-Base64 geencodeerd en overgestuurd naar de client.
+gestuurd naar de client. Dit certificaat wordt gegenereerd op de server,n
+met Base64 geencodeerd en overgestuurd naar de client.
 
 De beheerder kan op de server een lijst met aanvragen zien evenals een
 lijst met gebruikers die daadwerkelijk een certificaat hebben. Na deze
@@ -919,8 +920,8 @@ Proof-of-Concept in het OpenRemote project.
 Er waren een aantal onderdelen die verbeterd moesten worden wanneer ze
 geimplementeerd zouden worden in het OpenRemote project. De beheerders
 interface was een onderdeel hiervan. Deze interface is verbeterd, hij is
-ontworpen (zie figuur ~\ref{fig:adminv1}) en er zijn acties aangekoppeld waarmee de client
-goedgekeurd kan worden.
+ontworpen (zie figuur ~\ref{fig:adminv1}) en er zijn acties aan gekoppeld 
+waarmee de client goedgekeurd kan worden.
 
 \begin{table}[htpb]
   \caption{Eisen iteratie 4}
@@ -1110,6 +1111,38 @@ rechten, en in het administrator paneel kan een groep toegewezen worden.
 Mocht er toch op een knop gedrukt worden op de android applicatie wordt er een
 melding getoond met daarin het bericht dat de gebruiker niet in de correcte
 groep zit. 
+
+\subsection{Iteratie 8}
+
+\begin{table}[htpb]
+  \caption{Eisen iteratie 8}
+  \begin{center}
+    \begin{tabular}{|| l ||}\hline
+        Eis                                                              \\\hline\hline
+        Als beheerder kan ik knoppen aan meerdere groepen toewijzen om zo\\
+        meer gebruikers er rechten toe te geven                          \\\hline
+        Als gebruiker wil ik de knoppen die ik niet aan kan sturen niet  \\ 
+        kunnen bedienen                                                  \\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+In deze sprint was het belangrijk om de groepen te breiden. In de modeler was
+het nog niet mogelijk om meerdere groepen te selecteren voor \'e\'en knop.
+Daarom is er in deze iteratie een nieuwe scherm ontworpen en ge\"implementeerd
+om makkelijk en gebruiksvriendelijk meerdere groepen te kunnen selecteren.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.6\textwidth,keepaspectratio]{groupselect.pdf}
+  \label{fig:groupselect}
+  \caption{Het groepenselecteerscherm}
+\end{figure}
+
+Ook is er in deze iteratie voor gezorgd dat de knoppen die niet aangestuurd
+mogen worden, op Android ook daadwerkelijk gedisabled worden. Dit betekent dat
+de knoppen donkergrijs worden gekleurd en niet meer in te drukken zijn.
+
 
 \newpage
 \section{Conclusies \& Aanbevelingen}
