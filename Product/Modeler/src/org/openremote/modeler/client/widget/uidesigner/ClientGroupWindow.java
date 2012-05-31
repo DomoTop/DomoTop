@@ -38,6 +38,7 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 
 import com.extjs.gxt.ui.client.event.Listener;
@@ -159,8 +160,10 @@ public class ClientGroupWindow extends Dialog {
     	  if(!contains(selectedGroups, group.getName())) {
     		  allGroupsBox.addItem(group.getName());
     	  }
-      }  
+      }
+      groupContainer1.add(new Label("All Groups"));
       groupContainer1.add(allGroupsBox);
+      
       
       
       
@@ -178,6 +181,7 @@ public class ClientGroupWindow extends Dialog {
     	  selectedGroupsBox.addItem(group.getName());
       }
       
+      groupContainer2.add(new Label("Selected Groups"));
       groupContainer2.add(selectedGroupsBox); 
       
       LayoutContainer groupContainer3 = new LayoutContainer();
