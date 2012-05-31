@@ -130,8 +130,16 @@
 													</TR>
 													</#if>
 												</TBODY>
-												</TABLE>			
+												</TABLE>												
 												<p><div style="text-align: center;"><a href="javascript:refreshPage();"><img src="image/refresh.png" alt="Refresh" align="middle"/></a></div></p>
+												<form id="dropUsersForm" action="admin.htm?method=dropClients" method="post">
+													<#if clients?exists>
+														<#assign drop_users=''>
+													<#else>
+															<#assign drop_users=' disabled'>														
+													</#if>
+													<input type="submit" value="Drop users" onClick="return confirm('You are about to drop all the users.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"${drop_users} /><br/><br/>
+												</form>
 											<#else>
 												<b><i><font color="#ee2222">To use this feature, please enable 'Authentication' in the configuration tab.</font></i></b>
 											</#if>
@@ -142,7 +150,7 @@
 							        	<table cellpadding="4" border="0">
 													<#list configurations as configuration>
 							           		<tr>
-								        			<td align="left">
+								        			<td align="left" width="220">
 								        				<b>${configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${configuration.configuration_information}</span></span></#if>
 								        			</td>
 								        			<td>
@@ -173,16 +181,58 @@
 												</table>
 											</form>
 											<br/><br/>
-											<hr noshade size="1">
-											<br/>
+											<form id="resetSettingsForm" action="admin.htm?method=resetSettings" method="post">
+												<input type="submit" value="Reset to default settings" onClick="return confirm('You are about to reset to the default settings.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
+											</form>
+											
+											<button type="button" id="advanced-button">Advanced Settings...</button>
+											
+											<div id="advanced">
+												<br/>
+								        <form id="saveAdvancedSettings" action="admin.htm?method=saveSettings" method="post">
+							        	<table cellpadding="4" border="0">
+													<#list advanced_configurations as advanced_configuration>
+							           		<tr>
+								        			<td align="left" width="220">
+								        				<b>${advanced_configuration.configuration_name?replace("_", " ")?capitalize}:</b> <#if advanced_configuration.configuration_information?has_content><span class="info"><img src="image/info_icon.png" alt=""/><span>${advanced_configuration.configuration_information}</span></span></#if>
+								        			</td>
+								        			<td>
+							        				<#if advanced_configuration.configuration_disabled>
+							        					<#assign disabled=' disabled'>
+							        				<#else>
+							        					<#assign disabled=''>			
+							        				</#if>								        				
+								        			<#if advanced_configuration.configuration_type == 'boolean'>
+								        				<#if advanced_configuration.configuration_value == 'true'>
+								        					<#assign checked=' checked'>
+								        				<#else>
+								        					<#assign checked=''>
+								        				</#if>
+								        				<input type="checkbox" name="${advanced_configuration.configuration_name}" value="true"${checked}${disabled} />								        					
+								        				<input type="hidden" name="${advanced_configuration.configuration_name}" value="false"${disabled} />		
+															<#else>
+																<input type="text" size="35" name="${advanced_configuration.configuration_name}" value="${advanced_configuration.configuration_value}"${disabled} />
+															</#if>
+															</td>
+														</tr>												
+							      			</#list>
+													<tr>
+														<td colspan="2" align="right">
+															<input type="submit" value="Save settings"/>
+														</td>
+													</tr>
+												</table>
+											</form>
+																	
 											<form id="caForm" action="admin.htm?method=setupCA" method="post">
-												<b>Reset all devices:</b> <br/><input type="submit" value="Reset devices" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/>
+												<input type="submit" value="Reset settings including CA*" onClick="return confirm('You are about remove all devices, meaning that all currently accepted devices will be invalid.\nAre you sure you want to continue?\n\nClick OK to continue or Cancel to abort.');"/><br/><br/>
+												* CA = <a target="_blank" href="http://en.wikipedia.org/wiki/Certificate_authority" title="Certificate Authority more information...">Certificate Authority</a>
 											</form>
 							      </div>				      
 							    </div>
 							  </div>
 							  <#if isPinCheck == 'true'>
-						  	<div id="popupPin">
+								<div id="popupPin">
 									<a id="popupPinClose">x</a>
 									<h1>Enter the pin</h1>							
 									<p id="pinArea">

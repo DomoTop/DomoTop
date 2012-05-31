@@ -88,12 +88,22 @@ public interface ConfigurationService
     * @return int value -1 or 0 is incorrect, 1 is action succeed
     */
    int emptyItem(String name);
-
+   /**
+    * Reset the configuration table to default settings
+    * 
+    * @return true is success else false
+    */
+   boolean resetConfigurations();   
    /**
     * Get all items (configurations values and names) from the database
     * @return resultSet with the result
     */
-   ResultSet getAllItems();
+   public ResultSet getConfigurationItems();
+   /**
+    * Get all advanced items (configurations values and names) from the database
+    * @return resultSet with the result
+    */
+   public ResultSet getAdvancedConfigurationItems();
    /**
     * Enable or disable the configuration item
     * @param name of the configuration item

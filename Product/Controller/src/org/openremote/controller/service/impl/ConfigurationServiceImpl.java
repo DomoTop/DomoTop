@@ -113,27 +113,53 @@ public class ConfigurationServiceImpl implements ConfigurationService
    }
    
    /**
-    * Get all items (configurations values and names) from the database
+    * Reset the configuration table to default settings
     * 
+    * @return true is success else false
+    * @see initCaPath()
+    */
+   @Override
+   public boolean resetConfigurations()
+   {
+      return database.resetConfigurationTables();  
+   }
+   
+   
+   /**
+    * Get all items (configurations values and names) from the database
     * @return resultSet with the result
     */
    @Override
-   public ResultSet getAllItems()
-   {
+   public ResultSet getConfigurationItems() {
       ResultSet result = null;
       if(database != null)
       {
          // Get all configuration except the password
          result = database.doSQL("SELECT * FROM configuration WHERE " +
-         		"configuration_name != 'composer_password' AND " +
-         		"configuration_name != 'session_timestamp' AND " +
-         		"configuration_name != 'salt' AND " +
-               "configuration_name != 'first_time_sync'");
+         		"configuration_name = 'authentication' OR " +
+         		"configuration_name = 'pin_check' OR " +
+         		"configuration_name = 'group_required'");
+      }      
+      return result;
+   }
+
+   /**
+    * Get all advanced items (configurations values and names) from the database
+    * @return resultSet with the result
+    */
+   @Override
+   public ResultSet getAdvancedConfigurationItems() {
+      ResultSet result = null;
+      if(database != null)
+      {
+         // Get all configuration except the password
+         result = database.doSQL("SELECT * FROM configuration WHERE " +
+               "configuration_name = 'ca_path' OR " +
+               "configuration_name = 'composer_username'");
       }      
       return result;
    }
    
-
    /**
     * Retrieve a configuration item
     *

@@ -238,7 +238,7 @@ public class DatabaseServiceImpl implements DatabaseService
    /**
     * Database initialization
     * 
-    * @return true is success else false
+    * @return boolean true is success else false
     */
    @Override
    public boolean databaseInit()
@@ -356,6 +356,23 @@ public class DatabaseServiceImpl implements DatabaseService
    }      
    
    /**
+    * Reset the database configuration table to default settings
+    * 
+    * @return boolean true if success else false
+    */
+   @Override
+   public boolean resetConfigurationTables()
+   {
+      boolean returnValue = false;
+      if(this.doUpdateSQL("TRUNCATE TABLE configuration") >= 1)
+      {
+         this.fillDatabase();
+         returnValue = true;
+      }
+      return returnValue;
+   }   
+   
+   /**
     * Get the number of rows of the result set (after a doSQL)
     * 
     * @see doSQL(String sql)
@@ -383,7 +400,7 @@ public class DatabaseServiceImpl implements DatabaseService
       }
       return numRows;
    }
-
+   
    /**
     * Get the last inserted ID (IDENTITY) of the last database query
     * 
