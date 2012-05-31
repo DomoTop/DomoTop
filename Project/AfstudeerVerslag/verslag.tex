@@ -83,19 +83,16 @@
 
 \thispagestyle{plain}
 
-\title{Afstudeerverslag}
+\title{\textbf{DomoTop} \\Afstudeerverslag}
 \author{Vincent Kriek \and Melroy van den Berg}
 
 \maketitle
 
 \begin{figure}[htpb]
    \begin{center}
-     \includegraphics[width=\textwidth]{voorkant.pdf}
+    \includegraphics[width=0.8\textwidth]{voorkant.pdf}
    \end{center}
 \end{figure}
-
-%\vspace*{-3cm}
-\vspace*{\fill}
 
 \begin{tabular}{|| l | l || l | l ||}\hline
    Document ID: & AFVSL-MV-21          &Project naam:     &DomoTop             \\\hline
@@ -106,6 +103,9 @@
                 &Vincent Kriek         &                  &                    \\\hline
    Printdatum:  &\insertdate           &Classificatie:    &Openbaar            \\\hline
 \end{tabular}
+
+%\vspace*{-3cm}
+\vspace*{\fill}
 
 \newpage
 
@@ -165,10 +165,11 @@ Eindhoven, Nederland\\
 \section*{Voorwoord}
 \addcontentsline{toc}{section}{Voorwoord}
 Domotica systemen nemen een steeds prominentere rol aan in de huidige
-samenleving. Denk bijvoorbeeld aan de Living Colors lampen van Philips, het
-KlikAanKlikUit systeem wat je voor twee tientjes bij de Blokker haalt en het
-nieuwe Toon van Eneco. Maar wat voor soort beveiliging zit er op zulke systemen?
-En wat voor beveiling zou het meest geschikt zijn? In onze stage hebben bekeken
+samenleving. Denk bijvoorbeeld aan de Living Colors lampen van
+Philips\textsuperscript{\texttrademark}, het
+KlikAanKlikUit\textsuperscript{\textregistered} systeem wat je voor twee tientjes bij de Blokker haalt en het
+nieuwe Toon\textsuperscript{\textregistered} van Eneco. Maar wat voor soort beveiliging zit er op zulke systemen?
+En wat voor beveiling zou het meest geschikt zijn? In onze stage hebben we bekeken
 hoe dit soort systemen het best beveiligd kunnen worden.
 
 In de presentatie kan niet alles getoond worden wat er is gedaan en bereikt
@@ -184,9 +185,9 @@ Berry Borgers, \'e\'en van onze technische begeleiders, hebben we een aantal keu
 gemaakt over hoe we het project aan zouden pakken. Het onderzoek wat hieraan
 vooraf ging heeft, samen met de stage, ons veel geleerd over beveiliging.
 
-Het beveiligen van OpenRemote was voor TASS tweeledig. Het is bedoeld als
+Het beveiligen van OpenRemote was voor TASS tweeledig. Ons project is bedoeld als
 demonstratieproject op beurzen en scholen. Hiermee is aan te tonen wat er
-allemaal mogelijk is op domotica gebied en welke rol beveiliging daar in speelt.
+allemaal mogelijk is op domotica gebied en welke rol beveiliging daarin speelt.
 Tevens was het een onderzoeksproject, om te kijken hoe een domoticasysteem
 het best beveiligd kan worden zonder in te leveren op het gebied van
 gebruiksvriendelijkheid.
@@ -208,7 +209,7 @@ de coachingsgesprekken en informatie over de eisen vanuit school.
 \section*{Samenvatting}
 \addcontentsline{toc}{section}{Samenvatting}
 Het software project genaamd OpenRemote is uitgebreid met een beter
-beveiligingssysteem dan er voorheen inzat. OpenRemote is een software
+beveiligingssysteem dan voorheen. OpenRemote is een software
 pakket om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
 een PlugTop computer om hierop de OpenRemote Controller te draaien, wat functioneert als
 zijnde een server. Vandaar de projectnaam DomoTop (Domotica PlugTop).
@@ -225,23 +226,32 @@ Borgers en Bas Burgers. Deze stageopdracht is gevonden via de school Avans Den
 Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
 Melroy van den Berg \& Vincent Kriek.
 
-\begin{figure}[htpb]
-   \begin{center}
-     \includegraphics[width=0.7\textwidth]{TopLevelDesignORSecurity.pdf}
-   \end{center}
-   \caption{Flowchart initial request}
-\end{figure}
+%\begin{figure}[htpb]
+%   \begin{center}
+%     \includegraphics[width=0.7\textwidth]{TopLevelDesignORSecurity.pdf}
+%   \end{center}
+%   \caption{Flowchart initial request}
+%\end{figure}
 
 TASS vond het belangrijk om OpenRemote software te beveiligen en een oplossing
 te vinden van een authenticatie mechanisme zonder gebruik te hoeven maken van
-een gebruikersnaam/wachtwoord. Tevens was het belangrijk dat er ervaring en
-onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
-gaat draaien. Tot slot was ook onderzoek nodig naar verschillende Domotica
-protocollen en verschillende manieren van beveiligen.  Hierdoor is er kennis en
+een gebruikersnaam/wachtwoord. OpenRemote is een software
+applicatie specifiek bedoeld voor een domotica systeem op te zetten. OpenRemote
+bestaat uit drie verschillende onderdelen: OpenRemote Moduler, OpenRemote
+Controller en tot slot de OpenRemote Client. Met de OpenRemote Moduler kan er een ontwerp
+gemaakt worden, via de Controller worden de commando's van de gebruiker
+afgehandeld. De OpenRemote Client, meestal een mobiel apparaat, stuurt
+commando's naar de controller.
+
+Verder was het belangrijk dat er ervaring en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
+draait. Tot slot was ook onderzoek nodig naar verschillende Domotica
+protocollen en verschillende manieren van beveiligen. Hierdoor is er kennis en
 ervaring opgedaan op gebied van onder andere domotica, Google Android, Embedded
 Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven met
-onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS,
-waarbij onderzoek naar gedaan is om het uiteindelijk te kunnen implementeren. 
+onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS (Secure Sockets Layer),
+waarbij onderzoek gedaan naar is.In dit onderzoek kwam naar voren dat SSL/TLS
+de beste manier was om OpenRemote te beveiligen, daarnaast is er onderzocht hoe
+SSL het beste ge\"implementeerd kon worden binnen het DomoTop project. 
 
 Op dit moment is OpenRemote beveiligd via client certificaten en kan de
 administrator via de OpenRemote administrator panel apparaten goed-/afkeuren. De
@@ -254,21 +264,20 @@ de administrator panel kan koppelen aan apparaten.
 \section{Inleiding}
 Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol is binnen
 de samenleving, er wordt immers veel gesproken over beveiliging kwesties in
-het nieuws. Zo is KPN onlangs wederom weer gehackt en dit keer door een 17
-jarige jongen of
+het nieuws. Zo is KPN gehackt en dit keer door een 17 jarige jongen of
 er worden weer allerei persoonlijke gegevens en/of logingegevens verspreid via het
 internet.
+
 In dit verslag wordt besproken hoe de beveiliging is gesteld met een
 softwareapplicatie genaamd OpenRemote. OpenRemote is een applicatie die
-bedoeld om thuis een (eigen) domotica systeem op te zetten. Hoewel er wel een
-Hoewel de mogelijkheid bestaat om een vorm van beveiling aan te zetten is deze
-erg beperkt. Daarom wordt er gekeken naar betere
-alternatieven om dit product te beveiligen en later uit te breiden. Het zou een
-nare ervaring zijn als ineens je buren bijvoorbeeld je lampen in jouw huis aan en uit
-kunnen doen.
+bedoeld om thuis een (eigen) domotica systeem op te zetten. Hoewel de mogelijkheid 
+bestaat om een vorm van beveiling aan te zetten is deze erg beperkt. Daarom wordt er gekeken naar betere
+alternatieven om dit product te beveiligen en later uit te breiden. Het zou
+immers een nare ervaring zijn als iemand, je buren bijvoorbeeld, ineens de lampen in jouw huis aan en uit
+kunnen doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie.
 
-In dit verslag worden bovenstaande punten besproken verdeeld in verschillende
-hoofdstukken, zoals onder andere probleemanalyse, methoden en technieken en resultaten.
+Verder word er in dit verslag belangrijke hoofdstukken besproken zoals onder andere
+plan van aanpak, probleemanalyse en methoden \& technieken.
 Tot slot eindigd dit verslag het met een conclusie en aanbevelingen.
 
 \newpage
@@ -285,22 +294,22 @@ onder de vleugels van moederbedrijf Total Specific Solutions (TSS).
   \caption{TASS Eindhoven}
 \end{wrapfigure}
 
-TASS is een detacheerder wat inhoudt dat hun personeel werkzaam is bij
+TASS is een detacheringsbedrijf wat betekent dat het personeel werkzaam is bij
 andere bedrijven. Zeker gezien hun geschiedenis heeft TASS nog een goede
-relatie met vorig moederbedrijf Philips en werkt dus ook veel met Philips
+relatie met het vroegere moederbedrijf Philips en werkt dus ook veel met Philips
 samen. Andere bedrijven waar veel mee wordt samengewerkt zijn TomTom, ASML
 en Bosch.
 
 Buiten het detacheren heeft TASS ook een aantal projecten intern lopen. Het
 grootste en meest bekende project is het uCAN[1] project. Dit project
-focust zich op het inzichtelijk maken van sensorgegevens uit auto's. Het
+focust zich op het inzichtelijk maken van sensorgegevens uit auto's. uCan
 leest de CAN-Bus uit en zendt de informatie door naar een server in de
 cloud.
 
 Binnen TASS is het grootste deel van het personeel gedetacheerd bij andere
 bedrijven. Deze medewerkers krijgen allemaal een people manager toegewezen.
 Deze people manager zorgt voor de relatie tussen TASS en de medewerker evenals
-eventuele problemen tussen de medewerker en het bedrijf waar deze
+het helpen van oplossen van eventuele problemen tussen de medewerker en het bedrijf waar deze
 gedetacheerd zit.
 
 De plek waar de medewerker gedetacheerd is geregeld door de account
@@ -315,39 +324,33 @@ people manager zal de afstudeerders begeleiden op projectmatig vlak,
 functioneren als Project Owner en eventueel antwoord geven op technische
 vragen.
 
-Twee wekelijks zal er een review punt komen waar de people manager
+Tweewekelijks zal er een review punt komen waar de people manager
 samenkomt met de afstudeerder om de voortgang en problemen te bespreken.
-Tevens zal daar besproken en getoond worden wat voor producten er deze week
-opgelevererd zijn. Hierna zullen ook de taken van de volgende twee weken
-bepaald worden en wordt er gekeken of daar haken en ogen aan zitten.
+Tevens zal daar besproken en getoond worden wat voor producten er in die twee weken
+opgeleverd zijn. Hierna zullen ook de taken van de komende twee weken
+bepaald worden.
 
 Buiten de People Manager krijgen de afstudeerders ook een technische
-begeleider toegewezen. Onze hoofd technische begeleider heet Bas Burgers,
+begeleider toegewezen. De hoofd technische begeleider heet Bas Burgers,
 maar ook Berry Borgers is erg ge\"interesseerd is het DomoTop project en hij
 wilt graag de tweede technische begeleider zijn. De people manager is
 niet meer dagelijks bezig met technische ontwikkeling en kan op dat vlak
-eventueel achter lopen. De technische begeleider zal een
+eventueel achter lopen. Bas Burgers is een gedatcheerde medewerker, die zich nog
+dagelijks bezighoudt met de techniek.
 gedetacheerde medewerker zijn die nog wel dagelijks bezig is met techniek.
 Deze technische begeleider zal zich dan ook niet bezig houden met de
 project management zaken maar vooral met de technische problemen of vragen
 waar tegenaan gelopen wordt.
-
-\begin{wrapfigure}{l}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{openremote.pdf}
-  \end{center}
-  \caption{OpenRemote logo}
-\end{wrapfigure}
 
 De klant zal in dit project vertegenwoordigd worden door de People Manager
 Gerben Blom. Dit zal in dit project niet de enige klant zijn, ook de
 ontwikkelaars en gebruikers van het OpenRemote project de rol van klant
 fungeren. Dit betekent dat de documentatie van het project hierop aangepast
 moet worden, er zal moeten worden gedocumenteerd in het Engels.  
-Wij zouden graag zien dat de uitbreiding opgenomen zullen worden in OpenRemote
-en daarvoor moet het project aan de standaarden voldoen die OpenRemote stelt. We zullen
-verantwoording over de keuzes moeten afleggen aan de ontwikkelaars van
-OpenRemote. Tevens kunnen de ontwikkelaars van OpenRemote ons helpen en begeleiden
+Het eindresultaat wordt gestuurd naar OpenRemote om op deze wijze de beveiliging
+te verbeteren van OpenRemote, daarom moet het project aan de standaarden voldoen die OpenRemote stelt. 
+De keuze moeten verantwoord kunnen worden richting de ontwikkelaars van
+OpenRemote. Tevens kunnen de ontwikkelaars van OpenRemote het DomoTop project helpen en begeleiden
 in het proces en dienen als begeleider in het project.
 
 Tot slot zijn de afdelingen HR en ICT beheer betrokken met het project. Bij
@@ -1236,7 +1239,8 @@ TomCat.
 
 \newpage
 \section{Bronnen}
-[Wordt nog bijgewerkt]
+
+http://tweakers.net/nieuws/80916/politie-arresteert-zeventienjarige-verdachte-kpn-hack.html
 
 \newpage
 \section{Bijlagen}
