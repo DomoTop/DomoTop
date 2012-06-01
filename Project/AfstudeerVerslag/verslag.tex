@@ -633,92 +633,85 @@ Castle, maar is exact dezelfde code.
 \newpage
 \section{Uitvoering}
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.50\textwidth]{dreamplug.pdf}
-  \end{center}
-  \caption{Een PlugTop computer}
-\end{wrapfigure}
-
-Het begin van de stage stond in het teken van onderzoek. Er was bij ons
-weinig kennis van het domotica veld, OpenRemote, PlugTop computers en
-beveiliging dus al deze velden moesten onderzocht worden. Het project begon
+Het begin van de stage stond in het teken van onderzoek. Er was bij het
+ontwikkelteam weinig kennis van het domotica veld, OpenRemote, PlugTop computers
+en beveiliging dus al deze velden moesten onderzocht worden. Het project begon
 met een globaal onderzoek naar het domotica veld en PlugTop computers. Het
-volgende onderzoek wat is gehouden was naar het
-OpenRemote software pakket en eventuele alternatieven.
+volgende onderzoek wat uitgevoerd was, was naar het OpenRemote software pakket en
+eventuele alternatieven.
 
-Het laatste onderzoek wat is gedaan is naar de beveiligingstechnieken die
-bestaan. Voordat het onderzoek begon, is er een gesprek gehouden met Berry
-Borgers aangezien hij over veel kennis beschike met betrekking tot het
-beveilingsgebied. De keuzes
-die zijn gemaakt in het document is in overleg met Berry Borgers gebeurd. Dit
-onderzoek is gedocumenteerd in het Engels zodat het makkelijkst te delen is met
-de ontwikkelaars van OpenRemote.  Alle onderzoeken zijn gedocumenteerd in
-verschillende documenten die te vinden zijn in de bijlages.
+Het laatste onderzoek is gedaan naar de beveiligingstechnieken die bestaan.
+Voordat het onderzoek begon, is er een gesprek gehouden met Berry Borgers
+aangezien hij over veel kennis beschikt met betrekking tot beveiling. De keuzes
+die zijn gemaakt in het document zijn in overleg met Berry Borgers gebeurd. Dit
+onderzoek is gedocumenteerd in het Engels zodat het te delen is met de
+ontwikkelaars van OpenRemote. Alle onderzoeken zijn  te vinden in de bijlages.
 
-Na het onderzoek is er begonnen met het ontwikkelen van de gekozen oplossing:
-TLS te implementeren in OpenRemote om OpenRemote veiliger te maken. Dit gebeurd
-door een apparaat een aanvraag laat doen bij de OpenRemote Controller, de
+Vervolgens is er begonnen met het ontwikkelen van de gekozen oplossing:
+TLS implementeren in OpenRemote om deze veiliger te maken. Dit gebeurt
+door een apparaat een aanvraag te laten doen bij de OpenRemote Controller. De
 OpenRemote Controller kan deze aanvraag goedkeuren en het apparaat ontvangt
 vervolgens het client certificaat. Dit client certificaat wordt vervolgens
 gebruikt in combinatie met een apparaat (zoals Android), waarna er toestemming
 wordt verleend om de OpenRemote Controller te gebruiken.
 
-Het is noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote
+Het was noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote
 applicatie van Android te modificeren. De aanpak was om allereerst alles op de
 server, waar ook de OpenRemote Controller draait, de certificaten te maken en te
 genereren. Het CSR bestand wordt aangemaakt en ondertekend op de server en ook
-het client certificaat wordt gegenereerd op de server. Omdat het belangrijk is
-dat alles juist functioneert, wordt er gebruik gemaakt van het openssl commando
-in de terminal onder Linux. De certificaten die gegenereerd worden, worden
-toegevoegd aan de truststore die TomCat gebruikt. Toen alles eenmaal werkte
-bleek al snel dat TomCat telkens moest worden herstart om de truststore opnieuw
-uit te kunnen lezen.\\ Om dat probleem op te lossen, zodat TomCat server niet
-telkens opnieuw herstart hoefde te worden, is er gekozen om een eigen
-'self-signed' CA te gebruiken. Hiervoor moet enkel het CA certificaat toegevoegd
-worden aan de truststore van TomCat en zolang de client certificaten ondertekend
-worden door hetzelfde CA certificaat is het mogelijk om de oorsprong van het
-client certificaat te achterhalen. Indien het client certificaat inderdaad
-getekend is door de CA, die aanwezig is in de truststore van TomCat, vertrouwd
-TomCat deze client en krijgt het apparaat toegang tot de OpenRemote Controller.
+het client certificaat wordt gegenereerd op de server. Om dit mogelijk maken
+wordt gebruik gemaakt van het openssl commando onder Linux.  De certificaten die
+gegenereerd worden, worden toegevoegd aan de truststore van TomCat. Echter bleek
+snel dat TomCat geherstart moest worden om de truststore opnieuw uit te 
+kunnen lezen. Dit betekent dat als er een nieuwe client aangemeld wordt, TomCat
+geherstart moest worden.
+\\ Om dat probleem op te lossen, zodat TomCat server niet
+telkens opnieuw herstart hoefde te worden, is gekozen om een eigen
+'self-signed' CA te gebruiken. Op deze manier hoeft alleen het certificaat van
+de CA toegevoegd te worden aan de truststore van TomCat.  Zolang de client
+certificaten ondertekend zijn door een CA certificaat uit de
+truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
+gebruik maken van de OpenRemote Controller.
 
-Toen het bovenstaande allemaal naar behoren werkte, werd er verder gegaan met het
-optimaleren en verfijnen van de OpenRemote Android applicatie en OpenRemote
+Toen het bovenstaande naar behoren werkte, is er verder gegaan met het
+optimaliseren en verfijnen van de OpenRemote Android applicatie en OpenRemote
 Controller. In de Android applicatie is er gewerkt aan het automatisch sturen
-van CSR bestanden naar de Controller, tevens zoekt de Android applicatie
+van CSR bestanden naar de Controller. Tevens zoekt de Android applicatie
 automatisch naar het client certificaat zodra er gedrukt wordt op 'Done'. Tot
 slot zijn er verschillende bugs opgelost, waaronder enkele stabiliteits
 problemen.
 
+%Dit is meer Resultaten, moet technischer
 In de OpenRemote Controller is er gewerkt aan verschillende kleine
 verbeteringen, zoals client certificaten automatisch laten verwijderen uit zowel
-de key store als database bij het drukken op 'Reset devices' knop.  Maar ook
+de key store als database bij het drukken op de 'Reset devices' knop. Maar ook
 wordt de CA en database automatisch aangemaakt aan het begin dat de applicatie
 wordt ge\"installeerd.  Een apparaat kan nu ook volledig verwijderd wordt uit het
 systeem, vervolgens is het nu mogelijk om de authenticatie via Client
 certificate aan en uit te zetten. 
 
+%Nooit uitgelegd dat het zo werkt
 Wanneer er geen rechtstreeks toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
-logingegevens van de Beehive server.  Er is daarom gekozen bij de login module
+logingegevens van de Beehive server. Er is daarom gekozen bij de login module
 gebruik te maken van de cache gegevens uit de database om de administrator te
 kunnen valideren.
 
 Het is van groot belang dat deze gegevens veilig worden opgeslagen. Daarom is er
 gekozen voor het opslaan van het wachtwoord in SHA512 (behoord tot de SHA-2
-familie) tevens bij de HTTP sessie id  wordt er gebruik gemaakt van het SHA512
-beveiligde hash algoritme, voorheen was dit MD5 echter is een MD5 hash relatief
+familie). Ook wordt bij de HTTP sessie id  wordt er gebruik gemaakt van het SHA512
+hash algoritme. Voorheen was dit MD5 echter is een MD5 hash relatief
 eenvoudig te kraken via brute-force en/of rainbow table. Het voordeel van SHA512
-is dat het gebruik maakt van 64-byte (512 bits) woord in tegenstelling tot 128
+is dat het gebruik maakt van 512 bits woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
 
-Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt
-er aangeraden om gebruik te maken van 'Pepper \& Salt' oftewel peper en zout. Met
-deze termen wordt bedoeld dat aan het wachtwoord met een bepaalde random lijst
-met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
-toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
-'Pepper' en een random lijst van karakters die gegeneerd wordt via het SHA-512
-algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
+Er is gebruik gemaak van een "Pepper \& Salt". Met deze termen wordt bedoeld dat
+aan het wachtwoord met een bepaalde random lijst met karakters wordt uitgebreid
+(Salt) en een geheime constante (Pepper) wordt toegevoegd. Er is gekozen om een
+systeem constante te gebruiken als zijnde 'Pepper' en een random lijst van
+karakters die gegeneerd wordt via het SHA-512 algoritme met een lengte van 32
+bits die gebruikt wordt als 'Salt'. Deze methode zorgt ervoor dat wachtwoorden
+lastiger te achterhalen zijn. 
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
@@ -727,59 +720,62 @@ algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'.
   \caption{Het TomCat logo}
 \end{wrapfigure}
 
+%UITLEG, HOE GEBEURD DIT?
 De client certificaten worden niet meer gegenereerd op de server vanwege
-veiligheidsredenen. Als de certificaten overgestuurd worden, wordt namelijk ook
-de private key over de lijn gestuurd wat ervoor kan zorgen dat deze onderschept
-wordt. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
+veiligheidsredenen. Als de certificaten overgestuurd worden, wordt ook
+de private key over de lijn gestuurd wat kan resultering in onderschepping van
+deze sleutel. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
 voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
 dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
-worden en hoe het client certificaat vervolgens geïmporteerd kan worden in de
-keystore van Android. Op de server waar ook de OpenRemote Controller draait werd
-er gekeken hoe je een CA aanmaakt voor de TomCat server, hoe je client
-certification request files kan omzetten in normale client certificaten die
-ondertekend zijn door het CA certificaat. En hoe je de client certificaten
-vervolgens kan opslaan in \'e\'en keystore op de server, zodat er op een langer
+worden en hoe het client certificaat vervolgens ge\"importeerd kan worden in de
+keystore van Android. Op de server, waar ook de OpenRemote Controller draait, werd
+er gekeken hoe een CA aangemaakt kan worden voor de TomCat server, hoe client
+certification request files omgezet kunnen wordfen in normale client certificaten die
+ondertekend zijn door het CA certificaat. En hoe de client certificaten
+vervolgens opgeslagen kunnen worden in \'e\'en keystore op de server, zodat er op een langer
 termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
 Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
-commando afgehandeld, later is deze code in zijn geheel omgeschreven in native Java code en
+commando afgehandeld, later is deze code omgeschreven in native Java code en
 wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
-Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
-keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
-worden met de pin die aanwezig is op het Android apparaat, indien de pin van
-Android en de administrator panel overeenkomen, is er met zekerheid te zeggen
-dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke
-sleutel die aanwezig is in het client certificaat. Naast 'User management' heeft de
-administrator panel ook een tab genaamd 'Configuration'. In deze tab is het
-mogelijk om bepaalde instellingen te veranderen zoals of de authenticiteit of
-pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
-gebruikersnaam en wachtwoord die overeen moet komen met een bestaand OpenRemote
-Designer account. Op deze manier is het administratie paneel enkel toegankelijk
-voor de administrator.
+%Moet omhoog, is gemaakt voor SHA shizzle
+Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
+apparaten goed en/of af te keuren vanuit de 'administrator panel'. Er bestaat
+een pin die vergeleken kan worden met de pin die aanwezig is op het Android
+apparaat. Indien de pin van Android en de administrator panel overeenkomen, is
+er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze pin is
+gebaseerd op de publieke sleutel die ook aanwezig is in het client certificaat.
+Naast 'User management' heeft de administrator panel ook een tab
+'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
+veranderen zoals de authenticatie of pin check aan- of uit te zetten.  De
+administrator panel is beveiligd door een gebruikersnaam en wachtwoord die
+overeen moet komen met een bestaand OpenRemote Designer account. Op deze manier
+is het administratie paneel enkel toegankelijk voor de administrator.
 
 \begin{figure}[htpb]
    \begin{center}
      \includegraphics[width=0.6\textwidth]{userlist.pdf}
    \end{center}
+   \label{userlist}
    \caption{Gebruikers management lijst}
 \end{figure}
 
-Er was veel vraag vanuit de OpenRemote community om apparaten in groepen onder
-te kunnen brengen. Hier is dan ook gehoor aangegeven, hoewel het binnen het
-project al op de planning stond om deze mogelijkheid te implementeren. In de
-OpenRemote Composer (ook wel Modeler genoemd) is het nu mogelijk om groepen toe
-te voegen en vervolgens knoppen, sliders en switches te koppelen aan een groep. Vervolgens
-wordt het gegenereerde XML bestand uitgelezen in de OpenRemote Controller,
-waarna de lijst met groepen in de database wordt opgeslagen. Via de
-administrator panel is het mogelijk om apparaten te koppelen aan een bepaalde
-groep. Zodra de gebruiker van een apparaat op bijvoorbeeld een knop drukt,
-controleert de OpenRemote Controller door middel van het client certificaat tot
-welke groep de client behoord om vervolgens te controleren of deze groep ook
-gekoppeld is aan de knop die ingedrukt was.  Tot slot is er een optie om groepen
-niet te verplichten, dit kan ingesteld worden via de 'Configuration' tab in de
-administrator panel. Als groepen niet verplicht zijn, dan heeft het apparaat
-automatisch toegang tot alle mogelijke commando's naar de server, hoewel nog steeds
-authenticatie vereist kan zijn.
+Er is veel vraag vanuit de OpenRemote community om apparaten in groepen onder te
+kunnen brengen, hier is gehoor aangegeven. Binnen het project stond al op de
+planning om deze mogelijkheid te implementeren. In de OpenRemote Composer (ook
+wel Modeler genoemd) is het nu mogelijk om groepen toe te voegen en knoppen,
+sliders en switches te koppelen aan een groep. Vervolgens wordt het gegenereerde
+XML bestand uitgelezen in de OpenRemote Controller, waarna de lijst met groepen
+in de database wordt opgeslagen. Via de administrator panel is het mogelijk om
+apparaten te koppelen aan een bepaalde groep zoals te zien in figuur 13. Zodra
+de gebruiker van een apparaat op bijvoorbeeld een knop drukt, controleert de
+OpenRemote Controller door middel van het client certificaat tot welke groep de
+client behoord om vervolgens te controleren of deze groep ook gekoppeld is aan
+de knop die ingedrukt was. Tevens is er een optie om groepen niet te
+verplichten, dit kan ingesteld worden via de 'Configuration' tab in de
+administrator panel. Wanneer groepen niet verplicht zijn, heeft het apparaat
+automatisch toegang tot alle mogelijke commando's naar de server. Dit betekent
+echter niet dat authenticatie niet vereist is, dit kan nog steeds nodig zijn.
 
 \begin{figure}[htpb]
    \begin{center}
@@ -791,12 +787,7 @@ authenticatie vereist kan zijn.
 \newpage
 \section{Resultaten}
 
-Zoals al eerder vermeld, wordt er in het project gewerkt met de SCRUM
-ontwikkeltechniek. Deze ontwikkeltechniek werkt met verschillende iteraties
-waar verschillende eisen afgerond worden. Na afloop van een iteratie
-kunnen er veranderingen aangebracht worden in de lijst met eisen. Hier zal
-per iteratie besproken worden wat de eisen waren van van de desbetreffende
-iteratie en welke resultaten deze heeft opgeleverd.
+
 
 \subsection{Iteratie 1}
 De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
