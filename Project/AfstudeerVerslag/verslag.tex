@@ -371,8 +371,8 @@ Het open source domotica platform OpenRemote is een software pakket wat
 gebruikers in staat stelt een domotica systeem op te zetten in huis wat
 overweg kan met meerdere domotica protocollen. Dit systeem bestaat uit drie
 delen, ten eerste de OpenRemote controller. Deze controller is een stuk
-software wat draait op een computer binnen het huis wat door middel van
-domotica geautomatiseerd gaat worden.
+software dat draait op een computer binnen het huis dat door middel van
+domotica geautomatiseerd kan worden.
 
 De controller communiceert rechtstreeks met het tweede onderdeel van het
 OpenRemote pakket, namelijk de client applicatie. Er is een Android, iOS en
@@ -391,45 +391,45 @@ er een authenticatie en autorisatie mechanisme aan toe te voegen.
 
 \subsection{Probleemstelling}
 
-Het probleem wat opgelost moet worden is dat onbevoegden makkelijk toegang
+Het probleem dat opgelost moet worden is dat onbevoegden makkelijk toegang
 kunnen krijgen op een OpenRemote systeem. Voor dit probleem is de
 volgende doelstelling geformuleerd: Het implementeren van beveiliging in
 OpenRemote, zodat onbevoegden geen toegang kunnen krijgen op het systeem.
 
-Het eerste deelprobleem die te defini"eren is over deze probleemstelling is:
+Het eerste deelprobleem dat te defini"eren is over deze probleemstelling is:
 Welke beveiligingstechnieken zijn het best te gebruiken in deze situatie?
-Deze doelstelling zal onderzocht moeten worden en uiteindelijk moet het
-onderzoek ge\"implementeerd worden in OpenRemote.
+Deze doelstelling zal onderzocht worden en uiteindelijk ge\"implementeerd worden in OpenRemote.
 
-Het tweede deelprobleem wat opgelost moet worden is: De ontwikkelaars
+Het tweede deelprobleem dat opgelost moet worden is: De ontwikkelaars
 moeten de code van OpenRemote doorgronden om deze uiteindelijk uit te
 kunnen breiden. Voordat er aan de slag kan worden gaan met uitbreiding van
 OpenRemote moet de code eerst onderzocht worden.
 
 De volgende probleemstelling die opgelost moet worden binnen het project
-is: Geselecteerde gebruikers moet toestemming tot het systeem kunnen worden
+is: geselecteerde gebruikers moeten toestemming tot het systeem kunnen worden
 verleend. Deze probleemstelling gaat meer richting de autorisatie en over
 hoe men gebruikers toestemming kan geven tot een systeem.
 
-Het laatste probleem wat gedefinieerd kan worden is: Er moeten groepen gemaakt
-kunnen worden om rechten aan gebruikers te geven. Op deze manier kunnen knoppen
-alleen toegankelijk zijn voor een deel van de gebruikers. 
+Het laatste probleem dat gedefiniteerd is: Er kunnen groepen gemaakt worden om
+rechten aan gebruikers te geven, zodat knoppen alleen toegankelijk zijn voor een deel van de gebruikers. 
 
-Voor dit project zal SCRUM gebruikt worden als ontwikkelmethodiek, omdat het
-daarmee makkelijk is een lopend project door te ontwikkelen. Voor meer
-informatie zie het hoofdstuk “Methoden en Technieken”.
+Voor dit project is SCRUM gebruikt als ontwikkelmethodiek, mede omdat het een
+zeer flexibele ontwikkelmethode is voor het ontwikkelen van software. Zo is het
+mogelijk met SCRUM om zonder dat alle eisen bekend zijn meerdere tussen
+opleveringen te hebben, wat de kwaliteit ten goede komt. Voor meer
+informatie zie het hoofdstuk "Methoden en Technieken".
 
 \newpage
 \section{Plan van Aanpak}
 
-In dit hoofdstuk wordt er een samenvatting gegeven van het plan  van  aanpak
-, zie het volledige plan van aanpak in bijlage 1.  Het  doel  van  het
-project is  van  het  om  OpenRemote  te  beveiligen  en  dit  eventueel  te
-demonstreren.  De  opdracht  binnen  het  project  is   om   OpenRemote   te
-beveiligen. Op dit moment is er geen enkele manier van beveiliging  aanwezig
+In dit hoofdstuk wordt er een samenvatting gegeven van het plan van aanpak,
+zie voor het volledige plan van aanpak in bijlage 1. Het doel van het 
+project is OpenRemote  te  beveiligen  en  dit  eventueel  te
+demonstreren. Op dit moment is er geen enkele manier van beveiliging aanwezig
 in OpenRemote. Ook zal er gebruik gemaakt worden van een PlugTop, waarop  de
-OpenRemote server komt te draaien. Er zal gebruik gemaakt worden van  SCRUM,
-een ontwikkelmethode, wat flexibel is en resulteert in een product dat  veel
+OpenRemote server komt te draaien.
+
+Er zal gebruik gemaakt worden van  SCRUM, een ontwikkelmethode, wat flexibel is en resulteert in een product dat  veel
 meer aan de verwachtingen van de klant voldoet. Meer informatie  over  SCRUM
 kan gevonden worden in het hoofdstuk 'Methoden en technieken'.
 Er wordt git gebruikt als versiebeheer software en  dat  in  combinatie  met
@@ -438,11 +438,11 @@ gebruikt worden, waarin de documenten geschreven, opgeslagen worden.
 Al deze technieken komen ook verder aan bod in het  hoofdstuk  'Methoden  en
 technieken'.
 
-In de eerste weken wordt  er  onderzoek  gedaan  over  welke  technieken  er
-gebruikt gaan worden, welk platform,  PlugTop  en  protocollen  er  gebruikt
+In de eerste weken wordt  er  onderzoek  gedaan  naar  welke  technieken  er
+gebruikt gaan worden, welk platform,  PlugTop (een kleine computer server voor gebruik in huis / kantoor)  en  protocollen  er  gebruikt
 gaan worden. Daarna wordt de PlugTop opgezet samen met een  mobiel  apparaat
-(Android)  waarop  OpenRemote  draait.  Er  wordt  een  'Research  Security'
-document opgezet, hierin komt een conclusie te staan wat de aanpak wordt  om
+(Android)  waarop  OpenRemote  draait. Er wordt een 'Research  Security'
+document opgezet, hierin komt een conclusie te staan dat de aanpak wordt  om
 OpenRemote het beste  te  beveiligen.  Met  deze  informatie  wordt  er  een
 prototype ontwikkeld. Nadat er een volledig werkend  prototype  is,  kan  er
 gekeken worden of en waar dit product uitgebreid en verbeterd kan worden.
@@ -454,7 +454,7 @@ risico's,  afspraken,  deadlines  en  een weekplanning.
 \section{Methoden en Technieken}
 
 Binnen het project zijn er een aantal methoden, technieken en tools
-gebruikt worden om tot een goed eind te komen. Hier zullen de
+gebruikt worden om het project tot een goed einde te brengen. Hier zullen de
 verschillende keuzes voor methoden, technieken en tools toegelicht worden.
 
 \subsection{Ontwikkelmethodiek}
@@ -462,8 +462,11 @@ De eerste keuze was voor een ontwikkelmethodiek. De ontwikkelmethodiek
 moest een duidelijke voortgang kunnen laten zien door het project heen. De
 begeleider vanuit school moet goed op de hoogte gehouden kunnen worden van
 de voortgang evenals de bedrijfsbegeleider. SCRUM is, met de review
-momenten, hier een mooie techniek voor. Tevens is binnen het bedrijf veel
-kennis en expertise over SCRUM aanwezig.
+momenten, hier een geschikte techniek voor doordat er bij elke SCRUM meeting de
+resulaten worden besproken en er een notulen van gemaakt wordt. Deze notulen wordt
+overhandigd richting de schoolbegeleider. Tevens is binnen het bedrijf veel
+kennis en expertise over SCRUM aanwezig, dus kan de methodiek ondersteund worden
+vanuit het bedrijf.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -489,60 +492,63 @@ houden.
 
 \newpage
 \subsection{Versiebeheer}
-
-\begin{wrapfigure}{l}{0.3\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{git.pdf}
-  \end{center}
-  \caption{Git}
-\end{wrapfigure}
+%
+%\begin{wrapfigure}{l}{0.3\textwidth}
+%  \begin{center}
+%    \includegraphics[width=0.20\textwidth]{git.pdf}
+%  \end{center}
+%  \caption{Git}
+%\end{wrapfigure}
 De techniek gebruikt wordt om code en document versies bij te houden is
-git. Git is een “version control system” net als bijvoorbeeld subversion en
+git. Git is een "version control system" net als subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
 te houden en te kunnen springen in versies. Git heeft als grote voordeel
 dat het gedistribueerd is, wat betekent dat elke git clone (vergelijkbaar
-met een svn checkout) een volledige geschiedenis met zich mee heeft. Het is
+met een svn checkout) een volledige geschiedenis met zich mee brengt. Het is
 dus niet noodzakelijk een centrale server te gebruiken, al wordt dit vaak
 wel gedaan. Dat betekent ook dat elke git clone een backup is van de gehele
-geschiedenis.
+geschiedenis. Een ander voordeel van git is: dat er veranderingen opgeslagen
+kunnen worden (commit) en later pas gedeeld kan worden met andere mensen (push) dit in
+tegenstelling tot andere versie beheersystemen waarbij deze functinaliteit niet
+aanwezig is.
 
 Om toch een centrale plaats te hebben waar alle verandering naartoe
 gestuurd te worden hebben wij ervoor gekozen om Github te gebruiken. Github
 is een online platform voor git-repositories, met een erg goede
-webinterface. In deze webinterface kan de code ingezien worden, issues
-worden aangemaakt en is er een wiki aanwezig.
+webinterface. In deze webinterface kan men de code bekijken alsmede de git url
+gevonden worden en 'issues' aangemaakt worden.
 
 \subsection{Documenten}
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{docs.pdf}
-  \end{center}
-  \caption{Google Documenten}
-\end{wrapfigure}
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%  \begin{center}
+%    \includegraphics[width=0.20\textwidth]{docs.pdf}
+%  \end{center}
+%  \caption{Google Documenten}
+%\end{wrapfigure}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
 meerdere mensen in een document te werken zonder conflicten te krijgen. Ook
 de SCRUM spreadsheets staan Google Documenten.
 
-Voor het afstudeerverslag is er voor \LaTeX\space gekozen. Dit omdat het
-makkelijker is om de opmaak en uiterlijk te wijzigen en dit meer mogelijkheden
-biedt dan het meer beperkt Google Documenten. Ook bestond de wens bij studenten
+Voor het afstudeerverslag is er gekozen voor voor \LaTeX. Dit omdat het opmaken
+van een document veel mogelijkheden met zich mee bracht dan het meer
+beperkt Google Documents. Ook bestond de wens bij studenten
 om meer ervaring op te doen met \LaTeX\space en dit leek hen de de uitgelezen kans om
-dit te doen
+dit te doen.
 
 \subsection{Programmeertalen}
 De talen die gebruikt gaan worden liggen al vast aangezien er verder 
 gewerkt wordt op een bestaand project. Voor de controller wordt gebruik gemaak van
-Java, evenals voor de composer. De verschillende applicaties maken gebruik
+Java, evenals voor de composer en beehive. De verschillende applicaties maken gebruik
 van Java op Android en Objective-C op iOS.
 
 \newpage
 \subsection{Database}
 Er is gebruik gemaakt van RazorSQL[3]. Met dit programma is het mogelijk om
-SQL queries te maken, typen en de testen via een grafische interface en dit
-alles werkt ook met de database die gebruikt wordt bij het DomoTop project,
+SQL queries op te zetten, uit te voeren en te testen via een grafische
+interface. RazorSQL werkt ook met de database die gebruikt wordt bij het DomoTop project,
 genaamd HSQLDB[4]. In deze database worden gegevens opgeslagen van de
 apparaten die zich aanmelden bij OpenRemote evenals de groepen.
 RazorSQL is enkel een tool die gebruikt is bij het
@@ -585,7 +591,7 @@ van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
 en deze Controller is ook vanaf het begin af aan gestart in de Eclipse
 ontwikkeling omgeving. Omdat OpenRemote Controller al ontwikkeld is in
 Eclipse, wordt er ook gebruik gemaakt van Eclipse. Er wordt gebruik gemaakt van Ant om de Controller te bouwen en compileren. Uiteindelijk krijg
-je één WAR bestand, deze WAR kan eenvoudig geïmporteerd worden in de TomCat
+je \'e\'en WAR bestand, deze WAR kan eenvoudig ge\"importeerd worden in de TomCat
 Web Application Manager waarna de Controller gebruikt kan worden. TomCat is
 de webserver die OpenRemote al gebruikt om de OpenRemote Controller op te
 kunnen zetten. Het DomoTop project heeft daarom ook TomCat gebruikt, omdat
@@ -617,12 +623,12 @@ van een Model View Controller software architectuur. FreeMarker wordt ook
 vaak gebruikt voor servlet gebaseerde web applicatie ontwikkeling en dat is
 exact wat de OpenRemote Controller is.
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{bouncyjava.pdf}
-  \end{center}
-  \caption{Bouncy Castle}
-\end{wrapfigure}
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%  \begin{center}
+%    \includegraphics[width=0.55\textwidth]{bouncyjava.pdf}
+%  \end{center}
+%  \caption{Bouncy Castle}
+%\end{wrapfigure}
 Om te kunnen werken met encryptie en TLS te kunnen werken in native Java code
 wordt er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
 Bouncy Castle is een bibliotheek die binnen het project onder andere gebruikt
