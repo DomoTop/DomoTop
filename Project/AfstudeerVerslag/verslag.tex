@@ -495,13 +495,7 @@ houden.
 
 \newpage
 \subsection{Versiebeheer}
-%
-%\begin{wrapfigure}{l}{0.3\textwidth}
-%  \begin{center}
-%    \includegraphics[width=0.20\textwidth]{git.pdf}
-%  \end{center}
-%  \caption{Git}
-%\end{wrapfigure}
+
 De techniek gebruikt wordt om code en document versies bij te houden is
 git. Git is een "version control system" net als subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
@@ -513,7 +507,15 @@ wel gedaan. Dat betekent ook dat elke git clone een backup is van de gehele
 geschiedenis. Een ander voordeel van git is: dat er veranderingen opgeslagen
 kunnen worden (commit) en later pas gedeeld kan worden met andere mensen (push) dit in
 tegenstelling tot andere versie beheersystemen waarbij deze functinaliteit niet
-aanwezig is.
+aanwezig is. Zie de werking en belangrijke commando's van git in figuur \ref{git}.
+
+\begin{figure}[htpb]
+  \begin{center}
+    \includegraphics[width=0.50\textwidth]{git_diagram.pdf}
+  \end{center}
+  \caption{Werking git}
+  \label{git}
+\end{figure}
 
 Om toch een centrale plaats te hebben waar alle verandering naartoe
 gestuurd te worden hebben wij ervoor gekozen om Github te gebruiken. Github
@@ -522,13 +524,6 @@ webinterface. In deze webinterface kan men de code bekijken alsmede de git url
 gevonden worden en 'issues' aangemaakt worden.
 
 \subsection{Documenten}
-
-%\begin{wrapfigure}{r}{0.5\textwidth}
-%  \begin{center}
-%    \includegraphics[width=0.20\textwidth]{docs.pdf}
-%  \end{center}
-%  \caption{Google Documenten}
-%\end{wrapfigure}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
@@ -558,14 +553,6 @@ RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
 noodzakelijk.
 
-
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \begin{center}
-    \includegraphics[width=0.30\textwidth]{hsql.pdf}
-  \end{center}
-  \caption{HyperSQL}
-\end{wrapfigure}
-
 Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
 is geschreven (net als de Controller van OpenRemote), volledig open-source is,
 relatief weinig impact heeft op het system en multithreaded is.
@@ -581,13 +568,6 @@ eens geschikt om te gebruiken in combinatie met een TomCat server.
 Voor de Android applicatie wordt gebruik gemaakt van de Eclipse
 ontwikkelomgeving met de ADT plugin. Hiermee is het makkelijk om wijziging
 live te draaien op een tablet of een emulator.
-
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{eclipse.pdf}
-  \end{center}
-  \caption{Eclipse}
-\end{wrapfigure}
 
 Bij het programmeren van de OpenRemote Controller wordt er ook gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
@@ -731,13 +711,6 @@ met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
 toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
 'Pepper' en een random lijst van karakters die gegeneerd wordt via het SHA-512
 algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
-
-\begin{wrapfigure}{l}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.30\textwidth]{tomcat.pdf}
-  \end{center}
-  \caption{Het TomCat logo}
-\end{wrapfigure}
 
 De client certificaten worden niet meer gegenereerd op de server vanwege
 veiligheidsredenen. Als de certificaten overgestuurd worden, wordt namelijk ook
