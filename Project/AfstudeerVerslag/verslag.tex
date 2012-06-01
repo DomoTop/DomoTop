@@ -5,7 +5,7 @@
 \renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
 
-%Set page to 14cm
+%Set page width 
 \usepackage[textwidth=16cm]{geometry}
 
 %Used to improve the headers
@@ -42,6 +42,12 @@
 \makeatletter
 \let\insertdate\@date
 \makeatother
+
+%Stop word breaks
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
 
 %add version command, use \version to insert current version
 \newcommand{\version}{1.13}
@@ -736,7 +742,7 @@ vervolgens opgeslagen kunnen worden in \'e\'en keystore op de server, zodat er o
 termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
 Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
 commando afgehandeld, later is deze code omgeschreven in native Java code en
-wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
+wordt er gebruik gemaakt van de Bouncy Castle library.
 
 %Moet omhoog, is gemaakt voor SHA shizzle
 Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
@@ -787,13 +793,14 @@ echter niet dat authenticatie niet vereist is, dit kan nog steeds nodig zijn.
 \newpage
 \section{Resultaten}
 
-
+Tijdens de afstudeerperiode zijn er resultaten geboekt die vermeld zijn in dit
+hoofdstuk. Hier wordt per iteratie uitgelegd welke resultaten behaald
+zijn en aan welke eisen deze moest voldoen.
 
 \subsection{Iteratie 1}
-De eerste iteratie was het vooral belangrijk om onderzoek te doen in het
-werkveld waar in gewerkt zou gaan worden de komende weken. Er waren vier
-delen waar onderzoek naar gedaan is namelijk: Domotica protocollen,
-domotica hardware, PlugTops en OpenRemote.
+De eerste iteratie is onderzoek gedaan in het werkveld van de afstudeerstage.
+Er is onderzoek gaan naar vier delen: Domotica protocollen, domotica hardware,
+PlugTops en OpenRemote met alternatieven. 
 
 \begin{table}[htpb]
   \caption{Eisen iteratie 1}
@@ -808,29 +815,23 @@ domotica hardware, PlugTops en OpenRemote.
   \end{center}
 \end{table}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{x10.pdf}
-  \end{center}
-  \caption{X10}
-\end{wrapfigure}
+Het doel van deze iteratie is het scheppen van opheldering over de mogelijke
+keuzes. Er is onderzocht welke domotica protocollen er bestaan en welke het
+meest geschikt zijn voor toepassing in het project. Uit dit onderzoek is gekomen
+dat X10 de meest gebruikte, voordeligste en veelzijdigste protocol op de markt
+is. Ook is Z-Wave een mooi protocol aangezien het draadloos is. Echter is deze
+duurder en wordt deze minder goed ondersteund. Dit betekent dat het voor dit
+project minder geschikt is, dus de keuze is op X10 gevallen.  
 
-Na deze sprint zijn er een aantal documenten opgesteld die duidelijk maken
-welke keuzes gemaakt kunnen worden. De conclusie van het protocollen en
-hardware onderzoek was dat X10 een mooi en makkelijk te gebruiken protocol
-is. Z-Wave is een erg mooi draadloos protocol maar dit wordt minder goed
-ondersteund en is duurder waardoor het minder geschikt was voor dit
-project.
-
-Het PlugTop onderzoek heeft aangetoond dat de al binnen TASS gebruikte
-DreamPlug de meest geschikte PlugTop is voor dit project. De DreamPlug
-beschikt over veel aansluiting en is gunstig geprijsd.
+Het PlugTop onderzoek heeft aangetoond dat de binnen TASS gebruikte
+DreamPlug de meest geschikte PlugTop voor dit project is. De DreamPlug
+beschikt over een groot aantal aansluiting en is gunstig geprijsd. 
 
 In het onderzoek naar OpenRemote is gekeken naar de mogelijkheden van het
-OpenRemote in vergelijking met andere software pakketten. Hier is uit
+OpenRemote project in vergelijking met andere software pakketten. Hier is uit
 gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
-goed geregeld.
+goed geregeld. In bijlage X is het onderzoek te vinden.
 
 \subsection{Iteratie 2}
 \begin{table}[htpb]
@@ -857,10 +858,10 @@ onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
   \caption{Android}
 \end{wrapfigure}
 
-Met de test opstelling kon aan het eind van de iteratie een lamp
-aangestuurd worden met de OpenRemote controller, welke moest draaien op de
-DreamPlug, met de OpenRemote app om een lamp aan te zetten via een X10
-stopcontactmodule.
+Met de test opstelling is het mogelijk om een lamp
+aan te sturen met de OpenRemote controller, welke draait op de
+DreamPlug. Met de OpenRemote app is het mogelijk om met behulp van deze
+opstelling een lamp aan te zetten via een X10 stopcontactmodule.
 
 Het onderzoek over beveiliging concludeert dat de beste methode om
 OpenRemote te beveiligen het gebruiken van SSL certificaten is. Deze
@@ -868,7 +869,7 @@ certificaten kunnen door zowel de server als de client gebruikt worden om
 zich te authenticeren.
 
 \subsection{Iteratie 3}
-De derde iteratie stond in het teken van de Proof-of-Concept die laat zien
+De derde iteratie heeft in het teken gestaan van de Proof-of-Concept die laat zien
 dat het mogelijk is om met Android te verbinden naar een TomCat server en
 te authenticeren door middel van SSL Client Certificaten.
 
@@ -885,32 +886,30 @@ te authenticeren door middel van SSL Client Certificaten.
   \end{center}                                                            
 \end{table}                                                               
 
-Voor de Proof-of-Concept waren een aantal eisen. Als eerste moet de client
+Voor de Proof-of-Concept zijn een aantal eisen. Als eerste moet de client
 een aanvraag kunnen doen bij de server voor een certificaat. Deze aanvraag
 moet in een lijstje te zien zijn waarna er een certificaat terug wordt
-gestuurd naar de client. Dit certificaat wordt gegenereerd op de server,n
+gestuurd naar de client. Dit certificaat wordt gegenereerd op de server en
 met Base64 geencodeerd en overgestuurd naar de client.
 
 De beheerder kan op de server een lijst met aanvragen zien evenals een
-lijst met gebruikers die daadwerkelijk een certificaat hebben. Na deze
-sprint was het nog niet mogelijk om dynamisch gebruikers een certificaat te
-geven en werd dit automatisch gedaan. De lijst met clients die een aanvraag
-hebben gedaan zal dus dezelfde zijn als de clients met een certificaat.
+lijst met gebruikers die daadwerkelijk een certificaat hebben. Er is in deze
+sprint nog niet gewerkt aan het dynamisch genereren van certificaten voor
+gebruikers. Dit wordt in deze versie nog automatisch gedaan, in de veolgende
+iteraties zal deze functionaliteit toegevoegd worden.
 
-De telefoon van de gebruiker moest uniek identificeerbaar zijn. De server
-en client moest kunnen zien dat de client uniek identificeerbaar is. Er
-moest dus een manier gevonden worden waar de server aan kon zien welke
-client er verbonden is. Hiervoor is het ``serial'' attribuut van het client
-certificaat gebruikt. Dit attribuut is een oplopend nummer welke in elk
-certificaat aanwezig is.
+Er is ook voor gezorgd dat de gebruikers uniek identificeerbaar zijn. De server
+en client moet kunnen zien dat de client uniek identificeerbaar is. Er wordt
+geburik gemaakt van het 'serial' attribuut wat in elk certificaat aanwezig is.
+Dit attribuut is een oplopende integer.
 
 \subsection{Iteratie 4}
 In de daaropvolgende iteratie is er gewerkt aan het implementeren van de
 Proof-of-Concept in het OpenRemote project.
 
-Er waren een aantal onderdelen die verbeterd moesten worden wanneer ze
-geimplementeerd zouden worden in het OpenRemote project. De beheerders
-interface was een onderdeel hiervan. Deze interface is verbeterd, hij is
+Er zijn een aantal onderdelen verbeterd om ze te kunnen implementeren in het
+OpenRemote project. De beheerders
+interface is een onderdeel hiervan. Deze interface is verbeterd, hij is
 ontworpen (zie figuur ~\ref{fig:adminv1}) en er zijn acties aan gekoppeld 
 waarmee de client goedgekeurd kan worden.
 
@@ -945,8 +944,8 @@ laten zien.
   \label{fig:adminv1}
 \end{figure}
 
-De app stuurt sinds deze iteratie een CSR naar de server die de server
-gebruikt om een certificaat te maken. Op deze manier wordt de private
+De app stuurt sinds deze iteratie een CSR naar de server. De server
+gebruikt deze CSR om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
 
@@ -967,64 +966,65 @@ worden door kwaadwillenden.
   \end{center}
 \end{table}
 
-De vijfde iteratie kwam het probleem van platform ondersteuning om de hoek.
+In de vijfde iteratie is er voor gezorgd dat alle platformen ondersteund worden.
 OpenRemote is een cross platform applicatie. De Controller draait op TomCat
 welke in Java geschreven is. Dit betekent dat het draait op elk platform waar
-java draait. Echter hebben de wijzigingen die in de vorige iteratie zijn
-doorgevoergd er voor gezorgd dat het nu noodzakelijk is toegang te hebben tot
-het 'openssl' commando. In deze iteratie is er voor gezorgd dat dit niet meer
-nodig is. Voor alle cryptografische acties wordt nu gebruik gemaakt van Bouncy
-Castle library. 
+Java draait. Echter hebben de wijzigingen, die in de vorige iteratie zijn
+doorgevoert, er voor gezorgd dat het noodzakelijk is toegang te hebben tot
+het 'openssl' commando. In deze iteratie is gewerkt aan het vervangen van het
+'openssl' commando door de Bouncy Castle library, wat ervoor zorgt dat de
+cryptografische acties gebeuren door middel van Java, in plaats van een aanroep
+naar openssl. 
 
-In figuur ~\ref{fig:tls} is te zien wat er nu precies gebeurd als er een
+In figuur ~\ref{fig:tls} is te zien wat er gebeurd als er een
 aanvraag binnenkomt bij de Controller. De client doet in het begin een aanvraag
 voor toegang. Hiermee stuurt hij een CSR bestand op waar al zijn gegevens in staan,
 welke de Controller gebruikt om een certificaat te maken. 
 
 Als er een aanvraag binnen komt voegt de Controller de nieuwe client toe aan de
-database. De gegevens in de database worden uit de CSR gehaald. Als dit allemaal
-gedaan is, is de client te zien in de beheerdersinterface. Hij is nog niet
+database. De gegevens in de database worden uit de CSR gehaald. vervolgens is de
+client te zien in de beheerdersinterface. Hij is nog niet
 goedgekeurd en heeft dus ook geen toegang tot het systeem.
 
 Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de pin ingevoerd
-heeft, wordt het proces gestart om een certificaat te genereren. Als eerste
-wordt de private sleutel van de CA opgehaald. Elk certificaat dat gemaakt wordt,
+heeft, wordt het een certificaat gegenereert. Als eerste
+wordt de private key van de CA opgehaald. Elk certificaat dat gemaakt wordt,
 wordt ondertekend door de CA. Deze CA wordt ook geimporteerd in de OpenRemote
 Controller en op die manier weet OpenRemote dat hij de clients kan vertrouwen.
 
-Daarna wordt de private sleutel samen met de CSR gebruikt om een certificaat te
+Daarna wordt de private key samen met de CSR gebruikt om een certificaat te
 cree"eren. Tevens moet er een serienummer meegegeven. Dit serienummer is een
-uniek oplopend nummer waarmee de certificaten makkelijk te identificeren is. Het
-certificaat wat dan gemaakt is wordt het certificaat een in een keystore
-opgeslagen, klaar om opgehaald te worden door de mobiele applicatie en wordt de
+uniek oplopend nummer waarmee de certificaten te identificeren zijn. Het
+certificaat wat gemaakt is wordt deze in een keystore
+opgeslagen, klaar om opgehaald te worden door de mobiele applicatie. Tevens wordt de
 status van de client in de database aangepast.
 
-Nu kan de client met de applicatie een certificaat ophalen en met dit
+Nu kan de gebruiker met de applicatie een certificaat ophalen en met dit
 certificaat een veilige verbinding opzetten. Tevens kan TomCat het certificaat
-gebruiken om de gebruiker te identificeren. In de database staat de ``dname''
+gebruiken om de gebruiker te identificeren. In de database staat de 'dname'
 welke ook in het certificaat staat. Op het moment dat een client een verbinding
 maakt met TomCat, controleert TomCat de dname en kijkt in de database of deze
 gebruiker toegang heeft tot het systeem. Mocht dat niet het geval zijn, zal hij
 de gebruiker geen toegang tot het systeem geven.
 Zie bijlage 2.
 
-Om een aantal dingen te kunnen aanpassen als beheerder is er ook een
+Tevens is er een
 configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
 ingesteld zoals onder andere het pad waar de CA opgeslagen wordt en of de PIN
 verplicht gecontroleerd moet worden.
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=1\textwidth,keepaspectratio]{adminv2config.pdf}
+    \includegraphics[width=0.7\textwidth,keepaspectratio]{adminv2config.pdf}
   \label{fig:adminv2config}
   \caption{Het configuratiescherm}
 \end{figure}
 
 Dit configuratiescherm en het user management scherm zijn beide beveiligd met
 een gebruikersnaam en wachtwoordcombinatie. Deze combinatie is dezelfde als
-waarmee ingelogd wordt op \url{http://composer.openremote.org/}. Deze worden,
-wanneer er ingelogd wordt gecontrolleerd online of, als er geen
-internetverbinding is, lokaal met de cache die te vinden is in de database.
+waarmee ingelogd wordt op \url{http://composer.openremote.org/demo/}. 
+Deze worden gecontrolleerd online als er ingelogd wordt. Mocht er geen
+internetverbinding zijn wordt de cache uit de database gebruikt.
 
 \subsection{Iteratie 6}
 \begin{table}[htpb]
@@ -1039,7 +1039,7 @@ internetverbinding is, lokaal met de cache die te vinden is in de database.
         bij de OpenRemote Controller kunnen komen                        \\\hline
         Als ontwikkelaar wil ik documentatie hebben over de implementatie\\ 
         van het authenticatie systeem                                    \\\hline
-        Als ontwikkelaar wil ik een patch van de toevoegingen ten        \\
+        Als ontwikkelaar wil ik een patch hebben van de toevoegingen ten \\
         opzichte van een OpenRemote release                              \\\hline
     \end{tabular}
   \end{center}
@@ -1050,15 +1050,15 @@ stabiele release voor de ontwikkelaars van OpenRemote. Zoals eerder vermeld is
 er in dit project gewerkt aan het uitbreiden van een bestaand open source
 project namelijk OpenRemote. 
 
-Er is nu voor gezorgd dat het verbinden met SSL client certificaten verplicht
+Er is voor gezorgd dat het verbinden met SSL client certificaten verplicht
 gesteld kan worden. Dit betekent dat vanaf deze iteratie het alleen mogelijk is
-om te verbinden met de Controller met behulp van een bekent SSL Client
-Certificaat. Dit is gedaan met behulp van rollen in TomCat. Er wordt,
-als er verbinding wordt gemaakt, gecontroleert of het client certificaat bekend
+om te verbinden met de Controller met behulp van een bekend SSL Client
+Certificaat. Er wordt,
+als er verbinding is, gecontroleert of het client certificaat bekend
 is bij de Controller. Zo ja, dan is er toegang, anders niet.
 
-Ook is ervoor gezorgd dat de uitbreidingen op OpenRemote simpel uit te zetten
-zijn. Er is een checkbox bijgekomen in het configuratie paneel welke, als er
+Ook is ervoor gezorgd dat de uitbreidingen op OpenRemote uit te zetten
+zijn. Er is een checkbox bijgekomen in het configuratie paneel welke, als
 deze uitgevinkt wordt, er voor zorgt dat TomCat niet meer controleert op client
 certificaten. 
 
@@ -1066,12 +1066,14 @@ Tevens is er ook contact opgenomen met OpenRemote om de vorderingen te tonen.
 Dit is gedaan via een bericht op het forum van OpenRemote welke te vinden is via
 de volgende link 
 \url{http://openremote.org/pages/viewpage.action?pageId=19439381&focusedCommentId=19440285#comment-19440285}. 
+In de forum post is kort uitgelegd wat de veranderingen zijn waar aan gewerkt is
+en hoe dit getest is. 
  
 \subsection{Iteratie 7}
 
 In deze iteratie is er gewerkt aan het implementeren van groepen in OpenRemote.
-Deze functies houdt in dat je een groep toe kan wijzen aan een knop in de layout
-designer, en een telefoon/tablet aan een groep toe wijzen. Op het moment dat er
+Deze functies houdt in dat men een groep toe kan wijzen aan een knop in de layout
+designer, en een telefoon/tablet aan een groep toe kan wijzen. Op het moment dat er
 een device en een knop in dezelfde groep zitten, zal de actie die aan de knop
 hangt doorgevoerd worden.
 
@@ -1121,7 +1123,7 @@ groep zit.
 In deze sprint was het belangrijk om de groepen te breiden. In de modeler was
 het nog niet mogelijk om meerdere groepen te selecteren voor \'e\'en knop.
 Daarom is er in deze iteratie een nieuwe scherm ontworpen en ge\"implementeerd
-om makkelijk en gebruiksvriendelijk meerdere groepen te kunnen selecteren.
+om gebruiksvriendelijk meerdere groepen te kunnen selecteren.
 
 \begin{figure}[h!]
   \centering
@@ -1134,32 +1136,34 @@ Ook is er in deze iteratie voor gezorgd dat de knoppen die niet aangestuurd
 mogen worden, op Android ook daadwerkelijk gedisabled worden. Dit betekent dat
 de knoppen donkergrijs worden gekleurd en niet meer in te drukken zijn.
 
+%%
+%Screenshot android applicatie
+%%
 
 \newpage
 \section{Conclusies \& Aanbevelingen}
 Samenvattend is het DomoTop project succesvol afgerond. OpenRemote is nu beveiligd
 via SSL/TLS en client certificaten. Dit maakt het mogelijk om apparaten te
-authoriseren en te kiezen of deze apparaten al dan niet toegang krijgt tot de
+authoriseren en te kiezen of deze apparaten toegang krijgen tot de
 OpenRemote Controller. Tevens is aan het eind van het DomoTop project ook de
-mogelijkheid om groepen te gebruiken. Zo kunnen er groepen worden aangemaakt en
-gekoppeld worden aan knoppen, sliders en switches waarna je in de OpenRemote
-Controller backend de apparaten kan koppelen aan een bepaalde groep. Op deze
-manier wordt er ook gebruik gemaakt van autenticatie.
+mogelijkheid om groepen te gebruiken toegevoegd. Zo kunnen er groepen worden aangemaakt en
+gekoppeld worden aan knoppen, sliders en switches. Daarna kan men, in de OpenRemote
+Controller backend, de apparaten koppelen aan een bepaalde groep. Op deze
+manier wordt er ook gebruik gemaakt van authorisatie.
 
 Kortom het beveiligen van OpenRemote is gelukt en de gemaakte code kan weer
-levert worden aan de OpenRemote community, waarna ook de rest van de wereld
+opgelevert worden aan de OpenRemote community, waarna ook de rest van de wereld
 gebruik kan maken van de verbetering in beveiling die ontwikkelt zijn in dit
 project. 
 
 Binnen het DomoTop project zijn er punten die nog verbeterd kunnen worden. Het eerste waar
 aan gewerkt zou kunnen worden is het implementeren van de beveilings
-verbeteringen in het OpenRemote project in de iOS client. Op dit moment is er in
-de iOS client niks veranderd en kan deze dus niet worden gebruikt om de
-beveiligde OpenRemote controller aan te spreken.
+verbeteringen in het OpenRemote project in de iOS client. Op dit moment zijn de
+authenticatie en authorisatie verbeteringen nog niet ge\"implementeerd in de iOS
+client.
 
 Een goede uitbreiding aan dit project zou een Windows Phone 7 (WP7) client zijn.
-OpenRemote heeft op dit moment alleen een Android, web en iOS client. Een WP7
-client zou een mooie uitbreiding zijn op OpenRemote.
+OpenRemote heeft op dit moment alleen een Android, web en iOS client. 
 
 Op het moment dat er uitbreidingen of verbeteringen uitgevoerd gaan worden op
 dit project is het verstandig dat er kennis is van SSL/TLS. Er moet kennis zijn
@@ -1172,23 +1176,23 @@ TomCat.
 
 \begin{longtable}{|| l | l ||}\hline
     Begrip           & Omschrijving                                         \\\hline\hline
-    CAN-Bus          & CAN-bus is een standaard voor in voertuigen ontworpen\\
+    CAN-Bus          & CAN-bus is een standaard voor in voertuigen          \\
                      & om microcontrollers en apparaten met elkaar te       \\
-                     & communiceren zonder een host-computer.               \\\hline
+                     & laten communiceren zonder een host-computer.        \\\hline
     OpenRemote       & Een domotica pakket waarmee je meerdere domotica     \\
-                     & protocollen aan kan sturen                           \\\hline
+                     & protocollen aan kan sturen.                          \\\hline
     Android          & Een besturingssysteem voor mobiele telefoons en      \\
-                     & tablets gemaakt door Google                          \\\hline
+                     & tablets gemaakt door Google.                         \\\hline
     iOS              & Een besturingssysteem voor mobiele telefoons en      \\
-                     & tablets gemaakt door Apple                           \\\hline
-    GitHub           & Een online git hosting platform                      \\\hline
+                     & tablets gemaakt door Apple.                          \\\hline
+    GitHub           & Een online git hosting platform.                     \\\hline
     SCRUM            & Een ontwikkelmethodiek die werkt met meerdere        \\
-                     & iteraties om zo klantvriendelijk te kunnen           \\
+                     & iteraties om zo flexibel te kunnen                   \\
                      & ontwikkelen.                                         \\\hline
     PlugTop          & Een energiezuinige computer in het formaat van een   \\
                      & forse adapter.                                       \\\hline
-    Multithreaded    & Meer dan één thread, dit kan de efficient van de     \\
-                     & hardware tegoede komen.                              \\\hline
+    Multithreaded    & Meer dan \'e\'en thread, dit kan de efficientie van de   \\
+                     & hardware ten goede komen.                            \\\hline
     CA               & CA staat voor Certificate authority en is bedoeld om \\
                      & certificaat aanvragen goed te keuren en een          \\
                      & certificaten te beheren en te generen.               \\\hline
@@ -1210,7 +1214,7 @@ TomCat.
     KeyStore         & Een Java keystore (JKS) is een bestand waar          \\
                      & beveiligingscertificaten, aanvraag certificaten of   \\
                      & publieke sleutels worden opgeslagen                  \\
-                     & - wat gebruikt wordt met SSL encryptie.              \\\hline
+                     & wat gebruikt wordt met SSL encryptie.                \\\hline
     TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
                      & die zijn geaccepteerd om verbinding mee op te zetten.\\
                      & Of een CA ceritificaat waarbij de ondertekende       \\
@@ -1220,7 +1224,7 @@ TomCat.
                      & ondertekend is.                                      \\\hline
     Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
                      & techniek gebruikt kan worden. Deze applicatie laat   \\
-                     & alleen zien dat de techniek werkt.                   \\\hline
+                     & zien dat de techniek werkt.                   \\\hline
     CSR              & Certification Sign Request, met behulp van dit       \\
                      & bestand kan de CA een certificaat genereren.         \\\hline
 \end{longtable}
