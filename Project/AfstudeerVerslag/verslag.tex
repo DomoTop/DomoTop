@@ -226,22 +226,17 @@ Borgers en Bas Burgers. Deze stageopdracht is gevonden via de school Avans Den
 Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
 Melroy van den Berg \& Vincent Kriek.
 
-%\begin{figure}[htpb]
-%   \begin{center}
-%     \includegraphics[width=0.7\textwidth]{TopLevelDesignORSecurity.pdf}
-%   \end{center}
-%   \caption{Flowchart initial request}
-%\end{figure}
-
 TASS vond het belangrijk om OpenRemote software te beveiligen en een oplossing
 te vinden van een authenticatie mechanisme zonder gebruik te hoeven maken van
 een gebruikersnaam/wachtwoord. OpenRemote is een software
 applicatie specifiek bedoeld voor een domotica systeem op te zetten. OpenRemote
-bestaat uit drie verschillende onderdelen: OpenRemote Moduler, OpenRemote
-Controller en tot slot de OpenRemote Client. Met de OpenRemote Moduler kan er een ontwerp
+bestaat uit drie verschillende onderdelen: OpenRemote Modeler, OpenRemote
+Controller en tot slot de OpenRemote Client. Met de OpenRemote Modeler kan er een ontwerp
 gemaakt worden, via de Controller worden de commando's van de gebruiker
-afgehandeld. De OpenRemote Client, meestal een mobiel apparaat, stuurt
-commando's naar de controller.
+afgehandeld. Deze commando's zijn acties die gedaan moeten worden door de
+OpenRemote Controller, bijvoorbeeld 'licht aan' van een bepaalde lamp. De OpenRemote Client, meestal een mobiel apparaat, stuurt
+commando's naar de controller. Zie figuur \ref{global} voor een globale overzicht van de
+werking van OpenRemote.
 
 Verder was het belangrijk dat er ervaring en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
 draait. Tot slot was ook onderzoek nodig naar verschillende Domotica
@@ -259,6 +254,14 @@ administrator panel is een webbased applicatie en behoord tot de OpenRemote
 Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
 gekoppeld worden aan knoppen, sliders en/of switches, waarna je deze groepen in
 de administrator panel kan koppelen aan apparaten.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=\textwidth]{GlobalOR.pdf}
+   \end{center}
+   \caption{Globale werking van OpenRemote}
+   \label{global}
+\end{figure}
 
 \newpage
 \section{Inleiding}
