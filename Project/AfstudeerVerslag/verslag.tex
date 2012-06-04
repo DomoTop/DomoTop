@@ -180,7 +180,7 @@ hoe dit soort systemen het best beveiligd kunnen worden.
 
 In de presentatie kan niet alles getoond worden wat er is gedaan en bereikt
 tijdens de afstudeerstage. Om alles toch goed toe te lichten hebben we dit
-verslag opgesteld.  Onze docenten, gecommiteerde en andere ge"intresseerden
+verslag opgesteld.  Onze docenten, gecommiteerde en andere ge\"intresseerden
 kunnen in dit verslag nalezen hoe wij onze stage hebben aangepakt, welke
 methodes en technieken we gebruikt hebben en wat voor resultaten we hebben
 bereikt.
@@ -283,7 +283,8 @@ bedoeld om thuis een (eigen) domotica systeem op te zetten. Hoewel de mogelijkhe
 bestaat om een vorm van beveiling aan te zetten is deze erg beperkt. Daarom wordt er gekeken naar betere
 alternatieven om dit product te beveiligen en later uit te breiden. Het zou
 immers een nare ervaring zijn als iemand, je buren bijvoorbeeld, ineens de lampen in jouw huis aan en uit
-kunnen doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie.
+kunnen doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie
+en zie figuur \ref{global} voor de algemene werking van OpenRemote.
 
 Verder word er in dit verslag belangrijke hoofdstukken besproken zoals onder andere
 plan van aanpak, probleemanalyse en methoden \& technieken.
@@ -700,9 +701,17 @@ telkens opnieuw herstart hoefde te worden, is gekozen om een eigen
 de CA toegevoegd te worden aan de truststore van TomCat.  Zolang de client
 certificaten ondertekend zijn door een CA certificaat uit de
 truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
-gebruik maken van de OpenRemote Controller.
+gebruik maken van de OpenRemote Controller. Zie figuur \ref{init_controller} hoe
+de OpenRemote Controller ge\"installeerd wordt.
 
-UITLEG CA MET DIAGRAM
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[height=\textheight]{OpenremoteControllerAd.pdf}
+   \end{center}
+   \caption{Activity Diagram initalitatie OpenRemote Controller}
+   \label{init_controller}
+\end{figure}
+
 
 \begin{figure}[htpb]
    \begin{center}
@@ -767,10 +776,18 @@ gehaald aangezien de acties nu automatisch gebeuren. Zo wordt er automatisch een
 certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt. 
 
 \subsection{Controller}
-%Nooit uitgelegd dat het zo werkt
+De OpenRemote Controller heeft een administrator panel om de gebruikers/mobiele
+apparaten te kunnen beheren. De beheerder kan inloggen met zijn/haar
+inloggegevens van de Beehive server (Modeler account). Hierdoor zijn er geen
+extra login gegevens nodig die onthouden zouden moeten. Er wordt communicatie
+gelegd met de Beehive server, de login gegevens worden gestuurd naar de Behive server
+en vervolgens daar gecontrolleerd. De Beehive server geeft vervolgens een 'OK'
+of 'NOT ALLOWED' terug, waarna er met zekerheid te zeggen dat de login gegevens
+correct of incorrect zijn opgegeven.
+
 Wanneer er geen rechtstreeks toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
-logingegevens van de Beehive server. Er is daarom gekozen bij de login module
+login gegevens van de Beehive server. Er is daarom gekozen bij de login module
 gebruik te maken van de cache gegevens uit de database om de administrator te
 kunnen valideren.
 
@@ -1334,27 +1351,10 @@ TomCat.
 
 http://tweakers.net/nieuws/80916/politie-arresteert-zeventienjarige-verdachte-kpn-hack.html
 http://osteele.com/images/2008/481x455xgit-transport.png.pagespeed.ic.zXwVaRg5pO.png
-
-\newpage
-\section{Bijlagen}
-
-In dit hoofdstuk komen de bijlagen te staan. Elke bijlage is genummerd en
-dit nummer kan worden in het document als referentie.
-
-\subsection{Bijlage 1: Plan van Aanpak}
-
-\newpage
-
-\begin{landscape}
-\subsection{Bijlage 2: }
-\begin{figure}[h!]
-  \centering
-    \includegraphics[height=0.80\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
-  \label{fig:tls}
-  \caption{DomoTop Sequence Diagram - Afhandelen van een request via een TLS
-  capable OpenRemote Controller}
-\end{figure}
-\end{landscape}
+http://developer.android.com/reference/javax/net/ssl/package-summary.html
+http://developer.android.com/reference/java/security/KeyStore.html
+http://developer.android.com/reference/java/security/KeyPair.html
+http://stackoverflow.com/questions/2012497/accepting-a-certificate-for-https-on-android
 
 
 \newpage
@@ -1376,5 +1376,43 @@ dit nummer kan worden in het document als referentie.
     Aanbeveling            &                     &  X                   \\\hline
 \end{tabular}              
 
+\newpage
+\section{Bijlagen}
+
+In dit hoofdstuk komen de bijlagen te staan. Elke bijlage is genummerd en
+dit nummer kan worden in het document als referentie.
+
+\subsection{Bijlage 1: Plan van Aanpak}
+Het Plan van Aanpak document is toegevoegd aan dit afstudeerverslag.
+
+\newpage
+
+\begin{landscape}
+\subsection{Bijlage 2: }
+\begin{figure}[h!]
+  \centering
+    \includegraphics[height=0.80\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
+  \label{fig:tls}
+  \caption{DomoTop Sequence Diagram - Afhandelen van een request via een TLS
+  capable OpenRemote Controller}
+\end{figure}
+\end{landscape}
+
+\newpage
+
+\subsection{Bijlage 3: Onderzoeksdocument PlugTop}
+Het onderzoeksdocument PlugTop is bijgevoegd als bijlage aan het
+afstudeerverslag.
+
+\subsection{Bijlage 4: Onderzoeksdocument Beveiliging OpenRemote}
+Het onderzoeksdocument 'Research Security' is als toegevoegd aan dit document.
+
+\subsection{Bijlage 5: Onderzoeksdocument Domotica Protocollen}
+Het onderzoeksdocument Domotica Protocollen is als bijlage toegevoegd aan dit
+document.
+
+\subsection{Bijlage 6: Onderzoeksdocument OpenRemote}
+Het onderzoeksdocument OpenRemote is als bijlage toegevoegd aan dit
+afstudeerverslag.
 
 \end{document}
