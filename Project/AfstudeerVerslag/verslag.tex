@@ -718,22 +718,16 @@ truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
 gebruik maken van de OpenRemote Controller. Zie figuur \ref{init_controller} hoe
 de OpenRemote Controller ge\"installeerd wordt.
 
+\newpage
+
 \begin{figure}[htpb]
    \begin{center}
-     \includegraphics[height=\textheight]{OpenremoteControllerAd.pdf}
+     \includegraphics[height=0.84\textheight]{OpenremoteControllerAd.pdf}
    \end{center}
    \caption{Activity Diagram initalitatie OpenRemote Controller}
    \label{init_controller}
 \end{figure}
 
-
-\begin{figure}[htpb]
-   \begin{center}
-     \includegraphics[height=\textheight]{ssl_ad_2.pdf}
-   \end{center}
-   \caption{SSL workflow versie 2}
-   \label{ssl_ad_2}
-\end{figure}
 
 Het oversturen van de client certificaten met de private key van server naar
 client is een probleem. Mochten deze twee bestanden onderschept worden, kan een
@@ -744,6 +738,17 @@ van kan maken en deze op kan halen. Als een CSR of certificaat onderschept
 wordt, vormt dit geen probleem. Deze bestanden zijn public en mogen door
 iedereen bekeken worden. De workflow is dan ook aangepast zoals te zien in
 figuur \ref{ssl_ad_2}.
+
+\newpage
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[height=0.86\textheight]{ssl_ad_2.pdf}
+   \end{center}
+   \caption{SSL workflow versie 2}
+   \label{ssl_ad_2}
+\end{figure}
+
 
 De client controleert eerst of er een certificaat aanwezig is voor de
 desbetreffende server. Als deze aanwezig is, wordt het proces meteen gestopt en
