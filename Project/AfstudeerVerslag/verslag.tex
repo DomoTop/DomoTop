@@ -120,7 +120,7 @@ Alle rechten voorbehouden. Verveelvuldiging, geheel of gedeeltelijk, is
 niet toegestaan dan met schriftelijke toestemming van de
 auteursrechthebbende.
 All rights are reserved. Reproduction in whole or in part is prohibited
-without the written consent of the copyright owner.Dit document is
+without the written consent of the copyright owner. Dit document is
 gepubliceerd door:\\
 TASS BV\\
 Eindhoven, Nederland\\
@@ -172,15 +172,15 @@ Eindhoven, Nederland\\
 \newpage
 \section*{Voorwoord}
 \addcontentsline{toc}{section}{Voorwoord}
-Domotica systemen nemen een steeds prominentere rol aan in de huidige
+Domotica systemen nemen een steeds prominentere plaats in in de huidige
 samenleving. Denk bijvoorbeeld aan de Living Colors lampen van
 Philips\textsuperscript{\texttrademark}, het
-KlikAanKlikUit\textsuperscript{\textregistered} systeem wat je voor twee tientjes bij de Blokker haalt en het
+KlikAanKlikUit\textsuperscript{\textregistered} systeem dat je voor twee tientjes bij de Blokker haalt en het
 nieuwe Toon\textsuperscript{\textregistered} van Eneco. Maar wat voor soort beveiliging zit er op zulke systemen?
 En wat voor beveiling zou het meest geschikt zijn? In onze stage hebben we bekeken
 hoe dit soort systemen het best beveiligd kunnen worden.
 
-In de presentatie kan niet alles getoond worden wat er is gedaan en bereikt
+In de presentatie kan niet alles getoond worden dat er is gedaan en bereikt
 tijdens de afstudeerstage. Om alles toch goed toe te lichten hebben we dit
 verslag opgesteld.  Onze docenten, gecommiteerde en andere ge\"intresseerden
 kunnen in dit verslag nalezen hoe wij onze stage hebben aangepakt, welke
@@ -190,7 +190,7 @@ bereikt.
 Voordat we met de stage begonnen was onze kennis van beveiliging nog beperkt,
 maar tijdens onze stage hebben we veel geleerd over dit vakgebied. Samen met
 Berry Borgers, \'e\'en van onze technische begeleiders, hebben we een aantal keuzes
-gemaakt over hoe we het project aan zouden pakken. Het onderzoek wat hieraan
+gemaakt over hoe we het project aan zouden pakken. Het onderzoek dat hieraan
 vooraf ging heeft, samen met de stage, ons veel geleerd over beveiliging.
 
 Het beveiligen van OpenRemote was voor TASS tweeledig. Ons project is bedoeld als
@@ -202,8 +202,7 @@ gebruiksvriendelijkheid.
 
 We willen Gerben Blom bedanken voor alle begeleiding die we op projectmatig vlak
 gekregen hebben. Tevens willen we Berry Borger bedanken voor de technische
-beleiding, informatie en advies op security gebied. Tevens willen we Bas Burgers
-bedanken voor advies en begeleiding op technisch gebied. Ook willen we onze
+beleiding, informatie en advies op security gebied, alsmede Bas Burgers voor advies en begeleiding op technisch gebied. Ook willen we onze
 begeiding vanuit school bedanken, met dan in het bijzonder Peter Kailuhu voor
 de coachingsgesprekken en informatie over de eisen vanuit school.
 
@@ -219,31 +218,31 @@ de coachingsgesprekken en informatie over de eisen vanuit school.
 Het software project genaamd OpenRemote is uitgebreid met een beter
 beveiligingssysteem dan voorheen. OpenRemote is een software
 pakket om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
-een PlugTop computer om hierop de OpenRemote Controller te draaien, wat functioneert als
+een PlugTop computer om hierop de OpenRemote Controller te draaien, welke functioneert als
 zijnde een server. Vandaar de projectnaam DomoTop (Domotica PlugTop).
 De beveiligingtechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
-waarin het bijzonder gebruik wordt gemaakt van client certificaten om de
+waarin gebruik wordt gemaakt van client certificaten om de
 gebruikers/apparaten te authenticeren. Ook is er later in het DomoTop project
-voor gekozen om de mogelijkheid te geven om groepen aan te maken waardoor
-het het mogelijk is om apparaten te plaatsen in een specifieke groep. Hierdoor
+voor gekozen om de mogelijkheid te geven groepen aan te maken, waardoor
+het mogelijk is om apparaten te plaatsen in een specifieke groep. Hierdoor
 is het dus mogelijk om apparaten te autoriseren.
 
 Deze opdracht is afkomstig en bedacht door het bedrijf TASS. De opdracht wordt
 begeleid door de people manager Gerben Blom, technische begeleiders Berry
 Borgers en Bas Burgers. Deze stageopdracht is gevonden via de school Avans Den
-Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
+Bosch bij een bedrijvenbeurs te Rotterdam. De opdracht is aangenomen door
 Melroy van den Berg \& Vincent Kriek.
 
 TASS vond het belangrijk om OpenRemote software te beveiligen en een oplossing
 te vinden van een authenticatie mechanisme zonder gebruik te hoeven maken van
 een gebruikersnaam/wachtwoord. OpenRemote is een software
-applicatie specifiek bedoeld voor een domotica systeem op te zetten. OpenRemote
+applicatie, specifiek bedoeld om een domotica systeem op te zetten. OpenRemote
 bestaat uit drie verschillende onderdelen: OpenRemote Modeler, OpenRemote
 Controller en tot slot de OpenRemote Client. Met de OpenRemote Modeler kan er een ontwerp
-gemaakt worden, via de Controller worden de commando's van de gebruiker
+gemaakt worden. Via de Controller worden de commando's van de gebruiker
 afgehandeld. Deze commando's zijn acties die gedaan moeten worden door de
 OpenRemote Controller, bijvoorbeeld 'licht aan' van een bepaalde lamp. De OpenRemote Client, meestal een mobiel apparaat, stuurt
-commando's naar de controller. Zie figuur \ref{global} voor een globale overzicht van de
+commando's naar de controller. Zie figuur \ref{global} voor een globaal overzicht van de
 werking van OpenRemote.
 
 Verder was het belangrijk dat er ervaring en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
@@ -252,13 +251,13 @@ protocollen en verschillende manieren van beveiligen. Hierdoor is er kennis en
 ervaring opgedaan op gebied van onder andere domotica, Google Android, Embedded
 Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven met
 onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS (Secure Sockets Layer),
-waarbij onderzoek gedaan naar is.In dit onderzoek kwam naar voren dat SSL/TLS
+waar onderzoek naar gedaan is. In dit onderzoek kwam naar voren dat SSL/TLS
 de beste manier was om OpenRemote te beveiligen, daarnaast is er onderzocht hoe
 SSL het beste ge\"implementeerd kon worden binnen het DomoTop project. 
 
 Op dit moment is OpenRemote beveiligd via client certificaten en kan de
 administrator via de OpenRemote administrator panel apparaten goed-/afkeuren. De
-administrator panel is een webbased applicatie en behoord tot de OpenRemote
+administrator panel is een webbased applicatie en behoort tot de OpenRemote
 Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
 gekoppeld worden aan knoppen, sliders en/of switches, waarna je deze groepen in
 de administrator panel kan koppelen aan apparaten.
@@ -273,10 +272,10 @@ de administrator panel kan koppelen aan apparaten.
 
 \newpage
 \section{Inleiding}
-Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol is binnen
-de samenleving, er wordt immers veel gesproken over beveiliging kwesties in
-het nieuws. Zo is KPN gehackt en dit keer door een 17 jarige jongen of
-er worden weer allerei persoonlijke gegevens en/of logingegevens verspreid via het
+Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol krijgt binnen
+de samenleving, er wordt immers veel gesproken over beveiligingskwesties in
+het nieuws. Zo werd KPN gehackt, dit keer door een 17-jarige jongen, of
+er werden weer allerlei persoonlijke gegevens en/of logingegevens verspreid via het
 internet.
 
 In dit verslag wordt besproken hoe de beveiliging is gesteld met een
@@ -302,15 +301,15 @@ iemand, je buren bijvoorbeeld, ineens de lampen in jouw huis aan en uit kunnen
 doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie en zie
 figuur \ref{global} voor de algemene werking van OpenRemote.
 
-Verder word er in dit verslag belangrijke hoofdstukken besproken zoals onder andere
+Verder worden er in dit verslag belangrijke hoofdstukken besproken zoals onder andere
 plan van aanpak, probleemanalyse en methoden \& technieken.
-Tot slot eindigd dit verslag het met een conclusie en aanbevelingen.
+Tot slot eindigt dit verslag met een conclusie en aanbevelingen.
 
 \newpage
 \section{De plaats van de afstudeerder binnen de organisatie}
 
 TASS is 30 jaar geleden begonnen als onderdeel van Philips. Het is tot 2007
-onderdeel gebleven van Philips waarna het zelfstandig is verder gegaan,
+onderdeel gebleven van Philips, waarna het zelfstandig is verder gegaan
 onder de vleugels van moederbedrijf Total Specific Solutions (TSS).
 
 \begin{wrapfigure}{r}{0.5\textwidth}
@@ -320,7 +319,7 @@ onder de vleugels van moederbedrijf Total Specific Solutions (TSS).
   \caption{TASS Eindhoven}
 \end{wrapfigure}
 
-TASS is een detacheringsbedrijf wat betekent dat het personeel werkzaam is bij
+TASS is een detacheringsbedrijf, wat betekent dat het personeel werkzaam is bij
 andere bedrijven. Zeker gezien hun geschiedenis heeft TASS nog een goede
 relatie met het vroegere moederbedrijf Philips en werkt dus ook veel met Philips
 samen. Andere bedrijven waar veel mee wordt samengewerkt zijn TomTom, ASML
@@ -334,18 +333,18 @@ cloud.
 
 Binnen TASS is het grootste deel van het personeel gedetacheerd bij andere
 bedrijven. Deze medewerkers krijgen allemaal een people manager toegewezen.
-Deze people manager zorgt voor de relatie tussen TASS en de medewerker evenals
-het helpen van oplossen van eventuele problemen tussen de medewerker en het bedrijf waar deze
-gedetacheerd zit.
+Deze people manager zorgt voor de relatie tussen TASS en de medewerker, en helpt 
+bij het oplossen van eventuele problemen tussen de medewerker en het bedrijf waar deze
+gedetacheerd is.
 
-De plek waar de medewerker gedetacheerd is geregeld door de account
+De plek waar de medewerker gedetacheerd is wordt geregeld door de account
 managers van TASS. Een account manager heeft een aantal bedrijven in
 zijn/haar portfolio zitten met wie ze contact hebben over mogelijke
 opdrachten voor medewerkers. Mochten ze een plek vinden, zorgen zij voor
 een goede kandidaat in samenwerking met de people managers.
 
 Tijdens het afstuderen is er voor de studenten ook een people manager
-die het project zal begeleiden, in dit geval is het Gerben Blom. Deze
+die het project zal begeleiden, in dit geval is dat Gerben Blom. Deze
 people manager zal de afstudeerders begeleiden op projectmatig vlak,
 functioneren als Project Owner en eventueel antwoord geven op technische
 vragen.
