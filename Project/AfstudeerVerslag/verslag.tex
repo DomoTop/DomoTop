@@ -628,9 +628,17 @@ gemaakt van de Bouncy Castle bibliotheek, echter heet dat onder Android Spongy
 Castle, maar is exact dezelfde code.
 
 \newpage
+\begin{wrapfigure}{R}{0.25\textwidth}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{ssl_ad_1.pdf}
+  \end{center}
+  \caption{SSL workflow}
+  \label{ssl_ad_1}
+\end{wrapfigure}
 \section{Uitvoering}
 
 \subsection{Onderzoek}
+
 Het begin van de stage stond in het teken van onderzoek. Er was bij het
 ontwikkelteam weinig kennis van het domotica veld, OpenRemote, PlugTop computers
 en beveiliging dus al deze velden moesten onderzocht worden. Het project begon
@@ -654,19 +662,39 @@ vervolgens het client certificaat. Dit client certificaat wordt vervolgens
 gebruikt in combinatie met een apparaat (zoals Android), waarna er toestemming
 wordt verleend om de OpenRemote Controller te gebruiken.
 
+De client heeft een certificaat nodig om een veilige verbinding op te kunnen
+zetten met de server. Met dit certificaat kan een client zich identificeren en
+authenticeren bij een server. Een certificaat wordt gegenereerd in de manier te
+zien in figuur \ref{ssl_ad_1}. In een certificaat moeten gegevens staan waarmee
+de client te identificeren is. Als er een aanvraag wordt gedaan moet de
+beheerder kunnen zien wie deze aanvraag heeft gedaan. Er is in het project
+gekozen om hiervoor de naam van het apparaat (tablet/telefoon) evenals het
+emailadres te gebruiken. Hiervoor is gekozen omdat deze gegevens in de meeste
+apparaten voorkomen en uit te lezen zijn. Met deze twee gegevens is het voor een
+beheerder mogelijk  De client verzamelt deze gegevens en verstuurt deze naar de
+server. 
 
+De server genereert voor de client een nieuw keypair, met daarin een
+public en een private key. Vervolgens wordt de public key en de gegevens van de
+client gebruikt om een certificate signing request (CSR) te genereren. Een
+CSR is een bestand met daarin al de gegevens die een certificate authority (CA)
+nodig heeft om een certificaat te genereren. Vervolgens gebruikt dezelfde server
+deze CSR om een certificaat te maken. Het certificaat wordt samen met de private
+key opgeslagen in een keystore. De public key hoeft niet apart opgeslagen te
+worden, deze staat immers in het certificaat. Deze keystore kan vervolgens
+opgehaald worden door de client en gebruikt worden om een veilige verbinding op
+te zetten.
 
-Het was noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote
-applicatie van Android te modificeren. De aanpak was om allereerst alles op de
-server, waar ook de OpenRemote Controller draait, de certificaten te maken en te
-genereren. Het CSR bestand wordt aangemaakt en ondertekend op de server en ook
-het client certificaat wordt gegenereerd op de server. Om dit mogelijk maken
-wordt gebruik gemaakt van het openssl commando onder Linux.  De certificaten die
-gegenereerd worden, worden toegevoegd aan de truststore van TomCat. Echter bleek
-snel dat TomCat geherstart moest worden om de truststore opnieuw uit te 
-kunnen lezen. Dit betekent dat als er een nieuwe client aangemeld wordt, TomCat
-geherstart moest worden.
-\\ Om dat probleem op te lossen, zodat TomCat server niet
+Het certificaat van de client wordt, zonder private key, ook opgeslagen in de
+truststore van TomCat. TomCat gebruikt deze truststore om te controleren of een
+certificaat te vertrouwen is. Als een certificaat niet in de truststore staat
+is deze niet te vertrouwen en wordt er geen veilige verbinding opgezet. 
+
+Echter onstond er een probleem, TomCat leest de truststore tijdens het opstarten
+\'e\'en keer in. De certificaten die na het opstarten van TomCat toegevoegd
+worden aan de truststore, worden dus niet gebruikt. Dit betekent dat na het
+toevoegen van een client, TomCat geherstart zou moeten  worden. 
+\\Om dat probleem op te lossen, zodat TomCat server niet
 telkens opnieuw herstart hoefde te worden, is gekozen om een eigen
 'self-signed' CA te gebruiken. Op deze manier hoeft alleen het certificaat van
 de CA toegevoegd te worden aan de truststore van TomCat.  Zolang de client
@@ -674,41 +702,69 @@ certificaten ondertekend zijn door een CA certificaat uit de
 truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
 gebruik maken van de OpenRemote Controller.
 
-%UITLEG, HOE GEBEURD DIT?
-De client certificaten worden niet meer gegenereerd op de server vanwege
-veiligheidsredenen. Als de certificaten overgestuurd worden, wordt ook
-de private key over de lijn gestuurd wat kan resultering in onderschepping van
-deze sleutel. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
-voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
-dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
-worden en hoe het client certificaat vervolgens ge\"importeerd kan worden in de
-keystore van Android. Op de server, waar ook de OpenRemote Controller draait, werd
-er gekeken hoe een CA aangemaakt kan worden voor de TomCat server, hoe client
-certification request files omgezet kunnen wordfen in normale client certificaten die
-ondertekend zijn door het CA certificaat. En hoe de client certificaten
-vervolgens opgeslagen kunnen worden in \'e\'en keystore op de server, zodat er op een langer
-termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
-Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
-commando afgehandeld, later is deze code omgeschreven in native Java code en
-wordt er gebruik gemaakt van de Bouncy Castle library.
+UITLEG CA MET DIAGRAM
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[height=\textheight]{ssl_ad_2.pdf}
+   \end{center}
+   \caption{SSL workflow versie 2}
+   \label{ssl_ad_2}
+\end{figure}
+
+Het oversturen van de client certificaten met de private key van server naar
+client is een probleem. Mochten deze twee bestanden onderschept worden, kan een
+ander apparaat deze gebruiken om een "veilige" verbinding op te zetten. In het
+ideale geval is het gewenst om het keypair en CSR op de client te genereren. De
+CSR kan dan overgestuurd worden naar de server waarna deze er een certificaat
+van kan maken en deze op kan halen. Als een CSR of certificaat onderschept
+wordt, vormt dit geen probleem. Deze bestanden zijn public en mogen door
+iedereen bekeken worden. De workflow is dan ook aangepast zoals te zien in
+figuur \ref{ssl_ad_2}.
+
+De client controleert eerst of er een certificaat aanwezig is voor de
+desbetreffende server. Als deze aanwezig is, wordt het proces meteen gestopt en
+kan er direct een veilige verbinding opgezet worden. Mocht er geen certificaat
+zijn, wordt er gecontroleerd of er een keypair aanwezig is. Een client heeft
+\'e\'en keypair die gebruikt kan worden om meerdere certificaten mee te
+cree\"eren. Mocht er geen keypair aanwezig zijn, wordt deze gegenereerd, anders
+kan er direct een CSR gegenereerd worden. Dit CSR wordt vervolgens opgestuurd
+naar de server.
+
+De CA op de server gebruikt deze CSR om een certificaat te cree\"eren. Dit
+certificaat hoeft vervolgens niet toegevoegd te worden aan de truststore van
+TomCat omdat het ondertekend is door een vertrouwde partij, namelijk de CA. Het
+certificaat van de CA moet wel toegevoegd zijn aan de truststore van TomCat.
+
+Het certificaat kan vervolgens door de client opgehaald worden en gebruikt
+worden voor een veilige verbinding. Op deze manier is de private key nooit
+overgestuurd en zal deze altijd lokaal op de client blijven staan. 
 
 \subsection{Android}
-Toen het bovenstaande naar behoren werkte, is er verder gegaan met het
-optimaliseren en verfijnen van de OpenRemote Android applicatie en OpenRemote
-Controller. In de Android applicatie is er gewerkt aan het automatisch sturen
-van CSR bestanden naar de Controller. Tevens zoekt de Android applicatie
-automatisch naar het client certificaat zodra er gedrukt wordt op 'Done'. Tot
-slot zijn er verschillende bugs opgelost, waaronder enkele stabiliteits
-problemen.
+De client applicatie heeft als eis dat deze gegevens kan verzamelen. In het
+begin om direct naar de server te sturen, later om zelf een CSR te sturen. De
+naam van het apparaat zorgde niet voor problemen, echter het ophalen van het
+emailadres wel. De app waar aan gewerkt is, is een bestaande app die al op de
+market te vinden is. Deze app is beschikbaar voor android versies vanaf 1.5 en
+hoger. Binnen het project moet er voor gezorgd worden dat de de app nog steeds
+werkt met deze versie.
 
-%Dit is meer Resultaten, moet technischer
-In de OpenRemote Controller is er gewerkt aan verschillende kleine
-verbeteringen, zoals client certificaten automatisch laten verwijderen uit zowel
-de key store als database bij het drukken op de 'Reset devices' knop. Maar ook
-wordt de CA en database automatisch aangemaakt aan het begin dat de applicatie
-wordt ge\"installeerd.  Een apparaat kan nu ook volledig verwijderd wordt uit het
-systeem, vervolgens is het nu mogelijk om de authenticatie via Client
-certificate aan en uit te zetten. 
+Om het email adres op te halen word er gebruik gemaakt van de AccountManager van
+Android. Deze is echter pas ge\"introduceerd in versie 2.1 van Android. Om dit
+op te lossen is er gebruik gemaakt van reflection. Het ophalen dan het
+emailadres gebeurt met de AccountManager als de versie waar de app draait hoger
+is dan 2.1. In lagere versies van Android geeft de app een standaard string
+terug.
+
+In de eerste versie van de app met certificaten is de interface veranderd. Er
+zijn knoppen toegevoegd om de pin op te vragen, een certificaat aan te vragen en
+een certificaat op te halen.
+
+In latere versies is de interface dermate geoptimaliseerd dat deze knoppen niet
+meer nodig zijn. De vernieuwde interface, te zien in \ref{androidv2}, heeft een
+veld waar de pin direct af te lezen is zonder pop-up. De knoppen zijn weg
+gehaald aangezien de acties nu automatisch gebeuren. Zo wordt er automatisch een
+certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt. 
 
 \subsection{Controller}
 %Nooit uitgelegd dat het zo werkt
@@ -726,29 +782,20 @@ eenvoudig te kraken via brute-force en/of rainbow table. Het voordeel van SHA512
 is dat het gebruik maakt van 512 bits woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
 
-<<<<<<< HEAD
-Er is gebruik gemaak van een "Pepper \& Salt". Met deze termen wordt bedoeld dat
-aan het wachtwoord met een bepaalde random lijst met karakters wordt uitgebreid
-(Salt) en een geheime constante (Pepper) wordt toegevoegd. Er is gekozen om een
-systeem constante te gebruiken als zijnde 'Pepper' en een random lijst van
-karakters die gegeneerd wordt via het SHA-512 algoritme met een lengte van 32
-bits die gebruikt wordt als 'Salt'. Deze methode zorgt ervoor dat wachtwoorden
-lastiger te achterhalen zijn. 
-
-%Moet omhoog, is gemaakt voor SHA shizzle
 Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
 apparaten goed en/of af te keuren vanuit de 'administrator panel'. Er bestaat
 een pin die vergeleken kan worden met de pin die aanwezig is op het Android
 apparaat. Indien de pin van Android en de administrator panel overeenkomen, is
 er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze pin is
 gebaseerd op de publieke sleutel die ook aanwezig is in het client certificaat.
+
 Naast 'User management' heeft de administrator panel ook een tab
 'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
 veranderen zoals de authenticatie of pin check aan- of uit te zetten.  De
 administrator panel is beveiligd door een gebruikersnaam en wachtwoord die
 overeen moet komen met een bestaand OpenRemote Designer account. Op deze manier
 is het administratie paneel enkel toegankelijk voor de administrator.
-=======
+
 Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt
 er aangeraden om gebruik te maken van 'Pepper \& Salt' oftewel peper en zout. Met
 deze termen wordt bedoeld dat aan het wachtwoord met een bepaalde random lijst
@@ -756,23 +803,6 @@ met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
 toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
 'Pepper' en een random lijst van karakters die gegeneerd wordt via het SHA-512
 algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
-
-De client certificaten worden niet meer gegenereerd op de server vanwege
-veiligheidsredenen. Als de certificaten overgestuurd worden, wordt namelijk ook
-de private key over de lijn gestuurd wat ervoor kan zorgen dat deze onderschept
-wordt. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
-voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
-dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
-worden en hoe het client certificaat vervolgens geïmporteerd kan worden in de
-keystore van Android. Op de server waar ook de OpenRemote Controller draait werd
-er gekeken hoe je een CA aanmaakt voor de TomCat server, hoe je client
-certification request files kan omzetten in normale client certificaten die
-ondertekend zijn door het CA certificaat. En hoe je de client certificaten
-vervolgens kan opslaan in \'e\'en keystore op de server, zodat er op een langer
-termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
-Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
-commando afgehandeld, later is deze code in zijn geheel omgeschreven in native Java code en
-wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
 keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
@@ -786,7 +816,6 @@ pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
 gebruikersnaam en wachtwoord die overeen moet komen met een bestaand OpenRemote
 Designer account. Op deze manier is het administratie paneel enkel toegankelijk
 voor de administrator.
->>>>>>> d0bcae2a3a6afe880b3342b03eeada83121ba646
 
 \begin{figure}[htpb]
    \begin{center}
