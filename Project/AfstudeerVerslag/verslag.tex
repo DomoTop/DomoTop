@@ -50,7 +50,7 @@
 \hbadness=10000
 
 %add version command, use \version to insert current version
-\newcommand{\version}{1.13}
+\newcommand{\version}{1.14}
 
 % Alter some LaTeX defaults for better treatment of figures:
 % See p.105 of "TeX Unbound" for suggested values.
@@ -164,7 +164,8 @@ Eindhoven, Nederland\\
             &            &                    &Samenvatting geschreven         \\\hline 
     1.11    &14-05-2012  &Vincent Kriek       &Voorwoord                       \\\hline
     1.12    &21-05-2012  &Vincent Kriek       &Voorwoord verbeterd             \\\hline
-    1.13    &24-06-2012  &Melroy van den Berg &Document lay-out verbeterd      \\\hline
+    1.13    &24-05-2012  &Melroy van den Berg &Document lay-out verbeterd      \\\hline
+    1.14    &04-06-2012  &Melroy van den Berg &Reviews doorvoeren	       \\\hline
 \end{tabular}
 
 \newpage
@@ -410,7 +411,7 @@ gebeuren als er bijvoorbeeld een knop wordt ingedrukt.
 
 Dit software pakket heeft echter een groot gebrek, het is niet beveiligd
 afgezien van een globale gebruikersnaam en wachtwoord voor het hele
-systeem. Dit is niet gewenst en dit opdracht is om dit te verhelpen door
+systeem. Dit is niet gewenst en deze opdracht is bedoeld om dit te verhelpen door
 er een authenticatie en autorisatie mechanisme aan toe te voegen.
 
 \subsection{Probleemstelling}
@@ -517,8 +518,8 @@ houden.
 \newpage
 \subsection{Versiebeheer}
 
-De techniek gebruikt wordt om code en document versies bij te houden is
-git. Git is een "version control system" net als subversion en
+De techniek die gebruikt wordt om code en document versies bij te houden is
+git. Git is een "version control system"\space net als subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
 te houden en te kunnen springen in versies. Git heeft als grote voordeel
 dat het gedistribueerd is, wat betekent dat elke git clone (vergelijkbaar
@@ -635,9 +636,12 @@ exact wat de OpenRemote Controller is.
 Om te kunnen werken met encryptie en TLS te kunnen werken in native Java code
 wordt er gebruik gemaakt van Bouncy Castle wat een gratis open-source software.
 Bouncy Castle is een bibliotheek die binnen het project onder andere gebruikt
-wordt om nieuwe certificaten te kunnen generen vanuit Java code alsmede een CSR
-bestand uit te lezen en deze gegevens gebruiken om een nieuw certificaat te
-onderteken door middel van een CA. Ook het gebruikte CA certificaat wordt
+wordt om nieuwe certificaten te kunnen genereren vanuit Java code alsmede een CSR
+(Certificate Signing Request) bestand uit te lezen en deze gegevens gebruiken om een nieuw certificaat te
+onderteken door middel van een CA (Certificate Authority). In dit CSR bestand
+staat onder andere de publieke sleutel van de aanvrager alsmede extra informatie
+over de persoon die het certificaat probeert aan te vragen. Certificate
+Authority beheert alle certificaten, zie de begrippenlijst voor meer informatie. Ook het gebruikte CA certificaat wordt
 aangemaakt door middel van Bouncy Castle. Ook onder Android wordt er gebruik
 gemaakt van de Bouncy Castle bibliotheek, echter heet dat onder Android Spongy
 Castle, maar is exact dezelfde code.
@@ -812,7 +816,7 @@ en vervolgens daar gecontrolleerd. De Beehive server geeft vervolgens een 'OK'
 of 'NOT ALLOWED' terug, waarna er met zekerheid te zeggen dat de login gegevens
 correct of incorrect zijn opgegeven.
 
-Wanneer er geen rechtstreeks toegang is tot het internet op de 
+Wanneer er geen rechtstreekse toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
 login gegevens van de Beehive server. Er is daarom gekozen bij de login module
 gebruik te maken van de cache gegevens uit de database om de administrator te
@@ -962,6 +966,13 @@ Tijdens de tweede iteratie is er gewerkt aan het opzetten van een
 testopstelling met OpenRemote, de DreamPlug en de X10 hardware. Ook is er
 onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
 
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \begin{center}
+    \includegraphics[width=0.20\textwidth]{android.pdf}
+  \end{center}
+  \caption{Android}
+\end{wrapfigure}
+
 Met de test opstelling is het mogelijk om een lamp
 aan te sturen met de OpenRemote controller, welke draait op de
 DreamPlug. Met de OpenRemote app is het mogelijk om met behulp van deze
@@ -993,8 +1004,8 @@ te authenticeren door middel van SSL Client Certificaten.
 Voor de Proof-of-Concept zijn een aantal eisen. Als eerste moet de client
 een aanvraag kunnen doen bij de server voor een certificaat. Deze aanvraag
 moet in een lijstje te zien zijn waarna er een certificaat terug wordt
-gestuurd naar de client. Dit certificaat wordt gegenereerd op de server en
-met Base64 geencodeerd en overgestuurd naar de client.
+gestuurd naar de client. Dit certificaat wordt gegenereerd op de server
+ge\"encodeerd met Base64 en overgestuurd naar de client.
 
 De beheerder kan op de server een lijst met aanvragen zien evenals een
 lijst met gebruikers die daadwerkelijk een certificaat hebben. Er is in deze
@@ -1295,8 +1306,8 @@ gekoppeld worden aan knoppen, sliders en switches. Daarna kan men, in de OpenRem
 Controller backend, de apparaten koppelen aan een bepaalde groep. Op deze
 manier wordt er ook gebruik gemaakt van authorisatie.
 
-Kortom het beveiligen van OpenRemote is gelukt en de gemaakte code kan weer
-opgelevert worden aan de OpenRemote community, waarna ook de rest van de wereld
+Kortom het beveiligen van OpenRemote is gelukt en de gemaakte code kan
+opgeleverd worden aan de OpenRemote community, waarna ook de rest van de wereld
 gebruik kan maken van de verbetering in beveiling die ontwikkelt zijn in dit
 project. 
 
