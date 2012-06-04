@@ -279,12 +279,26 @@ internet.
 
 In dit verslag wordt besproken hoe de beveiliging is gesteld met een
 softwareapplicatie genaamd OpenRemote. OpenRemote is een applicatie die
-bedoeld om thuis een (eigen) domotica systeem op te zetten. Hoewel de mogelijkheid 
-bestaat om een vorm van beveiling aan te zetten is deze erg beperkt. Daarom wordt er gekeken naar betere
-alternatieven om dit product te beveiligen en later uit te breiden. Het zou
-immers een nare ervaring zijn als iemand, je buren bijvoorbeeld, ineens de lampen in jouw huis aan en uit
-kunnen doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie
-en zie figuur \ref{global} voor de algemene werking van OpenRemote.
+bedoeld om thuis een (eigen) domotica systeem op te zetten. Deze applicatie
+bestaat uit verschillende onderdelen. De OpenRemote Controller is het hart van
+het pakket. Deze draait op een server binnenshuis en op deze server wordt de
+domotica apparatuur aangesloten. Om de domotica apparatuur aan te spreken wordt
+er gebruik gemaakt van een OpenRemote Client. Deze app communiceert met de
+OpenRemote Controller om dynamisch een interface in te laden en commando's te
+sturen. 
+
+De interface wordt geconfigureerd in de cloud, in de OpenRemote Modeler. De
+OpenRemote Modeler is een applicatie waar een interface ontworpen kan worden.
+Dit ontwerp wordt opgeslagen in de Beehive en via de Beehive kunnen deze wordt
+gesynchroniseerd naar de Controller en via de Controller in geladen in de
+client. Door middel van deze interface kan de Client commando's 
+
+Hoewel de mogelijkheid bestaat om een vorm van beveiling aan te zetten is deze
+erg beperkt. Daarom wordt er gekeken naar betere alternatieven om dit product te
+beveiligen en later uit te breiden. Het zou immers een nare ervaring zijn als
+iemand, je buren bijvoorbeeld, ineens de lampen in jouw huis aan en uit kunnen
+doen. Lees de hoofdstukken uitvoering \& resultaten voor meer informatie en zie
+figuur \ref{global} voor de algemene werking van OpenRemote.
 
 Verder word er in dit verslag belangrijke hoofdstukken besproken zoals onder andere
 plan van aanpak, probleemanalyse en methoden \& technieken.
@@ -768,6 +782,14 @@ terug.
 In de eerste versie van de app met certificaten is de interface veranderd. Er
 zijn knoppen toegevoegd om de pin op te vragen, een certificaat aan te vragen en
 een certificaat op te halen.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[height=0.4\textheight]{device-android.pdf}
+   \end{center}
+   \caption{Verschil tussen Android interfaces}
+   \label{androidv2}
+\end{figure}
 
 In latere versies is de interface dermate geoptimaliseerd dat deze knoppen niet
 meer nodig zijn. De vernieuwde interface, te zien in \ref{androidv2}, heeft een
