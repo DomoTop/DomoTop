@@ -918,13 +918,6 @@ Tijdens de tweede iteratie is er gewerkt aan het opzetten van een
 testopstelling met OpenRemote, de DreamPlug en de X10 hardware. Ook is er
 onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
 
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{android.pdf}
-  \end{center}
-  \caption{Android}
-\end{wrapfigure}
-
 Met de test opstelling is het mogelijk om een lamp
 aan te sturen met de OpenRemote controller, welke draait op de
 DreamPlug. Met de OpenRemote app is het mogelijk om met behulp van deze
@@ -1195,8 +1188,8 @@ om gebruiksvriendelijk meerdere groepen te kunnen selecteren.
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.6\textwidth,keepaspectratio]{groupselect.pdf}
-  \label{fig:groupselect}
-  \caption{Het groepenselecteerscherm}
+  \caption{Het scherm waar groepen geselecteerd kunnen worden}
+  \label{groupselect}
 \end{figure}
 
 Ook is er in deze iteratie voor gezorgd dat de knoppen die niet aangestuurd
@@ -1206,6 +1199,46 @@ de knoppen donkergrijs worden gekleurd en niet meer in te drukken zijn.
 %%
 %Screenshot android applicatie
 %%
+
+\subsection{Eindresultaat}
+Aan het eind van de stage heeft de OpenRemote Modeler de mogelijkheid om groepen
+toe te voegen. Deze groepen kunnen tevens ook verwijderd worden. Dezelfde
+groepen kunnen aan knoppen, sliders en switches gekoppeld worden. Deze koppeling
+gaat via een popup, welke te zien is in figuur \ref{groupselect}. Deze groepen
+worden opgeslagen in xml en zo overgestuurd naar de controller.
+
+De controller heeft een admin interface gekregen. Deze heeft verschillende
+opties, de belangrijkste zijnde de gebruikerslijst (te zien in figuur
+\ref{userlist}). In deze lijst staan de gebruikers die een aanvraag hebben
+gedaan. In de configuratie tab kunnen de instellingen van de controller
+aangepast worden, zoals te zien in figuur \ref{configv2}. 
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.6\textwidth,keepaspectratio]{configv2.pdf}
+  \caption{Vernieuwde configuratie panel}
+  \label{configv2}
+\end{figure}
+
+De controller vereist, als dat ingesteld is, een client certificaat van de
+gebruiker. Deze certificaten kunnen, als de client ze nog niet heeft,
+aangevraagd worden bij de controller. De controller gebruikt dan zijn CA om een
+certificaat te maken voor de desbetreffende clients. 
+
+Ook controlleert de controller bij een aanvraag of de client in de juiste groep
+zit. Zo niet, dan wordt de aanvraag niet verwerkt en wordt er dus geen domotica
+apparatuur aangesproken. 
+
+De android client kan, wanneer er een verbinding wordt gemaakt met de server,
+een certificaat aanvragen. Tevens controlleert hij, wanneer de interface
+daadwerkelijk vanaf de controller geladen wordt, of er een certificaat aanwezig
+is. Zo niet, wordt deze opgehaald van de server. Mocht er geen certificaat klaar
+staan, wordt de interface niet geladen. 
+
+Als de interface geladen wordt, wordt er gekeken of de client toegang heeft tot
+de verschillende elementen. Zo niet, dan wordt het element wel getekent maar op
+een "disabled" state gezet. Dit zorgt ervoor dat ze niet meer te besturen zijn.
+
 
 \newpage
 \section{Conclusies \& Aanbevelingen}
