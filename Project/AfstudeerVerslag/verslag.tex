@@ -933,10 +933,10 @@ PlugTops en OpenRemote met alternatieven.
 
 Het doel van deze iteratie is het scheppen van opheldering over de mogelijke
 keuzes. Er is onderzocht welke domotica protocollen er bestaan en welke het
-meest geschikt zijn voor toepassing in het project. Uit dit onderzoek is gekomen
-dat X10 de meest gebruikte, voordeligste en veelzijdigste protocol op de markt
-is. Ook is Z-Wave een mooi protocol aangezien het draadloos is. Echter is deze
-duurder en wordt deze minder goed ondersteund. Dit betekent dat het voor dit
+meest geschikt zijn voor toepassing in het project. Uit dit onderzoek is
+gebleken dat X10 het meest gebruikte, voordeligste en veelzijdigste protocol op de markt
+is. Ook is Z-Wave een mooi protocol aangezien het draadloos werkt. Echter is
+Z-Wave duurder en wordt deze minder goed ondersteund. Dit betekent dat het voor dit
 project minder geschikt is, dus de keuze is op X10 gevallen.  
 
 Het PlugTop onderzoek heeft aangetoond dat de binnen TASS gebruikte
@@ -947,7 +947,7 @@ In het onderzoek naar OpenRemote is gekeken naar de mogelijkheden van het
 OpenRemote project in vergelijking met andere software pakketten. Hier is uit
 gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
-goed geregeld. In bijlage X is het onderzoek te vinden.
+goed geregeld. In bijlage 6 is het onderzoek te vinden.
 
 \subsection{Iteratie 2}
 \begin{table}[htpb]
@@ -982,7 +982,7 @@ opstelling een lamp aan te zetten via een X10 stopcontactmodule.
 Het onderzoek over beveiliging concludeert dat de beste methode om
 OpenRemote te beveiligen het gebruiken van SSL certificaten is. Deze
 certificaten kunnen door zowel de server als de client gebruikt worden om
-zich te authenticeren.
+zich te authenticeren. Zie bijlage 4 voor meer informatie.
 
 \subsection{Iteratie 3}
 De derde iteratie heeft in het teken gestaan van de Proof-of-Concept die laat zien
@@ -1016,7 +1016,7 @@ iteraties zal deze functionaliteit toegevoegd worden.
 
 Er is ook voor gezorgd dat de gebruikers uniek identificeerbaar zijn. De server
 en client moet kunnen zien dat de client uniek identificeerbaar is. Er wordt
-geburik gemaakt van het 'serial' attribuut wat in elk certificaat aanwezig is.
+gebruik gemaakt van het 'serial' attribuut wat in elk certificaat aanwezig is.
 Dit attribuut is een oplopende integer.
 
 \subsection{Iteratie 4}
@@ -1026,7 +1026,7 @@ Proof-of-Concept in het OpenRemote project.
 Er zijn een aantal onderdelen verbeterd om ze te kunnen implementeren in het
 OpenRemote project. De beheerders
 interface is een onderdeel hiervan. Deze interface is verbeterd, hij is
-ontworpen (zie figuur ~\ref{fig:adminv1}) en er zijn acties aan gekoppeld 
+ontworpen (zie figuur \ref{adminv1}) en er zijn acties aan gekoppeld 
 waarmee de client goedgekeurd kan worden.
 
 \begin{table}[htpb]
@@ -1048,7 +1048,7 @@ waarmee de client goedgekeurd kan worden.
   \end{center}
 \end{table}
 
-Van deze clients kan informatie getoond worden, namelijk het email adres,
+Van deze clients kan informatie getoond worden, namelijk het e-mail adres,
 de naam van de telefoon en een PIN. Deze PIN wordt gegenereerd door een
 hash van de publieke sleutel te maken en daarvan de laatste 4 karakters te
 laten zien.
@@ -1057,10 +1057,10 @@ laten zien.
   \centering
     \includegraphics[height=150pt,keepaspectratio]{adminv1.pdf}
   \caption{Ontwerp beheerderspanel}
-  \label{fig:adminv1}
+  \label{adminv1}
 \end{figure}
 
-De app stuurt sinds deze iteratie een CSR naar de server. De server
+De app stuurt sinds deze iteratie een CSR (Certificate Signing Request) naar de server. De server
 gebruikt deze CSR om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
@@ -1092,7 +1092,7 @@ het 'openssl' commando. In deze iteratie is gewerkt aan het vervangen van het
 cryptografische acties gebeuren door middel van Java, in plaats van een aanroep
 naar openssl. 
 
-In figuur ~\ref{fig:tls} is te zien wat er gebeurd als er een
+In bijlage 2 is te zien wat er gebeurd als er een
 aanvraag binnenkomt bij de Controller. De client doet in het begin een aanvraag
 voor toegang. Hiermee stuurt hij een CSR bestand op waar al zijn gegevens in staan,
 welke de Controller gebruikt om een certificaat te maken. 
@@ -1124,15 +1124,14 @@ gebruiker toegang heeft tot het systeem. Mocht dat niet het geval zijn, zal hij
 de gebruiker geen toegang tot het systeem geven.
 Zie bijlage 2.
 
-Tevens is er een
-configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
+Tevens is er een configuratiescherm gemaakt. In dit scherm kunnen een aantal dingen worden
 ingesteld zoals onder andere het pad waar de CA opgeslagen wordt en of de PIN
 verplicht gecontroleerd moet worden.
 
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.7\textwidth,keepaspectratio]{adminv2config.pdf}
-  \label{fig:adminv2config}
+  \label{adminv2config}
   \caption{Het configuratiescherm}
 \end{figure}
 
@@ -1182,8 +1181,7 @@ Tevens is er ook contact opgenomen met OpenRemote om de vorderingen te tonen.
 Dit is gedaan via een bericht op het forum van OpenRemote welke te vinden is via
 de volgende link 
 \url{http://openremote.org/pages/viewpage.action?pageId=19439381&focusedCommentId=19440285#comment-19440285}. 
-In de forum post is kort uitgelegd wat de veranderingen zijn waar aan gewerkt is
-en hoe dit getest is. 
+In de forum post is kort uitgelegd wat de veranderingen zijn waar aan gewerkt is en hoe dit getest is. 
  
 \subsection{Iteratie 7}
 
@@ -1236,7 +1234,7 @@ groep zit.
   \end{center}
 \end{table}
 
-In deze sprint was het belangrijk om de groepen te breiden. In de modeler was
+In deze sprint was het belangrijk om de groepen uit te breiden. In de modeler was
 het nog niet mogelijk om meerdere groepen te selecteren voor \'e\'en knop.
 Daarom is er in deze iteratie een nieuwe scherm ontworpen en ge\"implementeerd
 om gebruiksvriendelijk meerdere groepen te kunnen selecteren.
@@ -1249,11 +1247,11 @@ om gebruiksvriendelijk meerdere groepen te kunnen selecteren.
 \end{figure}
 
 Ook is er in deze iteratie voor gezorgd dat de knoppen die niet aangestuurd
-mogen worden, op Android ook daadwerkelijk gedisabled worden. Dit betekent dat
+mogen worden, op Android ook daadwerkelijk uitgeschakeld worden. Dit betekent dat
 de knoppen donkergrijs worden gekleurd en niet meer in te drukken zijn.
 
 %%
-%Screenshot android applicatie
+%Screenshot android applicatie met de knopen die uitgeschakeld zijn
 %%
 
 \subsection{Eindresultaat}
@@ -1427,7 +1425,7 @@ Het Plan van Aanpak document is toegevoegd aan dit afstudeerverslag.
 \newpage
 
 \begin{landscape}
-\subsection{Bijlage 2: }
+\subsection{Bijlage 2: Sequence Diagram - Afhandelen van request via TLS}
 \begin{figure}[h!]
   \centering
     \includegraphics[height=0.80\textheight,keepaspectratio]{DomoTopSequenceDiagram_without_title.pdf}
@@ -1438,18 +1436,20 @@ Het Plan van Aanpak document is toegevoegd aan dit afstudeerverslag.
 \end{landscape}
 
 \newpage
-
 \subsection{Bijlage 3: Onderzoeksdocument PlugTop}
 Het onderzoeksdocument PlugTop is bijgevoegd als bijlage aan het
 afstudeerverslag.
 
+\newpage
 \subsection{Bijlage 4: Onderzoeksdocument Beveiliging OpenRemote}
 Het onderzoeksdocument 'Research Security' is als toegevoegd aan dit document.
 
+\newpage
 \subsection{Bijlage 5: Onderzoeksdocument Domotica Protocollen}
 Het onderzoeksdocument Domotica Protocollen is als bijlage toegevoegd aan dit
 document.
 
+\newpage
 \subsection{Bijlage 6: Onderzoeksdocument OpenRemote}
 Het onderzoeksdocument OpenRemote is als bijlage toegevoegd aan dit
 afstudeerverslag.
