@@ -648,6 +648,7 @@ Castle, maar is exact dezelfde code.
 \newpage
 \section{Uitvoering}
 
+\subsection{Onderzoek}
 Het begin van de stage stond in het teken van onderzoek. Er was bij het
 ontwikkelteam weinig kennis van het domotica veld, OpenRemote, PlugTop computers
 en beveiliging dus al deze velden moesten onderzocht worden. Het project begon
@@ -662,6 +663,7 @@ die zijn gemaakt in het document zijn in overleg met Berry Borgers gebeurd. Dit
 onderzoek is gedocumenteerd in het Engels zodat het te delen is met de
 ontwikkelaars van OpenRemote. Alle onderzoeken zijn  te vinden in de bijlages.
 
+\subsection{SSL}
 Vervolgens is er begonnen met het ontwikkelen van de gekozen oplossing:
 TLS implementeren in OpenRemote om deze veiliger te maken. Dit gebeurt
 door een apparaat een aanvraag te laten doen bij de OpenRemote Controller. De
@@ -669,6 +671,8 @@ OpenRemote Controller kan deze aanvraag goedkeuren en het apparaat ontvangt
 vervolgens het client certificaat. Dit client certificaat wordt vervolgens
 gebruikt in combinatie met een apparaat (zoals Android), waarna er toestemming
 wordt verleend om de OpenRemote Controller te gebruiken.
+
+
 
 Het was noodzakelijk om zowel de OpenRemote Controller alsmede de OpenRemote
 applicatie van Android te modificeren. De aanpak was om allereerst alles op de
@@ -688,6 +692,25 @@ certificaten ondertekend zijn door een CA certificaat uit de
 truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
 gebruik maken van de OpenRemote Controller.
 
+%UITLEG, HOE GEBEURD DIT?
+De client certificaten worden niet meer gegenereerd op de server vanwege
+veiligheidsredenen. Als de certificaten overgestuurd worden, wordt ook
+de private key over de lijn gestuurd wat kan resultering in onderschepping van
+deze sleutel. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
+voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
+dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
+worden en hoe het client certificaat vervolgens ge\"importeerd kan worden in de
+keystore van Android. Op de server, waar ook de OpenRemote Controller draait, werd
+er gekeken hoe een CA aangemaakt kan worden voor de TomCat server, hoe client
+certification request files omgezet kunnen wordfen in normale client certificaten die
+ondertekend zijn door het CA certificaat. En hoe de client certificaten
+vervolgens opgeslagen kunnen worden in \'e\'en keystore op de server, zodat er op een langer
+termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
+Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
+commando afgehandeld, later is deze code omgeschreven in native Java code en
+wordt er gebruik gemaakt van de Bouncy Castle library.
+
+\subsection{Android}
 Toen het bovenstaande naar behoren werkte, is er verder gegaan met het
 optimaliseren en verfijnen van de OpenRemote Android applicatie en OpenRemote
 Controller. In de Android applicatie is er gewerkt aan het automatisch sturen
@@ -705,6 +728,7 @@ wordt ge\"installeerd.  Een apparaat kan nu ook volledig verwijderd wordt uit he
 systeem, vervolgens is het nu mogelijk om de authenticatie via Client
 certificate aan en uit te zetten. 
 
+\subsection{Controller}
 %Nooit uitgelegd dat het zo werkt
 Wanneer er geen rechtstreeks toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
@@ -728,31 +752,6 @@ karakters die gegeneerd wordt via het SHA-512 algoritme met een lengte van 32
 bits die gebruikt wordt als 'Salt'. Deze methode zorgt ervoor dat wachtwoorden
 lastiger te achterhalen zijn. 
 
-\begin{wrapfigure}{l}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.30\textwidth]{tomcat.pdf}
-  \end{center}
-  \caption{Het TomCat logo}
-\end{wrapfigure}
-
-%UITLEG, HOE GEBEURD DIT?
-De client certificaten worden niet meer gegenereerd op de server vanwege
-veiligheidsredenen. Als de certificaten overgestuurd worden, wordt ook
-de private key over de lijn gestuurd wat kan resultering in onderschepping van
-deze sleutel. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
-voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
-dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
-worden en hoe het client certificaat vervolgens ge\"importeerd kan worden in de
-keystore van Android. Op de server, waar ook de OpenRemote Controller draait, werd
-er gekeken hoe een CA aangemaakt kan worden voor de TomCat server, hoe client
-certification request files omgezet kunnen wordfen in normale client certificaten die
-ondertekend zijn door het CA certificaat. En hoe de client certificaten
-vervolgens opgeslagen kunnen worden in \'e\'en keystore op de server, zodat er op een langer
-termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
-Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
-commando afgehandeld, later is deze code omgeschreven in native Java code en
-wordt er gebruik gemaakt van de Bouncy Castle library.
-
 %Moet omhoog, is gemaakt voor SHA shizzle
 Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
 apparaten goed en/of af te keuren vanuit de 'administrator panel'. Er bestaat
@@ -775,6 +774,7 @@ is het administratie paneel enkel toegankelijk voor de administrator.
    \caption{Gebruikers management lijst}
 \end{figure}
 
+\subsection{Groepen}
 Er is veel vraag vanuit de OpenRemote community om apparaten in groepen onder te
 kunnen brengen, hier is gehoor aangegeven. Binnen het project stond al op de
 planning om deze mogelijkheid te implementeren. In de OpenRemote Composer (ook
