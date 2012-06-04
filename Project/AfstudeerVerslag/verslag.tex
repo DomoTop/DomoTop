@@ -232,22 +232,17 @@ Borgers en Bas Burgers. Deze stageopdracht is gevonden via de school Avans Den
 Bosch bij een bedrijven beurs te Rotterdam. De opdracht is aangenomen door
 Melroy van den Berg \& Vincent Kriek.
 
-%\begin{figure}[htpb]
-%   \begin{center}
-%     \includegraphics[width=0.7\textwidth]{TopLevelDesignORSecurity.pdf}
-%   \end{center}
-%   \caption{Flowchart initial request}
-%\end{figure}
-
 TASS vond het belangrijk om OpenRemote software te beveiligen en een oplossing
 te vinden van een authenticatie mechanisme zonder gebruik te hoeven maken van
 een gebruikersnaam/wachtwoord. OpenRemote is een software
 applicatie specifiek bedoeld voor een domotica systeem op te zetten. OpenRemote
-bestaat uit drie verschillende onderdelen: OpenRemote Moduler, OpenRemote
-Controller en tot slot de OpenRemote Client. Met de OpenRemote Moduler kan er een ontwerp
+bestaat uit drie verschillende onderdelen: OpenRemote Modeler, OpenRemote
+Controller en tot slot de OpenRemote Client. Met de OpenRemote Modeler kan er een ontwerp
 gemaakt worden, via de Controller worden de commando's van de gebruiker
-afgehandeld. De OpenRemote Client, meestal een mobiel apparaat, stuurt
-commando's naar de controller.
+afgehandeld. Deze commando's zijn acties die gedaan moeten worden door de
+OpenRemote Controller, bijvoorbeeld 'licht aan' van een bepaalde lamp. De OpenRemote Client, meestal een mobiel apparaat, stuurt
+commando's naar de controller. Zie figuur \ref{global} voor een globale overzicht van de
+werking van OpenRemote.
 
 Verder was het belangrijk dat er ervaring en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
 draait. Tot slot was ook onderzoek nodig naar verschillende Domotica
@@ -265,6 +260,14 @@ administrator panel is een webbased applicatie en behoord tot de OpenRemote
 Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
 gekoppeld worden aan knoppen, sliders en/of switches, waarna je deze groepen in
 de administrator panel kan koppelen aan apparaten.
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[width=\textwidth]{GlobalOR.pdf}
+   \end{center}
+   \caption{Globale werking van OpenRemote}
+   \label{global}
+\end{figure}
 
 \newpage
 \section{Inleiding}
@@ -498,13 +501,7 @@ houden.
 
 \newpage
 \subsection{Versiebeheer}
-%
-%\begin{wrapfigure}{l}{0.3\textwidth}
-%  \begin{center}
-%    \includegraphics[width=0.20\textwidth]{git.pdf}
-%  \end{center}
-%  \caption{Git}
-%\end{wrapfigure}
+
 De techniek gebruikt wordt om code en document versies bij te houden is
 git. Git is een "version control system" net als subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
@@ -516,7 +513,15 @@ wel gedaan. Dat betekent ook dat elke git clone een backup is van de gehele
 geschiedenis. Een ander voordeel van git is: dat er veranderingen opgeslagen
 kunnen worden (commit) en later pas gedeeld kan worden met andere mensen (push) dit in
 tegenstelling tot andere versie beheersystemen waarbij deze functinaliteit niet
-aanwezig is.
+aanwezig is. Zie de werking en belangrijke commando's van git in figuur \ref{git}.
+
+\begin{figure}[htpb]
+  \begin{center}
+    \includegraphics[width=0.50\textwidth]{git_diagram.pdf}
+  \end{center}
+  \caption{Werking git}
+  \label{git}
+\end{figure}
 
 Om toch een centrale plaats te hebben waar alle verandering naartoe
 gestuurd te worden hebben wij ervoor gekozen om Github te gebruiken. Github
@@ -525,13 +530,6 @@ webinterface. In deze webinterface kan men de code bekijken alsmede de git url
 gevonden worden en 'issues' aangemaakt worden.
 
 \subsection{Documenten}
-
-%\begin{wrapfigure}{r}{0.5\textwidth}
-%  \begin{center}
-%    \includegraphics[width=0.20\textwidth]{docs.pdf}
-%  \end{center}
-%  \caption{Google Documenten}
-%\end{wrapfigure}
 Voor het maken van documenten is er voor gekozen om Google Documenten te
 gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
@@ -550,7 +548,6 @@ gewerkt wordt op een bestaand project. Voor de controller wordt gebruik gemaak v
 Java, evenals voor de composer en beehive. De verschillende applicaties maken gebruik
 van Java op Android en Objective-C op iOS.
 
-\newpage
 \subsection{Database}
 Er is gebruik gemaakt van RazorSQL[3]. Met dit programma is het mogelijk om
 SQL queries op te zetten, uit te voeren en te testen via een grafische
@@ -560,14 +557,6 @@ apparaten die zich aanmelden bij OpenRemote evenals de groepen.
 RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
 noodzakelijk.
-
-
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \begin{center}
-    \includegraphics[width=0.30\textwidth]{hsql.pdf}
-  \end{center}
-  \caption{HyperSQL}
-\end{wrapfigure}
 
 Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
 is geschreven (net als de Controller van OpenRemote), volledig open-source is,
@@ -584,13 +573,6 @@ eens geschikt om te gebruiken in combinatie met een TomCat server.
 Voor de Android applicatie wordt gebruik gemaakt van de Eclipse
 ontwikkelomgeving met de ADT plugin. Hiermee is het makkelijk om wijziging
 live te draaien op een tablet of een emulator.
-
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.20\textwidth]{eclipse.pdf}
-  \end{center}
-  \caption{Eclipse}
-\end{wrapfigure}
 
 Bij het programmeren van de OpenRemote Controller wordt er ook gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
@@ -744,6 +726,7 @@ eenvoudig te kraken via brute-force en/of rainbow table. Het voordeel van SHA512
 is dat het gebruik maakt van 512 bits woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
 
+<<<<<<< HEAD
 Er is gebruik gemaak van een "Pepper \& Salt". Met deze termen wordt bedoeld dat
 aan het wachtwoord met een bepaalde random lijst met karakters wordt uitgebreid
 (Salt) en een geheime constante (Pepper) wordt toegevoegd. Er is gekozen om een
@@ -765,6 +748,45 @@ veranderen zoals de authenticatie of pin check aan- of uit te zetten.  De
 administrator panel is beveiligd door een gebruikersnaam en wachtwoord die
 overeen moet komen met een bestaand OpenRemote Designer account. Op deze manier
 is het administratie paneel enkel toegankelijk voor de administrator.
+=======
+Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt
+er aangeraden om gebruik te maken van 'Pepper \& Salt' oftewel peper en zout. Met
+deze termen wordt bedoeld dat aan het wachtwoord met een bepaalde random lijst
+met karakters wordt uitgebreid  (Salt) en een geheime constante (Pepper) wordt
+toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
+'Pepper' en een random lijst van karakters die gegeneerd wordt via het SHA-512
+algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
+
+De client certificaten worden niet meer gegenereerd op de server vanwege
+veiligheidsredenen. Als de certificaten overgestuurd worden, wordt namelijk ook
+de private key over de lijn gestuurd wat ervoor kan zorgen dat deze onderschept
+wordt. Het is dus verstandig om zoveel mogelijk acties lokaal op android uit te
+voeren. Om dit tot een goed einde te brengen is is het noodzakelijk
+dat er onder Android onderzocht wordt hoe er een client CSR bestand gemaakt kan
+worden en hoe het client certificaat vervolgens geïmporteerd kan worden in de
+keystore van Android. Op de server waar ook de OpenRemote Controller draait werd
+er gekeken hoe je een CA aanmaakt voor de TomCat server, hoe je client
+certification request files kan omzetten in normale client certificaten die
+ondertekend zijn door het CA certificaat. En hoe je de client certificaten
+vervolgens kan opslaan in \'e\'en keystore op de server, zodat er op een langer
+termijn nog steeds informatie opgevraagd kan worden over een specifiek client certificaat.
+Op de server en de OpenRemote controller werkte dit eerst via het OpenSSL
+commando afgehandeld, later is deze code in zijn geheel omgeschreven in native Java code en
+wordt er gebruik gemaakt van de Bouncy Castle bibliotheek.
+
+Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
+keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
+worden met de pin die aanwezig is op het Android apparaat, indien de pin van
+Android en de administrator panel overeenkomen, is er met zekerheid te zeggen
+dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke
+sleutel die aanwezig is in het client certificaat. Naast 'User management' heeft de
+administrator panel ook een tab genaamd 'Configuration'. In deze tab is het
+mogelijk om bepaalde instellingen te veranderen zoals of de authenticiteit of
+pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
+gebruikersnaam en wachtwoord die overeen moet komen met een bestaand OpenRemote
+Designer account. Op deze manier is het administratie paneel enkel toegankelijk
+voor de administrator.
+>>>>>>> d0bcae2a3a6afe880b3342b03eeada83121ba646
 
 \begin{figure}[htpb]
    \begin{center}
@@ -1242,6 +1264,7 @@ TomCat.
 \section{Bronnen}
 
 http://tweakers.net/nieuws/80916/politie-arresteert-zeventienjarige-verdachte-kpn-hack.html
+http://osteele.com/images/2008/481x455xgit-transport.png.pagespeed.ic.zXwVaRg5pO.png
 
 \newpage
 \section{Bijlagen}
