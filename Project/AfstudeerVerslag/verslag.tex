@@ -843,28 +843,35 @@ voor de administrator.
 \end{figure}
 
 \subsection{Groepen}
-Er is veel vraag vanuit de OpenRemote community om apparaten in groepen onder te
-kunnen brengen, hier is gehoor aangegeven. Binnen het project stond al op de
-planning om deze mogelijkheid te implementeren. In de OpenRemote Composer (ook
-wel Modeler genoemd) is het nu mogelijk om groepen toe te voegen en knoppen,
-sliders en switches te koppelen aan een groep. Vervolgens wordt het gegenereerde
-XML bestand uitgelezen in de OpenRemote Controller, waarna de lijst met groepen
-in de database wordt opgeslagen. Via de administrator panel is het mogelijk om
-apparaten te koppelen aan een bepaalde groep zoals te zien in figuur 13. Zodra
-de gebruiker van een apparaat op bijvoorbeeld een knop drukt, controleert de
-OpenRemote Controller door middel van het client certificaat tot welke groep de
-client behoord om vervolgens te controleren of deze groep ook gekoppeld is aan
-de knop die ingedrukt was. Tevens is er een optie om groepen niet te
-verplichten, dit kan ingesteld worden via de 'Configuration' tab in de
-administrator panel. Wanneer groepen niet verplicht zijn, heeft het apparaat
-automatisch toegang tot alle mogelijke commando's naar de server. Dit betekent
-echter niet dat authenticatie niet vereist is, dit kan nog steeds nodig zijn.
+Binnen het OpenRemote project bestond er veel vraag om apparaten in groepen aan
+te kunnen geven. Aan deze vraag is in dit project gehoor gegeven. In de
+OpenRemote Composer is er voor gezorgd dat aan de knoppen een groep toegewezen
+kan worden. Deze groepen worden gekoppeld aan groepen in de beide xml bestanden
+die geexporteerd worden vanuit de server. Per knop kunnen meerdere groepen
+gekoppeld worden.
+
+Op de controller worden de groepen uit XML gehaald en in de database opgeslagen.
+Vervolgens kan er in de admin interface een gebruiker aan een knop gekoppeld
+worden zoals te zien in figuur \ref{usergroups}. De koppeling tussen gebruiker
+en groep wordt opgeslagen in de database op de controller. 
+
+Als er vervolgens een commando wordt gestuurd naar de controller, wordt de
+gebruiker in de database opgezocht. Vervolgens wordt er gekeken welke groep aan
+de gebruiker gekoppeld is. Ook wordt er gekeken welke groepen er aan het element
+zitten waar een actie op wordt uitgevoerd. Als er een groep overeen komt, wordt
+de actie uitgevoerd. Zo niet, dan wordt er een errorcode teruggegeven.
+
+In de android applicatie wordt er bij het tekenen van de knoppen gekeken welke
+groep er aan deze knop gekoppeld zit en tot welke groep de gebruiker behoord.
+Als de gebruiker geen toegang heeft tot de knop, wordt deze disabled en kan deze
+dus niet ingedrukt worden.
 
 \begin{figure}[htpb]
    \begin{center}
      \includegraphics[width=0.6\textwidth]{usergroups.pdf}
    \end{center}
    \caption{Gebruikers koppelen aan groepen}
+   \label{usergroups}
 \end{figure}
 
 \newpage
