@@ -796,7 +796,7 @@ is dan 2.1. In lagere versies van Android geeft de app een standaard string
 terug.
 
 In de eerste versie van de app met certificaten is de interface veranderd. Er
-zijn knoppen toegevoegd om de pin op te vragen, een certificaat aan te vragen en
+zijn knoppen toegevoegd om de PIN op te vragen, een certificaat aan te vragen en
 een certificaat op te halen.
 
 \begin{figure}[htpb]
@@ -809,7 +809,7 @@ een certificaat op te halen.
 
 In latere versies is de interface dermate geoptimaliseerd dat deze knoppen niet
 meer nodig zijn. De vernieuwde interface, te zien in figuur \ref{androidv2}, heeft een
-veld waar de pin direct af te lezen is zonder pop-up. De knoppen zijn weggehaald
+veld waar de PIN direct af te lezen is zonder pop-up. De knoppen zijn weggehaald
 aangezien de acties nu automatisch gebeuren. Zo wordt er automatisch een
 certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt. 
 
@@ -839,14 +839,14 @@ bits, waardoor het veel minder snel gekraakt kan worden.
 
 Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
 apparaten goed en/of af te keuren vanuit de 'administrator panel'. Er bestaat
-een pin die vergeleken kan worden met de pin die aanwezig is op het Android
-apparaat. Indien de pin van Android en de administrator panel overeenkomen, is
-er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze pin is
+een PIN die vergeleken kan worden met de PIN die aanwezig is op het Android
+apparaat. Indien de PIN van Android en de administrator panel overeenkomen, is
+er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze PIN is
 gebaseerd op de publieke sleutel die ook aanwezig is in het client certificaat.
 
 Naast 'User management' heeft het administrator panel ook een tab
 'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
-veranderen, zoals de authenticatie of de pin check aan- of uit te zetten.  Het
+veranderen, zoals de authenticatie of de PIN check aan- of uit te zetten.  Het
 administrator panel is beveiligd door een gebruikersnaam en wachtwoord die
 overeen moeten komen met een bestaand OpenRemote Designer account. Op deze manier
 is het administratie panel enkel toegankelijk voor de administrator.
@@ -860,14 +860,14 @@ toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
 algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
-keuren vanuit het administrator panel. Er bestaat een pin die vergeleken kan
-worden met de pin die aanwezig is op het Android apparaat. Indien de pin van
+keuren vanuit het administrator panel. Er bestaat een PIN die vergeleken kan
+worden met de PIN die aanwezig is op het Android apparaat. Indien de PIN van
 Android en het administrator panel overeenkomen, is er met zekerheid te zeggen
-dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke sleutel
+dat het hetzelfde apparaat betreft. Deze PIN is gebaseerd op de publieke sleutel
 die aanwezig is in het client certificaat. Naast 'User management' heeft het
 administrator panel ook een tab, genaamd 'Configuration'. In deze tab is het
 mogelijk om bepaalde instellingen te veranderen zoals de authenticiteit, of door
-pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
+PIN check aan- of uit te zetten.  De administrator panel is beveiligd door een
 gebruikersnaam en wachtwoord die overeen moeten komen met een bestaand
 OpenRemote Designer account. Op deze manier is het administratie panel enkel
 toegankelijk voor de administrator.
@@ -1108,7 +1108,7 @@ database. De gegevens in de database worden uit de CSR gehaald. Vervolgens is de
 client te zien in de beheerdersinterface. Hij is nog niet
 goedgekeurd en heeft dus ook geen toegang tot het systeem.
 
-Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de pin ingevoerd
+Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de PIN ingevoerd
 heeft, wordt het certificaat gegenereert. Als eerste
 wordt de private key van de CA opgehaald. Elk certificaat dat gemaakt wordt,
 wordt ondertekend door de CA. Deze CA wordt ook geimporteerd in de OpenRemote
