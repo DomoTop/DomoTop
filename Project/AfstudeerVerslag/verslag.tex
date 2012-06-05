@@ -1347,34 +1347,30 @@ TomCat.
 
 \begin{tabular}{|| l | l ||}\hline
     Begrip           & Omschrijving                                         \\\hline\hline
-    CAN-Bus          & CAN-bus is een standaard voor in voertuigen          \\
-                     & om microcontrollers en apparaten met elkaar te       \\
-                     & laten communiceren zonder een host-computer.        \\\hline
-    OpenRemote       & Een domotica pakket waarmee je meerdere domotica     \\
-                     & protocollen aan kan sturen.                          \\\hline
     Android          & Een besturingssysteem voor mobiele telefoons en      \\
                      & tablets, gemaakt door Google.                        \\\hline
-    iOS              & Een besturingssysteem voor mobiele telefoons en      \\
-                     & tablets, gemaakt door Apple.                         \\\hline
-    GitHub           & Een online git hosting platform.                     \\\hline
-    SCRUM            & Een ontwikkelmethodiek dat werkt met meerdere        \\
-                     & iteraties om zo flexibel te kunnen                   \\
-                     & ontwikkelen.                                         \\\hline
-    PlugTop          & Een energiezuinige computer in het formaat van een   \\
-                     & forse adapter.                                       \\\hline
-    Multithreaded    & Meer dan \'e\'en thread, dit kan de efficientie van de   \\
-                     & hardware ten goede komen.                            \\\hline
     CA               & CA staat voor Certificate authority en is bedoeld om \\
                      & certificaat aanvragen goed te keuren en om           \\
                      & certificaten te beheren en te generen.               \\\hline
-    TomCat Web       & TomCat heeft een Web Application Manager waarbij je  \\
-    Application      & eenvoudig via een web interface je applicaties (WAR  \\
-    Manager          & bestanden) kan beheren, updaten en uploaden.         \\\hline
+    CAN-Bus          & CAN-bus is een standaard voor in voertuigen          \\
+                     & om microcontrollers en apparaten met elkaar te       \\
+                     & laten communiceren zonder een host-computer.        \\\hline
+    CSR              & Certification Sign Request, met behulp van dit       \\
+                     & bestand kan de CA een certificaat genereren.         \\\hline
+    GitHub           & Een online git hosting platform.                     \\\hline
+    iOS              & Een besturingssysteem voor mobiele telefoons en      \\
+                     & tablets, gemaakt door Apple.                         \\\hline
     Java Servlet     & Een servlet is een in Java geschreven programma dat  \\
                      & op een server draait. De servlet maakt hierbij       \\
                      & gebruik van een aantal diensten die de               \\
                      & webcontainer biedt, zoals het afhandelen van de      \\
                      & communicatie met de client.                          \\\hline
+    KeyStore         & Een Java keystore (JKS) is een bestand waar          \\
+                     & beveiligingscertificaten, aanvraag certificaten of   \\
+                     & publieke sleutels worden opgeslagen                  \\
+                     & wat gebruikt wordt met SSL encryptie.                \\\hline
+    Multithreaded    & Meer dan \'e\'en thread, dit kan de efficientie van de   \\
+                     & hardware ten goede komen.                            \\\hline
     Model View       & Model-view-controller (of MVC) is een ontwerppatroon \\
     Controller       & dat het ontwerp van complexe toepassingen opdeelt in \\
     software         & drie eenheden met verschillende                      \\
@@ -1382,26 +1378,8 @@ TomCat.
                      & applicatielogica. Het scheiden van deze              \\
                      & verantwoordelijkheden bevordert de leesbaarheid en   \\
                      & herbruikbaarheid van code.                           \\\hline
-    KeyStore         & Een Java keystore (JKS) is een bestand waar          \\
-                     & beveiligingscertificaten, aanvraag certificaten of   \\
-                     & publieke sleutels worden opgeslagen                  \\
-                     & wat gebruikt wordt met SSL encryptie.                \\\hline
-\end{tabular}
-\newpage
-\begin{tabular}{|| l | l ||}\hline
-    Begrip           & Omschrijving                                         \\\hline\hline
-    TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
-                     & die zijn geaccepteerd om een verbinding mee op te    \\
-                     & zetten. Of een CA certificaat waarbij de ondertekende\\
-                     & certificaten vertrouwd  zijn.                        \\\hline
-    Self-signed      & Een certificaat kan self-signed zijn,                \\
-                     & wat erop duidt dat het certificaat door zichtzelf    \\
-                     & ondertekend is.                                      \\\hline
-    Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
-                     & techniek gebruikt kan worden. Deze applicatie laat   \\
-                     & zien dat de techniek werkt.                          \\\hline
-    CSR              & Certification Sign Request, met behulp van dit       \\
-                     & bestand kan de CA een certificaat genereren.         \\\hline
+    OpenRemote       & Een domotica pakket waarmee je meerdere domotica     \\
+                     & protocollen aan kan sturen.                          \\\hline
     Penetratietest   & Een penetratietest is een check van \'e\'en of meer  \\
                      & computersystemen op kwetsbaarheden, waarbij deze     \\
                      & kwetsbaarheden ook werkelijk gebruikt worden om op   \\
@@ -1410,13 +1388,37 @@ TomCat.
                      & met toestemming van de eigenaars van de systemen die \\
                      & gecheckt worden, met als doel de systemen juist beter\\
                      & te beveiligen.                                       \\\hline
-
+\end{tabular}
+\newpage
+\begin{tabular}{|| l | l ||}\hline
+    Begrip           & Omschrijving                                         \\\hline\hline
+    PlugTop          & Een energiezuinige computer in het formaat van een   \\
+                     & forse adapter.                                       \\\hline
+    Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
+                     & techniek gebruikt kan worden. Deze applicatie laat   \\
+                     & zien dat de techniek werkt.                          \\\hline
+    SCRUM            & Een ontwikkelmethodiek dat werkt met meerdere        \\
+                     & iteraties om zo flexibel te kunnen                   \\
+                     & ontwikkelen.                                         \\\hline
+    TomCat Web       & TomCat heeft een Web Application Manager waarbij je  \\
+    Application      & eenvoudig via een web interface je applicaties (WAR  \\
+    Manager          & bestanden) kan beheren, updaten en uploaden.         \\\hline
+    TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
+                     & die zijn geaccepteerd om een verbinding mee op te    \\
+                     & zetten. Of een CA certificaat waarbij de ondertekende\\
+                     & certificaten vertrouwd  zijn.                        \\\hline
+    Self-signed      & Een certificaat kan self-signed zijn,                \\
+                     & wat erop duidt dat het certificaat door zichtzelf    \\
+                     & ondertekend is.                                      \\\hline
 \end{tabular}
 
 \newpage
 \section{Bronnen}
 
-\begin{enumerate}
+\begin{itemize}
+    \item \textbf{"Had u me d\'at niet eerder kunnen vertellen?"} Tips voor
+    stagiairs en afstudeerders (T)I - dictaat Blackboard - Simone Schenk
+    (augustus 2006) 
 
     \item \url{http://tweakers.net/nieuws/80916/politie-arresteert-zeventienjarige-verdachte-kpn-hack.html}
     \item \url{http://osteele.com/images/2008/481x455xgit-transport.png.pagespeed.ic.zXwVaRg5pO.png}
@@ -1433,7 +1435,7 @@ TomCat.
     \item \url{http://hsqldb.org/web/hsqlFeatures.html}
     \item \url{http://colorer.sourceforge.net/eclipsecolorer/}
 
-\end{enumerate}
+\end{itemize}
 
 \newpage
 \section{Verantwoording individuele bijdrage}
