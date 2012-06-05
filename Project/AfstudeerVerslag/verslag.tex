@@ -26,6 +26,7 @@
 %Used to display url's
 \usepackage{hyperref}
 
+%Used to calculate last page
 \usepackage{longtable}
 
 %Used to display "normal" paragraph's without indentation and with blank line
@@ -79,7 +80,7 @@
 \fancyhead[R]{\includegraphics[height=30pt,keepaspectratio]{tassbw.pdf}}
 
 \fancyfoot[L]{DomoTop - Afstudeerverslag}
-\fancyfoot[C]{\thepage}
+\fancyfoot[C]{\thepage\space van \pageref{lastpage}}
 \fancyfoot[R]{v\version}
 
 % Add line above footer
@@ -87,33 +88,24 @@
 
 \begin{document}
 
-\thispagestyle{plain}
 
 \title{\textbf{DomoTop} \\Afstudeerverslag}
 \author{Vincent Kriek \and Melroy van den Berg}
 
 \maketitle
 
+\thispagestyle{empty}
 \begin{figure}[htpb]
    \begin{center}
     \includegraphics[width=0.8\textwidth]{voorkant.pdf}
    \end{center}
 \end{figure}
 
-\begin{tabular}{|| l | l || l | l ||}\hline
-   Document ID: & AFVSL-MV-21          &Project naam:     &DomoTop             \\\hline
-   Datum:       &14 mei 2012          &School begeleider:&Peter Kailuhu       \\\hline
-   Versie:      &\version              &People Manager:   &Gerben Blom         \\\hline
-   Status:      &concept               &Documentnaam:     &Afstudeerverslag.pdf\\\hline
-   Auteur:      &Melroy van den Berg \&&Reviewer:         &Gerben Blom         \\
-                &Vincent Kriek         &                  &                    \\\hline
-   Printdatum:  &\insertdate           &Classificatie:    &Openbaar            \\\hline
-\end{tabular}
-
 %\vspace*{-3cm}
 \vspace*{\fill}
 
 \newpage
+\thispagestyle{empty}
 
 \noindent\copyright  TASS B.V. 2011
 Alle rechten voorbehouden. Verveelvuldiging, geheel of gedeeltelijk, is
@@ -135,6 +127,18 @@ Eindhoven, Nederland\\
 
 \vspace*{\fill}
 
+\begin{tabular}{|| l | l || l | l ||}\hline
+   Document ID: & AFVSL-MV-21          &Project naam:     &DomoTop             \\\hline
+   Datum:       &14 mei 2012          &School begeleider:&Peter Kailuhu       \\\hline
+   Versie:      &\version              &People Manager:   &Gerben Blom         \\\hline
+   Status:      &concept               &Documentnaam:     &Afstudeerverslag.pdf\\\hline
+   Auteur:      &Melroy van den Berg \&&Reviewer:         &Gerben Blom         \\
+                &Vincent Kriek         &                  &                    \\\hline
+   Printdatum:  &\insertdate           &Classificatie:    &Openbaar            \\\hline
+\end{tabular}
+
+\newpage
+\thispagestyle{empty}
 \section*{Geschiedenis}
 
 \begin{tabular}{|| l | l | l | l ||}\hline
@@ -170,24 +174,27 @@ Eindhoven, Nederland\\
 \end{tabular}
 
 \newpage
+\thispagestyle{empty}
 \section*{Voorwoord}
 \addcontentsline{toc}{section}{Voorwoord}
 Domotica systemen nemen een steeds prominentere plaats in in de huidige
 samenleving. Denk bijvoorbeeld aan de Living Colors lampen van
 Philips\textsuperscript{\texttrademark}, het
-KlikAanKlikUit\textsuperscript{\textregistered} systeem dat je voor twee tientjes bij de Blokker haalt en het
-nieuwe Toon\textsuperscript{\textregistered} van Eneco. Maar wat voor soort beveiliging zit er op zulke systemen?
-En wat voor beveiling zou het meest geschikt zijn? In onze stage hebben we bekeken
-hoe dit soort systemen het best beveiligd kunnen worden.
+KlikAanKlikUit\textsuperscript{\textregistered} systeem dat je voor twee
+tientjes bij de Blokker haalt en de nieuwe
+Toon\textsuperscript{\textregistered} van Eneco. Maar wat voor soort beveiliging
+zit er op zulke systemen?  En wat voor beveiling zou het meest geschikt zijn? In
+onze stage hebben we bekeken wat de beste beveiliging is voor dit soort
+systemen.
 
 In de presentatie kan niet alles getoond worden dat er is gedaan en bereikt
 tijdens de afstudeerstage. Om alles toch goed toe te lichten hebben we dit
 verslag opgesteld.  Onze docenten, gecommiteerde en andere ge\"intresseerden
 kunnen in dit verslag nalezen hoe wij onze stage hebben aangepakt, welke
-methodes en technieken we gebruikt hebben en wat voor resultaten we hebben
+methodes en technieken gebruikt zijn en wat voor resultaten we hebben
 bereikt.
 
-Voordat we met de stage begonnen was onze kennis van beveiliging nog beperkt,
+Voor de stage was onze kennis van beveiliging nog beperkt,
 maar tijdens onze stage hebben we veel geleerd over dit vakgebied. Samen met
 Berry Borgers, \'e\'en van onze technische begeleiders, hebben we een aantal keuzes
 gemaakt over hoe we het project aan zouden pakken. Het onderzoek dat hieraan
@@ -203,12 +210,15 @@ gebruiksvriendelijkheid.
 We willen Gerben Blom bedanken voor alle begeleiding die we op projectmatig vlak
 gekregen hebben. Tevens willen we Berry Borger bedanken voor de technische
 beleiding, informatie en advies op security gebied, alsmede Bas Burgers voor advies en begeleiding op technisch gebied. Ook willen we onze
-begeiding vanuit school bedanken, met dan in het bijzonder Peter Kailuhu voor
+begeiding vanuit school bedanken, met in het bijzonder Peter Kailuhu voor
 de coachingsgesprekken en informatie over de eisen vanuit school.
 
 \newpage
+\thispagestyle{empty}
 \tableofcontents
+\thispagestyle{empty}
 \newpage
+\thispagestyle{empty}
 \listoftables
 \listoffigures
 
@@ -220,16 +230,16 @@ beveiligingssysteem dan voorheen. OpenRemote is een software
 pakket om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
 een PlugTop computer om hierop de OpenRemote Controller te draaien, welke functioneert als
 zijnde een server. Vandaar de projectnaam DomoTop (Domotica PlugTop).
-De beveiligingtechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
+De beveiligingstechniek die gebruikt wordt in het DomoTop project is SSL/TLS,
 waarin gebruik wordt gemaakt van client certificaten om de
 gebruikers/apparaten te authenticeren. Ook is er later in het DomoTop project
 voor gekozen om de mogelijkheid te geven groepen aan te maken, waardoor
-het mogelijk is om apparaten te plaatsen in een specifieke groep. Hierdoor
+apparaten in een specifieke groep geplaatst kunnen worden. Hierdoor
 is het dus mogelijk om apparaten te autoriseren.
 
 Deze opdracht is afkomstig en bedacht door het bedrijf TASS. De opdracht wordt
 begeleid door de people manager Gerben Blom, technische begeleiders Berry
-Borgers en Bas Burgers. Deze stageopdracht is gevonden via de school Avans Den
+Borgers en Bas Burgers. Deze stageopdracht is gevonden via Avans Den
 Bosch bij een bedrijvenbeurs te Rotterdam. De opdracht is aangenomen door
 Melroy van den Berg \& Vincent Kriek.
 
@@ -239,28 +249,28 @@ een gebruikersnaam/wachtwoord. OpenRemote is een software
 applicatie, specifiek bedoeld om een domotica systeem op te zetten. OpenRemote
 bestaat uit drie verschillende onderdelen: OpenRemote Modeler, OpenRemote
 Controller en tot slot de OpenRemote Client. Met de OpenRemote Modeler kan er een ontwerp
-gemaakt worden. Via de Controller worden de commando's van de gebruiker
+gemaakt worden. Via de Controller worden commando's van de gebruiker
 afgehandeld. Deze commando's zijn acties die gedaan moeten worden door de
 OpenRemote Controller, bijvoorbeeld 'licht aan' van een bepaalde lamp. De OpenRemote Client, meestal een mobiel apparaat, stuurt
 commando's naar de controller. Zie figuur \ref{global} voor een globaal overzicht van de
 werking van OpenRemote.
 
 Verder was het belangrijk dat er ervaring en onderzoek werd gedaan naar een PlugTop computer, waarop de OpenRemote Controller
-draait. Tot slot was ook onderzoek nodig naar verschillende Domotica
-protocollen en verschillende manieren van beveiligen. Hierdoor is er kennis en
+draait. Tot slot was ook onderzoek nodig naar diverse domotica
+protocollen en verschillende manieren van beveiligen. Hierdoor is kennis en
 ervaring opgedaan op gebied van onder andere domotica, Google Android, Embedded
 Linux, maar ook zijn er verschillende onderzoeksrapporten geschreven met
 onderzoekresultaten. De meeste kennis is verkregen op gebied van SSL/TLS (Secure Sockets Layer),
-waar onderzoek naar gedaan is. In dit onderzoek kwam naar voren dat SSL/TLS
-de beste manier was om OpenRemote te beveiligen, daarnaast is er onderzocht hoe
+waar onderzoek naar gedaan is. In dit onderzoek is gebleken dat SSL/TLS
+de beste manier is om OpenRemote te beveiligen, daarnaast is er onderzocht hoe
 SSL het beste ge\"implementeerd kon worden binnen het DomoTop project. 
 
 Op dit moment is OpenRemote beveiligd via client certificaten en kan de
-administrator via de OpenRemote administrator panel apparaten goed-/afkeuren. De
-administrator panel is een webbased applicatie en behoort tot de OpenRemote
+administrator via het OpenRemote administrator panel apparaten goed-/afkeuren.
+Het administrator panel is een webbased applicatie en behoort tot de OpenRemote
 Controller. Op de OpenRemote Modeler kunnen er groepen gemaakt worden en
 gekoppeld worden aan knoppen, sliders en/of switches, waarna je deze groepen in
-de administrator panel kan koppelen aan apparaten.
+het administrator panel kan koppelen aan apparaten.
 
 \begin{figure}[htpb]
    \begin{center}
@@ -274,17 +284,17 @@ de administrator panel kan koppelen aan apparaten.
 \section{Inleiding}
 Vandaag de dag merk je dat beveiliging een steeds belangrijkere rol krijgt binnen
 de samenleving, er wordt immers veel gesproken over beveiligingskwesties in
-het nieuws. Zo werd KPN gehackt, dit keer door een 17-jarige jongen, of
+het nieuws. Zo werd KPN gehackt, dit keer door een 17-jarige jongen, en
 er werden weer allerlei persoonlijke gegevens en/of logingegevens verspreid via het
 internet.
 
-In dit verslag wordt besproken hoe de beveiliging is gesteld met een
+In dit verslag wordt besproken hoe het met de beveiliging is gesteld bij een
 softwareapplicatie genaamd OpenRemote. OpenRemote is een applicatie die
 bedoeld om thuis een (eigen) domotica systeem op te zetten. Deze applicatie
 bestaat uit verschillende onderdelen. De OpenRemote Controller is het hart van
 het pakket. Deze draait op een server binnenshuis en op deze server wordt de
 domotica apparatuur aangesloten. Om de domotica apparatuur aan te spreken wordt
-er gebruik gemaakt van een OpenRemote client. Deze app communiceert met de
+er gebruik gemaakt van een OpenRemote client. Deze applicatie communiceert met de
 OpenRemote Controller om dynamisch een interface in te laden en commando's te
 sturen. 
 
@@ -326,8 +336,8 @@ relatie met het vroegere moederbedrijf Philips en werkt dus ook veel met Philips
 samen. Andere bedrijven waar veel mee wordt samengewerkt zijn TomTom, ASML
 en Bosch.
 
-Buiten het detacheren heeft TASS ook een aantal projecten intern lopen. Het
-grootste en meest bekende project is het uCAN[1] project. Dit project
+Naast het detacheren heeft TASS ook een aantal projecten intern lopen. Het
+grootste en meest bekende project is het uCAN project. Dit project
 focust zich op het inzichtelijk maken van sensorgegevens uit auto's. uCan
 leest de CAN-Bus uit en zendt de informatie door naar een server in de
 cloud.
@@ -338,7 +348,7 @@ Deze people manager zorgt voor de relatie tussen TASS en de medewerker evenals
 het helpen van oplossen van eventuele problemen tussen de medewerker en het bedrijf waar deze
 gedetacheerd zit.
 
-De plek waar de medewerker gedetacheerd is geregeld door de account
+De plek waar de medewerker gedetacheerd is, wordt geregeld door de account
 managers van TASS. Een account manager heeft een aantal bedrijven in
 zijn/haar portfolio zitten met wie ze contact hebben over mogelijke
 opdrachten voor medewerkers. Mochten ze een plek vinden, zorgen zij voor
@@ -359,10 +369,9 @@ bepaald worden.
 Buiten de People Manager krijgen de afstudeerders ook een technische
 begeleider toegewezen. De hoofd technische begeleider heet Bas Burgers,
 maar ook Berry Borgers is erg ge\"interesseerd is het DomoTop project en hij
-wilt graag de tweede technische begeleider zijn. De people manager is
+wil graag de tweede technische begeleider zijn. De people manager is
 niet meer dagelijks bezig met technische ontwikkeling en kan op dat vlak
 eventueel achter lopen. Bas Burgers is een gedetacheerde medewerker, die zich nog
-dagelijks bezighoudt met de techniek.
 dagelijks bezighoudt met de techniek.
 Deze technische begeleider zal zich dan ook niet bezig houden met 
 project management zaken, maar vooral met de technische problemen of vragen
@@ -387,8 +396,8 @@ bij vragen kan men bij deze afdeling terecht.
 
 \newpage
 \section{Probleemanalyse}
-Binnen de opdracht waren er probleemsituaties onstaan die hieronder
-beschreven worden. Naar aanleiding van deze probleemsituaties is er een
+Binnen de opdracht is een probleemsituatie onstaan die hieronder
+beschreven worden. Naar aanleiding van deze probleemsituatie is er een
 probleemstelling opgesteld.
 
 \subsection{Probleemsituatie}
@@ -422,9 +431,10 @@ kunnen krijgen tot een OpenRemote systeem. Voor dit probleem is de
 volgende doelstelling geformuleerd: het implementeren van beveiliging in
 OpenRemote, zodat onbevoegden geen toegang kunnen krijgen tot het systeem.
 
-Het eerste deelprobleem dat is te defini"eren over deze probleemstelling is:
+Het eerste deelprobleem dat is te defini\"eren over deze probleemstelling is:
 Welke beveiligingstechnieken zijn het best te gebruiken in deze situatie?
-Deze doelstelling zal onderzocht worden en uiteindelijk ge\"implementeerd worden in OpenRemote.
+Deze doelstelling zal onderzocht worden en uiteindelijk ge\"implementeerd worden
+in OpenRemote.
 
 Het tweede deelprobleem dat opgelost moet worden is: De ontwikkelaars
 moeten de code van OpenRemote doorgronden om deze uiteindelijk uit te
@@ -432,46 +442,48 @@ kunnen breiden. Voordat er aan de slag kan worden gaan met uitbreiding van
 OpenRemote moet de code eerst onderzocht worden.
 
 De volgende probleemstelling die opgelost moet worden binnen het project
-is: geselecteerde gebruikers moeten toestemming tot het systeem kunnen worden
+is: geselecteerde gebruikers moet toestemming tot het systeem kunnen worden
 verleend. Deze probleemstelling gaat meer richting de autorisatie en over
 hoe men gebruikers toestemming kan geven tot een systeem.
 
 Het laatste probleem dat gedefinieerd is: er kunnen groepen gemaakt worden om
-rechten aan gebruikers te geven, zodat knoppen alleen toegankelijk zijn voor een deel van de gebruikers. 
+rechten aan gebruikers te geven, zodat knoppen alleen toegankelijk zijn voor een
+deel van de gebruikers. 
 
 Voor dit project is SCRUM gebruikt als ontwikkelmethodiek, mede omdat het een
 zeer flexibele ontwikkelmethode is voor het ontwikkelen van software. Zo is het
 mogelijk met SCRUM om, zonder dat alle eisen bekend zijn, meerdere tussenopleveringen te hebben, 
 wat de kwaliteit ten goede komt. Voor meer
-informatie zie het hoofdstuk "Methoden en Technieken".
+informatie zie het hoofdstuk 'Methoden en Technieken'.
 
 \newpage
 \section{Plan van Aanpak}
 
-In dit hoofdstuk wordt er een samenvatting gegeven van het plan van aanpak.
-Zie voor het volledige plan van aanpak bijlage 1. Het doel van het 
-project is OpenRemote  te  beveiligen  en  dit  eventueel  te
-demonstreren. Op dit moment is er geen enkele manier van beveiliging aanwezig
-in OpenRemote. Ook zal er gebruik gemaakt worden van een PlugTop, waarop  de
-OpenRemote server komt te draaien.
+In dit hoofdstuk wordt er een samenvatting gegeven van het plan van aanpak.  Zie
+voor het volledige plan van aanpak bijlage 1. Het doel van het project is
+OpenRemote  te  beveiligen  en  dit  eventueel  te demonstreren. Op dit moment
+is er geen enkele manier van beveiliging aanwezig in OpenRemote. Ook zal er
+gebruik gemaakt worden van een PlugTop, waarop  de OpenRemote server komt te
+draaien.
 
-Er zal gebruik gemaakt worden van  SCRUM, een ontwikkelmethode, welke flexibel is en resulteert in een product dat  veel
-meer aan de verwachtingen van de klant voldoet. Meer informatie  over  SCRUM
-kan gevonden worden in het hoofdstuk 'Methoden en technieken'.
-Er wordt git gebruikt als versiebeheer software en  dat  in  combinatie  met
-GitHub, waar de git hosting online geregeld is.  Er  zal  Google  Documenten
-gebruikt worden, waarin de documenten geschreven en opgeslagen worden.
-Al deze technieken komen ook verder aan bod in het  hoofdstuk  'Methoden  en
-technieken'.
+Er zal gebruik gemaakt worden van  SCRUM, een ontwikkelmethode, welke flexibel
+is en resulteert in een product dat  veel meer aan de verwachtingen van de klant
+voldoet. Meer informatie  over  SCRUM kan gevonden worden in het hoofdstuk
+'Methoden en technieken'.  Git wordt gebruikt als versiebeheer software en
+dat  in  combinatie  met GitHub, waar de git hosting online geregeld is.  Er
+zal  Google  Documenten gebruikt worden, waarin de documenten geschreven en
+opgeslagen worden.  Al deze technieken komen ook verder aan bod in het
+hoofdstuk  'Methoden  en technieken'.
 
 In de eerste weken wordt  er  onderzoek  gedaan  naar  welke  technieken  er
-gebruikt gaan worden. Welk platform,  PlugTop (een kleine computer server voor gebruik in huis / kantoor)  en  
-protocollen  er  gebruikt gaan worden. Daarna wordt de PlugTop opgezet samen met een  mobiel  apparaat
-(Android)  waarop  OpenRemote  draait. Er wordt een 'Research  Security'
-document opgezet. Hierin komt een conclusie te staan wat de aanpak wordt  om
-OpenRemote het beste  te  beveiligen.  Met  deze  informatie  wordt  er  een
-prototype ontwikkeld. Nadat er een volledig werkend  prototype  is,  kan  er
-gekeken worden of en waar dit product uitgebreid en verbeterd kan worden.
+gebruikt gaan worden. Welk platform,  PlugTop (een kleine computer server voor
+gebruik in huis / kantoor)  en  protocollen  er  gebruikt gaan worden. Daarna
+wordt de PlugTop opgezet samen met een  mobiel  apparaat (Android)  waarop
+OpenRemote  draait. Er wordt een 'Research  Security' document opgezet. Hierin
+komt een conclusie te staan wat de aanpak wordt  om OpenRemote het beste  te
+beveiligen.  Met  deze  informatie  wordt  er  een prototype ontwikkeld. Nadat
+er een volledig werkend  prototype  is,  kan  er gekeken worden of en waar dit
+product uitgebreid en verbeterd kan worden.
 
 Zie bijlage 1 voor het volledige plan van aanpak met daarin een lijst  van
 risico's,  afspraken,  deadlines  en  een weekplanning.
@@ -498,11 +510,11 @@ vanuit het bedrijf.
   \begin{center}
     \includegraphics[width=0.80\textwidth]{scrum.pdf}
   \end{center}
-  \caption{scrum}
+  \caption{Scrum}
 \end{figure}
 
-TASS heeft een interne website[2] opgezet, genaamd Sensei, waarin
-een grote bron aan informatie over SCRUM is opgenomen. Tevens zijn er een
+TASS heeft een interne website opgezet, genaamd Sensei, waarin
+veel informatie over SCRUM is opgenomen. Tevens zijn er een
 aantal personen binnen het bedrijf SCRUM-experts, wat betekent dat vragen of
 problemen altijd beantwoord kunnen worden door een van de experts.
 
@@ -520,7 +532,7 @@ houden.
 \subsection{Versiebeheer}
 
 De techniek die gebruikt wordt om code en documentversies bij te houden is
-git. Git is een "version control system"\space net als subversion en
+git. Git is een 'version control system' net als subversion en
 mercurial. Het doel van git is om verschillende versies van bestanden bij
 te houden en te kunnen springen in versies. Git heeft als grote voordeel
 dat het gedistribueerd is, wat betekent dat elke git clone (vergelijkbaar
@@ -543,12 +555,12 @@ aanwezig is. Zie de werking en belangrijke commando's van git in figuur \ref{git
 Om toch een centrale plaats te hebben waar alle veranderingen naartoe
 gestuurd worden, hebben wij ervoor gekozen om Github te gebruiken. Github
 is een online platform voor git-repositories, met een erg goede
-webinterface. In deze webinterface kan men de code bekijken. Tevens kan de git url
+webinterface. In deze webinterface kan de code bekeken worden. Tevens kan de git url
 gevonden worden en kunnen 'issues' aangemaakt worden.
 
 \subsection{Documenten}
-Voor het maken van documenten is er voor gekozen om Google Documenten te
-gebruiken. Google Documenten is een web applicatie waarmee eenvoudig en
+Voor het maken van documenten is gekozen voor Google Documenten.
+Google Documenten is een web applicatie waarmee eenvoudig en
 snel documenten kunnen worden gemaakt. Tevens is het mogelijk om met
 meerdere mensen in een document te werken zonder conflicten te krijgen. Ook
 de SCRUM spreadsheets staan in Google Documenten.
@@ -556,7 +568,7 @@ de SCRUM spreadsheets staan in Google Documenten.
 Voor het afstudeerverslag is er gekozen voor \LaTeX. Dit omdat het opmaken
 van een document veel meer mogelijkheden met zich meebrengt dan het meer
 beperkte Google Documents. Ook bestond de wens bij studenten
-om meer ervaring op te doen met \LaTeX\space. Het afstudeerverslag leek hen de uitgelezen kans hiervoor.
+om meer ervaring op te doen met \LaTeX\space. Het afstudeerverslag leek hen een uitgelezen kans hiervoor.
 
 \subsection{Programmeertalen}
 De talen die gebruikt gaan worden liggen al vast, aangezien er verder 
@@ -565,10 +577,10 @@ Java, evenals voor de composer en beehive. De verschillende applicaties maken ge
 van Java op Android en Objective-C op iOS.
 
 \subsection{Database}
-Er is gebruik gemaakt van RazorSQL[3]. Met dit programma is het mogelijk om
+Er is gebruik gemaakt van RazorSQL. Met dit programma is het mogelijk om
 SQL queries op te zetten, uit te voeren en te testen via een grafische
 interface. RazorSQL werkt ook met de database die gebruikt wordt bij het DomoTop project,
-genaamd HSQLDB[4]. In deze database worden gegevens opgeslagen van de
+genaamd HSQLDB. In deze database worden gegevens opgeslagen van de
 apparaten die zich aanmelden bij OpenRemote en bij de groepen.
 RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
@@ -576,8 +588,8 @@ noodzakelijk.
 
 Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
 is geschreven (net als de Controller van OpenRemote), volledig open-source is,
-relatief weinig impact heeft op het system en multithreaded is.
-HSQLDB is namelijk klein en gebruikt weinig bronnen. Tot slot voldoet
+relatief weinig impact heeft op het systeem en multithreaded is.
+HSQLDB is namelijk klein en gebruikt weinig bronnen van het systeem. Tot slot voldoet
 HSQLDB aan alle eisen en beschikt over alle mogelijkheden die noodzakelijk
 zijn binnen het DomoTop project. Denk hierbij aan tabellen aanmaken, rijen
 toevoegen, updaten, verwijderen en nog veel meer. Alternatieven van HSQLDB zijn
@@ -593,7 +605,7 @@ live te draaien op een tablet of een emulator.
 Bij het programmeren van de OpenRemote Controller wordt er ook gebruik gemaakt
 van de Eclipse omgeving. OpenRemote Controller is in Java geschreven code
 en deze Controller is ook vanaf het begin af aan gestart in de Eclipse
-ontwikkeling omgeving. Omdat OpenRemote Controller al ontwikkeld is in
+ontwikkelomgeving. Omdat OpenRemote Controller al ontwikkeld is in
 Eclipse, wordt er ook gebruik gemaakt van Eclipse. Er wordt gebruik gemaakt van Ant 
 om de Controller te bouwen en te compileren. Uiteindelijk krijg
 je \'e\'en WAR bestand. Deze WAR kan eenvoudig ge\"importeerd worden in de TomCat
@@ -603,12 +615,12 @@ kunnen zetten. Het DomoTop project heeft daarom ook TomCat gebruikt, omdat
 dit de meest toegankelijke oplossing is, gezien het feit dat OpenRemote hier
 ook al mee werkt.
 
-Tevens wordt gebruik gemaakt van een Eclipse plugin genaamd Colorer[5].
+Tevens wordt gebruik gemaakt van een Eclipse plugin genaamd Colorer.
 Met deze plugin is het mogelijk om syntax highlighting aan te zetten voor
 XML/HTML documenten, maar ook CSS en JavaScript bestanden. Er is hiervoor
 gekozen, omdat Eclipse standaard geen highlighting heeft voor bovengenoemde
 type bestanden. Desalniettemin is het optioneel om de Eclipse Colorer
-plugin te gebruiken. Het is enkel gekozen voor gemaks doeleinden.
+plugin te gebruiken. Het is enkel gekozen om optimaler te kunnen ontwikkelen.
 
 \subsection{Libraries}
 \begin{figure}[htpb]
@@ -619,33 +631,28 @@ plugin te gebruiken. Het is enkel gekozen voor gemaks doeleinden.
 \end{figure}
 
 In de OpenRemote Controller is er gebruikt gemaakt van een template engine
-genaamd Freemarker[6]. Deze template engine maakt het mogelijk om statische
+genaamd Freemarker. Deze template engine maakt het mogelijk om statische
 opmaak (template design) te scheiden van dynamische gegevens, zoals apparaatgegevens
 uit een database. Freemarker werkt goed samen met Java en TomCat.
 Verder is FreeMaker een relatief kleine template engine en simpel te
-begrijpen maar toch doeltreffend. FreeMarker forceert zich op het gebruik
+begrijpen maar toch doeltreffend. FreeMarker forceert het gebruik
 van een Model View Controller software architectuur. FreeMarker wordt ook
 vaak gebruikt voor servlet gebaseerde web applicatie ontwikkeling, en dat is
 exact wat de OpenRemote Controller is.
 
-%\begin{wrapfigure}{r}{0.5\textwidth}
-%  \begin{center}
-%    \includegraphics[width=0.55\textwidth]{bouncyjava.pdf}
-%  \end{center}
-%  \caption{Bouncy Castle}
-%\end{wrapfigure}
-Om te kunnen werken met encryptie en TLS in native Java code,
-wordt er gebruik gemaakt van Bouncy Castle wat een gratis open-source software is.
-Bouncy Castle is een bibliotheek die binnen het project gebruikt
-wordt om onder andere nieuwe certificaten te kunnen genereren vanuit Java code, alsmede een CSR
-(Certificate Signing Request) bestand uit te lezen en deze gegevens te gebruiken om een nieuw certificaat te
-ondertekenen door middel van een CA (Certificate Authority). In dit CSR bestand
-staat onder andere de publieke sleutel van de aanvrager alsmede extra informatie
-over de persoon die het certificaat probeert aan te vragen. Certificate
-Authority beheert alle certificaten. Zie de begrippenlijst voor meer informatie. Ook het gebruikte CA certificaat wordt
-aangemaakt door middel van Bouncy Castle. Onder Android wordt er ook gebruik
-gemaakt van de Bouncy Castle bibliotheek, echter heet dat onder Android Spongy
-Castle, maar het is exact dezelfde code.
+Om te kunnen werken met encryptie en TLS in native Java code, wordt er gebruik
+gemaakt van Bouncy Castle wat gratis open source software is.  Bouncy Castle is
+een bibliotheek die binnen het project gebruikt wordt om onder andere nieuwe
+certificaten te kunnen genereren vanuit Java code. Ook kan deze bibliotheek een
+CSR (Certificate Signing Request) bestand uit lezen en deze gegevens te
+gebruiken om een nieuw certificaat te ondertekenen door middel van een CA
+(Certificate Authority). In dit CSR bestand staat onder andere de publieke
+sleutel van de aanvrager alsmede extra informatie over de persoon die het
+certificaat probeert aan te vragen.  Certificate Authority beheert alle
+certificaten. Zie de begrippenlijst voor meer informatie. Ook het gebruikte CA
+certificaat wordt aangemaakt door middel van Bouncy Castle. Onder Android wordt
+er ook gebruik gemaakt van de Bouncy Castle bibliotheek, echter heet dat onder
+Android Spongy Castle, maar het is exact dezelfde code.
 
 \newpage
 \begin{wrapfigure}{R}{0.25\textwidth}
@@ -662,18 +669,18 @@ Castle, maar het is exact dezelfde code.
 Het begin van de stage stond in het teken van onderzoek. Er was bij het
 ontwikkelteam weinig kennis van het domotica veld, OpenRemote, PlugTop computers
 en beveiliging, dus al deze velden moesten onderzocht worden. Het project begon
-met een globaal onderzoek naar het domotica veld en naar PlugTop computers. Het
+met een globaal onderzoek naar het domotica domein en naar PlugTop computers. Het
 volgende onderzoek dat uitgevoerd werd, was naar het OpenRemote software pakket en
 eventuele alternatieven.
 
 Het laatste onderzoek is gedaan naar de beveiligingstechnieken die bestaan.
-Voordat het onderzoek begon, is er een gesprek gehouden met Berry Borgers
+Voorafgaan aan het onderzoek is er gesproken met Berry Borgers
 aangezien hij over veel kennis beschikt met betrekking tot beveiling. De keuzes
 die zijn gemaakt in het document zijn in overleg met Berry Borgers gebeurd. Dit
 onderzoek is gedocumenteerd in het Engels zodat het te delen is met de
 ontwikkelaars van OpenRemote. Alle onderzoeken zijn  te vinden in de bijlagen.
 
-\subsection{SSL}
+\subsection{TLS}
 Vervolgens is er begonnen met het ontwikkelen van de gekozen oplossing:
 TLS implementeren in OpenRemote om deze veiliger te maken. Dit gebeurt
 door een apparaat een aanvraag te laten doen bij de OpenRemote Controller. De
@@ -684,15 +691,14 @@ wordt verleend om de OpenRemote Controller te gebruiken.
 
 De client heeft een certificaat nodig om een veilige verbinding op te kunnen
 zetten met de server. Met dit certificaat kan een client zich identificeren en
-authenticeren bij een server. Een certificaat wordt gegenereerd op de manier die te
-zien is in figuur \ref{ssl_ad_1}. In een certificaat moeten gegevens staan waarmee
-de client te identificeren is. Als er een aanvraag wordt gedaan, moet de
-beheerder kunnen zien van wie deze aanvraag komt. Er is in het project
-gekozen om hiervoor de naam van het apparaat (tablet/telefoon) evenals het
-emailadres te gebruiken. Hiervoor is gekozen omdat deze gegevens in de meeste
-apparaten voorkomen en uit te lezen zijn. Met deze twee gegevens is het voor een
-beheerder mogelijk  De client verzamelt deze gegevens en verstuurt deze naar de
-server. 
+authenticeren bij een server. Een certificaat wordt gegenereerd op de manier
+zoals te zien in figuur \ref{ssl_ad_1}. In een certificaat moeten gegevens staan
+waarmee de client te identificeren is. Als er een aanvraag wordt gedaan, moet de
+beheerder kunnen zien van wie deze aanvraag komt. Er is in het project gekozen
+om hiervoor de naam van het apparaat (tablet/telefoon) evenals het emailadres te
+gebruiken. Hiervoor is gekozen omdat deze gegevens in de meeste apparaten
+voorkomen en uit te lezen zijn. Met deze twee gegevens is het voor een beheerder
+mogelijk  De client verzamelt deze gegevens en verstuurt deze naar de server. 
 
 De server genereert voor de client een nieuw keypair, met daarin een
 public en een private key. Vervolgens worden de public key en de gegevens van de
@@ -710,18 +716,18 @@ truststore van TomCat. TomCat gebruikt deze truststore om te controleren of een
 certificaat te vertrouwen is. Als een certificaat niet in de truststore staat
 is deze niet te vertrouwen en wordt er geen veilige verbinding opgezet. 
 
-Er ontstond echter een probleem. TomCat leest namelijk de truststore tijdens het opstarten
-\'e\'en keer in. De certificaten die na het opstarten van TomCat toegevoegd
-worden aan de truststore, worden dus niet gebruikt. Dit betekent dat na het
-toevoegen van een client, TomCat geherstart zou moeten worden. 
-\\Om dat probleem op te lossen, dat de TomCat server niet
-telkens opnieuw herstart hoeft te worden, is ervoor gekozen om een eigen
+Nadat dit ge\"implementeerd was ontstond echter een probleem. TomCat leest
+namelijk de truststore tijdens het opstarten \'e\'en keer in. De certificaten
+die na het opstarten van TomCat toegevoegd worden aan de truststore, worden dus
+niet gebruikt. Dit betekent dat na het toevoegen van een client, TomCat
+geherstart zou moeten worden.  \\Om dat probleem op te lossen, dat de TomCat
+server niet telkens herstart hoeft te worden, is ervoor gekozen om een eigen
 'self-signed' CA te gebruiken. Op deze manier hoeft alleen het certificaat van
 de CA toegevoegd te worden aan de truststore van TomCat.  Zolang de client
-certificaten ondertekend zijn door een CA certificaat uit de
-truststore wordt deze vertrouwd. Als een client vertrouwd wordt, kan deze
-gebruik maken van de OpenRemote Controller. Zie figuur \ref{init_controller} hoe
-de OpenRemote Controller ge\"installeerd wordt.
+certificaten ondertekend zijn door een CA certificaat uit de truststore wordt
+deze vertrouwd. Als een client vertrouwd wordt, kan deze gebruik maken van de
+OpenRemote Controller. Zie figuur \ref{init_controller} hoe de OpenRemote
+Controller ge\"installeerd wordt.
 
 \newpage
 
@@ -744,22 +750,11 @@ wordt, vormt dit geen probleem. Deze bestanden zijn public en mogen door
 iedereen bekeken worden. De workflow is dan ook aangepast zoals te zien in
 figuur \ref{ssl_ad_2}.
 
-\newpage
-
-\begin{figure}[htpb]
-   \begin{center}
-     \includegraphics[height=0.86\textheight]{ssl_ad_2.pdf}
-   \end{center}
-   \caption{SSL workflow versie 2}
-   \label{ssl_ad_2}
-\end{figure}
-
-
 De client controleert eerst of er een certificaat aanwezig is voor de
 desbetreffende server. Als deze aanwezig is, wordt het proces meteen gestopt en
 kan er direct een veilige verbinding opgezet worden. Mocht er geen certificaat
 zijn, wordt er gecontroleerd of er een keypair aanwezig is. Een client heeft
-\'e\'en keypair die gebruikt kan worden om meerdere certificaten mee te
+\'e\'en keypair die gebruikt kan worden om meerdere certificaten te
 cree\"eren. Mocht er geen keypair aanwezig zijn, dan wordt deze gegenereerd. Anders
 kan er direct een CSR gegenereerd worden. Deze CSR wordt vervolgens opgestuurd
 naar de server.
@@ -771,10 +766,21 @@ certificaat van de CA moet wel toegevoegd zijn aan de truststore van TomCat.
 
 Het certificaat kan vervolgens door de client opgehaald worden en gebruikt
 worden voor een veilige verbinding. Op deze manier is de private key nooit
-overgestuurd en zal deze altijd lokaal op de client blijven staan. 
+verstuurd es zal deze altijd lokaal op de client blijven staan. 
+
+\newpage
+
+\begin{figure}[htpb]
+   \begin{center}
+     \includegraphics[height=0.86\textheight]{ssl_ad_2.pdf}
+   \end{center}
+   \caption{SSL workflow versie 2}
+   \label{ssl_ad_2}
+\end{figure}
+
 
 \subsection{Android}
-De client applicatie heeft als eis dat deze gegevens kan verzamelen. In het
+De client applicatie heeft als vereiste dat deze gegevens kan verzamelen. In het
 begin om direct naar de server te sturen, later om zelf een CSR te sturen. De
 naam van het apparaat zorgde niet voor problemen, echter het ophalen van het
 emailadres wel. De app waar aan gewerkt is, is een bestaande app die al op de
@@ -802,7 +808,7 @@ een certificaat op te halen.
 \end{figure}
 
 In latere versies is de interface dermate geoptimaliseerd dat deze knoppen niet
-meer nodig zijn. De vernieuwde interface, te zien in \ref{androidv2}, heeft een
+meer nodig zijn. De vernieuwde interface, te zien in figuur \ref{androidv2}, heeft een
 veld waar de pin direct af te lezen is zonder pop-up. De knoppen zijn weggehaald
 aangezien de acties nu automatisch gebeuren. Zo wordt er automatisch een
 certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt. 
@@ -811,8 +817,8 @@ certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt.
 De OpenRemote Controller heeft een administrator panel om de gebruikers-/mobiele
 apparaten te kunnen beheren. De beheerder kan inloggen met zijn/haar
 inloggegevens van de Beehive server (Modeler account). Hierdoor zijn er geen
-extra login gegevens nodig die onthouden zouden moeten. Er wordt communicatie
-gelegd met de Beehive server, de login gegevens worden gestuurd naar de Behive server
+extra login gegevens nodig die onthouden zouden moeten worden. Er wordt communicatie
+gelegd met de Beehive server, de login gegevens worden gestuurd naar de Beehive server
 en vervolgens daar gecontroleerd. De Beehive server geeft vervolgens een 'OK'
 of 'NOT ALLOWED' terug, waarna er met zekerheid te zeggen is dat de login gegevens
 correct of incorrect zijn opgegeven.
@@ -820,13 +826,13 @@ correct of incorrect zijn opgegeven.
 Wanneer er geen rechtstreekse toegang is tot het internet op de 
 OpenRemote Controller is het noodzakelijk om toch in te kunnen loggen met de
 login gegevens van de Beehive server. Er is daarom gekozen bij de login module
-om gebruik te maken van de cache gegevens uit de database, om zodoende de administrator te
+om gebruik te maken van cache gegevens uit de database, om zodoende de administrator te
 kunnen valideren.
 
 Het is van groot belang dat deze gegevens veilig worden opgeslagen. Daarom is er
 gekozen voor het opslaan van het wachtwoord in SHA512 (behoord tot de SHA-2
 familie). Ook wordt bij de HTTP sessie id  wordt er gebruik gemaakt van het SHA512
-hash algoritme. Voorheen was dit MD5 echter is een MD5 hash relatief
+hash algoritme. Voorheen was dit MD5 echter is dit relatief
 eenvoudig te kraken via brute-force en/of rainbow table. Het voordeel van SHA512
 is dat het gebruik maakt van 512 bits woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
@@ -838,12 +844,12 @@ apparaat. Indien de pin van Android en de administrator panel overeenkomen, is
 er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze pin is
 gebaseerd op de publieke sleutel die ook aanwezig is in het client certificaat.
 
-Naast 'User management' heeft de administrator panel ook een tab
+Naast 'User management' heeft het administrator panel ook een tab
 'Configuration'. In deze tab is het mogelijk om bepaalde instellingen te
-veranderen, zoals de authenticatie of pin check aan- of uit te zetten.  De
+veranderen, zoals de authenticatie of de pin check aan- of uit te zetten.  Het
 administrator panel is beveiligd door een gebruikersnaam en wachtwoord die
 overeen moeten komen met een bestaand OpenRemote Designer account. Op deze manier
-is het administratie paneel enkel toegankelijk voor de administrator.
+is het administratie panel enkel toegankelijk voor de administrator.
 
 Om te voorkomen dat het wachtwoord relatief eenvoudig te achterhalen is, wordt
 er aangeraden om gebruik te maken van 'Pepper \& Salt' oftewel peper en zout. Met
@@ -854,17 +860,17 @@ toegevoegd. Er is gekozen om een systeem constante te gebruiken als zijnde
 algoritme met een lengte van 32 bits die gebruikt wordt als 'Salt'. 
 
 Uiteindelijk is er een grafische interface gemaakt om apparaten goed en/of af te
-keuren vanuit de 'administrator panel'. Er bestaat een pin die vergeleken kan
+keuren vanuit het administrator panel. Er bestaat een pin die vergeleken kan
 worden met de pin die aanwezig is op het Android apparaat. Indien de pin van
-Android en de administrator panel overeenkomen, is er met zekerheid te zeggen
-dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke
-sleutel die aanwezig is in het client certificaat. Naast 'User management' heeft de
+Android en het administrator panel overeenkomen, is er met zekerheid te zeggen
+dat het hetzelfde apparaat betreft. Deze pin is gebaseerd op de publieke sleutel
+die aanwezig is in het client certificaat. Naast 'User management' heeft het
 administrator panel ook een tab, genaamd 'Configuration'. In deze tab is het
 mogelijk om bepaalde instellingen te veranderen zoals de authenticiteit, of door
 pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
-gebruikersnaam en wachtwoord die overeen moeten komen met een bestaand OpenRemote
-Designer account. Op deze manier is het administratie paneel enkel toegankelijk
-voor de administrator.
+gebruikersnaam en wachtwoord die overeen moeten komen met een bestaand
+OpenRemote Designer account. Op deze manier is het administratie paneel enkel
+toegankelijk voor de administrator.
 
 \begin{figure}[htpb]
    \begin{center}
@@ -879,11 +885,11 @@ Binnen het OpenRemote project bestond er veel vraag naar om apparaten in groepen
 te kunnen geven. Aan deze vraag is in dit project gehoor gegeven. In de
 OpenRemote Composer is er voor gezorgd dat aan de knoppen een groep toegewezen
 kan worden. Deze groepen worden gekoppeld aan groepen in de beide xml bestanden
-die geexporteerd worden vanuit de server. Per knop kunnen meerdere groepen
+die ge\"exporteerd worden vanuit de server. Per knop kunnen meerdere groepen
 gekoppeld worden.
 
 Op de controller worden de groepen uit XML gehaald en in de database opgeslagen.
-Vervolgens kan er in de admin interface een gebruiker aan een knop gekoppeld
+Vervolgens kan er in het admin panel een gebruiker aan een knop gekoppeld
 worden zoals te zien in figuur \ref{usergroups}. De koppeling tussen gebruiker
 en groep wordt opgeslagen in de database op de controller. 
 
@@ -913,13 +919,13 @@ Tijdens de afstudeerperiode zijn er resultaten geboekt die vermeld zijn in dit
 hoofdstuk. Hier wordt per iteratie uitgelegd welke resultaten behaald
 zijn en aan welke eisen deze moesten voldoen.
 
-\subsection{Iteratie 1}
+\subsection{Iteratie 1: Onderzoek}
 Voor de eerste iteratie is onderzoek gedaan in het werkveld van de afstudeerstage.
 Er is onderzoek gedaan naar vier delen: Domotica protocollen, domotica hardware,
 PlugTops en OpenRemote met alternatieven. 
 
 \begin{table}[htpb]
-  \caption{Eisen iteratie 1}
+  \caption{Eisen iteratie 1: Onderzoek}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                  \\\hline\hline
@@ -949,9 +955,9 @@ gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
 goed geregeld. In bijlage 6 is het onderzoek te vinden.
 
-\subsection{Iteratie 2}
+\subsection{Iteratie 2: Testopstelling}
 \begin{table}[htpb]
-  \caption{Eisen iteratie 2}
+  \caption{Eisen iteratie 2: Testopstelling}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -984,13 +990,13 @@ OpenRemote te beveiligen het gebruik van SSL certificaten is. Deze
 certificaten kunnen door zowel de server als de client gebruikt worden om
 zich te authenticeren. Zie bijlage 4 voor meer informatie.
 
-\subsection{Iteratie 3}
+\subsection{Iteratie 3: SSL Proof-of-Concept}
 De derde iteratie heeft in het teken gestaan van de Proof-of-Concept die laat zien
 dat het mogelijk is om met Android te verbinden naar een TomCat server en
 te authenticeren door middel van SSL Client Certificaten.
 
 \begin{table}[htpb]
-  \caption{Eisen iteratie 3}
+  \caption{Eisen iteratie 3: SSL Proof-of-Concept}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1019,7 +1025,7 @@ en client moeten kunnen zien dat de client uniek identificeerbaar is. Er wordt
 gebruik gemaakt van het 'serial' attribuut wat in elk certificaat aanwezig is.
 Dit attribuut is een oplopende integer.
 
-\subsection{Iteratie 4}
+\subsection{Iteratie 4: SSL in OpenRemote}
 In de daaropvolgende iteratie is er gewerkt aan het implementeren van de
 Proof-of-Concept in het OpenRemote project.
 
@@ -1030,7 +1036,7 @@ ontworpen (zie figuur \ref{adminv1}) en er zijn acties aan gekoppeld
 waarmee de client goedgekeurd kan worden.
 
 \begin{table}[htpb]
-  \caption{Eisen iteratie 4}
+  \caption{Eisen iteratie 4: SSL in OpenRemote}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1065,9 +1071,9 @@ gebruikt deze CSR om een certificaat te maken. Op deze manier wordt de private
 sleutel van de client nooit overgestuurd en kan deze ook niet onderschept
 worden door kwaadwillenden.
 
-\subsection{Iteratie 5}
+\subsection{Iteratie 5: Platformonafhankelijkheid}
 \begin{table}[htpb]
-  \caption{Eisen iteratie 5}
+  \caption{Eisen iteratie 5: Platformonafhankelijkheid}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1141,9 +1147,9 @@ waarmee ingelogd wordt op \url{http://composer.openremote.org/demo/}.
 Deze worden online gecontroleerd als er ingelogd wordt. Mocht er geen
 internetverbinding zijn, dan wordt de cache uit de database gebruikt.
 
-\subsection{Iteratie 6}
+\subsection{Iteratie 6: Oplevering naar OpenRemote}
 \begin{table}[htpb]
-  \caption{Eisen iteratie 6}
+  \caption{Eisen iteratie 6: Oplevering naar OpenRemote}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1182,7 +1188,7 @@ de volgende link
 \url{http://openremote.org/pages/viewpage.action?pageId=19439381&focusedCommentId=19440285#comment-19440285}. 
 In de forum post is kort uitgelegd wat de veranderingen zijn waar aan gewerkt is en hoe dit getest is. 
  
-\subsection{Iteratie 7}
+\subsection{Iteratie 7: Groepen}
 
 In deze iteratie is er gewerkt aan het implementeren van groepen in OpenRemote.
 Deze functie houdt in dat men een groep toe kan wijzen aan een knop in de layout
@@ -1191,7 +1197,7 @@ een device en een knop in dezelfde groep zitten, zal de actie die aan de knop
 hangt doorgevoerd worden.
 
 \begin{table}[htpb]
-  \caption{Eisen iteratie 7}
+  \caption{Eisen iteratie 7: Groepen}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1218,10 +1224,10 @@ Mocht er toch op een knop gedrukt worden op de android applicatie, dan wordt er 
 melding getoond met daarin het bericht dat de gebruiker niet in de correcte
 groep zit. 
 
-\subsection{Iteratie 8}
+\subsection{Iteratie 8: Meer groepen}
 
 \begin{table}[htpb]
-  \caption{Eisen iteratie 8}
+  \caption{Eisen iteratie 8: Meer groepen}
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
@@ -1406,6 +1412,7 @@ TomCat.
 
 \newpage
 \section{Verantwoording individuele bijdrage}
+\label{lastpage}
 
 \begin{tabular}{|| l | c | c ||}\hline
     Onderdeel              &   \multicolumn{2}{|c||}{Verantwoordelijke} \\\hline
@@ -1424,6 +1431,7 @@ TomCat.
 \end{tabular}              
 
 \newpage
+\pagestyle{empty}
 \section{Bijlagen}
 
 In dit hoofdstuk komen de bijlagen te staan. Elke bijlage is genummerd en
