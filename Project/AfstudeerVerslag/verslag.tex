@@ -742,7 +742,7 @@ Controller ge\"installeerd wordt.
 
 Het oversturen van de client certificaten met de private key van server naar
 client is een probleem. Mochten deze twee bestanden onderschept worden, kan een
-ander apparaat deze gebruiken om een "veilige" verbinding op te zetten. In het
+ander apparaat deze gebruiken om een 'veilige' verbinding op te zetten. In het
 ideale geval is het gewenst om het keypair en CSR op de client te genereren. De
 CSR kan dan overgestuurd worden naar de server, waarna deze er een certificaat
 van kan maken en kan ophalen. Als een CSR of certificaat onderschept
@@ -869,7 +869,7 @@ administrator panel ook een tab, genaamd 'Configuration'. In deze tab is het
 mogelijk om bepaalde instellingen te veranderen zoals de authenticiteit, of door
 pin check aan- of uit te zetten.  De administrator panel is beveiligd door een
 gebruikersnaam en wachtwoord die overeen moeten komen met een bestaand
-OpenRemote Designer account. Op deze manier is het administratie paneel enkel
+OpenRemote Designer account. Op deze manier is het administratie panel enkel
 toegankelijk voor de administrator.
 
 \begin{figure}[htpb]
@@ -950,7 +950,7 @@ DreamPlug de meest geschikte PlugTop voor dit project is. De DreamPlug
 beschikt over een groot aantal aansluitingen en is gunstig geprijsd. 
 
 In het onderzoek naar OpenRemote is gekeken naar de mogelijkheden van het
-OpenRemote project in vergelijking met andere software pakketten. Hier is uit
+OpenRemote project in vergelijking met andere software pakketten. Hieruit is 
 gebleken dat OpenRemote beschikt over de meeste mogelijkheden en het meest
 actief wordt bijgehouden. Wel is de beveiliging van OpenRemote niet heel
 goed geregeld. In bijlage 6 is het onderzoek te vinden.
@@ -963,7 +963,7 @@ goed geregeld. In bijlage 6 is het onderzoek te vinden.
         Eis                                                              \\\hline\hline
         Als gebruiker wil ik een Android applicatie om een lamp aan en   \\ 
         uit te zetten                                                    \\\hline
-        Als klant wil ik weten wat voor authorisatie en authenticatie    \\
+        Als klant wil ik weten wat voor autorisatie en authenticatie    \\
         methoden er bestaan.                                             \\\hline
     \end{tabular}
   \end{center}
@@ -980,12 +980,12 @@ onderzoek gedaan naar verschillende beveilingsmethodieken en oplossingen.
   \caption{Android}
 \end{wrapfigure}
 
-Met de test opstelling is het mogelijk om een lamp
+Met de testopstelling is het mogelijk om een lamp
 aan te sturen met de OpenRemote controller, welke draait op de
 DreamPlug. Met de OpenRemote app is het mogelijk om met behulp van deze
 opstelling een lamp aan te zetten via een X10 stopcontactmodule.
 
-Het onderzoek over beveiliging concludeert dat de beste methode om
+Het onderzoek naar beveiliging concludeert dat de beste methode om
 OpenRemote te beveiligen het gebruik van SSL certificaten is. Deze
 certificaten kunnen door zowel de server als de client gebruikt worden om
 zich te authenticeren. Zie bijlage 4 voor meer informatie.
@@ -1008,7 +1008,7 @@ te authenticeren door middel van SSL Client Certificaten.
   \end{center}                                                            
 \end{table}                                                               
 
-Voor de Proof-of-Concept zijn een aantal eisen. Als eerste moet de client
+Voor de Proof-of-Concept zijn er een aantal eisen. Als eerste moet de client
 een aanvraag kunnen doen bij de server voor een certificaat. Deze aanvraag
 moet in een lijstje te zien zijn waarna er een certificaat terug wordt
 gestuurd naar de client. Dit certificaat wordt gegenereerd op de server,
@@ -1030,8 +1030,8 @@ In de daaropvolgende iteratie is er gewerkt aan het implementeren van de
 Proof-of-Concept in het OpenRemote project.
 
 Er zijn een aantal onderdelen verbeterd om ze te kunnen implementeren in het
-OpenRemote project. De beheerders
-interface is een onderdeel hiervan. Deze interface is verbeterd, hij is
+OpenRemote project. Het administrator panel
+is een onderdeel hiervan. Deze interface is verbeterd, hij is
 ontworpen (zie figuur \ref{adminv1}) en er zijn acties aan gekoppeld 
 waarmee de client goedgekeurd kan worden.
 
@@ -1062,7 +1062,7 @@ laten zien.
 \begin{figure}[h!]
   \centering
     \includegraphics[height=150pt,keepaspectratio]{adminv1.pdf}
-  \caption{Ontwerp beheerderspanel}
+  \caption{Ontwerp administrator panel}
   \label{adminv1}
 \end{figure}
 
@@ -1109,13 +1109,13 @@ client te zien in de beheerdersinterface. Hij is nog niet
 goedgekeurd en heeft dus ook geen toegang tot het systeem.
 
 Wanneer de beheerder de client goedgekeurd heeft, en desgewenst de pin ingevoerd
-heeft, wordt het een certificaat gegenereert. Als eerste
+heeft, wordt het certificaat gegenereert. Als eerste
 wordt de private key van de CA opgehaald. Elk certificaat dat gemaakt wordt,
 wordt ondertekend door de CA. Deze CA wordt ook geimporteerd in de OpenRemote
 Controller en op die manier weet OpenRemote dat hij de clients kan vertrouwen.
 
 Daarna wordt de private key samen met de CSR gebruikt om een certificaat te
-cree"eren. Tevens moet er een serienummer meegegeven worden. Dit serienummer is een
+cree\"eren. Tevens moet er een serienummer meegegeven worden. Dit serienummer is een
 uniek oplopend nummer waarmee de certificaten te identificeren zijn. Het
 certificaat dat gemaakt is wordt in een keystore
 opgeslagen, klaar om opgehaald te worden door de mobiele applicatie. Tevens wordt de
@@ -1141,7 +1141,8 @@ verplicht gecontroleerd moet worden.
   \caption{Het configuratiescherm}
 \end{figure}
 
-Dit configuratiescherm en het user managementscherm zijn beide beveiligd met
+Dit configuratiescherm en het user managementscherm, samen het administrator
+panel, zijn beide beveiligd met
 een gebruikersnaam en wachtwoordcombinatie. Deze combinatie is dezelfde als
 waarmee ingelogd wordt op \url{http://composer.openremote.org/demo/}. 
 Deze worden online gecontroleerd als er ingelogd wordt. Mocht er geen
@@ -1153,7 +1154,7 @@ internetverbinding zijn, dan wordt de cache uit de database gebruikt.
   \begin{center}
     \begin{tabular}{|| l ||}\hline
         Eis                                                              \\\hline\hline
-        Als beheerder wil ik authenticatie en authorisatie uit kunnen    \\
+        Als beheerder wil ik authenticatie en autorisatie uit kunnen    \\
         schakelen om terug te vallen op de standaard onbeveiligde        \\ 
         verbinding                                                       \\\hline
         Als gebruiker wil ik alleen via SSL port \& client certificaten  \\ 
@@ -1174,7 +1175,7 @@ project, namelijk OpenRemote.
 Er is voor gezorgd dat voor het verbinden met SSL client certificaten verplicht
 gesteld kunnen worden. Dit betekent dat vanaf deze iteratie het alleen mogelijk is
 om te verbinden met de Controller met behulp van een bekend SSL Client
-Certificaat. Er wordt, als er verbinding is, gecontroleert of het client certificaat bekend
+Certificaat. Er wordt, als er verbinding is, gecontroleerd of het client certificaat bekend
 is bij de Controller. Zo ja, dan is er toegang, anders niet.
 
 Ook is ervoor gezorgd dat de uitbreidingen op OpenRemote uit te zetten
@@ -1211,14 +1212,14 @@ hangt doorgevoerd worden.
 \end{table}
 
 De modeler is uitgebreid met de mogelijkheid om groepen aan te maken, en
-vervolgens deze groepen toe te kunnen wijzen aan "besturingselementen". Er kan
+vervolgens deze groepen toe te kunnen wijzen aan 'besturingselementen'. Er kan
 nu een groep toegewezen worden aan een knop, een switch en een slider. In de XML,
 die vervolgens gegenereerd wordt, zijn ook de groepen toegevoegd. 
 
 In de controller kan een gebruiker toegewezen worden aan een groep. Deze groepen
 zijn hetzelfde als de groepen die worden aangemaakt in modeler en worden
 meegestuurd in de XML. Standaard heeft een gebruiker geen groep, en dus geen
-rechten, en in het administrator paneel kan een groep toegewezen worden.
+rechten, en in het administrator panel kan een groep toegewezen worden.
 
 Mocht er toch op een knop gedrukt worden op de android applicatie, dan wordt er een
 melding getoond met daarin het bericht dat de gebruiker niet in de correcte
@@ -1266,7 +1267,7 @@ groepen kunnen aan knoppen, sliders en switches gekoppeld worden. Deze koppeling
 gaat via een popup, welke te zien is in figuur \ref{groupselect}. Deze groepen
 worden opgeslagen in xml en zo overgestuurd naar de controller.
 
-De controller heeft een admin interface gekregen. Deze heeft verschillende
+De controller heeft een adminstrator panel gekregen. Deze heeft verschillende
 opties, de belangrijkste is de gebruikerslijst (te zien in figuur
 \ref{userlist}). In deze lijst staan de gebruikers die een aanvraag hebben
 gedaan. In de configuratie tab kunnen de instellingen van de controller
@@ -1296,7 +1297,7 @@ staan, wordt de interface niet geladen.
 
 Als de interface geladen wordt, wordt er gekeken of de client toegang heeft tot
 de verschillende elementen. Zo niet, dan wordt het element wel getekend maar op
-een "disabled" state gezet. Dit zorgt ervoor dat ze niet meer te besturen zijn.
+een 'disabled' state gezet. Dit zorgt ervoor dat ze niet meer te besturen zijn.
 
 
 \newpage
@@ -1308,7 +1309,7 @@ OpenRemote Controller. Tevens is aan het eind van het DomoTop project ook de
 mogelijkheid toegevoegd om groepen te gebruiken. Zo kunnen er groepen worden aangemaakt en
 gekoppeld worden aan knoppen, sliders en switches. Daarna kan men, in de OpenRemote
 Controller backend, de apparaten koppelen aan een bepaalde groep. Op deze
-manier wordt er ook gebruik gemaakt van authorisatie.
+manier wordt er ook gebruik gemaakt van autorisatie.
 
 Kortom het beveiligen van OpenRemote is gelukt en de gemaakte code kan
 opgeleverd worden aan de OpenRemote community, waarna ook de rest van de wereld
@@ -1318,7 +1319,7 @@ project.
 Binnen het DomoTop project zijn er punten die nog verbeterd kunnen worden. Het eerste waar
 aan gewerkt zou kunnen worden is het implementeren van de beveilingsverbeteringen
 in het OpenRemote project in de iOS client. Op dit moment zijn de
-authenticatie en authorisatie verbeteringen nog niet ge\"implementeerd in de iOS
+authenticatie en autorisatie verbeteringen nog niet ge\"implementeerd in de iOS
 client.
 
 Een goede uitbreiding aan dit project zou zijn een Windows Phone 7 (WP7) client.
@@ -1326,14 +1327,14 @@ OpenRemote heeft op dit moment alleen een Android, web en iOS client.
 
 Op het moment dat er uitbreidingen of verbeteringen uitgevoerd gaan worden op
 dit project is het verstandig dat er kennis is van SSL/TLS. Er moet kennis zijn
-van het cree"eren van CSR's en het ondertekenen daarvan. Tevens is het
+van het cree\"eren van CSR's en het ondertekenen daarvan. Tevens is het
 verstandig kennis op te doen van Java en in het bijzonder Java op Android en in
 TomCat.
 
 \newpage
 \section{Verklarende woordenlijst}
 
-\begin{longtable}{|| l | l ||}\hline
+\begin{tabular}{|| l | l ||}\hline
     Begrip           & Omschrijving                                         \\\hline\hline
     CAN-Bus          & CAN-bus is een standaard voor in voertuigen          \\
                      & om microcontrollers en apparaten met elkaar te       \\
@@ -1374,9 +1375,13 @@ TomCat.
                      & beveiligingscertificaten, aanvraag certificaten of   \\
                      & publieke sleutels worden opgeslagen                  \\
                      & wat gebruikt wordt met SSL encryptie.                \\\hline
+\end{tabular}
+\newpage
+\begin{tabular}{|| l | l ||}\hline
+    Begrip           & Omschrijving                                         \\\hline\hline
     TrustStore       & Zie: KeyStore, een TrustStore bevat certificaten     \\
-                     & die zijn geaccepteerd om verbinding mee op te zetten.\\
-                     & Of een CA certificaat waarbij de ondertekende        \\
+                     & die zijn geaccepteerd om een verbinding mee op te    \\
+                     & zetten. Of een CA certificaat waarbij de ondertekende\\
                      & certificaten vertrouwd  zijn.                        \\\hline
     Self-signed      & Een certificaat kan self-signed zijn,                \\
                      & wat erop duidt dat het certificaat door zichtzelf    \\
@@ -1386,7 +1391,7 @@ TomCat.
                      & zien dat de techniek werkt.                   \\\hline
     CSR              & Certification Sign Request, met behulp van dit       \\
                      & bestand kan de CA een certificaat genereren.         \\\hline
-\end{longtable}
+\end{tabular}
 
 \newpage
 \section{Bronnen}
