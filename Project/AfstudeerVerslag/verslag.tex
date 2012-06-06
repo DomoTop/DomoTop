@@ -176,7 +176,6 @@ Eindhoven, Nederland\\
 \newpage
 \thispagestyle{empty}
 \section*{Voorwoord}
-\addcontentsline{toc}{section}{Voorwoord}
 Domotica systemen nemen een steeds prominentere plaats in in de huidige
 samenleving. Denk bijvoorbeeld aan de Living Colors lampen van
 Philips\textsuperscript{\texttrademark}, het
@@ -214,17 +213,7 @@ begeiding vanuit school bedanken, met in het bijzonder Peter Kailuhu voor
 de coachingsgesprekken en informatie over de eisen vanuit school.
 
 \newpage
-\thispagestyle{empty}
-\tableofcontents
-\thispagestyle{empty}
-\newpage
-\thispagestyle{empty}
-\listoftables
-\listoffigures
-
-\newpage
 \section*{Samenvatting}
-\addcontentsline{toc}{section}{Samenvatting}
 Het software project genaamd OpenRemote is uitgebreid met een beter
 beveiligingssysteem dan voorheen. OpenRemote is een software
 pakket om een domotica systeem op te zetten. Er wordt gebruik gemaakt van
@@ -279,6 +268,15 @@ het administrator panel kan koppelen aan apparaten.
    \caption{Globale werking van OpenRemote}
    \label{global}
 \end{figure}
+
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\thispagestyle{empty}
+\listoftables
+\listoffigures
 
 \newpage
 \section{Inleiding}
@@ -600,8 +598,8 @@ noodzakelijk.
 Er is gekozen voor HSQLDB vanwege het feit dat deze database 100\% in Java
 is geschreven (net als de Controller van OpenRemote), volledig open-source is,
 relatief weinig impact heeft op het systeem en multithreaded is.
-HSQLDB is namelijk klein en gebruikt weinig bronnen van het systeem. Tot slot voldoet
-HSQLDB aan alle eisen en beschikt over alle mogelijkheden die noodzakelijk
+HSQLDB is namelijk compact (klein qua grootte) en gebruikt weinig bronnen van het systeem. 
+Tot slot voldoet HSQLDB aan alle eisen en beschikt over alle mogelijkheden die noodzakelijk
 zijn binnen het DomoTop project. Denk hierbij aan tabellen aanmaken, rijen
 toevoegen, updaten, verwijderen en nog veel meer. Alternatieven van HSQLDB zijn
 niet in native Java geschreven. Deze vragen meer van het systeem qua
@@ -668,7 +666,7 @@ Android Spongy Castle, maar het is exact dezelfde code.
 \newpage
 \begin{wrapfigure}{R}{0.25\textwidth}
   \begin{center}
-    \includegraphics[height=0.70\textheight]{ssl_ad_1.pdf}
+    \includegraphics[height=0.62\textheight]{ssl_ad_1.pdf}
   \end{center}
   \caption{SSL workflow}
   \label{ssl_ad_1}
@@ -789,7 +787,6 @@ verstuurd es zal deze altijd lokaal op de client blijven staan.
    \label{ssl_ad_2}
 \end{figure}
 
-
 \subsection{Android}
 De client applicatie heeft als vereiste dat deze gegevens kan verzamelen. In het
 begin om direct naar de server te sturen, later om zelf een CSR te sturen. De
@@ -828,7 +825,7 @@ certificaat aangevraagd en opgehaald wanneer er verbinding wordt gemaakt.
 De OpenRemote Controller heeft een administrator panel om de gebruikers-/mobiele
 apparaten te kunnen beheren. De beheerder kan inloggen met zijn/haar
 inloggegevens van de Beehive server (Modeler account). Hierdoor zijn er geen
-extra login gegevens nodig die onthouden zouden moeten worden. Er wordt communicatie
+extra login gegevens nodig die onthouden moeten worden. Er wordt communicatie
 gelegd met de Beehive server, de login gegevens worden gestuurd naar de Beehive server
 en vervolgens daar gecontroleerd. De Beehive server geeft vervolgens een 'OK'
 of 'NOT ALLOWED' terug, waarna er met zekerheid te zeggen is dat de login gegevens
@@ -843,13 +840,13 @@ kunnen valideren.
 Het is van groot belang dat deze gegevens veilig worden opgeslagen. Daarom is er
 gekozen voor het opslaan van het wachtwoord in SHA512 (behoord tot de SHA-2
 familie). Ook wordt bij de HTTP sessie id  wordt er gebruik gemaakt van het SHA512
-hash algoritme. Voorheen was dit MD5 echter is dit relatief
+hash algoritme. Voorheen was dit MD5, echter is dit relatief
 eenvoudig te kraken via brute-force en/of rainbow table. Het voordeel van SHA512
 is dat het gebruik maakt van 512 bits woord in tegenstelling tot 128
 bits, waardoor het veel minder snel gekraakt kan worden.
 
 Tenslotte is er een grafische interface gemaakt (te zien in figuur 12) om
-apparaten goed en/of af te keuren vanuit de 'administrator panel'. Er bestaat
+apparaten goed en/of af te keuren vanuit de administrator panel. Er bestaat
 een PIN die vergeleken kan worden met de PIN die aanwezig is op het Android
 apparaat. Indien de PIN van Android en de administrator panel overeenkomen, is
 er met zekerheid te zeggen dat het hetzelfde apparaat betreft. Deze PIN is
@@ -892,7 +889,7 @@ toegankelijk voor de administrator.
 \end{figure}
 
 \subsection{Groepen}
-Binnen het OpenRemote project bestond er veel vraag naar om apparaten in groepen aan
+Binnen het OpenRemote project bestond er veel vraag om apparaten in groepen aan
 te kunnen geven. Aan deze vraag is in dit project gehoor gegeven. In de
 OpenRemote Composer is er voor gezorgd dat aan de knoppen een groep toegewezen
 kan worden. Deze groepen worden gekoppeld aan groepen in de beide xml bestanden
@@ -912,7 +909,7 @@ de actie uitgevoerd. Zo niet, dan wordt er een errorcode teruggegeven.
 
 In de android applicatie wordt er bij het tekenen van de knoppen gekeken welke
 groep er aan deze knop gekoppeld zit en tot welke groep de gebruiker behoort.
-Als de gebruiker geen toegang heeft tot de knop, wordt deze disabled en kan deze
+Als de gebruiker geen toegang heeft tot de knop, wordt deze uitgeschakeld en kan deze
 dus niet ingedrukt worden.
 
 \begin{figure}[htpb]
@@ -1276,7 +1273,7 @@ Aan het eind van de stage heeft de OpenRemote Modeler de mogelijkheid om groepen
 toe te voegen. Deze groepen kunnen tevens ook verwijderd worden. Dezelfde
 groepen kunnen aan knoppen, sliders en switches gekoppeld worden. Deze koppeling
 gaat via een popup, welke te zien is in figuur \ref{groupselect}. Deze groepen
-worden opgeslagen in xml en zo overgestuurd naar de controller.
+worden opgeslagen in XML en zo overgestuurd naar de controller.
 
 De controller heeft een adminstrator panel gekregen. Deze heeft verschillende
 opties, de belangrijkste is de gebruikerslijst (te zien in figuur
@@ -1349,6 +1346,8 @@ TomCat.
     Begrip           & Omschrijving                                         \\\hline\hline
     Android          & Een besturingssysteem voor mobiele telefoons en      \\
                      & tablets, gemaakt door Google.                        \\\hline
+    Beehive          & Beehive is een database systeem (data opslag) wat    \\
+                     & gehost wordt door OpenRemote.                        \\\hline
     CA               & CA staat voor Certificate authority en is bedoeld om \\
                      & certificaat aanvragen goed te keuren en om           \\
                      & certificaten te beheren en te generen.               \\\hline
@@ -1357,6 +1356,9 @@ TomCat.
                      & laten communiceren zonder een host-computer.        \\\hline
     CSR              & Certification Sign Request, met behulp van dit       \\
                      & bestand kan de CA een certificaat genereren.         \\\hline
+    Cryptografie     & Cryptografie houdt zich bezig met technieken om      \\
+                     & gegevens versleuteld (onleesbaar) te verzenden /     \\
+                     & ontvangen.                                           \\\hline
     GitHub           & Een online git hosting platform.                     \\\hline
     iOS              & Een besturingssysteem voor mobiele telefoons en      \\
                      & tablets, gemaakt door Apple.                         \\\hline
@@ -1380,6 +1382,10 @@ TomCat.
                      & herbruikbaarheid van code.                           \\\hline
     OpenRemote       & Een domotica pakket waarmee je meerdere domotica     \\
                      & protocollen aan kan sturen.                          \\\hline
+\end{tabular}
+\newpage
+\begin{tabular}{|| l | l ||}\hline
+    Begrip           & Omschrijving                                         \\\hline\hline
     Penetratietest   & Een penetratietest is een check van \'e\'en of meer  \\
                      & computersystemen op kwetsbaarheden, waarbij deze     \\
                      & kwetsbaarheden ook werkelijk gebruikt worden om op   \\
@@ -1388,10 +1394,6 @@ TomCat.
                      & met toestemming van de eigenaars van de systemen die \\
                      & gecheckt worden, met als doel de systemen juist beter\\
                      & te beveiligen.                                       \\\hline
-\end{tabular}
-\newpage
-\begin{tabular}{|| l | l ||}\hline
-    Begrip           & Omschrijving                                         \\\hline\hline
     PlugTop          & Een energiezuinige computer in het formaat van een   \\
                      & forse adapter.                                       \\\hline
     Proof-of-Concept & Een applicatie die laat zien dat een bepaalde        \\
