@@ -510,7 +510,8 @@ figuur \ref{scrum}
   \label{scrum}
 \end{figure}
 
-TASS heeft een interne website opgezet, genaamd Sensei, waarin
+TASS heeft een interne website opgezet, genaamd
+Sensei\footnote{http://freemarker.sourceforge.net/index.html}, waarin
 veel informatie over SCRUM is opgenomen. Tevens zijn er een
 aantal personen binnen het bedrijf SCRUM-experts, wat betekent dat vragen of
 problemen altijd beantwoord kunnen worden door een van de experts.
@@ -539,7 +540,8 @@ wel gedaan. Dat betekent ook dat elke git clone een backup is van de gehele
 geschiedenis. Een ander voordeel van git is, dat er veranderingen opgeslagen
 kunnen worden (commit) en later pas gedeeld worden met andere mensen (push). Dit in
 tegenstelling tot andere versies beheersystemen waarbij deze functionaliteit niet
-aanwezig is. Zie de werking en belangrijke commando's van git in figuur \ref{git}.
+aanwezig is. Zie de werking en belangrijke commando's van git in figuur
+\ref{git}\footnote{http://osteele.com/images/2008/481x455xgit-transport.png.pagespeed.ic.zXwVaRg5pO.png}.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -550,7 +552,8 @@ aanwezig is. Zie de werking en belangrijke commando's van git in figuur \ref{git
 \end{figure}
 
 Om toch een centrale plaats te hebben waar alle veranderingen naartoe
-gestuurd worden, hebben wij ervoor gekozen om Github te gebruiken. Github
+gestuurd worden, hebben wij ervoor gekozen om
+Github\footnote{https://help.github.com/articles/set-up-git} te gebruiken. Github
 is een online platform voor git-repositories, met een erg goede
 webinterface. In deze webinterface kan de code bekeken worden. Tevens kan de git url
 gevonden worden en kunnen 'issues' aangemaakt worden.
@@ -585,10 +588,11 @@ Java, evenals voor de composer en beehive. De verschillende applicaties maken ge
 van Java op Android en Objective-C op iOS.
 
 \subsection{Database}
-Er is gebruik gemaakt van RazorSQL. Met dit programma is het mogelijk om
+Er is gebruik gemaakt van
+RazorSQL\footnote{http://www.razorsql.com/features.html}. Met dit programma is het mogelijk om
 SQL queries op te zetten, uit te voeren en te testen via een grafische
 interface. RazorSQL werkt ook met de database die gebruikt wordt bij het DomoTop project,
-genaamd HSQLDB. In deze database worden gegevens opgeslagen van de
+genaamd HSQLDB\footnote{http://hsqldb.org/web/hsqlFeatures.html}. In deze database worden gegevens opgeslagen van de
 apparaten die zich aanmelden bij OpenRemote en bij de groepen.
 RazorSQL is enkel een tool die gebruikt is bij het
 testen/opzetten van de database, daarom is deze tool niet meer
@@ -624,7 +628,8 @@ kunnen zetten. Het DomoTop project heeft daarom ook TomCat gebruikt, omdat
 dit de meest toegankelijke oplossing is, gezien het feit dat OpenRemote hier
 ook al mee werkt.
 
-Tevens wordt gebruik gemaakt van een Eclipse plugin genaamd Colorer.
+Tevens wordt gebruik gemaakt van een Eclipse plugin genaamd
+Colorer\footnote{http://colorer.sourceforge.net/eclipsecolorer/}.
 Met deze plugin is het mogelijk om syntax highlighting aan te zetten voor
 XML/HTML documenten, maar ook CSS en JavaScript bestanden. Er is hiervoor
 gekozen, omdat Eclipse standaard geen highlighting heeft voor bovengenoemde
@@ -640,7 +645,7 @@ plugin te gebruiken. Het is enkel gekozen om optimaler te kunnen ontwikkelen.
 \end{figure}
 
 In de OpenRemote Controller is er gebruikt gemaakt van een template engine
-genaamd Freemarker. Deze template engine maakt het mogelijk om statische
+genaamd Freemarker\footnote{http://freemarker.sourceforge.net/index.html}. Deze template engine maakt het mogelijk om statische
 opmaak (template design) te scheiden van dynamische gegevens, zoals apparaatgegevens
 uit een database. Freemarker werkt goed samen met Java en TomCat.
 Verder is FreeMaker een relatief kleine template engine en simpel te
@@ -691,7 +696,8 @@ ontwikkelaars van OpenRemote. Alle onderzoeken zijn  te vinden in de bijlagen.
 
 \subsection{TLS}
 Vervolgens is er begonnen met het ontwikkelen van de gekozen oplossing:
-TLS implementeren in OpenRemote om deze veiliger te maken. Dit gebeurt
+TLS met client
+certificaten\footnote{http://www.ibm.com/developerworks/lotus/library/ls-SSL\_client\_authentication/} implementeren in OpenRemote om deze veiliger te maken. Dit gebeurt
 door een apparaat een aanvraag te laten doen bij de OpenRemote Controller. De
 OpenRemote Controller kan deze aanvraag goedkeuren en het apparaat ontvangt
 vervolgens het client certificaat. Dit client certificaat wordt vervolgens
@@ -709,16 +715,20 @@ gebruiken. Hiervoor is gekozen omdat deze gegevens in de meeste apparaten
 voorkomen en uit te lezen zijn. Met deze twee gegevens is het voor een beheerder
 mogelijk om clients te identificeren.  De client verzamelt deze gegevens en verstuurt deze naar de server. 
 
-De server genereert voor de client een nieuw keypair, met daarin een
+De server genereert voor de client een nieuw
+keypair\footnote{http://developer.android.com/reference/java/security/KeyPair.html}, met daarin een
 public en een private key. Vervolgens worden de public key en de gegevens van de
 client gebruikt om een certificate signing request (CSR) te genereren. Een
 CSR is een bestand met daarin al de gegevens die een certificate authority (CA)
 nodig heeft om een certificaat te genereren. Vervolgens gebruikt dezelfde server
 deze CSR om een certificaat te maken. Het certificaat wordt samen met de private
 key opgeslagen in een keystore. De public key hoeft niet apart opgeslagen te
-worden, deze staat immers in het certificaat. Deze keystore kan vervolgens
+worden, deze staat immers in het certificaat. Deze
+keystore\footnote{http://developer.android.com/reference/java/security/KeyStore.html} kan vervolgens
 opgehaald worden door de client en gebruikt worden om een veilige verbinding op
-te zetten.
+te zetten. Echter, dit moest wel een keystore zijn in een specifiek formaat
+vanwege restricties in
+Android\footnote{http://stackoverflow.com/questions/2012497/accepting-a-certificate-for-https-on-android}.
 
 Het certificaat van de client wordt, zonder private key, ook opgeslagen in de
 truststore van TomCat. TomCat gebruikt deze truststore om te controleren of een
