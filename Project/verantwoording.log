@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.16)  8 JUN 2012 09:36
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.2.17)  8 JUN 2012 13:44
 entering extended mode
  %&-line parsing enabled.
 **verantwoording.tex
@@ -371,36 +371,25 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-
-LaTeX Warning: Reference `LastPage' on page 1 undefined on input line 139.
-
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
  <./tassbw.pdf>]
 File: tassbw.pdf Graphic file (type pdf)
 
-<use tassbw.pdf>
-
-LaTeX Warning: Reference `LastPage' on page 2 undefined on input line 167.
-
-[2] (./verantwoording.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+<use tassbw.pdf> [2] (./verantwoording.aux) ) 
 Here is how much of TeX's memory you used:
- 5341 strings out of 495061
- 75253 string characters out of 1182621
- 154188 words of memory out of 3000000
- 8438 multiletter control sequences out of 15000+50000
+ 5340 strings out of 495061
+ 75243 string characters out of 1182621
+ 154168 words of memory out of 3000000
+ 8437 multiletter control sequences out of 15000+50000
  21971 words of font info for 27 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,15n,43p,259b,316s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/ur
-w/helvetic/uhvr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvro8
-a.pfb>
-Output written on verantwoording.pdf (2 pages, 81745 bytes).
+{/usr/share/texmf-texlive/fonts/en
+c/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.p
+fb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/te
+xmf-texlive/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on verantwoording.pdf (2 pages, 81712 bytes).
 PDF statistics:
  69 PDF objects out of 1000 (max. 8388607)
  11 named destinations out of 1000 (max. 500000)
