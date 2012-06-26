@@ -38,7 +38,7 @@ be sure you place the connector below somewhere after the line `<Service name="C
 
 3. Deploy the war from the output directory into the Tomcat Web Application Manager
 4. Copy the hsqldb.jar located in Controller/lib/hsqldb/ folder to ~tomcat6/lib
-5. Restart Apache Tomcat 6 Server
+5. Restart Apache Tomcat 6 Server (sudo /etc/init.d/tomcat6 restart)
 
 ###Android
 1. You may need to go to Menu->Settings->Applications and check Unknown sources
